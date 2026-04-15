@@ -3,13 +3,94 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="clr-namespace:CaptureImage.ViewModels.Dashboard;assembly=CaptureImage.ViewModels"
+             xmlns:conv="clr-namespace:CaptureImage.UI.Converters"
              mc:Ignorable="d"
              x:Class="CaptureImage.UI.Views.DashboardView"
              x:DataType="vm:DashboardViewModel">
 
-    <StackPanel Margin="32" Spacing="12">
-        <TextBlock Text="Dashboard" FontSize="28" FontWeight="SemiBold" />
-        <TextBlock Text="{Binding Placeholder}" Opacity="0.7" />
-    </StackPanel>
+    <UserControl.Resources>
+        <conv:BytesToBitmapConverter x:Key="BytesToBitmap" />
+    </UserControl.Resources>
+
+    <Grid RowDefinitions="Auto,*,Auto" Margin="24,16,24,16">
+
+        <!-- Header -->
+        <Grid Grid.Row="0" ColumnDefinitions="*,Auto" Margin="0,0,0,12">
+            <StackPanel Grid.Column="0" Orientation="Vertical">
+                <TextBlock Text="Dashboard" FontSize="24" FontWeight="SemiBold" />
+                <TextBlock Text="Select a running game/app to arm capture."
+                           Opacity="0.6" FontSize="12" Margin="0,2,0,0" />
+            </StackPanel>
+
+            <Button Grid.Column="1"
+                    Content="Refresh"
+                    Command="{Binding RefreshCommand}"
+                    IsEnabled="{Binding !IsLoading}"
+                    VerticalAlignment="Center" />
+        </Grid>
+
+        <!-- Target list -->
+        <Border Grid.Row="1"
+                BorderBrush="{DynamicResource SystemControlForegroundBaseLowBrush}"
+                BorderThickness="1"
+                CornerRadius="4">
+            <ListBox ItemsSource="{Binding Targets}"
+                     SelectedItem="{Binding SelectedTarget, Mode=TwoWay}"
+                     Background="Transparent"
+                     BorderThickness="0"
+                     Padding="4">
+                <ListBox.ItemTemplate>
+                    <DataTemplate DataType="vm:GameTargetViewModel">
+                        <Grid ColumnDefinitions="32,*,Auto" Height="40" Margin="4,2">
+                            <!-- Icon -->
+                            <Image Grid.Column="0"
+                                   Source="{Binding IconBytes, Converter={StaticResource BytesToBitmap}}"
+                                   Width="24" Height="24"
+                                   VerticalAlignment="Center" />
+
+                            <!-- Name + process -->
+                            <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="8,0,0,0">
+                                <TextBlock Text="{Binding DisplayName}"
+                                           FontWeight="SemiBold"
+                                           TextTrimming="CharacterEllipsis" />
+                                <TextBlock Text="{Binding ProcessName}"
+                                           FontSize="11"
+                                           Opacity="0.6"
+                                           TextTrimming="CharacterEllipsis" />
+                            </StackPanel>
+
+                            <!-- Steam warning badge -->
+                            <Border Grid.Column="2"
+                                    IsVisible="{Binding IsSteamGame}"
+                                    Background="#FF6B35"
+                                    CornerRadius="10"
+                                    Padding="8,2"
+                                    VerticalAlignment="Center"
+                                    ToolTip.Tip="{Binding SteamBadgeTooltip}">
+                                <TextBlock Text="STEAM"
+                                           FontSize="10"
+                                           FontWeight="Bold"
+                                           Foreground="White" />
+                            </Border>
+                        </Grid>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </Border>
+
+        <!-- Status bar -->
+        <Grid Grid.Row="2" ColumnDefinitions="*,Auto" Margin="0,12,0,0">
+            <TextBlock Grid.Column="0"
+                       Text="{Binding Targets.Count, StringFormat='{}{0} target(s) visible'}"
+                       Opacity="0.6"
+                       VerticalAlignment="Center" />
+            <TextBlock Grid.Column="1"
+                       Text="Loading…"
+                       Opacity="0.6"
+                       IsVisible="{Binding IsLoading}"
+                       VerticalAlignment="Center" />
+        </Grid>
+
+    </Grid>
 
 </UserControl>

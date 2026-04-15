@@ -7,6 +7,37 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### M1 — Process detection & Steam attribution
+
+- `GameTarget`, `SteamAppInfo`, `SteamLibrary`, `ProcessChange` domain models in `CaptureImage.Core`.
+- Core abstractions: `IProcessDetector`, `IProcessWatcher`, `ISteamDetector`,
+  `ISteamRootLocator`, `IUIThreadDispatcher`.
+- `VdfParser` — recursive-descent parser for Valve KeyValues files (.vdf / .acf)
+  with escape sequences, line comments, and conditional blocks tolerated.
+- `SteamLibraryScanner` — reads `libraryfolders.vdf` + every `appmanifest_*.acf`
+  under the discovered libraries, maps executable paths to `SteamAppInfo`.
+  Tested against real libraryfolders.vdf + appmanifest snippets.
+- `RegistrySteamRootLocator` — finds Steam install dir via `HKLM\Software\Valve\Steam`
+  with Program Files fallback.
+- `WindowEnumerator` — `EnumWindows` P/Invoke with tool-window, owned-window and
+  self-process filtering; uses `LibraryImport` source-gen.
+- `IconExtractor` — extracts the associated icon for an executable and encodes as
+  PNG bytes, cached by path.
+- `GameDetector` (`IProcessDetector`) — composes WindowEnumerator + IconExtractor
+  + ISteamDetector into a single `EnumerateTargetsAsync()` call.
+- `WmiProcessWatcher` (`IProcessWatcher`) — WMI `__InstanceCreationEvent` /
+  `__InstanceDeletionEvent` subscription over `Win32_Process`, 2s poll window.
+- `AvaloniaUIDispatcher` — `IUIThreadDispatcher` implementation over
+  `Dispatcher.UIThread`.
+- `BytesToBitmapConverter` — converts PNG `byte[]` → Avalonia `Bitmap` for the
+  Dashboard icon column.
+- `GameTargetViewModel` + live `DashboardViewModel` — `ObservableCollection<GameTargetViewModel>`,
+  refresh command, 500ms debounce on WMI events, IDisposable for clean teardown.
+- `DashboardView.axaml` — real process list with icon, title, process name, and
+  orange **STEAM** warning badge with tooltip.
+- 23 unit tests in `CaptureImage.Infrastructure.Tests` covering VdfParser edge
+  cases and SteamLibraryScanner path matching with `MockFileSystem`.
+
 ### M0 — Bootstrap
 
 - Solution + 8-project skeleton (Core, Infrastructure, ViewModels, UI, App, and 3 test projects).

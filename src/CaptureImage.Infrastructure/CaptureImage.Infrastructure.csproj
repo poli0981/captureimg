@@ -7,6 +7,8 @@
     <AssemblyName>CaptureImage.Infrastructure</AssemblyName>
     <UseWindowsForms>false</UseWindowsForms>
     <UseWpf>false</UseWpf>
+    <!-- Required by the LibraryImport source generator (Processes/Interop/User32.cs). -->
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
   <ItemGroup>
@@ -17,6 +19,8 @@
     <!-- CsWinRT: not needed at M0. Added back in M2 only if custom projections are required beyond
          what the SDK reference pack ships. Windows.Graphics.Capture is in the built-in projection. -->
     <PackageReference Include="System.Management" />
+    <PackageReference Include="System.Drawing.Common" />
+    <PackageReference Include="System.IO.Abstractions" />
     <PackageReference Include="Serilog" />
     <PackageReference Include="Serilog.Sinks.File" />
     <PackageReference Include="Serilog.Sinks.Async" />

@@ -1,4 +1,9 @@
 using System;
+using System.IO.Abstractions;
+using CaptureImage.Core.Abstractions;
+using CaptureImage.Infrastructure.Processes;
+using CaptureImage.Infrastructure.Steam;
+using CaptureImage.UI.Services;
 using CaptureImage.ViewModels;
 using CaptureImage.ViewModels.About;
 using CaptureImage.ViewModels.Dashboard;
@@ -29,17 +34,31 @@ internal static class CompositionRoot
             builder.SetMinimumLevel(LogLevel.Debug);
         });
 
-        // Navigation
+        // --- Cross-cutting -----------------------------------------------------
+        services.AddSingleton<IFileSystem, FileSystem>();
+        services.AddSingleton<IUIThreadDispatcher, AvaloniaUIDispatcher>();
+
+        // --- Steam detection ---------------------------------------------------
+        services.AddSingleton<ISteamRootLocator, RegistrySteamRootLocator>();
+        services.AddSingleton<ISteamDetector, SteamLibraryScanner>();
+
+        // --- Process / window enumeration --------------------------------------
+        services.AddSingleton<WindowEnumerator>();
+        services.AddSingleton<IconExtractor>();
+        services.AddSingleton<IProcessDetector, GameDetector>();
+        services.AddSingleton<IProcessWatcher, WmiProcessWatcher>();
+
+        // --- Navigation --------------------------------------------------------
         services.AddSingleton<INavigationService, NavigationService>();
 
-        // Main window VM — singleton because MainWindow is single-instance
+        // --- View models -------------------------------------------------------
+        // Singleton so tab state (selection, loaded lists, log buffer) survives nav switches
+        // and so IDisposable children are disposed exactly once with the provider.
         services.AddSingleton<MainWindowViewModel>();
-
-        // Tab view models — transient so nav can re-create on revisit later if we want
-        services.AddTransient<DashboardViewModel>();
-        services.AddTransient<UpdateViewModel>();
-        services.AddTransient<SettingsViewModel>();
-        services.AddTransient<AboutViewModel>();
+        services.AddSingleton<DashboardViewModel>();
+        services.AddSingleton<UpdateViewModel>();
+        services.AddSingleton<SettingsViewModel>();
+        services.AddSingleton<AboutViewModel>();
 
         return services.BuildServiceProvider(validateScopes: true);
     }

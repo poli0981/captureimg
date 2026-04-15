@@ -54,6 +54,12 @@
     <PackageVersion Include="Vortice.Direct3D11" Version="3.6.2" />
     <PackageVersion Include="Vortice.DXGI" Version="3.6.2" />
     <PackageVersion Include="System.Management" Version="9.0.0" />
+    <PackageVersion Include="Microsoft.Win32.Registry" Version="5.0.0" />
+    <PackageVersion Include="System.Drawing.Common" Version="9.0.0" />
+  </ItemGroup>
+
+  <ItemGroup Label="Filesystem abstractions (for tests)">
+    <PackageVersion Include="System.IO.Abstractions" Version="21.2.1" />
   </ItemGroup>
 
   <ItemGroup Label="Imaging (TIFF only; SkiaSharp arrives via Avalonia)">
