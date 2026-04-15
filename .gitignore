@@ -2,10 +2,12 @@
 [Bb]in/
 [Oo]bj/
 [Oo]ut/
-[Ll]og/
-[Ll]ogs/
 publish/
 artifacts/
+# NOTE: do NOT add [Ll]og/ or [Ll]ogs/ here — `src/CaptureImage.ViewModels/Logs/`
+# is a real source folder (LogViewerViewModel.cs). Runtime log files land under
+# %LocalAppData%\CaptureImage\logs\ which is outside the repo anyway.
+*.log
 
 # .NET
 *.user
