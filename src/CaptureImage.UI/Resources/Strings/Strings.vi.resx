@@ -76,14 +76,35 @@
 
   <!-- Update -->
   <data name="Update_Title" xml:space="preserve"><value>Cập nhật</value></data>
-  <data name="Update_Placeholder" xml:space="preserve"><value>Cập nhật — tích hợp Velopack sẽ có ở M4.</value></data>
+  <data name="Update_Check" xml:space="preserve"><value>Kiểm tra bản mới</value></data>
+  <data name="Update_Download" xml:space="preserve"><value>Tải về</value></data>
+  <data name="Update_Install" xml:space="preserve"><value>Cài đặt &amp; khởi động lại</value></data>
+  <data name="Update_Status" xml:space="preserve"><value>Trạng thái</value></data>
+  <data name="Update_Log" xml:space="preserve"><value>Nhật ký</value></data>
+  <data name="Update_NewVersion" xml:space="preserve"><value>Phiên bản mới:</value></data>
 
   <!-- About -->
-  <data name="About_Title" xml:space="preserve"><value>Giới thiệu</value></data>
+  <data name="About_Title" xml:space="preserve"><value>Về CaptureImage</value></data>
+  <data name="About_Tagline" xml:space="preserve"><value>Công cụ chụp màn hình Windows gọn nhẹ cho các game không có phím chụp có sẵn.</value></data>
   <data name="About_AppLabel" xml:space="preserve"><value>Ứng dụng</value></data>
   <data name="About_VersionLabel" xml:space="preserve"><value>Phiên bản</value></data>
   <data name="About_LicenseLabel" xml:space="preserve"><value>Giấy phép</value></data>
-  <data name="About_Placeholder" xml:space="preserve"><value>Giới thiệu — third-party, pháp lý, docs sẽ có ở M4.</value></data>
+  <data name="About_DeveloperLabel" xml:space="preserve"><value>Nhà phát triển</value></data>
+  <data name="About_RepositoryLabel" xml:space="preserve"><value>Kho mã nguồn</value></data>
+  <data name="About_AiSection" xml:space="preserve"><value>Phát triển có hỗ trợ AI</value></data>
+  <data name="About_DisclaimersSection" xml:space="preserve"><value>Tuyên bố miễn trừ</value></data>
+  <data name="About_TranslationDisclaimer" xml:space="preserve"><value>Bản dịch</value></data>
+  <data name="About_CaptureDisclaimer" xml:space="preserve"><value>Khả năng chụp</value></data>
+  <data name="About_LiabilityDisclaimer" xml:space="preserve"><value>Không bảo hành</value></data>
+  <data name="About_LegalSection" xml:space="preserve"><value>Tài liệu pháp lý</value></data>
+  <data name="About_ThirdPartySection" xml:space="preserve"><value>Thành phần third-party</value></data>
+  <data name="About_ThirdPartyHint" xml:space="preserve"><value>Bấm "Third-party notices" phía trên để xem danh sách đầy đủ kèm URL upstream.</value></data>
+  <data name="About_OpenDisclaimer" xml:space="preserve"><value>Disclaimer</value></data>
+  <data name="About_OpenPrivacy" xml:space="preserve"><value>Privacy</value></data>
+  <data name="About_OpenTerms" xml:space="preserve"><value>Terms</value></data>
+  <data name="About_OpenLicense" xml:space="preserve"><value>License (GPL-3.0)</value></data>
+  <data name="About_OpenThirdParty" xml:space="preserve"><value>Third-party notices</value></data>
+  <data name="About_OpenContributors" xml:space="preserve"><value>Contributors</value></data>
 
   <!-- Log viewer -->
   <data name="Log_Title" xml:space="preserve"><value>Nhật ký thời gian thực</value></data>

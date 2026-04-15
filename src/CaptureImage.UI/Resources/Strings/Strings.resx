@@ -76,14 +76,35 @@
 
   <!-- Update -->
   <data name="Update_Title" xml:space="preserve"><value>Update</value></data>
-  <data name="Update_Placeholder" xml:space="preserve"><value>Update — Velopack integration lands in M4.</value></data>
+  <data name="Update_Check" xml:space="preserve"><value>Check for updates</value></data>
+  <data name="Update_Download" xml:space="preserve"><value>Download</value></data>
+  <data name="Update_Install" xml:space="preserve"><value>Install &amp; restart</value></data>
+  <data name="Update_Status" xml:space="preserve"><value>Status</value></data>
+  <data name="Update_Log" xml:space="preserve"><value>Log</value></data>
+  <data name="Update_NewVersion" xml:space="preserve"><value>New version:</value></data>
 
   <!-- About -->
-  <data name="About_Title" xml:space="preserve"><value>About</value></data>
+  <data name="About_Title" xml:space="preserve"><value>About CaptureImage</value></data>
+  <data name="About_Tagline" xml:space="preserve"><value>Lightweight Windows screen capture for games without a built-in screenshot key.</value></data>
   <data name="About_AppLabel" xml:space="preserve"><value>App</value></data>
   <data name="About_VersionLabel" xml:space="preserve"><value>Version</value></data>
   <data name="About_LicenseLabel" xml:space="preserve"><value>License</value></data>
-  <data name="About_Placeholder" xml:space="preserve"><value>About — third-party, legal, docs land in M4.</value></data>
+  <data name="About_DeveloperLabel" xml:space="preserve"><value>Developer</value></data>
+  <data name="About_RepositoryLabel" xml:space="preserve"><value>Repository</value></data>
+  <data name="About_AiSection" xml:space="preserve"><value>AI-assisted development</value></data>
+  <data name="About_DisclaimersSection" xml:space="preserve"><value>Disclaimers</value></data>
+  <data name="About_TranslationDisclaimer" xml:space="preserve"><value>Translations</value></data>
+  <data name="About_CaptureDisclaimer" xml:space="preserve"><value>Capture support</value></data>
+  <data name="About_LiabilityDisclaimer" xml:space="preserve"><value>No warranty</value></data>
+  <data name="About_LegalSection" xml:space="preserve"><value>Legal documents</value></data>
+  <data name="About_ThirdPartySection" xml:space="preserve"><value>Third-party components</value></data>
+  <data name="About_ThirdPartyHint" xml:space="preserve"><value>Click "Third-party notices" above for the full list with upstream URLs.</value></data>
+  <data name="About_OpenDisclaimer" xml:space="preserve"><value>Disclaimer</value></data>
+  <data name="About_OpenPrivacy" xml:space="preserve"><value>Privacy</value></data>
+  <data name="About_OpenTerms" xml:space="preserve"><value>Terms</value></data>
+  <data name="About_OpenLicense" xml:space="preserve"><value>License (GPL-3.0)</value></data>
+  <data name="About_OpenThirdParty" xml:space="preserve"><value>Third-party notices</value></data>
+  <data name="About_OpenContributors" xml:space="preserve"><value>Contributors</value></data>
 
   <!-- Log viewer -->
   <data name="Log_Title" xml:space="preserve"><value>Real-time log</value></data>

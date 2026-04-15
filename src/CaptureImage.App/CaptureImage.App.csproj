@@ -34,4 +34,17 @@
     <ProjectReference Include="..\CaptureImage.UI\CaptureImage.UI.csproj" />
   </ItemGroup>
 
+  <!-- Ship the legal and docs files next to the binary so the About tab can open them
+       with Process.Start. Links to the repo-root docs/ folder so there's a single source
+       of truth; content is copied into bin/.../docs/... at build time. -->
+  <ItemGroup>
+    <Content Include="..\..\docs\legal\DISCLAIMER.md" Link="docs\legal\DISCLAIMER.md" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="..\..\docs\legal\PRIVACY.md" Link="docs\legal\PRIVACY.md" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="..\..\docs\legal\TERMS.md" Link="docs\legal\TERMS.md" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="..\..\docs\legal\THIRD_PARTY_NOTICES.md" Link="docs\legal\THIRD_PARTY_NOTICES.md" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="..\..\docs\CONTRIBUTORS.md" Link="docs\CONTRIBUTORS.md" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="..\..\LICENSE" Link="LICENSE" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="..\..\NOTICE" Link="NOTICE" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
 </Project>

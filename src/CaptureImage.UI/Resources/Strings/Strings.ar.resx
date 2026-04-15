@@ -76,14 +76,35 @@
 
   <!-- Update -->
   <data name="Update_Title" xml:space="preserve"><value>تحديث</value></data>
-  <data name="Update_Placeholder" xml:space="preserve"><value>التحديث — سيتم دمج Velopack في M4.</value></data>
+  <data name="Update_Check" xml:space="preserve"><value>التحقق من التحديثات</value></data>
+  <data name="Update_Download" xml:space="preserve"><value>تنزيل</value></data>
+  <data name="Update_Install" xml:space="preserve"><value>تثبيت وإعادة تشغيل</value></data>
+  <data name="Update_Status" xml:space="preserve"><value>الحالة</value></data>
+  <data name="Update_Log" xml:space="preserve"><value>السجل</value></data>
+  <data name="Update_NewVersion" xml:space="preserve"><value>إصدار جديد:</value></data>
 
   <!-- About -->
-  <data name="About_Title" xml:space="preserve"><value>حول</value></data>
+  <data name="About_Title" xml:space="preserve"><value>حول CaptureImage</value></data>
+  <data name="About_Tagline" xml:space="preserve"><value>أداة خفيفة لالتقاط الشاشة على Windows للألعاب التي لا تحتوي على مفتاح التقاط مدمج.</value></data>
   <data name="About_AppLabel" xml:space="preserve"><value>التطبيق</value></data>
   <data name="About_VersionLabel" xml:space="preserve"><value>الإصدار</value></data>
   <data name="About_LicenseLabel" xml:space="preserve"><value>الترخيص</value></data>
-  <data name="About_Placeholder" xml:space="preserve"><value>حول — طرف ثالث، قانوني، مستندات في M4.</value></data>
+  <data name="About_DeveloperLabel" xml:space="preserve"><value>المطور</value></data>
+  <data name="About_RepositoryLabel" xml:space="preserve"><value>المستودع</value></data>
+  <data name="About_AiSection" xml:space="preserve"><value>التطوير بمساعدة الذكاء الاصطناعي</value></data>
+  <data name="About_DisclaimersSection" xml:space="preserve"><value>إخلاءات المسؤولية</value></data>
+  <data name="About_TranslationDisclaimer" xml:space="preserve"><value>الترجمات</value></data>
+  <data name="About_CaptureDisclaimer" xml:space="preserve"><value>دعم الالتقاط</value></data>
+  <data name="About_LiabilityDisclaimer" xml:space="preserve"><value>بدون ضمان</value></data>
+  <data name="About_LegalSection" xml:space="preserve"><value>المستندات القانونية</value></data>
+  <data name="About_ThirdPartySection" xml:space="preserve"><value>مكونات الطرف الثالث</value></data>
+  <data name="About_ThirdPartyHint" xml:space="preserve"><value>انقر على "Third-party notices" أعلاه للحصول على القائمة الكاملة مع عناوين URL.</value></data>
+  <data name="About_OpenDisclaimer" xml:space="preserve"><value>Disclaimer</value></data>
+  <data name="About_OpenPrivacy" xml:space="preserve"><value>Privacy</value></data>
+  <data name="About_OpenTerms" xml:space="preserve"><value>Terms</value></data>
+  <data name="About_OpenLicense" xml:space="preserve"><value>License (GPL-3.0)</value></data>
+  <data name="About_OpenThirdParty" xml:space="preserve"><value>Third-party notices</value></data>
+  <data name="About_OpenContributors" xml:space="preserve"><value>Contributors</value></data>
 
   <!-- Log viewer -->
   <data name="Log_Title" xml:space="preserve"><value>السجل في الوقت الفعلي</value></data>

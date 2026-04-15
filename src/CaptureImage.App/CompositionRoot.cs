@@ -9,6 +9,7 @@ using CaptureImage.Infrastructure.Logging;
 using CaptureImage.Infrastructure.Processes;
 using CaptureImage.Infrastructure.Settings;
 using CaptureImage.Infrastructure.Steam;
+using CaptureImage.Infrastructure.Update;
 using CaptureImage.UI.Localization;
 using CaptureImage.UI.Services;
 using CaptureImage.ViewModels;
@@ -77,6 +78,9 @@ internal static class CompositionRoot
 
         // --- Hotkeys -----------------------------------------------------------
         services.AddSingleton<IHotkeyService, SharpHookHotkeyService>();
+
+        // --- Updates -----------------------------------------------------------
+        services.AddSingleton<IUpdateService, VelopackUpdateService>();
 
         // --- UI-side services (toasts, preview, tray) --------------------------
         services.AddSingleton<IToastService, ToastService>();

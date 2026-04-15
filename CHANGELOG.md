@@ -7,6 +7,58 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### M4 — Auto-update, About tab, legal docs
+
+Velopack-powered self-update, a full About tab, and the first cut of the
+shipped legal documents.
+
+- **Velopack integration**: `IUpdateService` in Core plus
+  `VelopackUpdateService` in Infrastructure that wraps `UpdateManager` and
+  `GithubSource`. `VelopackApp.Build().Run()` is now the first line of
+  `Program.Main` so installer hooks (`--squirrel-install`,
+  `--squirrel-firstrun`, `--squirrel-uninstall`) run before Avalonia boots.
+  When the binary is not a Velopack-installed app (e.g. `dotnet run` from
+  source), the service gracefully reports `UpdateStatus.Unavailable`
+  instead of crashing.
+- **Update tab**: `UpdateViewModel` owns the check / download / install
+  workflow with a bounded rolling log (200 lines), progress bar, and
+  localized state labels. `UpdateView.axaml` lays out Check / Download /
+  Install buttons with correct enable/disable wiring based on `UpdateStatus`.
+- **About tab**: full rewrite of `AboutViewModel` + `AboutView` with:
+  app metadata (name, version, license, developer, repository link), the
+  AI-assistance disclosure, translation / capture-support / liability
+  disclaimers, a third-party component list, and buttons that open every
+  shipped legal document via `Process.Start` + default shell handler.
+- **Legal documents** (new, shipped next to the binary via
+  `CopyToOutputDirectory`):
+  - `docs/legal/DISCLAIMER.md` — no warranty, capture limitations,
+    AI-assisted development, machine-assisted translations, trademark
+    notice, "not legal advice" caveat.
+  - `docs/legal/PRIVACY.md` — local-only storage, no telemetry, update
+    check is the only network call, optional cloud upload is out-of-scope
+    for this release, plaintext log contents.
+  - `docs/legal/TERMS.md` — plain-language restatement of GPL-3.0 free
+    software obligations, user agreement, trademark notice, no support
+    obligation, contribution acceptance terms.
+  - `docs/legal/THIRD_PARTY_NOTICES.md` — expanded version of the root
+    `NOTICE` file with upstream URLs, license identifiers, and a note on
+    libuiohook's GPL-3.0 compatibility.
+  - `docs/CONTRIBUTORS.md` — maintainer info, AI assistance disclosure,
+    translation help wanted, open-source acknowledgements.
+- **Translation disclaimer**: explicit note in About tab + DISCLAIMER that
+  Vietnamese and Arabic strings are machine-assisted, and an invitation
+  for native speakers to contribute corrections.
+- **Capture limitation disclaimer**: explicit list of known-bad cases
+  (DRM, D3D9 exclusive fullscreen, anti-cheat protected titles, HDCP,
+  minimized windows) both in-app and in DISCLAIMER.md §2.
+- **Liability disclaimer**: plain-language "AS IS" notice in About tab
+  pointing to the full GPL-3.0 text.
+- **Localization**: 20+ new resx keys (`About_*`, `Update_*`) shipped in
+  English, Vietnamese, and Arabic satellite assemblies. Legal link button
+  labels are left in English intentionally so they match the file names
+  when opened.
+- **CompositionRoot**: `IUpdateService` registered as singleton.
+
 ### M3 — UX polish: state machine, localization, preview, toast, tray, settings, log viewer
 
 Major shell rewire landing everything the spec calls "polish".

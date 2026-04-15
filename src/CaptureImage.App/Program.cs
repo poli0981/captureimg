@@ -4,6 +4,7 @@ using Avalonia;
 using CaptureImage.Core.Abstractions;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
+using Velopack;
 
 namespace CaptureImage.App;
 
@@ -13,13 +14,19 @@ internal static class Program
     /// Entry point.
     /// </summary>
     /// <remarks>
-    /// NOTE: When Velopack lands in M4, <c>VelopackApp.Build().Run()</c> must be the very first
-    /// line of <see cref="Main"/> so it can handle <c>--squirrel-install</c>, <c>--squirrel-firstrun</c>,
-    /// etc. before Avalonia boots.
+    /// <see cref="VelopackApp.Build"/> MUST be the very first thing <see cref="Main"/> does.
+    /// The Velopack installer passes command-line arguments like <c>--squirrel-install</c>,
+    /// <c>--squirrel-firstrun</c>, and <c>--squirrel-uninstall</c> on the first launch after an
+    /// install/update/uninstall event; these need to be handled before Avalonia boots,
+    /// otherwise the installer will hang waiting for the previous instance to exit.
     /// </remarks>
     [STAThread]
     public static int Main(string[] args)
     {
+        // Velopack first — runs hooks for install/firstrun/update/uninstall and returns only
+        // when the launch is a normal one.
+        VelopackApp.Build().Run();
+
         // Bootstrap Serilog early (and keep the in-memory sink reference for DI).
         var inMemorySink = LoggingSetup.Initialize();
 
