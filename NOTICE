@@ -1,0 +1,51 @@
+CaptureImage
+Copyright (c) CaptureImage Contributors
+
+This product is licensed under the GNU General Public License v3.0 or later (GPL-3.0-or-later).
+See LICENSE for the full license text.
+
+================================================================================
+Third-party components
+================================================================================
+
+This product includes software developed by third parties. The following table
+lists every runtime dependency together with its upstream license. All listed
+licenses are compatible with distribution under GPL-3.0-or-later.
+
+Package                                    SPDX license
+---------------------------------------    -----------------
+Avalonia                                   MIT
+Avalonia.Desktop                           MIT
+Avalonia.Themes.Fluent                     MIT
+Avalonia.Fonts.Inter                       MIT
+Avalonia.Diagnostics                       MIT
+CommunityToolkit.Mvvm                      MIT
+Microsoft.Extensions.DependencyInjection   MIT
+Microsoft.Extensions.Hosting               MIT
+Microsoft.Extensions.Localization          MIT
+Microsoft.Extensions.Logging               MIT
+Microsoft.Extensions.Options               MIT
+H.NotifyIcon                               MIT
+SharpHook                                  MIT
+Stateless                                  Apache-2.0
+Serilog                                    Apache-2.0
+Serilog.Extensions.Hosting                 Apache-2.0
+Serilog.Extensions.Logging                 Apache-2.0
+Serilog.Sinks.Console                      Apache-2.0
+Serilog.Sinks.File                         Apache-2.0
+Serilog.Sinks.Async                        Apache-2.0
+Microsoft.Windows.CsWinRT                  MIT
+Vortice.Direct3D11                         MIT
+Vortice.DXGI                               MIT
+System.Management                          MIT
+SixLabors.ImageSharp  (>= 3.1)             Apache-2.0
+Velopack                                   MIT
+SkiaSharp (transitive via Avalonia)        MIT
+Inter font (transitive via Avalonia)       OFL-1.1
+
+Test-only dependencies are not redistributed with the binary and are omitted.
+
+Full license texts for Apache-2.0, MIT, and OFL-1.1 can be retrieved from:
+  - https://www.apache.org/licenses/LICENSE-2.0.txt
+  - https://opensource.org/licenses/MIT
+  - https://openfontlicense.org/open-font-license-official-text/

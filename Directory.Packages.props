@@ -1,0 +1,77 @@
+<Project>
+
+  <PropertyGroup>
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+    <CentralPackageTransitivePinningEnabled>true</CentralPackageTransitivePinningEnabled>
+  </PropertyGroup>
+
+  <ItemGroup Label="Avalonia">
+    <PackageVersion Include="Avalonia" Version="11.2.3" />
+    <PackageVersion Include="Avalonia.Desktop" Version="11.2.3" />
+    <PackageVersion Include="Avalonia.Themes.Fluent" Version="11.2.3" />
+    <PackageVersion Include="Avalonia.Fonts.Inter" Version="11.2.3" />
+    <PackageVersion Include="Avalonia.Diagnostics" Version="11.2.3" />
+  </ItemGroup>
+
+  <ItemGroup Label="MVVM">
+    <PackageVersion Include="CommunityToolkit.Mvvm" Version="8.4.0" />
+  </ItemGroup>
+
+  <ItemGroup Label="DI / Hosting / Localization">
+    <PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="9.0.0" />
+    <PackageVersion Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.0" />
+    <PackageVersion Include="Microsoft.Extensions.Hosting" Version="9.0.0" />
+    <PackageVersion Include="Microsoft.Extensions.Hosting.Abstractions" Version="9.0.0" />
+    <PackageVersion Include="Microsoft.Extensions.Localization" Version="9.0.0" />
+    <PackageVersion Include="Microsoft.Extensions.Logging" Version="9.0.0" />
+    <PackageVersion Include="Microsoft.Extensions.Options" Version="9.0.0" />
+  </ItemGroup>
+
+  <ItemGroup Label="Tray">
+    <PackageVersion Include="H.NotifyIcon.WindowsAppSDK" Version="2.2.0" />
+    <PackageVersion Include="H.NotifyIcon" Version="2.2.0" />
+  </ItemGroup>
+
+  <ItemGroup Label="Hotkeys">
+    <PackageVersion Include="SharpHook" Version="5.3.9" />
+  </ItemGroup>
+
+  <ItemGroup Label="State machine">
+    <PackageVersion Include="Stateless" Version="5.15.0" />
+  </ItemGroup>
+
+  <ItemGroup Label="Logging">
+    <PackageVersion Include="Serilog" Version="4.2.0" />
+    <PackageVersion Include="Serilog.Extensions.Hosting" Version="9.0.0" />
+    <PackageVersion Include="Serilog.Extensions.Logging" Version="9.0.0" />
+    <PackageVersion Include="Serilog.Sinks.Console" Version="6.0.0" />
+    <PackageVersion Include="Serilog.Sinks.File" Version="6.0.0" />
+    <PackageVersion Include="Serilog.Sinks.Async" Version="2.1.0" />
+  </ItemGroup>
+
+  <ItemGroup Label="Windows interop + D3D11">
+    <PackageVersion Include="Microsoft.Windows.CsWinRT" Version="2.2.0" />
+    <PackageVersion Include="Vortice.Direct3D11" Version="3.6.2" />
+    <PackageVersion Include="Vortice.DXGI" Version="3.6.2" />
+    <PackageVersion Include="System.Management" Version="9.0.0" />
+  </ItemGroup>
+
+  <ItemGroup Label="Imaging (TIFF only; SkiaSharp arrives via Avalonia)">
+    <PackageVersion Include="SixLabors.ImageSharp" Version="3.1.12" />
+  </ItemGroup>
+
+  <ItemGroup Label="Auto-update">
+    <PackageVersion Include="Velopack" Version="0.0.1053" />
+  </ItemGroup>
+
+  <ItemGroup Label="Tests">
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
+    <PackageVersion Include="xunit" Version="2.9.2" />
+    <PackageVersion Include="xunit.runner.visualstudio" Version="2.8.2" />
+    <PackageVersion Include="FluentAssertions" Version="6.12.2" />
+    <PackageVersion Include="NSubstitute" Version="5.3.0" />
+    <PackageVersion Include="System.IO.Abstractions.TestingHelpers" Version="21.2.1" />
+    <PackageVersion Include="coverlet.collector" Version="6.0.2" />
+  </ItemGroup>
+
+</Project>

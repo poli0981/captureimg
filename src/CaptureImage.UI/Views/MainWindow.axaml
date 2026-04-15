@@ -1,0 +1,87 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="clr-namespace:CaptureImage.ViewModels;assembly=CaptureImage.ViewModels"
+        xmlns:nav="clr-namespace:CaptureImage.ViewModels.Navigation;assembly=CaptureImage.ViewModels"
+        xmlns:dashboard="clr-namespace:CaptureImage.ViewModels.Dashboard;assembly=CaptureImage.ViewModels"
+        xmlns:update="clr-namespace:CaptureImage.ViewModels.Update;assembly=CaptureImage.ViewModels"
+        xmlns:settings="clr-namespace:CaptureImage.ViewModels.Settings;assembly=CaptureImage.ViewModels"
+        xmlns:about="clr-namespace:CaptureImage.ViewModels.About;assembly=CaptureImage.ViewModels"
+        xmlns:views="clr-namespace:CaptureImage.UI.Views"
+        mc:Ignorable="d"
+        x:Class="CaptureImage.UI.Views.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
+        Title="CaptureImage"
+        Width="960" Height="600"
+        MinWidth="960" MinHeight="600"
+        MaxWidth="960" MaxHeight="600"
+        CanResize="False"
+        WindowStartupLocation="CenterScreen">
+
+    <Window.DataTemplates>
+        <DataTemplate DataType="dashboard:DashboardViewModel">
+            <views:DashboardView />
+        </DataTemplate>
+        <DataTemplate DataType="update:UpdateViewModel">
+            <views:UpdateView />
+        </DataTemplate>
+        <DataTemplate DataType="settings:SettingsViewModel">
+            <views:SettingsView />
+        </DataTemplate>
+        <DataTemplate DataType="about:AboutViewModel">
+            <views:AboutView />
+        </DataTemplate>
+    </Window.DataTemplates>
+
+    <Grid ColumnDefinitions="220,*">
+
+        <!-- Nav rail -->
+        <Border Grid.Column="0"
+                Background="{DynamicResource SystemControlBackgroundChromeMediumLowBrush}"
+                BorderBrush="{DynamicResource SystemControlForegroundBaseLowBrush}"
+                BorderThickness="0,0,1,0">
+            <DockPanel LastChildFill="True">
+                <StackPanel DockPanel.Dock="Top" Margin="20,24,20,16">
+                    <TextBlock Text="CaptureImage"
+                               FontSize="22"
+                               FontWeight="SemiBold"
+                               Foreground="{DynamicResource SystemControlForegroundBaseHighBrush}" />
+                    <TextBlock Text="v0.1.0 — M0 Bootstrap"
+                               FontSize="11"
+                               Margin="0,2,0,0"
+                               Opacity="0.6" />
+                </StackPanel>
+
+                <ListBox ItemsSource="{Binding NavItems}"
+                         SelectedItem="{Binding SelectedNavItem, Mode=TwoWay}"
+                         Background="Transparent"
+                         BorderThickness="0"
+                         Margin="8,8,8,8">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate DataType="nav:NavItem">
+                            <Grid ColumnDefinitions="32,*" Height="40">
+                                <TextBlock Grid.Column="0"
+                                           Text="{Binding IconGlyph}"
+                                           FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets"
+                                           FontSize="18"
+                                           VerticalAlignment="Center"
+                                           HorizontalAlignment="Center" />
+                                <TextBlock Grid.Column="1"
+                                           Text="{Binding Key}"
+                                           VerticalAlignment="Center" />
+                            </Grid>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </DockPanel>
+        </Border>
+
+        <!-- Content host -->
+        <ContentControl Grid.Column="1"
+                        Content="{Binding CurrentViewModel}"
+                        Margin="0" />
+
+    </Grid>
+
+</Window>

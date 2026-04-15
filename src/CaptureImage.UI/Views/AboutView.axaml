@@ -1,0 +1,27 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:CaptureImage.ViewModels.About;assembly=CaptureImage.ViewModels"
+             mc:Ignorable="d"
+             x:Class="CaptureImage.UI.Views.AboutView"
+             x:DataType="vm:AboutViewModel">
+
+    <StackPanel Margin="32" Spacing="12">
+        <TextBlock Text="About" FontSize="28" FontWeight="SemiBold" />
+
+        <Grid ColumnDefinitions="120,*" RowDefinitions="Auto,Auto,Auto" Margin="0,12,0,0">
+            <TextBlock Grid.Row="0" Grid.Column="0" Text="App" Opacity="0.6" />
+            <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding AppName}" />
+
+            <TextBlock Grid.Row="1" Grid.Column="0" Text="Version" Opacity="0.6" />
+            <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding AppVersion}" />
+
+            <TextBlock Grid.Row="2" Grid.Column="0" Text="License" Opacity="0.6" />
+            <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding License}" />
+        </Grid>
+
+        <TextBlock Text="{Binding Placeholder}" Opacity="0.5" Margin="0,16,0,0" />
+    </StackPanel>
+
+</UserControl>
