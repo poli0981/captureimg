@@ -7,6 +7,67 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### M3 — UX polish: state machine, localization, preview, toast, tray, settings, log viewer
+
+Major shell rewire landing everything the spec calls "polish".
+
+- **Settings persistence**: `AppSettings` record hierarchy
+  (`CaptureSettings`, `UiSettings`) in Core plus `ISettingsStore` abstraction.
+  `JsonSettingsStore` writes to `%LocalAppData%\CaptureImage\settings.json` via
+  `System.Text.Json` source generators (`SettingsJsonContext`), with atomic
+  temp+rename writes, a 300ms debounce window, and import/export helpers.
+  12 unit tests cover round-trip, version guard, corrupt input, and import/export.
+- **Localization**: `ILocalizationService` in Core with indexer + INPC.
+  `ResxLocalizationService` in UI backed by `Strings.resx`, `Strings.vi.resx`,
+  `Strings.ar.resx` (≈40 keys each). `FlowDirectionConverter` maps the portable
+  `TextFlowDirection` enum to Avalonia's own `FlowDirection`; MainWindow binds
+  via `FlowDirection="{Binding Localization.CurrentFlowDirection, Converter=...}"`
+  so `ar-SA` auto-mirrors the whole layout.
+- **Culture-aware nav rail**: `NavItemViewModel` subscribes to the localization
+  service's `PropertyChanged("Item[]")` and re-raises `Label`, so every nav rail
+  entry refreshes in place when the user switches language.
+- **Capture state machine**: `CaptureStateMachine` in Core (Stateless-backed)
+  implementing the plan §5 states — Idle → TargetsSelected → Armed → Capturing →
+  (Previewing?) → Saving → Complete → Armed (with Failed as the parallel error
+  path). 14 unit tests cover happy path, preview gate, error paths, and illegal
+  transitions.
+- **Toast system**: `IToastService` in Core with `ToastItem` record.
+  `ToastService` + `ToastHost` custom Avalonia UserControl render an
+  `ObservableCollection<ToastItem>` as a bottom-right overlay (bottom-left under
+  RTL). `ToastKindToBrushConverter` colors each toast by severity.
+- **Preview flow**: `IPreviewPresenter` in Core + `AvaloniaPreviewPresenter` in
+  UI that opens a modal `PreviewWindow` showing the captured frame (encoded once
+  as PNG via SkiaSharp) and awaits a Save/Discard decision. Wired through the
+  state machine so `PreviewRejected` routes back to Armed with the frame
+  discarded.
+- **Tray icon**: `ITrayIconHost` in Core + `AvaloniaTrayIconHost` in UI using
+  Avalonia's built-in `TrayIcon` and `NativeMenu`. Runtime-generated 32×32 icon
+  via SkiaSharp so we don't ship a binary `.ico` yet. Menu items: Show / Open
+  captures folder / Exit. MainWindow `Closing` event is intercepted when
+  `UiSettings.MinimizeToTray` is true so the close button hides instead of quits.
+- **Real-time log viewer**: `LogEntry` model + `LogLevel` enum in Core,
+  `ILogBufferSource` abstraction. `InMemorySink` is a Serilog sink that keeps a
+  2000-entry ring buffer and implements `ILogBufferSource`. `LogViewerViewModel`
+  hydrates from a snapshot on first show and appends live entries; bounded at
+  500 visible rows. `LogViewerView` is a right-side drawer overlay toggled from
+  the nav rail footer.
+- **Dashboard rewire**: `DashboardViewModel` now drives the capture flow through
+  the state machine, reads hotkey/format/output settings from `ISettingsStore`,
+  gates saves behind the preview presenter when `PreviewBeforeSave` is on,
+  surfaces toasts on success/failure, and auto-resets from Complete/Failed to
+  Armed after 800ms so the next shot is one hotkey press away.
+- **Settings UI**: `SettingsView` with a scrollable form — language dropdown
+  (auto-persists + live-switches culture), hotkey display, default format
+  picker, JPEG/WebP quality sliders, output folder, file name template, toggle
+  switches for preview/minimize-to-tray/sound, and Import / Export / Open
+  buttons wired to Avalonia's `IStorageProvider`.
+- **CompositionRoot**: all M3 services registered. `Program.Main` loads settings
+  before building the Avalonia lifetime, applies the persisted culture so the
+  first frame renders correctly, and flushes settings on shutdown.
+- **Integration test**: M2's Notepad integration test switched to `winver.exe`
+  because `notepad.exe` on Win11 is a Store launcher shim whose `Process.Start`
+  return doesn't expose a real main window.
+
 ### M2 — Capture engine, encoders, hotkey, orchestrator
 
 - Core models: `ImageFormat` (+ extension helpers), `CaptureRequest`, `CaptureResult`

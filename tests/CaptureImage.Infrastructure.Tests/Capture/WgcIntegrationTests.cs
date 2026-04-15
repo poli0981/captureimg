@@ -34,29 +34,31 @@ namespace CaptureImage.Infrastructure.Tests.Capture;
 public class WgcIntegrationTests
 {
     [Fact]
-    public async Task Orchestrator_CapturesNotepadToPng_SuccessAndNonEmptyFile()
+    public async Task Orchestrator_CapturesWinverToPng_SuccessAndNonEmptyFile()
     {
-        // Arrange — spawn Notepad and wait for its main window to be ready.
-        using var notepad = Process.Start(new ProcessStartInfo("notepad.exe")
+        // Arrange — spawn winver.exe. It's still a classic Win32 app on Win11 (unlike
+        // notepad.exe / calc.exe which are Store launchers that hand back a shim process
+        // with MainWindowHandle = 0).
+        using var winver = Process.Start(new ProcessStartInfo("winver.exe")
         {
             WindowStyle = ProcessWindowStyle.Normal,
             UseShellExecute = true,
-        }) ?? throw new InvalidOperationException("Failed to start notepad.exe");
+        }) ?? throw new InvalidOperationException("Failed to start winver.exe");
 
         try
         {
-            notepad.WaitForInputIdle(5_000);
-            await WaitForMainWindowAsync(notepad, TimeSpan.FromSeconds(5));
+            winver.WaitForInputIdle(10_000);
+            await WaitForMainWindowAsync(winver, TimeSpan.FromSeconds(10));
 
-            var hwnd = notepad.MainWindowHandle;
-            hwnd.Should().NotBe(IntPtr.Zero, "Notepad must have a top-level window");
+            var hwnd = winver.MainWindowHandle;
+            hwnd.Should().NotBe(IntPtr.Zero, "winver must have a top-level window");
 
             var target = new GameTarget(
-                ProcessId: (uint)notepad.Id,
+                ProcessId: (uint)winver.Id,
                 WindowHandle: hwnd,
-                ProcessName: "notepad",
-                WindowTitle: notepad.MainWindowTitle,
-                ExecutablePath: notepad.MainModule?.FileName ?? string.Empty,
+                ProcessName: "winver",
+                WindowTitle: winver.MainWindowTitle,
+                ExecutablePath: winver.MainModule?.FileName ?? string.Empty,
                 IconBytes: null,
                 SteamInfo: null);
 
@@ -71,7 +73,7 @@ public class WgcIntegrationTests
                     Target: target,
                     Format: ImageFormat.Png,
                     OutputDirectory: tempDir,
-                    FileNameTemplate: "notepad_{yyyy}-{MM}-{dd}_{HH}-{mm}-{ss}",
+                    FileNameTemplate: "winver_{yyyy}-{MM}-{dd}_{HH}-{mm}-{ss}",
                     JpegQuality: 90,
                     WebpQuality: 85);
 
@@ -113,7 +115,7 @@ public class WgcIntegrationTests
         }
         finally
         {
-            try { notepad.Kill(); } catch { /* ignore */ }
+            try { winver.Kill(); } catch { /* ignore */ }
         }
     }
 

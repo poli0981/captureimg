@@ -1,13 +1,14 @@
 using System;
 using System.IO;
+using CaptureImage.Infrastructure.Logging;
 using Serilog;
 using Serilog.Events;
 
 namespace CaptureImage.App;
 
 /// <summary>
-/// Central Serilog configuration. M3 will swap the console sink for the in-memory ring buffer
-/// sink that backs the real-time log viewer; M0 only needs file + console.
+/// Central Serilog configuration. Creates the in-memory ring buffer sink once, exposes it
+/// so the DI container can hand it to the log viewer, and wires console + rolling file.
 /// </summary>
 internal static class LoggingSetup
 {
@@ -31,17 +32,20 @@ internal static class LoggingSetup
     }
 
     /// <summary>
-    /// Bootstrap logger used before DI is built. Writes to console + a rolling file.
+    /// Build the Serilog root logger together with the in-memory sink, and assign it to
+    /// <see cref="Log.Logger"/>. Returns the sink so the DI container can register it.
     /// </summary>
-    public static ILogger CreateBootstrapLogger()
+    public static InMemorySink Initialize()
     {
         var logPath = Path.Combine(GetLogsDir(), "captureimg-.log");
+        var sink = new InMemorySink();
 
-        return new LoggerConfiguration()
+        Log.Logger = new LoggerConfiguration()
             .MinimumLevel.Debug()
             .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
             .Enrich.WithProperty("App", "CaptureImage")
             .WriteTo.Console()
+            .WriteTo.Sink(sink)
             .WriteTo.Async(a => a.File(
                 path: logPath,
                 rollingInterval: RollingInterval.Day,
@@ -51,5 +55,7 @@ internal static class LoggingSetup
                 shared: false,
                 outputTemplate: "[{Timestamp:yyyy-MM-dd HH:mm:ss.fff} {Level:u3}] {Message:lj} {Properties:j}{NewLine}{Exception}"))
             .CreateLogger();
+
+        return sink;
     }
 }

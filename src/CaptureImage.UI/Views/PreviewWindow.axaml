@@ -1,0 +1,60 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="clr-namespace:CaptureImage.ViewModels.Preview;assembly=CaptureImage.ViewModels"
+        xmlns:conv="clr-namespace:CaptureImage.UI.Converters"
+        mc:Ignorable="d"
+        x:Class="CaptureImage.UI.Views.PreviewWindow"
+        x:DataType="vm:PreviewViewModel"
+        Title="Preview"
+        Width="720" Height="560"
+        WindowStartupLocation="CenterOwner"
+        CanResize="False">
+
+    <Grid RowDefinitions="Auto,*,Auto" Margin="16">
+
+        <!-- Header -->
+        <StackPanel Grid.Row="0" Margin="0,0,0,12">
+            <TextBlock Text="{Binding Localization[Preview_Title]}" FontSize="20" FontWeight="SemiBold" />
+            <TextBlock Margin="0,4,0,0" Opacity="0.7">
+                <Run Text="{Binding TargetName}" />
+                <Run Text="— " />
+                <Run Text="{Binding Width}" />
+                <Run Text="×" />
+                <Run Text="{Binding Height}" />
+            </TextBlock>
+        </StackPanel>
+
+        <!-- Image preview -->
+        <Border Grid.Row="1"
+                BorderBrush="{DynamicResource SystemControlForegroundBaseLowBrush}"
+                BorderThickness="1"
+                CornerRadius="4"
+                Background="#111">
+            <Image Source="{Binding PngBytes, Converter={x:Static conv:BytesToBitmapConverter.Instance}}"
+                   Stretch="Uniform"
+                   Margin="8" />
+        </Border>
+
+        <!-- Accept / discard -->
+        <StackPanel Grid.Row="2"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Right"
+                    Spacing="8"
+                    Margin="0,12,0,0">
+            <TextBlock Text="{Binding Localization[Preview_Prompt]}"
+                       VerticalAlignment="Center"
+                       Margin="0,0,12,0" />
+            <Button Name="DiscardButton"
+                    Content="{Binding Localization[Preview_Discard]}"
+                    MinWidth="100" />
+            <Button Name="SaveButton"
+                    Content="{Binding Localization[Preview_Save]}"
+                    Classes="accent"
+                    MinWidth="100" />
+        </StackPanel>
+
+    </Grid>
+
+</Window>

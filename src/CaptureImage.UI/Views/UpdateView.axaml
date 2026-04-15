@@ -8,8 +8,8 @@
              x:DataType="vm:UpdateViewModel">
 
     <StackPanel Margin="32" Spacing="12">
-        <TextBlock Text="Update" FontSize="28" FontWeight="SemiBold" />
-        <TextBlock Text="{Binding Placeholder}" Opacity="0.7" />
+        <TextBlock Text="{Binding Localization[Update_Title]}" FontSize="24" FontWeight="SemiBold" />
+        <TextBlock Text="{Binding Localization[Update_Placeholder]}" Opacity="0.7" />
     </StackPanel>
 
 </UserControl>

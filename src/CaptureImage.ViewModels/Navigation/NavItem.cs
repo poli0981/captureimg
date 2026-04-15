@@ -1,14 +1,5 @@
 namespace CaptureImage.ViewModels.Navigation;
 
-/// <summary>
-/// Describes a single entry in the main navigation rail.
-/// </summary>
-/// <param name="Key">Stable identifier for the destination (used for logging + analytics).</param>
-/// <param name="LabelKey">Localization resource key for the display label.</param>
-/// <param name="IconGlyph">Fluent-style icon glyph or path data. M0 uses a short text placeholder.</param>
-/// <param name="TargetViewModel">The VM type that should be activated when the user selects this item.</param>
-public sealed record NavItem(
-    string Key,
-    string LabelKey,
-    string IconGlyph,
-    Type TargetViewModel);
+// This file previously held the NavItem record. NavItem has been superseded by
+// NavItemViewModel which is culture-aware. Keeping this file empty marker so git
+// history shows the rename intent; delete after M3 ships if desired.

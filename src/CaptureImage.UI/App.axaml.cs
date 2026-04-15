@@ -2,6 +2,7 @@ using System;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
+using CaptureImage.Core.Abstractions;
 using CaptureImage.UI.Views;
 using CaptureImage.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
@@ -29,14 +30,17 @@ public partial class App : Application
                 ?? throw new InvalidOperationException(
                     "App.Services must be assigned before the Avalonia lifetime starts.");
 
-            // MainWindowViewModel's ctor sets SelectedNavItem = NavItems[0], which flows through
-            // the nav service and activates DashboardViewModel. No explicit NavigateTo needed here.
             var mainVm = services.GetRequiredService<MainWindowViewModel>();
-
-            desktop.MainWindow = new MainWindow
+            var mainWindow = new MainWindow
             {
                 DataContext = mainVm,
             };
+            desktop.MainWindow = mainWindow;
+
+            // Attach the tray icon now that the main window is constructed — the host needs
+            // a live Window reference for Show / Hide / Close-to-tray wiring.
+            var trayHost = services.GetRequiredService<ITrayIconHost>();
+            trayHost.Initialize(mainWindow);
         }
 
         base.OnFrameworkInitializationCompleted();

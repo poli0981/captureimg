@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="xml:space" type="xsd:string" msdata:Ordinal="4" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+
+  <!-- Navigation -->
+  <data name="Nav_Dashboard" xml:space="preserve"><value>Dashboard</value></data>
+  <data name="Nav_Update" xml:space="preserve"><value>Update</value></data>
+  <data name="Nav_Settings" xml:space="preserve"><value>Settings</value></data>
+  <data name="Nav_About" xml:space="preserve"><value>About</value></data>
+  <data name="Nav_LogViewer" xml:space="preserve"><value>Log</value></data>
+
+  <!-- Dashboard -->
+  <data name="Dashboard_Title" xml:space="preserve"><value>Dashboard</value></data>
+  <data name="Dashboard_Subtitle" xml:space="preserve"><value>Select a target and arm — press the hotkey to capture.</value></data>
+  <data name="Dashboard_Refresh" xml:space="preserve"><value>Refresh</value></data>
+  <data name="Dashboard_Arm" xml:space="preserve"><value>Arm</value></data>
+  <data name="Dashboard_Disarm" xml:space="preserve"><value>Disarm</value></data>
+  <data name="Dashboard_StatusIdle" xml:space="preserve"><value>Idle — select a target and arm to begin.</value></data>
+  <data name="Dashboard_StatusArmed" xml:space="preserve"><value>Armed: press {0} to capture {1}.</value></data>
+  <data name="Dashboard_StatusCapturing" xml:space="preserve"><value>Capturing {0}…</value></data>
+  <data name="Dashboard_StatusDisarmed" xml:space="preserve"><value>Disarmed.</value></data>
+  <data name="Dashboard_StatusSaved" xml:space="preserve"><value>Saved: {0} ({1}x{2}, {3} ms)</value></data>
+  <data name="Dashboard_StatusFailed" xml:space="preserve"><value>Capture failed ({0}): {1}</value></data>
+  <data name="Dashboard_TargetsCount" xml:space="preserve"><value>{0} target(s) visible</value></data>
+  <data name="Dashboard_Loading" xml:space="preserve"><value>Loading…</value></data>
+  <data name="Dashboard_SteamBadge" xml:space="preserve"><value>STEAM</value></data>
+  <data name="Dashboard_SteamBadgeTooltip" xml:space="preserve"><value>Steam game: {0} (AppId {1}). F12 screenshot is available via Steam Overlay. Some anti-cheat protected games may block external capture.</value></data>
+
+  <!-- Settings -->
+  <data name="Settings_Title" xml:space="preserve"><value>Settings</value></data>
+  <data name="Settings_Language" xml:space="preserve"><value>Language</value></data>
+  <data name="Settings_Theme" xml:space="preserve"><value>Theme</value></data>
+  <data name="Settings_Hotkey" xml:space="preserve"><value>Capture hotkey</value></data>
+  <data name="Settings_HotkeyHint" xml:space="preserve"><value>Default: Ctrl+Shift+F12. Hotkey editing lands in a future milestone.</value></data>
+  <data name="Settings_Format" xml:space="preserve"><value>Default format</value></data>
+  <data name="Settings_JpegQuality" xml:space="preserve"><value>JPEG quality</value></data>
+  <data name="Settings_WebpQuality" xml:space="preserve"><value>WebP quality</value></data>
+  <data name="Settings_OutputFolder" xml:space="preserve"><value>Output folder</value></data>
+  <data name="Settings_OutputFolderDefault" xml:space="preserve"><value>(default: Pictures\CaptureImage)</value></data>
+  <data name="Settings_FileNameTemplate" xml:space="preserve"><value>File name template</value></data>
+  <data name="Settings_PreviewBeforeSave" xml:space="preserve"><value>Preview each capture before saving</value></data>
+  <data name="Settings_MinimizeToTray" xml:space="preserve"><value>Close button minimizes to tray</value></data>
+  <data name="Settings_SoundEnabled" xml:space="preserve"><value>Play capture sound</value></data>
+  <data name="Settings_Import" xml:space="preserve"><value>Import…</value></data>
+  <data name="Settings_Export" xml:space="preserve"><value>Export…</value></data>
+  <data name="Settings_OpenFile" xml:space="preserve"><value>Open settings file</value></data>
+
+  <!-- Update -->
+  <data name="Update_Title" xml:space="preserve"><value>Update</value></data>
+  <data name="Update_Placeholder" xml:space="preserve"><value>Update — Velopack integration lands in M4.</value></data>
+
+  <!-- About -->
+  <data name="About_Title" xml:space="preserve"><value>About</value></data>
+  <data name="About_AppLabel" xml:space="preserve"><value>App</value></data>
+  <data name="About_VersionLabel" xml:space="preserve"><value>Version</value></data>
+  <data name="About_LicenseLabel" xml:space="preserve"><value>License</value></data>
+  <data name="About_Placeholder" xml:space="preserve"><value>About — third-party, legal, docs land in M4.</value></data>
+
+  <!-- Log viewer -->
+  <data name="Log_Title" xml:space="preserve"><value>Real-time log</value></data>
+  <data name="Log_Pause" xml:space="preserve"><value>Pause</value></data>
+  <data name="Log_Resume" xml:space="preserve"><value>Resume</value></data>
+  <data name="Log_Clear" xml:space="preserve"><value>Clear</value></data>
+  <data name="Log_Export" xml:space="preserve"><value>Export…</value></data>
+
+  <!-- Preview -->
+  <data name="Preview_Title" xml:space="preserve"><value>Preview</value></data>
+  <data name="Preview_Prompt" xml:space="preserve"><value>Save this capture?</value></data>
+  <data name="Preview_Save" xml:space="preserve"><value>Save</value></data>
+  <data name="Preview_Discard" xml:space="preserve"><value>Discard</value></data>
+
+  <!-- Toasts -->
+  <data name="Toast_CaptureSaved" xml:space="preserve"><value>Capture saved</value></data>
+  <data name="Toast_CaptureFailed" xml:space="preserve"><value>Capture failed</value></data>
+  <data name="Toast_SettingsImported" xml:space="preserve"><value>Settings imported</value></data>
+  <data name="Toast_SettingsExported" xml:space="preserve"><value>Settings exported</value></data>
+
+  <!-- Tray menu -->
+  <data name="Tray_ShowWindow" xml:space="preserve"><value>Show CaptureImage</value></data>
+  <data name="Tray_Arm" xml:space="preserve"><value>Arm capture</value></data>
+  <data name="Tray_Disarm" xml:space="preserve"><value>Disarm capture</value></data>
+  <data name="Tray_OpenFolder" xml:space="preserve"><value>Open captures folder</value></data>
+  <data name="Tray_Exit" xml:space="preserve"><value>Exit</value></data>
+
+</root>

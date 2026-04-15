@@ -5,12 +5,16 @@ using CaptureImage.Core.Pipeline;
 using CaptureImage.Infrastructure.Capture;
 using CaptureImage.Infrastructure.Hotkeys;
 using CaptureImage.Infrastructure.Imaging;
+using CaptureImage.Infrastructure.Logging;
 using CaptureImage.Infrastructure.Processes;
+using CaptureImage.Infrastructure.Settings;
 using CaptureImage.Infrastructure.Steam;
+using CaptureImage.UI.Localization;
 using CaptureImage.UI.Services;
 using CaptureImage.ViewModels;
 using CaptureImage.ViewModels.About;
 using CaptureImage.ViewModels.Dashboard;
+using CaptureImage.ViewModels.Logs;
 using CaptureImage.ViewModels.Navigation;
 using CaptureImage.ViewModels.Settings;
 using CaptureImage.ViewModels.Update;
@@ -26,7 +30,7 @@ namespace CaptureImage.App;
 /// </summary>
 internal static class CompositionRoot
 {
-    public static IServiceProvider BuildServices()
+    public static IServiceProvider BuildServices(InMemorySink inMemorySink)
     {
         var services = new ServiceCollection();
 
@@ -38,9 +42,18 @@ internal static class CompositionRoot
             builder.SetMinimumLevel(LogLevel.Debug);
         });
 
+        // The same InMemorySink instance is both the Serilog sink AND the log buffer source
+        // used by the log viewer VM.
+        services.AddSingleton(inMemorySink);
+        services.AddSingleton<ILogBufferSource>(inMemorySink);
+
         // --- Cross-cutting -----------------------------------------------------
         services.AddSingleton<IFileSystem, FileSystem>();
         services.AddSingleton<IUIThreadDispatcher, AvaloniaUIDispatcher>();
+        services.AddSingleton<ILocalizationService, ResxLocalizationService>();
+
+        // --- Settings ----------------------------------------------------------
+        services.AddSingleton<ISettingsStore, JsonSettingsStore>();
 
         // --- Steam detection ---------------------------------------------------
         services.AddSingleton<ISteamRootLocator, RegistrySteamRootLocator>();
@@ -65,6 +78,11 @@ internal static class CompositionRoot
         // --- Hotkeys -----------------------------------------------------------
         services.AddSingleton<IHotkeyService, SharpHookHotkeyService>();
 
+        // --- UI-side services (toasts, preview, tray) --------------------------
+        services.AddSingleton<IToastService, ToastService>();
+        services.AddSingleton<IPreviewPresenter, AvaloniaPreviewPresenter>();
+        services.AddSingleton<ITrayIconHost, AvaloniaTrayIconHost>();
+
         // --- Navigation --------------------------------------------------------
         services.AddSingleton<INavigationService, NavigationService>();
 
@@ -74,6 +92,7 @@ internal static class CompositionRoot
         services.AddSingleton<UpdateViewModel>();
         services.AddSingleton<SettingsViewModel>();
         services.AddSingleton<AboutViewModel>();
+        services.AddSingleton<LogViewerViewModel>();
 
         return services.BuildServiceProvider(validateScopes: true);
     }

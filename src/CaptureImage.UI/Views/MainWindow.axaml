@@ -9,6 +9,8 @@
         xmlns:settings="clr-namespace:CaptureImage.ViewModels.Settings;assembly=CaptureImage.ViewModels"
         xmlns:about="clr-namespace:CaptureImage.ViewModels.About;assembly=CaptureImage.ViewModels"
         xmlns:views="clr-namespace:CaptureImage.UI.Views"
+        xmlns:controls="clr-namespace:CaptureImage.UI.Controls"
+        xmlns:conv="clr-namespace:CaptureImage.UI.Converters"
         mc:Ignorable="d"
         x:Class="CaptureImage.UI.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
@@ -17,7 +19,8 @@
         MinWidth="960" MinHeight="600"
         MaxWidth="960" MaxHeight="600"
         CanResize="False"
-        WindowStartupLocation="CenterScreen">
+        WindowStartupLocation="CenterScreen"
+        FlowDirection="{Binding Localization.CurrentFlowDirection, Converter={x:Static conv:FlowDirectionConverter.Instance}}">
 
     <Window.DataTemplates>
         <DataTemplate DataType="dashboard:DashboardViewModel">
@@ -34,6 +37,8 @@
         </DataTemplate>
     </Window.DataTemplates>
 
+    <Panel>
+
     <Grid ColumnDefinitions="220,*">
 
         <!-- Nav rail -->
@@ -47,11 +52,28 @@
                                FontSize="22"
                                FontWeight="SemiBold"
                                Foreground="{DynamicResource SystemControlForegroundBaseHighBrush}" />
-                    <TextBlock Text="v0.1.0 — M0 Bootstrap"
+                    <TextBlock Text="v0.1.0 — M3 UX polish"
                                FontSize="11"
                                Margin="0,2,0,0"
                                Opacity="0.6" />
                 </StackPanel>
+
+                <!-- Log viewer toggle at the bottom of the nav rail -->
+                <Button DockPanel.Dock="Bottom"
+                        Command="{Binding ToggleLogViewerCommand}"
+                        HorizontalAlignment="Stretch"
+                        HorizontalContentAlignment="Left"
+                        Margin="12,4,12,16"
+                        Padding="12,8">
+                    <StackPanel Orientation="Horizontal" Spacing="10">
+                        <TextBlock Text="&#xE9F9;"
+                                   FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets"
+                                   FontSize="16"
+                                   VerticalAlignment="Center" />
+                        <TextBlock Text="{Binding Localization[Nav_LogViewer]}"
+                                   VerticalAlignment="Center" />
+                    </StackPanel>
+                </Button>
 
                 <ListBox ItemsSource="{Binding NavItems}"
                          SelectedItem="{Binding SelectedNavItem, Mode=TwoWay}"
@@ -59,7 +81,7 @@
                          BorderThickness="0"
                          Margin="8,8,8,8">
                     <ListBox.ItemTemplate>
-                        <DataTemplate DataType="nav:NavItem">
+                        <DataTemplate DataType="nav:NavItemViewModel">
                             <Grid ColumnDefinitions="32,*" Height="40">
                                 <TextBlock Grid.Column="0"
                                            Text="{Binding IconGlyph}"
@@ -68,7 +90,7 @@
                                            VerticalAlignment="Center"
                                            HorizontalAlignment="Center" />
                                 <TextBlock Grid.Column="1"
-                                           Text="{Binding Key}"
+                                           Text="{Binding Label}"
                                            VerticalAlignment="Center" />
                             </Grid>
                         </DataTemplate>
@@ -83,5 +105,22 @@
                         Margin="0" />
 
     </Grid>
+
+    <!-- Log viewer drawer — overlays the right 400px when toggled. -->
+    <views:LogViewerView Width="400"
+                         HorizontalAlignment="Right"
+                         DataContext="{Binding LogViewer}"
+                         IsVisible="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).IsLogViewerVisible}" />
+
+    <!-- Toast overlay — anchored bottom-right, floats over the content grid.
+         Under RTL FlowDirection Avalonia automatically mirrors Right/Left edges,
+         so this ends up bottom-left for ar-SA etc. -->
+    <controls:ToastHost ItemsSource="{Binding Toasts}"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Bottom"
+                        Margin="0,0,20,20"
+                        IsHitTestVisible="True" />
+
+    </Panel>
 
 </Window>

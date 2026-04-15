@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="xml:space" type="xsd:string" msdata:Ordinal="4" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+
+  <!-- Navigation -->
+  <data name="Nav_Dashboard" xml:space="preserve"><value>لوحة التحكم</value></data>
+  <data name="Nav_Update" xml:space="preserve"><value>تحديث</value></data>
+  <data name="Nav_Settings" xml:space="preserve"><value>الإعدادات</value></data>
+  <data name="Nav_About" xml:space="preserve"><value>حول</value></data>
+  <data name="Nav_LogViewer" xml:space="preserve"><value>السجل</value></data>
+
+  <!-- Dashboard -->
+  <data name="Dashboard_Title" xml:space="preserve"><value>لوحة التحكم</value></data>
+  <data name="Dashboard_Subtitle" xml:space="preserve"><value>اختر هدفًا وقم بالتفعيل — اضغط على مفتاح الاختصار للالتقاط.</value></data>
+  <data name="Dashboard_Refresh" xml:space="preserve"><value>تحديث</value></data>
+  <data name="Dashboard_Arm" xml:space="preserve"><value>تفعيل</value></data>
+  <data name="Dashboard_Disarm" xml:space="preserve"><value>إلغاء التفعيل</value></data>
+  <data name="Dashboard_StatusIdle" xml:space="preserve"><value>خامل — اختر هدفًا وقم بالتفعيل للبدء.</value></data>
+  <data name="Dashboard_StatusArmed" xml:space="preserve"><value>مفعل: اضغط {0} لالتقاط {1}.</value></data>
+  <data name="Dashboard_StatusCapturing" xml:space="preserve"><value>جاري التقاط {0}…</value></data>
+  <data name="Dashboard_StatusDisarmed" xml:space="preserve"><value>تم إلغاء التفعيل.</value></data>
+  <data name="Dashboard_StatusSaved" xml:space="preserve"><value>تم الحفظ: {0} ({1}x{2}، {3} مللي ثانية)</value></data>
+  <data name="Dashboard_StatusFailed" xml:space="preserve"><value>فشل الالتقاط ({0}): {1}</value></data>
+  <data name="Dashboard_TargetsCount" xml:space="preserve"><value>{0} هدف/أهداف متاح</value></data>
+  <data name="Dashboard_Loading" xml:space="preserve"><value>جاري التحميل…</value></data>
+  <data name="Dashboard_SteamBadge" xml:space="preserve"><value>STEAM</value></data>
+  <data name="Dashboard_SteamBadgeTooltip" xml:space="preserve"><value>لعبة Steam: {0} (AppId {1}). F12 متاح عبر Steam Overlay. بعض الألعاب المحمية بـ anti-cheat قد تمنع الالتقاط الخارجي.</value></data>
+
+  <!-- Settings -->
+  <data name="Settings_Title" xml:space="preserve"><value>الإعدادات</value></data>
+  <data name="Settings_Language" xml:space="preserve"><value>اللغة</value></data>
+  <data name="Settings_Theme" xml:space="preserve"><value>المظهر</value></data>
+  <data name="Settings_Hotkey" xml:space="preserve"><value>مفتاح اختصار الالتقاط</value></data>
+  <data name="Settings_HotkeyHint" xml:space="preserve"><value>افتراضي: Ctrl+Shift+F12. تحرير مفتاح الاختصار في المراحل القادمة.</value></data>
+  <data name="Settings_Format" xml:space="preserve"><value>التنسيق الافتراضي</value></data>
+  <data name="Settings_JpegQuality" xml:space="preserve"><value>جودة JPEG</value></data>
+  <data name="Settings_WebpQuality" xml:space="preserve"><value>جودة WebP</value></data>
+  <data name="Settings_OutputFolder" xml:space="preserve"><value>مجلد الإخراج</value></data>
+  <data name="Settings_OutputFolderDefault" xml:space="preserve"><value>(افتراضي: Pictures\CaptureImage)</value></data>
+  <data name="Settings_FileNameTemplate" xml:space="preserve"><value>قالب اسم الملف</value></data>
+  <data name="Settings_PreviewBeforeSave" xml:space="preserve"><value>معاينة كل التقاط قبل الحفظ</value></data>
+  <data name="Settings_MinimizeToTray" xml:space="preserve"><value>زر الإغلاق يصغر إلى علبة النظام</value></data>
+  <data name="Settings_SoundEnabled" xml:space="preserve"><value>تشغيل صوت الالتقاط</value></data>
+  <data name="Settings_Import" xml:space="preserve"><value>استيراد…</value></data>
+  <data name="Settings_Export" xml:space="preserve"><value>تصدير…</value></data>
+  <data name="Settings_OpenFile" xml:space="preserve"><value>فتح ملف الإعدادات</value></data>
+
+  <!-- Update -->
+  <data name="Update_Title" xml:space="preserve"><value>تحديث</value></data>
+  <data name="Update_Placeholder" xml:space="preserve"><value>التحديث — سيتم دمج Velopack في M4.</value></data>
+
+  <!-- About -->
+  <data name="About_Title" xml:space="preserve"><value>حول</value></data>
+  <data name="About_AppLabel" xml:space="preserve"><value>التطبيق</value></data>
+  <data name="About_VersionLabel" xml:space="preserve"><value>الإصدار</value></data>
+  <data name="About_LicenseLabel" xml:space="preserve"><value>الترخيص</value></data>
+  <data name="About_Placeholder" xml:space="preserve"><value>حول — طرف ثالث، قانوني، مستندات في M4.</value></data>
+
+  <!-- Log viewer -->
+  <data name="Log_Title" xml:space="preserve"><value>السجل في الوقت الفعلي</value></data>
+  <data name="Log_Pause" xml:space="preserve"><value>إيقاف مؤقت</value></data>
+  <data name="Log_Resume" xml:space="preserve"><value>استئناف</value></data>
+  <data name="Log_Clear" xml:space="preserve"><value>مسح</value></data>
+  <data name="Log_Export" xml:space="preserve"><value>تصدير…</value></data>
+
+  <!-- Preview -->
+  <data name="Preview_Title" xml:space="preserve"><value>معاينة</value></data>
+  <data name="Preview_Prompt" xml:space="preserve"><value>حفظ هذا الالتقاط؟</value></data>
+  <data name="Preview_Save" xml:space="preserve"><value>حفظ</value></data>
+  <data name="Preview_Discard" xml:space="preserve"><value>تجاهل</value></data>
+
+  <!-- Toasts -->
+  <data name="Toast_CaptureSaved" xml:space="preserve"><value>تم حفظ الالتقاط</value></data>
+  <data name="Toast_CaptureFailed" xml:space="preserve"><value>فشل الالتقاط</value></data>
+  <data name="Toast_SettingsImported" xml:space="preserve"><value>تم استيراد الإعدادات</value></data>
+  <data name="Toast_SettingsExported" xml:space="preserve"><value>تم تصدير الإعدادات</value></data>
+
+  <!-- Tray menu -->
+  <data name="Tray_ShowWindow" xml:space="preserve"><value>عرض CaptureImage</value></data>
+  <data name="Tray_Arm" xml:space="preserve"><value>تفعيل الالتقاط</value></data>
+  <data name="Tray_Disarm" xml:space="preserve"><value>إلغاء تفعيل الالتقاط</value></data>
+  <data name="Tray_OpenFolder" xml:space="preserve"><value>فتح مجلد اللقطات</value></data>
+  <data name="Tray_Exit" xml:space="preserve"><value>خروج</value></data>
+
+</root>

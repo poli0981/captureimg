@@ -1,0 +1,72 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:CaptureImage.ViewModels.Logs;assembly=CaptureImage.ViewModels"
+             xmlns:models="clr-namespace:CaptureImage.Core.Models;assembly=CaptureImage.Core"
+             mc:Ignorable="d"
+             x:Class="CaptureImage.UI.Views.LogViewerView"
+             x:DataType="vm:LogViewerViewModel">
+
+    <Border Background="{DynamicResource SystemControlBackgroundChromeMediumBrush}"
+            BorderBrush="{DynamicResource SystemControlForegroundBaseLowBrush}"
+            BorderThickness="1,1,0,0"
+            CornerRadius="6,0,0,0"
+            Padding="12">
+        <Grid RowDefinitions="Auto,*">
+
+            <!-- Header + controls -->
+            <Grid Grid.Row="0" ColumnDefinitions="*,Auto,Auto,Auto" Margin="0,0,0,8">
+                <TextBlock Grid.Column="0"
+                           Text="{Binding Localization[Log_Title]}"
+                           FontSize="14"
+                           FontWeight="SemiBold"
+                           VerticalAlignment="Center" />
+                <Button Grid.Column="1"
+                        Command="{Binding TogglePauseCommand}"
+                        Content="{Binding Localization[Log_Pause]}"
+                        Margin="0,0,8,0" />
+                <Button Grid.Column="2"
+                        Command="{Binding ClearCommand}"
+                        Content="{Binding Localization[Log_Clear]}"
+                        Margin="0,0,8,0" />
+                <TextBlock Grid.Column="3"
+                           Text="{Binding Entries.Count, StringFormat='{}{0} events'}"
+                           Opacity="0.6"
+                           VerticalAlignment="Center" />
+            </Grid>
+
+            <!-- Entries list -->
+            <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+                <ItemsControl ItemsSource="{Binding Entries}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate DataType="models:LogEntry">
+                            <Grid ColumnDefinitions="Auto,Auto,*" Margin="0,1">
+                                <TextBlock Grid.Column="0"
+                                           Text="{Binding Timestamp, StringFormat='HH:mm:ss.fff'}"
+                                           FontFamily="Consolas, Courier New, monospace"
+                                           FontSize="11"
+                                           Opacity="0.6"
+                                           Margin="0,0,8,0" />
+                                <TextBlock Grid.Column="1"
+                                           Text="{Binding Level}"
+                                           FontFamily="Consolas, Courier New, monospace"
+                                           FontSize="11"
+                                           Width="45"
+                                           Margin="0,0,8,0" />
+                                <TextBlock Grid.Column="2"
+                                           Text="{Binding Message}"
+                                           FontFamily="Consolas, Courier New, monospace"
+                                           FontSize="11"
+                                           TextWrapping="NoWrap"
+                                           TextTrimming="CharacterEllipsis" />
+                            </Grid>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+
+        </Grid>
+    </Border>
+
+</UserControl>
