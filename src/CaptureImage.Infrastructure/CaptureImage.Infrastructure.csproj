@@ -27,6 +27,8 @@
     <PackageReference Include="SharpHook" />
     <PackageReference Include="Vortice.Direct3D11" />
     <PackageReference Include="Vortice.DXGI" />
+    <PackageReference Include="SkiaSharp" />
+    <PackageReference Include="SkiaSharp.NativeAssets.Win32" />
     <PackageReference Include="SixLabors.ImageSharp" />
     <PackageReference Include="Velopack" />
   </ItemGroup>

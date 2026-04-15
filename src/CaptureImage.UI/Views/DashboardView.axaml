@@ -12,13 +12,13 @@
         <conv:BytesToBitmapConverter x:Key="BytesToBitmap" />
     </UserControl.Resources>
 
-    <Grid RowDefinitions="Auto,*,Auto" Margin="24,16,24,16">
+    <Grid RowDefinitions="Auto,*,Auto,Auto" Margin="24,16,24,16">
 
         <!-- Header -->
-        <Grid Grid.Row="0" ColumnDefinitions="*,Auto" Margin="0,0,0,12">
+        <Grid Grid.Row="0" ColumnDefinitions="*,Auto,Auto,Auto" Margin="0,0,0,12">
             <StackPanel Grid.Column="0" Orientation="Vertical">
                 <TextBlock Text="Dashboard" FontSize="24" FontWeight="SemiBold" />
-                <TextBlock Text="Select a running game/app to arm capture."
+                <TextBlock Text="Select a target and arm — press the hotkey to capture."
                            Opacity="0.6" FontSize="12" Margin="0,2,0,0" />
             </StackPanel>
 
@@ -26,6 +26,21 @@
                     Content="Refresh"
                     Command="{Binding RefreshCommand}"
                     IsEnabled="{Binding !IsLoading}"
+                    VerticalAlignment="Center"
+                    Margin="0,0,8,0" />
+
+            <Button Grid.Column="2"
+                    Content="Arm"
+                    Command="{Binding ArmCommand}"
+                    IsVisible="{Binding !IsArmed}"
+                    VerticalAlignment="Center"
+                    Classes="accent"
+                    Margin="0,0,8,0" />
+
+            <Button Grid.Column="3"
+                    Content="Disarm"
+                    Command="{Binding DisarmCommand}"
+                    IsVisible="{Binding IsArmed}"
                     VerticalAlignment="Center" />
         </Grid>
 
@@ -42,13 +57,11 @@
                 <ListBox.ItemTemplate>
                     <DataTemplate DataType="vm:GameTargetViewModel">
                         <Grid ColumnDefinitions="32,*,Auto" Height="40" Margin="4,2">
-                            <!-- Icon -->
                             <Image Grid.Column="0"
                                    Source="{Binding IconBytes, Converter={StaticResource BytesToBitmap}}"
                                    Width="24" Height="24"
                                    VerticalAlignment="Center" />
 
-                            <!-- Name + process -->
                             <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="8,0,0,0">
                                 <TextBlock Text="{Binding DisplayName}"
                                            FontWeight="SemiBold"
@@ -59,7 +72,6 @@
                                            TextTrimming="CharacterEllipsis" />
                             </StackPanel>
 
-                            <!-- Steam warning badge -->
                             <Border Grid.Column="2"
                                     IsVisible="{Binding IsSteamGame}"
                                     Background="#FF6B35"
@@ -78,8 +90,34 @@
             </ListBox>
         </Border>
 
+        <!-- Armed / capture state -->
+        <Border Grid.Row="2"
+                Margin="0,12,0,0"
+                Padding="12,8"
+                CornerRadius="4"
+                BorderThickness="1"
+                BorderBrush="{DynamicResource SystemControlForegroundBaseLowBrush}">
+            <Grid ColumnDefinitions="Auto,*">
+                <Grid Grid.Column="0" Width="10" Height="10" VerticalAlignment="Center" Margin="0,0,12,0">
+                    <!-- Idle dot (gray) -->
+                    <Border CornerRadius="5" Background="Gray"
+                            IsVisible="{Binding !IsArmed}" />
+                    <!-- Armed dot (green) — hidden while capturing -->
+                    <Border CornerRadius="5" Background="#3CB371"
+                            IsVisible="{Binding IsArmed}" />
+                    <!-- Capturing dot (orange) overlays when capture in progress -->
+                    <Border CornerRadius="5" Background="#FFA500"
+                            IsVisible="{Binding IsCapturing}" />
+                </Grid>
+                <TextBlock Grid.Column="1"
+                           Text="{Binding StatusMessage}"
+                           VerticalAlignment="Center"
+                           TextTrimming="CharacterEllipsis" />
+            </Grid>
+        </Border>
+
         <!-- Status bar -->
-        <Grid Grid.Row="2" ColumnDefinitions="*,Auto" Margin="0,12,0,0">
+        <Grid Grid.Row="3" ColumnDefinitions="*,Auto" Margin="0,8,0,0">
             <TextBlock Grid.Column="0"
                        Text="{Binding Targets.Count, StringFormat='{}{0} target(s) visible'}"
                        Opacity="0.6"

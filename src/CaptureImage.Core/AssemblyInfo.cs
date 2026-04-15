@@ -1,5 +1,7 @@
-// Marker file to ensure the Core assembly builds.
-// Real types will land in Abstractions/, Models/, StateMachine/, Pipeline/, Errors/ as M1+ progresses.
+using System.Runtime.CompilerServices;
+
+// Expose internal helpers (e.g. FileNameStrategy.ExpandTokens / Sanitize) to the test assembly.
+[assembly: InternalsVisibleTo("CaptureImage.Core.Tests")]
 
 namespace CaptureImage.Core;
 

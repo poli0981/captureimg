@@ -1,6 +1,10 @@
 using System;
 using System.IO.Abstractions;
 using CaptureImage.Core.Abstractions;
+using CaptureImage.Core.Pipeline;
+using CaptureImage.Infrastructure.Capture;
+using CaptureImage.Infrastructure.Hotkeys;
+using CaptureImage.Infrastructure.Imaging;
 using CaptureImage.Infrastructure.Processes;
 using CaptureImage.Infrastructure.Steam;
 using CaptureImage.UI.Services;
@@ -26,7 +30,7 @@ internal static class CompositionRoot
     {
         var services = new ServiceCollection();
 
-        // Logging: route Microsoft.Extensions.Logging through Serilog
+        // --- Logging ------------------------------------------------------------
         services.AddLogging(builder =>
         {
             builder.ClearProviders();
@@ -48,12 +52,23 @@ internal static class CompositionRoot
         services.AddSingleton<IProcessDetector, GameDetector>();
         services.AddSingleton<IProcessWatcher, WmiProcessWatcher>();
 
+        // --- Capture engine + encoders -----------------------------------------
+        services.AddSingleton<D3D11DeviceManager>();
+        services.AddSingleton<ICaptureEngine, WindowsGraphicsCaptureEngine>();
+        services.AddSingleton<PrintWindowFallback>();
+        services.AddSingleton<IImageEncoder, SkiaImageEncoder>();
+        services.AddSingleton<IImageEncoder, ImageSharpTiffEncoder>();
+        services.AddSingleton<FileNameStrategy>(_ =>
+            new FileNameStrategy(System.IO.File.Exists));
+        services.AddSingleton<CaptureOrchestrator>();
+
+        // --- Hotkeys -----------------------------------------------------------
+        services.AddSingleton<IHotkeyService, SharpHookHotkeyService>();
+
         // --- Navigation --------------------------------------------------------
         services.AddSingleton<INavigationService, NavigationService>();
 
         // --- View models -------------------------------------------------------
-        // Singleton so tab state (selection, loaded lists, log buffer) survives nav switches
-        // and so IDisposable children are disposed exactly once with the provider.
         services.AddSingleton<MainWindowViewModel>();
         services.AddSingleton<DashboardViewModel>();
         services.AddSingleton<UpdateViewModel>();

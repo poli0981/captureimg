@@ -96,6 +96,10 @@ public sealed class WindowEnumerator
     /// Resolve the absolute executable path for <paramref name="processId"/>, or empty string
     /// if access is denied or the process has already exited.
     /// </summary>
+    /// <remarks>
+    /// Access-denied failures (elevated processes, Win32 error 5) are common and expected —
+    /// we log them without a stack trace to avoid flooding the debug log on every refresh.
+    /// </remarks>
     public string TryGetExecutablePath(uint processId)
     {
         try
@@ -105,7 +109,8 @@ public sealed class WindowEnumerator
         }
         catch (Exception ex)
         {
-            _logger.LogDebug(ex, "Could not read executable path for PID {Pid}.", processId);
+            _logger.LogDebug("Could not read executable path for PID {Pid}: {Reason}.",
+                processId, ex.Message);
             return string.Empty;
         }
     }

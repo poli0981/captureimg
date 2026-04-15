@@ -62,7 +62,11 @@
     <PackageVersion Include="System.IO.Abstractions" Version="21.2.1" />
   </ItemGroup>
 
-  <ItemGroup Label="Imaging (TIFF only; SkiaSharp arrives via Avalonia)">
+  <ItemGroup Label="Imaging">
+    <!-- Avalonia ships SkiaSharp transitively, but Infrastructure doesn't reference Avalonia
+         so we pin it explicitly here. Bumping deliberately to match Avalonia's choice. -->
+    <PackageVersion Include="SkiaSharp" Version="3.119.2" />
+    <PackageVersion Include="SkiaSharp.NativeAssets.Win32" Version="3.119.2" />
     <PackageVersion Include="SixLabors.ImageSharp" Version="3.1.12" />
   </ItemGroup>
 
