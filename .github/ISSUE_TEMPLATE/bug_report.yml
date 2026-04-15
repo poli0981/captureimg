@@ -1,0 +1,105 @@
+name: Bug report
+description: Something is broken, crashes, or produces wrong output.
+title: "[bug] "
+labels: ["bug", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report a bug. Please fill in every
+        field — bug reports missing environment or repro details usually
+        cannot be acted on.
+
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: One-sentence description of what's wrong.
+      placeholder: "Capturing Elden Ring produces an all-black PNG."
+    validations:
+      required: true
+
+  - type: textarea
+    id: repro
+    attributes:
+      label: Steps to reproduce
+      description: Numbered steps from a clean launch of CaptureImage.
+      placeholder: |
+        1. Start Elden Ring in borderless windowed mode.
+        2. Open CaptureImage and select "Elden Ring" from the Dashboard.
+        3. Click Arm, focus Elden Ring, press Ctrl+Shift+F12.
+        4. Observe the resulting PNG in Pictures\CaptureImage.
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+      placeholder: "The PNG should contain the game frame."
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+      placeholder: "The PNG is 1920x1080 but every pixel is (0,0,0,255)."
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: CaptureImage version
+      description: "See About tab. Example: `1.0.0`"
+      placeholder: "1.0.0"
+    validations:
+      required: true
+
+  - type: input
+    id: windows
+    attributes:
+      label: Windows version
+      description: "Run `winver` — example: `Windows 11 Pro 24H2 (26100.2454)`"
+    validations:
+      required: true
+
+  - type: input
+    id: gpu
+    attributes:
+      label: GPU + driver version
+      description: "Example: `RTX 4070 / NVIDIA 566.14`"
+
+  - type: dropdown
+    id: capture-api
+    attributes:
+      label: Which capture engine produced the bug?
+      options:
+        - "Windows.Graphics.Capture (primary)"
+        - "PrintWindow fallback"
+        - "Both"
+        - "Not sure"
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant log snippet
+      description: |
+        Paste the relevant window from `%LocalAppData%\CaptureImage\logs\captureimg-<date>.log`.
+        Please redact anything sensitive (window titles of other apps, file paths in your home).
+      render: text
+
+  - type: checkboxes
+    id: preflight
+    attributes:
+      label: Pre-flight checks
+      options:
+        - label: I have searched existing issues for a duplicate.
+          required: true
+        - label: I have read `docs/legal/DISCLAIMER.md §2` (capture limitations) and the bug is not an expected limitation.
+          required: true
+        - label: This is NOT a security vulnerability (those go through Security Advisories, not issues).
+          required: true

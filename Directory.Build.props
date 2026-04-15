@@ -17,11 +17,18 @@
     <!-- Assembly / product info -->
     <Product>CaptureImage</Product>
     <Company>CaptureImage Contributors</Company>
-    <Copyright>Copyright (c) CaptureImage Contributors. Licensed under GPL-3.0.</Copyright>
-    <Version>0.1.0</Version>
-    <AssemblyVersion>0.1.0.0</AssemblyVersion>
-    <FileVersion>0.1.0.0</FileVersion>
+    <Authors>poli0981 and contributors</Authors>
+    <Copyright>Copyright (c) CaptureImage Contributors. Licensed under GPL-3.0-or-later.</Copyright>
+    <Version>1.0.0</Version>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <FileVersion>1.0.0.0</FileVersion>
     <NeutralLanguage>en</NeutralLanguage>
+
+    <!-- Repository metadata — lands in the assembly manifest and the About tab. -->
+    <RepositoryUrl>https://github.com/poli0981/captureimg</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageProjectUrl>https://github.com/poli0981/captureimg</PackageProjectUrl>
+    <PackageLicenseExpression>GPL-3.0-or-later</PackageLicenseExpression>
 
     <!-- Repo-wide suppressions -->
     <NoWarn>$(NoWarn);CA1014;CS1591</NoWarn>

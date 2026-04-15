@@ -7,6 +7,56 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### M5 — Release infrastructure (1.0.0 cut)
+
+Everything you need to actually ship the binary. No new product features;
+this milestone is the build system, CI/CD, and the docs you read before
+clicking Run.
+
+- **GitHub Actions CI** (`.github/workflows/ci.yml`): builds + tests the
+  solution on `windows-latest` on every PR and push to `main`. Treats
+  nullable warnings as errors; uploads `.trx` test results as artifacts.
+- **Release workflow** (`.github/workflows/release.yml`): tag-triggered
+  (`v*` pattern). Runs the full test suite, `dotnet publish` single-file
+  self-contained for `win-x64`, `vpk pack` via the Velopack CLI,
+  computes `SHA256SUMS.txt`, uploads everything to a GitHub Release
+  with auto-generated release notes. Also supports `workflow_dispatch`
+  with a manual version input for emergency reruns.
+- **Issue + PR templates**: `bug_report.yml` (with repro, environment,
+  capture-engine dropdown, preflight checks), `feature_request.yml`
+  (use case first, scope picker), `config.yml` routing security reports
+  to Security Advisories. PR template covers testing, AI assistance
+  disclosure, and contribution checklist.
+- **Dependabot**: weekly NuGet + GitHub Actions bumps, with Avalonia,
+  Microsoft.Extensions, Serilog, and test-tooling grouped to avoid PR
+  spam.
+- **SECURITY.md**: private disclosure process via GitHub Security
+  Advisories, supported versions, scope (RCE, privilege escalation,
+  target-selection bypass, Velopack supply chain), out-of-scope (game
+  incompatibility, unsigned-installer SmartScreen, etc.), supply-chain
+  dependency note.
+- **`docs/RELEASING.md`**: step-by-step tag flow, failure recovery,
+  post-release verification checklist, detailed unsigned-installer
+  section (SignPath was declined — documented how to verify via SHA256
+  and what to do when signing becomes available later), manual
+  fallback steps, version policy.
+- **README.md**: full rewrite with CI / release / license / .NET 9
+  badges, feature list, screenshots placeholder, system requirements,
+  install instructions with SmartScreen warning, usage walkthrough,
+  build-from-source steps, repository layout, contributing pointer,
+  security pointer, AI assistance disclosure.
+- **`docs/legal/DISCLAIMER.md §7`**: new section documenting the
+  unsigned installer state, how to verify via SHA256, and the SignPath
+  application rejection context.
+- **`.gitattributes`**: normalize line endings, declare text vs binary
+  for every file type we ship, silence the "CRLF will be replaced"
+  warning on commit.
+- **`Directory.Build.props`**: version bumped to `1.0.0` (from `0.1.0`).
+  Added `Authors`, `RepositoryUrl`, `RepositoryType`, `PackageProjectUrl`,
+  `PackageLicenseExpression` so the assembly manifest and the About tab
+  can report accurate metadata. Copyright updated to reference
+  GPL-3.0-or-later explicitly.
+
 ### M4 — Auto-update, About tab, legal docs
 
 Velopack-powered self-update, a full About tab, and the first cut of the

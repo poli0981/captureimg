@@ -1,0 +1,45 @@
+# Normalize line endings for all text files — Git stores LF internally and
+# checks out CRLF on Windows automatically for *.cs / *.csproj / *.md / etc.
+# This avoids the "CRLF will be replaced by LF" warning on every commit.
+* text=auto
+
+# Files that must stay LF regardless of platform.
+*.sh          text eol=lf
+*.yml         text eol=lf
+*.yaml        text eol=lf
+Dockerfile    text eol=lf
+*.gitattributes text eol=lf
+*.gitignore   text eol=lf
+
+# Files that must stay CRLF (Windows scripts).
+*.bat         text eol=crlf
+*.cmd         text eol=crlf
+*.ps1         text eol=crlf
+
+# Source / config files — auto is fine but declaring explicit makes intent obvious.
+*.cs          text diff=csharp
+*.csproj      text
+*.sln         text
+*.props       text
+*.targets     text
+*.json        text
+*.xml         text
+*.config      text
+*.resx        text
+*.axaml       text
+
+# Binaries — never touch.
+*.dll         binary
+*.pdb         binary
+*.exe         binary
+*.so          binary
+*.dylib       binary
+*.png         binary
+*.jpg         binary
+*.jpeg        binary
+*.webp        binary
+*.tiff        binary
+*.ico         binary
+*.nupkg       binary
+*.snupkg      binary
+*.zip         binary

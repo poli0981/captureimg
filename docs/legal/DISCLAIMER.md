@@ -126,3 +126,32 @@ you need legal certainty about your use of CaptureImage — for example
 because you intend to redistribute it, bundle it with another product, or
 integrate it into a commercial offering — consult a qualified attorney in
 your jurisdiction.
+
+## 7. Unsigned installer — SmartScreen warning
+
+Until a code-signing certificate is available, the installer (`Setup.exe`
+produced by Velopack) is **not Authenticode-signed**. Windows SmartScreen
+will show the "Unknown publisher" warning on first run:
+
+> Windows protected your PC · Microsoft Defender SmartScreen prevented
+> an unrecognized app from starting.
+
+This is expected, not a sign that the binary has been tampered with. To
+verify the download is authentic:
+
+1. Download `SHA256SUMS.txt` from the same GitHub Release page.
+2. Compute the hash of your downloaded `Setup.exe`:
+   ```powershell
+   Get-FileHash -Algorithm SHA256 .\Setup.exe
+   ```
+3. Compare the output against the entry in `SHA256SUMS.txt`.
+
+Only then click **More info** → **Run anyway** in SmartScreen. If the
+hashes do not match, **do not run the installer** and report the
+discrepancy via a GitHub Security Advisory.
+
+The project's application to <https://signpath.io> (free OSS code
+signing) was declined in the first round. Until it is accepted or an
+alternative signing path becomes available, every release ships under
+these terms. Re-signing old releases is not planned — each release is
+the authoritative artifact at its point in time.

@@ -1,0 +1,51 @@
+version: 2
+
+updates:
+  # NuGet — the actual runtime + build dependencies. Weekly cadence; grouped
+  # minor/patch bumps so we don't get a PR per package when .NET rolls.
+  - package-ecosystem: nuget
+    directory: "/"
+    schedule:
+      interval: weekly
+      day: monday
+      time: "07:00"
+      timezone: Asia/Ho_Chi_Minh
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: "chore(deps)"
+      include: scope
+    labels:
+      - dependencies
+    groups:
+      avalonia:
+        patterns:
+          - "Avalonia*"
+      microsoft-extensions:
+        patterns:
+          - "Microsoft.Extensions.*"
+      serilog:
+        patterns:
+          - "Serilog*"
+      test-tooling:
+        patterns:
+          - "xunit*"
+          - "FluentAssertions"
+          - "NSubstitute"
+          - "Microsoft.NET.Test.Sdk"
+          - "coverlet.*"
+
+  # GitHub Actions workflow files themselves. Dependabot bumps action
+  # versions when upstream releases.
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: weekly
+      day: monday
+      time: "07:00"
+      timezone: Asia/Ho_Chi_Minh
+    open-pull-requests-limit: 3
+    commit-message:
+      prefix: "chore(ci)"
+    labels:
+      - dependencies
+      - ci

@@ -1,0 +1,55 @@
+name: CI
+
+# Build + test CaptureImage on every push to main and every pull request.
+# Runs on windows-latest because the Infrastructure project targets
+# net9.0-windows10.0.22621.0 and the WGC integration tests require a real
+# desktop session with Windows 11 22H2 SDK.
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+# Cancel in-progress runs for the same ref when a new commit lands.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-test:
+    runs-on: windows-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # full history so MinVer / git describe works later
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          # Honor global.json; avoids drift between local + CI.
+          global-json-file: global.json
+
+      - name: Print .NET version
+        run: dotnet --info
+
+      - name: Restore
+        run: dotnet restore CaptureImage.sln
+
+      - name: Build (Release, no restore)
+        run: dotnet build CaptureImage.sln -c Release --no-restore /p:TreatWarningsAsErrors=true /p:WarningsAsErrors=nullable
+
+      - name: Test
+        run: dotnet test CaptureImage.sln -c Release --no-build --logger "trx;LogFileName=test-results.trx" --results-directory ./TestResults
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: ./TestResults/**/*.trx
+          retention-days: 14
