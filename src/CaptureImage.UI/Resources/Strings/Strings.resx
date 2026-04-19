@@ -60,7 +60,16 @@
   <data name="Settings_Language" xml:space="preserve"><value>Language</value></data>
   <data name="Settings_Theme" xml:space="preserve"><value>Theme</value></data>
   <data name="Settings_Hotkey" xml:space="preserve"><value>Capture hotkey</value></data>
-  <data name="Settings_HotkeyHint" xml:space="preserve"><value>Default: Ctrl+Shift+F12. Hotkey editing lands in a future milestone.</value></data>
+  <data name="Settings_HotkeyHint" xml:space="preserve"><value>Click Record and press a combination. Esc cancels. Reset restores Ctrl+Shift+F12.</value></data>
+  <data name="Settings_HotkeyRecord" xml:space="preserve"><value>Record…</value></data>
+  <data name="Settings_HotkeyCancel" xml:space="preserve"><value>Cancel</value></data>
+  <data name="Settings_HotkeyReset" xml:space="preserve"><value>Reset</value></data>
+  <data name="Settings_HotkeyRecorderPrompt" xml:space="preserve"><value>Press a key combination (Esc to cancel)…</value></data>
+  <data name="Settings_HotkeyErrorNoPrimary" xml:space="preserve"><value>Select a primary key (e.g. a letter or an F-key).</value></data>
+  <data name="Settings_HotkeyErrorModifierOnly" xml:space="preserve"><value>A modifier key alone isn't enough — add a letter or an F-key.</value></data>
+  <data name="Settings_HotkeyErrorNeedsModifier" xml:space="preserve"><value>Plain letters and digits need at least one modifier (Ctrl/Alt/Shift/Win).</value></data>
+  <data name="Settings_HotkeyErrorReserved" xml:space="preserve"><value>This combination is reserved by Windows and cannot be captured.</value></data>
+  <data name="Settings_HotkeyConflictWarning" xml:space="preserve"><value>Another application may already own this combination — it might not fire while that app is running.</value></data>
   <data name="Settings_Format" xml:space="preserve"><value>Default format</value></data>
   <data name="Settings_JpegQuality" xml:space="preserve"><value>JPEG quality</value></data>
   <data name="Settings_WebpQuality" xml:space="preserve"><value>WebP quality</value></data>

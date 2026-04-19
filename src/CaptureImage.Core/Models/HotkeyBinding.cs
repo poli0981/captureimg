@@ -2,8 +2,28 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using CaptureImage.Core.Validation;
 
 namespace CaptureImage.Core.Models;
+
+/// <summary>
+/// Outcome of <see cref="HotkeyBinding.Validate"/>. UI inspects this to render the right
+/// error or warning string; persistence layer only persists bindings whose result is
+/// <see cref="Ok"/>.
+/// </summary>
+public enum HotkeyValidationResult
+{
+    /// <summary>Binding is acceptable for use.</summary>
+    Ok,
+    /// <summary>No primary (non-modifier) key — e.g. only Ctrl pressed.</summary>
+    NoPrimaryKey,
+    /// <summary><see cref="HotkeyBinding.VirtualKey"/> is itself a modifier VK (Shift/Ctrl/Alt/Win).</summary>
+    ModifierOnlyKey,
+    /// <summary>Plain letter/digit without any modifier — too easy to trigger while typing.</summary>
+    RequiresModifier,
+    /// <summary>Combination is owned by the Windows shell (<see cref="ReservedHotkeys"/>).</summary>
+    ReservedByWindows,
+}
 
 /// <summary>
 /// Modifier flags for a global hotkey. Values match the common Win32 MOD_* constants
@@ -45,6 +65,41 @@ public readonly record struct HotkeyBinding(HotkeyModifiers Modifiers, uint Virt
     /// <summary>The default binding shipped to users on first run: <c>Ctrl+Shift+F12</c>.</summary>
     public static HotkeyBinding Default =>
         new(HotkeyModifiers.Control | HotkeyModifiers.Shift, 0x7B); // VK_F12 = 0x7B
+
+    /// <summary>
+    /// Classify this binding for use in the UI rebinder. See <see cref="HotkeyValidationResult"/>
+    /// for possible outcomes. Pure function — does not touch Windows state.
+    /// </summary>
+    public HotkeyValidationResult Validate()
+    {
+        if (VirtualKey == 0)
+            return HotkeyValidationResult.NoPrimaryKey;
+
+        if (IsModifierVk(VirtualKey))
+            return HotkeyValidationResult.ModifierOnlyKey;
+
+        if (Modifiers == HotkeyModifiers.None && !IsFunctionOrSpecial(VirtualKey))
+            return HotkeyValidationResult.RequiresModifier;
+
+        if (ReservedHotkeys.IsReserved(this))
+            return HotkeyValidationResult.ReservedByWindows;
+
+        return HotkeyValidationResult.Ok;
+    }
+
+    /// <summary>True when <see cref="Validate"/> returns <see cref="HotkeyValidationResult.Ok"/>.</summary>
+    public bool IsValid() => Validate() == HotkeyValidationResult.Ok;
+
+    private static bool IsModifierVk(uint vk) => vk is
+        0x10 or 0x11 or 0x12 or            // VK_SHIFT, VK_CONTROL, VK_MENU (Alt)
+        0x5B or 0x5C or                    // VK_LWIN, VK_RWIN
+        0xA0 or 0xA1 or                    // VK_LSHIFT, VK_RSHIFT
+        0xA2 or 0xA3 or                    // VK_LCONTROL, VK_RCONTROL
+        0xA4 or 0xA5;                      // VK_LMENU,   VK_RMENU
+
+    private static bool IsFunctionOrSpecial(uint vk) =>
+        (vk >= 0x70 && vk <= 0x87) ||      // F1..F24
+        vk == 0x2C;                        // VK_SNAPSHOT (PrintScreen)
 
     /// <summary>
     /// Short display name for a VK code. Only covers the keys we care about; unknown codes

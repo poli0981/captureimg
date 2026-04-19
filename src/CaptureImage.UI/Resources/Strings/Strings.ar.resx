@@ -60,7 +60,16 @@
   <data name="Settings_Language" xml:space="preserve"><value>اللغة</value></data>
   <data name="Settings_Theme" xml:space="preserve"><value>المظهر</value></data>
   <data name="Settings_Hotkey" xml:space="preserve"><value>مفتاح اختصار الالتقاط</value></data>
-  <data name="Settings_HotkeyHint" xml:space="preserve"><value>افتراضي: Ctrl+Shift+F12. تحرير مفتاح الاختصار في المراحل القادمة.</value></data>
+  <data name="Settings_HotkeyHint" xml:space="preserve"><value>انقر تسجيل ثم اضغط على مجموعة مفاتيح. Esc للإلغاء. إعادة التعيين تستعيد Ctrl+Shift+F12.</value></data>
+  <data name="Settings_HotkeyRecord" xml:space="preserve"><value>تسجيل…</value></data>
+  <data name="Settings_HotkeyCancel" xml:space="preserve"><value>إلغاء</value></data>
+  <data name="Settings_HotkeyReset" xml:space="preserve"><value>إعادة تعيين</value></data>
+  <data name="Settings_HotkeyRecorderPrompt" xml:space="preserve"><value>اضغط على مجموعة مفاتيح (Esc للإلغاء)…</value></data>
+  <data name="Settings_HotkeyErrorNoPrimary" xml:space="preserve"><value>حدد مفتاحًا رئيسيًا (مثل حرف أو مفتاح F).</value></data>
+  <data name="Settings_HotkeyErrorModifierOnly" xml:space="preserve"><value>مفتاح التعديل وحده غير كافٍ — أضف حرفًا أو مفتاح F.</value></data>
+  <data name="Settings_HotkeyErrorNeedsModifier" xml:space="preserve"><value>الحروف والأرقام العادية تحتاج إلى مفتاح تعديل واحد على الأقل (Ctrl/Alt/Shift/Win).</value></data>
+  <data name="Settings_HotkeyErrorReserved" xml:space="preserve"><value>هذه المجموعة محجوزة من قبل Windows ولا يمكن التقاطها.</value></data>
+  <data name="Settings_HotkeyConflictWarning" xml:space="preserve"><value>قد يستخدم تطبيق آخر هذه المجموعة بالفعل — قد لا تعمل أثناء تشغيل ذلك التطبيق.</value></data>
   <data name="Settings_Format" xml:space="preserve"><value>التنسيق الافتراضي</value></data>
   <data name="Settings_JpegQuality" xml:space="preserve"><value>جودة JPEG</value></data>
   <data name="Settings_WebpQuality" xml:space="preserve"><value>جودة WebP</value></data>

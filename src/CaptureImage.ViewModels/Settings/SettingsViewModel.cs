@@ -25,6 +25,9 @@ public sealed partial class SettingsViewModel : ViewModelBase
 
     public ILocalizationService Localization { get; }
 
+    /// <summary>Child VM driving the Settings → Capture hotkey recorder.</summary>
+    public HotkeyBindingViewModel Hotkey { get; }
+
     public ObservableCollection<CultureInfo> SupportedCultures { get; }
 
     public ObservableCollection<ImageFormat> SupportedFormats { get; } =
@@ -63,12 +66,14 @@ public sealed partial class SettingsViewModel : ViewModelBase
         ISettingsStore settings,
         ILocalizationService localization,
         IToastService toasts,
+        HotkeyBindingViewModel hotkey,
         ILogger<SettingsViewModel> logger)
     {
         _settings = settings;
         _toasts = toasts;
         _logger = logger;
         Localization = localization;
+        Hotkey = hotkey;
 
         SupportedCultures = new ObservableCollection<CultureInfo>(localization.SupportedCultures);
         _selectedCulture = FindCulture(settings.Current.Culture) ?? SupportedCultures[0];
