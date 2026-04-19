@@ -53,10 +53,15 @@ tray app, and stays out of your way until you press the hotkey.
 
 ## Screenshots
 
-<!-- Screenshots land here once the maintainer captures them. The app
-     generates its own screenshots — yes, we eat our own dog food. -->
+Captured with CaptureImage itself — yes, we eat our own dog food.
 
-_(coming with the first tagged release)_
+| Dashboard | Settings | About |
+|:-:|:-:|:-:|
+| ![Dashboard — target list with Steam badge](docs/screenshots/dashboard.png) | ![Settings — hotkey recorder + format + language](docs/screenshots/settings.png) | ![About — version, licenses, legal docs](docs/screenshots/about.png) |
+
+| Update | Log viewer | RTL (Arabic) |
+|:-:|:-:|:-:|
+| ![Update — Velopack check / download / install with live log](docs/screenshots/update.png) | ![Log viewer — live Serilog ring buffer](docs/screenshots/logviewer.png) | ![RTL — dashboard mirrored for Arabic culture](docs/screenshots/rtl-dashboard.png) |
 
 ## Requirements
 
@@ -154,6 +159,13 @@ docs/
     TERMS.md                   Plain-language restatement of GPL-3.0 obligations.
     THIRD_PARTY_NOTICES.md     Full dependency list + licenses.
 ```
+
+## Architecture
+
+See [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) for a one-page-per-layer
+tour — layer rules, state-machine diagram, WGC capture pipeline sequence,
+DI composition sketch, i18n + RTL flow, and Velopack update flow (all with
+Mermaid diagrams rendered inline on GitHub).
 
 ## Contributing
 
