@@ -3,6 +3,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="clr-namespace:CaptureImage.ViewModels.Settings;assembly=CaptureImage.ViewModels"
+             xmlns:ctrl="clr-namespace:CaptureImage.UI.Controls"
              xmlns:sys="clr-namespace:System.Globalization;assembly=System.Runtime"
              xmlns:models="clr-namespace:CaptureImage.Core.Models;assembly=CaptureImage.Core"
              mc:Ignorable="d"
@@ -31,7 +32,7 @@
             <!-- Hotkey -->
             <StackPanel Spacing="4">
                 <TextBlock Text="{Binding Localization[Settings_Hotkey]}" Opacity="0.7" FontSize="12" />
-                <TextBlock Text="Ctrl+Shift+F12" FontFamily="Consolas, Courier New, monospace" />
+                <ctrl:HotkeyRecorder DataContext="{Binding Hotkey}" />
                 <TextBlock Text="{Binding Localization[Settings_HotkeyHint]}" FontSize="11" Opacity="0.5" />
             </StackPanel>
 

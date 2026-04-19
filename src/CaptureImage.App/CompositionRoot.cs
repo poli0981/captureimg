@@ -78,6 +78,7 @@ internal static class CompositionRoot
 
         // --- Hotkeys -----------------------------------------------------------
         services.AddSingleton<IHotkeyService, SharpHookHotkeyService>();
+        services.AddSingleton<IHotkeyConflictSniffer, HotkeyConflictSniffer>();
 
         // --- Updates -----------------------------------------------------------
         services.AddSingleton<IUpdateService, VelopackUpdateService>();
@@ -94,6 +95,7 @@ internal static class CompositionRoot
         services.AddSingleton<MainWindowViewModel>();
         services.AddSingleton<DashboardViewModel>();
         services.AddSingleton<UpdateViewModel>();
+        services.AddSingleton<HotkeyBindingViewModel>();
         services.AddSingleton<SettingsViewModel>();
         services.AddSingleton<AboutViewModel>();
         services.AddSingleton<LogViewerViewModel>();

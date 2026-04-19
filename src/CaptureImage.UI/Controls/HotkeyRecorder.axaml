@@ -1,0 +1,74 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:CaptureImage.ViewModels.Settings;assembly=CaptureImage.ViewModels"
+             mc:Ignorable="d"
+             x:Class="CaptureImage.UI.Controls.HotkeyRecorder"
+             x:DataType="vm:HotkeyBindingViewModel">
+
+    <StackPanel Spacing="6">
+
+        <Grid ColumnDefinitions="*,8,Auto,8,Auto">
+
+            <!-- The keyboard-focused surface. Receives KeyDown events while recording; shows the
+                 current binding while idle. Focused programmatically from code-behind when
+                 IsRecording flips to true. -->
+            <Border Grid.Column="0"
+                    Name="BindingField"
+                    Focusable="True"
+                    MinHeight="34"
+                    CornerRadius="4"
+                    Padding="10,6"
+                    BorderThickness="1"
+                    BorderBrush="{DynamicResource SystemControlForegroundBaseMediumLowBrush}"
+                    Background="{DynamicResource SystemControlBackgroundChromeMediumLowBrush}"
+                    VerticalAlignment="Center">
+                <Grid>
+                    <TextBlock Text="{Binding DisplayText}"
+                               FontFamily="Consolas, Courier New, monospace"
+                               VerticalAlignment="Center"
+                               IsVisible="{Binding !IsRecording}" />
+                    <TextBlock Text="{Binding Localization[Settings_HotkeyRecorderPrompt]}"
+                               Opacity="0.7"
+                               FontStyle="Italic"
+                               VerticalAlignment="Center"
+                               IsVisible="{Binding IsRecording}" />
+                </Grid>
+            </Border>
+
+            <Button Grid.Column="2"
+                    Content="{Binding Localization[Settings_HotkeyRecord]}"
+                    Command="{Binding StartRecordingCommand}"
+                    IsVisible="{Binding !IsRecording}"
+                    MinWidth="80" />
+            <Button Grid.Column="2"
+                    Content="{Binding Localization[Settings_HotkeyCancel]}"
+                    Command="{Binding CancelRecordingCommand}"
+                    IsVisible="{Binding IsRecording}"
+                    MinWidth="80" />
+
+            <Button Grid.Column="4"
+                    Content="{Binding Localization[Settings_HotkeyReset]}"
+                    Command="{Binding ResetToDefaultCommand}"
+                    IsVisible="{Binding !IsRecording}"
+                    MinWidth="80" />
+        </Grid>
+
+        <!-- Validation error — visible only after a rejected commit. -->
+        <TextBlock Text="{Binding ErrorMessage}"
+                   Foreground="#D13438"
+                   FontSize="11"
+                   TextWrapping="Wrap"
+                   IsVisible="{Binding HasError}" />
+
+        <!-- Conflict warning — non-blocking, binding already persisted. -->
+        <TextBlock Text="{Binding Localization[Settings_HotkeyConflictWarning]}"
+                   Foreground="#C19C00"
+                   FontSize="11"
+                   TextWrapping="Wrap"
+                   IsVisible="{Binding ConflictDetected}" />
+
+    </StackPanel>
+
+</UserControl>

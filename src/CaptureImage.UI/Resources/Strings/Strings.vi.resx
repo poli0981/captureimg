@@ -60,7 +60,16 @@
   <data name="Settings_Language" xml:space="preserve"><value>Ngôn ngữ</value></data>
   <data name="Settings_Theme" xml:space="preserve"><value>Giao diện</value></data>
   <data name="Settings_Hotkey" xml:space="preserve"><value>Hotkey chụp</value></data>
-  <data name="Settings_HotkeyHint" xml:space="preserve"><value>Mặc định: Ctrl+Shift+F12. Chỉnh sửa hotkey sẽ có trong milestone sau.</value></data>
+  <data name="Settings_HotkeyHint" xml:space="preserve"><value>Nhấn Ghi rồi nhấn tổ hợp phím. Esc để huỷ. Đặt lại sẽ khôi phục Ctrl+Shift+F12.</value></data>
+  <data name="Settings_HotkeyRecord" xml:space="preserve"><value>Ghi…</value></data>
+  <data name="Settings_HotkeyCancel" xml:space="preserve"><value>Huỷ</value></data>
+  <data name="Settings_HotkeyReset" xml:space="preserve"><value>Đặt lại</value></data>
+  <data name="Settings_HotkeyRecorderPrompt" xml:space="preserve"><value>Nhấn tổ hợp phím (Esc để huỷ)…</value></data>
+  <data name="Settings_HotkeyErrorNoPrimary" xml:space="preserve"><value>Chọn một phím chính (ví dụ chữ cái hoặc phím F).</value></data>
+  <data name="Settings_HotkeyErrorModifierOnly" xml:space="preserve"><value>Chỉ phím bổ trợ là chưa đủ — hãy thêm chữ cái hoặc phím F.</value></data>
+  <data name="Settings_HotkeyErrorNeedsModifier" xml:space="preserve"><value>Chữ cái hoặc chữ số cần kèm ít nhất một phím bổ trợ (Ctrl/Alt/Shift/Win).</value></data>
+  <data name="Settings_HotkeyErrorReserved" xml:space="preserve"><value>Tổ hợp này bị Windows giữ và không thể chụp được.</value></data>
+  <data name="Settings_HotkeyConflictWarning" xml:space="preserve"><value>Ứng dụng khác có thể đã đăng ký tổ hợp này — nó có thể không kích hoạt khi ứng dụng đó đang chạy.</value></data>
   <data name="Settings_Format" xml:space="preserve"><value>Định dạng mặc định</value></data>
   <data name="Settings_JpegQuality" xml:space="preserve"><value>Chất lượng JPEG</value></data>
   <data name="Settings_WebpQuality" xml:space="preserve"><value>Chất lượng WebP</value></data>
