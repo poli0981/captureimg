@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using CaptureImage.Core.Models;
 
 namespace CaptureImage.Core.Abstractions;

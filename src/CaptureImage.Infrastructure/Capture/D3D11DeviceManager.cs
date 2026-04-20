@@ -1,4 +1,3 @@
-using System;
 using System.Runtime.Versioning;
 using Vortice.Direct3D;
 using Vortice.Direct3D11;

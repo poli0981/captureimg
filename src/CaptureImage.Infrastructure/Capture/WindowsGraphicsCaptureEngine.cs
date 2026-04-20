@@ -1,7 +1,4 @@
-using System;
 using System.Runtime.Versioning;
-using System.Threading;
-using System.Threading.Tasks;
 using CaptureImage.Core.Abstractions;
 using CaptureImage.Core.Errors;
 using CaptureImage.Core.Models;

@@ -1,8 +1,4 @@
-using System;
-using System.Collections.Generic;
 using System.Runtime.Versioning;
-using System.Threading;
-using System.Threading.Tasks;
 using CaptureImage.Core.Abstractions;
 using CaptureImage.Core.Models;
 using Microsoft.Extensions.Logging;

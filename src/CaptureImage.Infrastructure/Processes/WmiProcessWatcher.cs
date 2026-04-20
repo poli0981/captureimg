@@ -1,4 +1,3 @@
-using System;
 using System.Management;
 using System.Runtime.Versioning;
 using CaptureImage.Core.Abstractions;

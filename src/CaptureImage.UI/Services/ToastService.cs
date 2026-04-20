@@ -1,6 +1,4 @@
-using System;
 using System.Collections.ObjectModel;
-using System.Threading.Tasks;
 using Avalonia.Threading;
 using CaptureImage.Core.Abstractions;
 using CaptureImage.Core.Models;

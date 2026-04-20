@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
 using CaptureImage.Core.Models;
 using CaptureImage.Core.Pipeline;
 using FluentAssertions;

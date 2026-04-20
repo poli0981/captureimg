@@ -1,7 +1,5 @@
-using System;
 using CaptureImage.Core.StateMachine;
 using FluentAssertions;
-using Stateless;
 using Xunit;
 
 namespace CaptureImage.Core.Tests.StateMachine;

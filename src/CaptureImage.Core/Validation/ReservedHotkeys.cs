@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-using System.Linq;
 using CaptureImage.Core.Models;
 
 namespace CaptureImage.Core.Validation;

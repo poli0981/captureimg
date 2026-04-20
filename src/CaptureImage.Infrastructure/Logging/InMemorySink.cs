@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
 using CaptureImage.Core.Abstractions;
 using CaptureImage.Core.Models;
 using Serilog.Core;

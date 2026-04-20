@@ -5,7 +5,6 @@
              xmlns:vm="clr-namespace:CaptureImage.ViewModels.Settings;assembly=CaptureImage.ViewModels"
              xmlns:ctrl="clr-namespace:CaptureImage.UI.Controls"
              xmlns:sys="clr-namespace:System.Globalization;assembly=System.Runtime"
-             xmlns:models="clr-namespace:CaptureImage.Core.Models;assembly=CaptureImage.Core"
              mc:Ignorable="d"
              x:Class="CaptureImage.UI.Views.SettingsView"
              x:DataType="vm:SettingsViewModel">

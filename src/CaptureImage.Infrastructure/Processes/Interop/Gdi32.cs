@@ -1,4 +1,3 @@
-using System;
 using System.Runtime.InteropServices;
 
 namespace CaptureImage.Infrastructure.Processes.Interop;

@@ -1,5 +1,3 @@
-using System;
-using System.IO;
 using CaptureImage.Infrastructure.Logging;
 using Serilog;
 using Serilog.Events;

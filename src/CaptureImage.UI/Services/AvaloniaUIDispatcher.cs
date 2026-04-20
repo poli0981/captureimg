@@ -1,5 +1,3 @@
-using System;
-using System.Threading.Tasks;
 using Avalonia.Threading;
 using CaptureImage.Core.Abstractions;
 

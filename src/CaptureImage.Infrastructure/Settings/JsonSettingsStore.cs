@@ -1,9 +1,5 @@
-using System;
-using System.IO;
 using System.IO.Abstractions;
 using System.Text.Json;
-using System.Threading;
-using System.Threading.Tasks;
 using CaptureImage.Core.Abstractions;
 using CaptureImage.Core.Models;
 using Microsoft.Extensions.Logging;

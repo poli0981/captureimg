@@ -1,5 +1,3 @@
-using System.Threading;
-using System.Threading.Tasks;
 using CaptureImage.Core.Models;
 
 namespace CaptureImage.Core.Abstractions;

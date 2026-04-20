@@ -1,7 +1,5 @@
-using System;
 using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
-using System.Threading;
 using CaptureImage.Core.Abstractions;
 using CaptureImage.Core.Models;
 using Microsoft.Extensions.Logging;

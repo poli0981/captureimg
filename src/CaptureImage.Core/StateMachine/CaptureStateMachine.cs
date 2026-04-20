@@ -1,4 +1,3 @@
-using System;
 using Stateless;
 
 namespace CaptureImage.Core.StateMachine;

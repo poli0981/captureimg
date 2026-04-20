@@ -1,6 +1,3 @@
-using System;
-using System.Threading;
-using System.Threading.Tasks;
 using CaptureImage.Core.Abstractions;
 using CaptureImage.Core.Models;
 using Microsoft.Extensions.Logging;

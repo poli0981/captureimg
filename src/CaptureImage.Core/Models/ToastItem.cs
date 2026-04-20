@@ -1,5 +1,3 @@
-using System;
-
 namespace CaptureImage.Core.Models;
 
 /// <summary>

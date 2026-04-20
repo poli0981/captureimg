@@ -1,4 +1,3 @@
-using System;
 using System.IO.Abstractions;
 using CaptureImage.Core.Abstractions;
 using CaptureImage.Core.Pipeline;
@@ -73,7 +72,7 @@ internal static class CompositionRoot
         services.AddSingleton<IImageEncoder, SkiaImageEncoder>();
         services.AddSingleton<IImageEncoder, ImageSharpTiffEncoder>();
         services.AddSingleton<FileNameStrategy>(_ =>
-            new FileNameStrategy(System.IO.File.Exists));
+            new FileNameStrategy(File.Exists));
         services.AddSingleton<CaptureOrchestrator>();
 
         // --- Hotkeys -----------------------------------------------------------

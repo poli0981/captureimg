@@ -1,4 +1,3 @@
-using System;
 using System.IO.Abstractions;
 using CaptureImage.Core.Abstractions;
 using Microsoft.Extensions.Logging;
