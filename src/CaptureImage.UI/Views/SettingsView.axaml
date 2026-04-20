@@ -13,11 +13,11 @@
     <ScrollViewer>
         <StackPanel Margin="24,16" Spacing="18" MaxWidth="620">
 
-            <TextBlock Text="{Binding Localization[Settings_Title]}" FontSize="24" FontWeight="SemiBold" />
+            <TextBlock Text="{Binding Localization[Settings_Title]}" FontSize="22" FontWeight="SemiBold" />
 
             <!-- Language -->
             <StackPanel Spacing="4">
-                <TextBlock Text="{Binding Localization[Settings_Language]}" Opacity="0.7" FontSize="12" />
+                <TextBlock Text="{Binding Localization[Settings_Language]}" Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}" FontSize="12" />
                 <ComboBox ItemsSource="{Binding SupportedCultures}"
                           SelectedItem="{Binding SelectedCulture, Mode=TwoWay}"
                           HorizontalAlignment="Stretch">
@@ -31,14 +31,14 @@
 
             <!-- Hotkey -->
             <StackPanel Spacing="4">
-                <TextBlock Text="{Binding Localization[Settings_Hotkey]}" Opacity="0.7" FontSize="12" />
+                <TextBlock Text="{Binding Localization[Settings_Hotkey]}" Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}" FontSize="12" />
                 <ctrl:HotkeyRecorder DataContext="{Binding Hotkey}" />
-                <TextBlock Text="{Binding Localization[Settings_HotkeyHint]}" FontSize="11" Opacity="0.5" />
+                <TextBlock Text="{Binding Localization[Settings_HotkeyHint]}" FontSize="11" Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}" />
             </StackPanel>
 
             <!-- Default format -->
             <StackPanel Spacing="4">
-                <TextBlock Text="{Binding Localization[Settings_Format]}" Opacity="0.7" FontSize="12" />
+                <TextBlock Text="{Binding Localization[Settings_Format]}" Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}" FontSize="12" />
                 <ComboBox ItemsSource="{Binding SupportedFormats}"
                           SelectedItem="{Binding DefaultFormat, Mode=TwoWay}"
                           HorizontalAlignment="Stretch" />
@@ -47,27 +47,27 @@
             <!-- Quality sliders -->
             <Grid ColumnDefinitions="*,16,*">
                 <StackPanel Grid.Column="0" Spacing="4">
-                    <TextBlock Text="{Binding Localization[Settings_JpegQuality]}" Opacity="0.7" FontSize="12" />
+                    <TextBlock Text="{Binding Localization[Settings_JpegQuality]}" Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}" FontSize="12" />
                     <Slider Minimum="1" Maximum="100" Value="{Binding JpegQuality, Mode=TwoWay}" TickFrequency="10" />
-                    <TextBlock Text="{Binding JpegQuality}" FontSize="11" Opacity="0.6" HorizontalAlignment="Right" />
+                    <TextBlock Text="{Binding JpegQuality}" FontSize="11" Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}" HorizontalAlignment="Right" />
                 </StackPanel>
                 <StackPanel Grid.Column="2" Spacing="4">
-                    <TextBlock Text="{Binding Localization[Settings_WebpQuality]}" Opacity="0.7" FontSize="12" />
+                    <TextBlock Text="{Binding Localization[Settings_WebpQuality]}" Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}" FontSize="12" />
                     <Slider Minimum="1" Maximum="100" Value="{Binding WebpQuality, Mode=TwoWay}" TickFrequency="10" />
-                    <TextBlock Text="{Binding WebpQuality}" FontSize="11" Opacity="0.6" HorizontalAlignment="Right" />
+                    <TextBlock Text="{Binding WebpQuality}" FontSize="11" Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}" HorizontalAlignment="Right" />
                 </StackPanel>
             </Grid>
 
             <!-- Output folder -->
             <StackPanel Spacing="4">
-                <TextBlock Text="{Binding Localization[Settings_OutputFolder]}" Opacity="0.7" FontSize="12" />
+                <TextBlock Text="{Binding Localization[Settings_OutputFolder]}" Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}" FontSize="12" />
                 <TextBox Text="{Binding OutputDirectory, Mode=TwoWay}"
                          Watermark="{Binding Localization[Settings_OutputFolderDefault]}" />
             </StackPanel>
 
             <!-- File name template -->
             <StackPanel Spacing="4">
-                <TextBlock Text="{Binding Localization[Settings_FileNameTemplate]}" Opacity="0.7" FontSize="12" />
+                <TextBlock Text="{Binding Localization[Settings_FileNameTemplate]}" Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}" FontSize="12" />
                 <TextBox Text="{Binding FileNameTemplate, Mode=TwoWay}"
                          FontFamily="Consolas, Courier New, monospace" />
             </StackPanel>
@@ -90,7 +90,7 @@
                         Command="{Binding OpenSettingsFileCommand}" />
             </StackPanel>
 
-            <TextBlock Text="{Binding SettingsFilePath}" Opacity="0.4" FontSize="11" TextWrapping="Wrap" />
+            <TextBlock Text="{Binding SettingsFilePath}" Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}" FontSize="11" TextWrapping="Wrap" />
 
         </StackPanel>
     </ScrollViewer>

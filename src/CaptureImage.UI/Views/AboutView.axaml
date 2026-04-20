@@ -12,29 +12,29 @@
 
             <!-- Header -->
             <StackPanel Spacing="4">
-                <TextBlock Text="{Binding Localization[About_Title]}" FontSize="24" FontWeight="SemiBold" />
-                <TextBlock Text="{Binding Localization[About_Tagline]}" Opacity="0.7" FontSize="12" />
+                <TextBlock Text="{Binding Localization[About_Title]}" FontSize="22" FontWeight="SemiBold" />
+                <TextBlock Text="{Binding Localization[About_Tagline]}" Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}" FontSize="12" />
             </StackPanel>
 
             <!-- App metadata -->
-            <Border Padding="14"
-                    CornerRadius="4"
+            <Border Padding="16"
+                    CornerRadius="8"
                     BorderThickness="1"
                     BorderBrush="{DynamicResource SystemControlForegroundBaseLowBrush}">
                 <Grid ColumnDefinitions="140,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto">
-                    <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding Localization[About_AppLabel]}" Opacity="0.6" Margin="0,0,0,6" />
+                    <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding Localization[About_AppLabel]}" Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}" Margin="0,0,0,6" />
                     <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding AppName}" FontWeight="SemiBold" Margin="0,0,0,6" />
 
-                    <TextBlock Grid.Row="1" Grid.Column="0" Text="{Binding Localization[About_VersionLabel]}" Opacity="0.6" Margin="0,0,0,6" />
+                    <TextBlock Grid.Row="1" Grid.Column="0" Text="{Binding Localization[About_VersionLabel]}" Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}" Margin="0,0,0,6" />
                     <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding AppVersion}" Margin="0,0,0,6" />
 
-                    <TextBlock Grid.Row="2" Grid.Column="0" Text="{Binding Localization[About_LicenseLabel]}" Opacity="0.6" Margin="0,0,0,6" />
+                    <TextBlock Grid.Row="2" Grid.Column="0" Text="{Binding Localization[About_LicenseLabel]}" Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}" Margin="0,0,0,6" />
                     <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding License}" Margin="0,0,0,6" />
 
-                    <TextBlock Grid.Row="3" Grid.Column="0" Text="{Binding Localization[About_DeveloperLabel]}" Opacity="0.6" Margin="0,0,0,6" />
+                    <TextBlock Grid.Row="3" Grid.Column="0" Text="{Binding Localization[About_DeveloperLabel]}" Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}" Margin="0,0,0,6" />
                     <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding Developer}" Margin="0,0,0,6" />
 
-                    <TextBlock Grid.Row="4" Grid.Column="0" Text="{Binding Localization[About_RepositoryLabel]}" Opacity="0.6" />
+                    <TextBlock Grid.Row="4" Grid.Column="0" Text="{Binding Localization[About_RepositoryLabel]}" Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}" />
                     <Button  Grid.Row="4" Grid.Column="1"
                              Content="{Binding RepositoryUrl}"
                              Command="{Binding OpenRepositoryCommand}"
@@ -107,7 +107,7 @@
             <StackPanel Spacing="6">
                 <TextBlock Text="{Binding Localization[About_ThirdPartySection]}" FontWeight="SemiBold" />
                 <Border BorderBrush="{DynamicResource SystemControlForegroundBaseLowBrush}"
-                        BorderThickness="1" CornerRadius="4" Padding="8">
+                        BorderThickness="1" CornerRadius="8" Padding="8">
                     <ItemsControl ItemsSource="{Binding ThirdPartyItems}">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate DataType="vm:ThirdPartyItem">
@@ -119,7 +119,7 @@
                                     <TextBlock Grid.Column="1"
                                                Text="{Binding License}"
                                                FontSize="11"
-                                               Opacity="0.6"
+                                               Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}"
                                                Margin="8,0,0,0" />
                                 </Grid>
                             </DataTemplate>
@@ -128,7 +128,7 @@
                 </Border>
                 <TextBlock Text="{Binding Localization[About_ThirdPartyHint]}"
                            FontSize="11"
-                           Opacity="0.5" />
+                           Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}" />
             </StackPanel>
 
         </StackPanel>

@@ -52,6 +52,8 @@
   <data name="Dashboard_StatusFailed" xml:space="preserve"><value>Chụp lỗi ({0}): {1}</value></data>
   <data name="Dashboard_TargetsCount" xml:space="preserve"><value>{0} đối tượng khả dụng</value></data>
   <data name="Dashboard_Loading" xml:space="preserve"><value>Đang tải…</value></data>
+  <data name="Dashboard_EmptyState" xml:space="preserve"><value>Không có cửa sổ nào để chụp — khởi chạy game hoặc ứng dụng của bạn, rồi bấm Làm mới.</value></data>
+  <data name="Dashboard_LogToggle" xml:space="preserve"><value>Bật/tắt khay nhật ký thời gian thực</value></data>
   <data name="Dashboard_SteamBadge" xml:space="preserve"><value>STEAM</value></data>
   <data name="Dashboard_SteamBadgeTooltip" xml:space="preserve"><value>Game Steam: {0} (AppId {1}). Phím F12 có sẵn qua Steam Overlay. Một số game có anti-cheat có thể chặn capture từ bên ngoài.</value></data>
 
@@ -121,6 +123,8 @@
   <data name="Log_Resume" xml:space="preserve"><value>Tiếp tục</value></data>
   <data name="Log_Clear" xml:space="preserve"><value>Xoá</value></data>
   <data name="Log_Export" xml:space="preserve"><value>Xuất…</value></data>
+  <data name="Log_EventsCount" xml:space="preserve"><value>{0} sự kiện</value></data>
+  <data name="Log_EmptyState" xml:space="preserve"><value>Chưa có sự kiện nhật ký nào. Sự kiện thời gian thực từ capture engine sẽ xuất hiện ở đây.</value></data>
 
   <!-- Preview -->
   <data name="Preview_Title" xml:space="preserve"><value>Xem trước</value></data>

@@ -1,4 +1,5 @@
 using System.Collections.ObjectModel;
+using System.Reflection;
 using CaptureImage.Core.Abstractions;
 using CaptureImage.Core.Models;
 using CaptureImage.ViewModels.About;
@@ -38,6 +39,32 @@ public sealed partial class MainWindowViewModel : ViewModelBase
     public ObservableCollection<ToastItem> Toasts { get; }
 
     public ObservableCollection<NavItemViewModel> NavItems { get; }
+
+    /// <summary>Brand name shown in the nav rail header. Constant across cultures — brand names do not translate.</summary>
+    public string AppTitle => "CaptureImage";
+
+    /// <summary>
+    /// Short semver pulled from the entry assembly's <c>Version</c> at runtime. Release builds
+    /// set this via <c>/p:Version=&lt;git-tag&gt;</c> in release.yml; dev builds fall back to the
+    /// <c>&lt;Version&gt;</c> element in CaptureImage.App.csproj. Zero-valued versions (a bare
+    /// <c>dotnet build</c> with no version props) render as "dev".
+    /// </summary>
+    public string AppVersion
+    {
+        get
+        {
+            var info = Assembly.GetEntryAssembly()?.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion;
+            if (!string.IsNullOrWhiteSpace(info))
+            {
+                // Strip the +commit-sha suffix if present.
+                var plus = info.IndexOf('+');
+                return "v" + (plus >= 0 ? info[..plus] : info);
+            }
+            var v = Assembly.GetEntryAssembly()?.GetName().Version;
+            if (v is null || v.Major == 0 && v.Minor == 0 && v.Build == 0) return "dev";
+            return $"v{v.Major}.{v.Minor}.{v.Build}";
+        }
+    }
 
     public MainWindowViewModel(
         INavigationService navigation,

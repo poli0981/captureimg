@@ -68,6 +68,19 @@ public sealed partial class HotkeyBindingViewModel : ViewModelBase, IDisposable
 
         _currentBinding = settings.Current.CaptureHotkey;
         _settings.Changed += OnSettingsChanged;
+
+        // Localized ErrorMessage + ConflictWarning come from the indexer — push a fresh
+        // PropertyChanged on culture switch so bound TextBlocks re-resolve strings in place.
+        Localization.PropertyChanged += OnLocalizationChanged;
+    }
+
+    private void OnLocalizationChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+    {
+        if (_disposed) return;
+        if (e.PropertyName is "Item[]" or nameof(ILocalizationService.CurrentCulture))
+        {
+            OnPropertyChanged(nameof(ErrorMessage));
+        }
     }
 
     private void OnSettingsChanged(object? sender, EventArgs e)
@@ -174,5 +187,6 @@ public sealed partial class HotkeyBindingViewModel : ViewModelBase, IDisposable
         if (_disposed) return;
         _disposed = true;
         _settings.Changed -= OnSettingsChanged;
+        Localization.PropertyChanged -= OnLocalizationChanged;
     }
 }

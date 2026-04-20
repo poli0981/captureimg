@@ -44,6 +44,44 @@ public sealed partial class LogViewerViewModel : ViewModelBase
         Localization = localization;
 
         _source.Emitted += OnEmitted;
+
+        Localization.PropertyChanged += (_, e) =>
+        {
+            if (e.PropertyName is "Item[]" or nameof(ILocalizationService.CurrentCulture))
+            {
+                OnPropertyChanged(nameof(TogglePauseLabel));
+                OnPropertyChanged(nameof(EventsCountText));
+                OnPropertyChanged(nameof(EmptyStateText));
+            }
+        };
+
+        Entries.CollectionChanged += (_, _) =>
+        {
+            OnPropertyChanged(nameof(EventsCountText));
+            OnPropertyChanged(nameof(HasNoEntries));
+        };
+    }
+
+    /// <summary>
+    /// Label shown on the Pause/Resume button. Flips on <see cref="IsPaused"/> so one
+    /// button drives both states, and re-localizes on culture change.
+    /// </summary>
+    public string TogglePauseLabel =>
+        IsPaused ? Localization["Log_Resume"] : Localization["Log_Pause"];
+
+    /// <summary>Localized "{0} events" line at the right edge of the log header.</summary>
+    public string EventsCountText =>
+        string.Format(Localization["Log_EventsCount"], Entries.Count);
+
+    /// <summary>Localized hint shown inside the drawer when no log events have fired yet.</summary>
+    public string EmptyStateText => Localization["Log_EmptyState"];
+
+    public bool HasNoEntries => Entries.Count == 0;
+
+    partial void OnIsPausedChanged(bool value)
+    {
+        _source.Paused = value;
+        OnPropertyChanged(nameof(TogglePauseLabel));
     }
 
     /// <summary>
@@ -60,11 +98,6 @@ public sealed partial class LogViewerViewModel : ViewModelBase
         {
             Entries.Add(snapshot[i]);
         }
-    }
-
-    partial void OnIsPausedChanged(bool value)
-    {
-        _source.Paused = value;
     }
 
     [RelayCommand]

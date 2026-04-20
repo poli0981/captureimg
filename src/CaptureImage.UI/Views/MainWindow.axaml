@@ -47,15 +47,15 @@
                 BorderBrush="{DynamicResource SystemControlForegroundBaseLowBrush}"
                 BorderThickness="0,0,1,0">
             <DockPanel LastChildFill="True">
-                <StackPanel DockPanel.Dock="Top" Margin="20,24,20,16">
-                    <TextBlock Text="CaptureImage"
+                <StackPanel DockPanel.Dock="Top" Margin="16,24,16,16">
+                    <TextBlock Text="{Binding AppTitle}"
                                FontSize="22"
                                FontWeight="SemiBold"
                                Foreground="{DynamicResource SystemControlForegroundBaseHighBrush}" />
-                    <TextBlock Text="v0.1.0 — M3 UX polish"
+                    <TextBlock Text="{Binding AppVersion}"
                                FontSize="11"
-                               Margin="0,2,0,0"
-                               Opacity="0.6" />
+                               Margin="0,4,0,0"
+                               Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}" />
                 </StackPanel>
 
                 <!-- Log viewer toggle at the bottom of the nav rail -->
@@ -63,9 +63,11 @@
                         Command="{Binding ToggleLogViewerCommand}"
                         HorizontalAlignment="Stretch"
                         HorizontalContentAlignment="Left"
-                        Margin="12,4,12,16"
-                        Padding="12,8">
-                    <StackPanel Orientation="Horizontal" Spacing="10">
+                        Margin="8,4,8,16"
+                        Padding="12,8"
+                        AutomationProperties.Name="{Binding Localization[Dashboard_LogToggle]}"
+                        ToolTip.Tip="{Binding Localization[Dashboard_LogToggle]}">
+                    <StackPanel Orientation="Horizontal" Spacing="12">
                         <TextBlock Text="&#xE9F9;"
                                    FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets"
                                    FontSize="16"
@@ -86,7 +88,7 @@
                                 <TextBlock Grid.Column="0"
                                            Text="{Binding IconGlyph}"
                                            FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets"
-                                           FontSize="18"
+                                           FontSize="16"
                                            VerticalAlignment="Center"
                                            HorizontalAlignment="Center" />
                                 <TextBlock Grid.Column="1"

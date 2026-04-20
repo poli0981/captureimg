@@ -11,7 +11,7 @@
     <Border Background="{DynamicResource SystemControlBackgroundChromeMediumBrush}"
             BorderBrush="{DynamicResource SystemControlForegroundBaseLowBrush}"
             BorderThickness="1,1,0,0"
-            CornerRadius="6,0,0,0"
+            CornerRadius="8,0,0,0"
             Padding="12">
         <Grid RowDefinitions="Auto,*">
 
@@ -24,47 +24,61 @@
                            VerticalAlignment="Center" />
                 <Button Grid.Column="1"
                         Command="{Binding TogglePauseCommand}"
-                        Content="{Binding Localization[Log_Pause]}"
+                        Content="{Binding TogglePauseLabel}"
                         Margin="0,0,8,0" />
                 <Button Grid.Column="2"
                         Command="{Binding ClearCommand}"
                         Content="{Binding Localization[Log_Clear]}"
                         Margin="0,0,8,0" />
                 <TextBlock Grid.Column="3"
-                           Text="{Binding Entries.Count, StringFormat='{}{0} events'}"
-                           Opacity="0.6"
+                           Text="{Binding EventsCountText}"
+                           Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}"
                            VerticalAlignment="Center" />
             </Grid>
 
             <!-- Entries list -->
-            <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-                <ItemsControl ItemsSource="{Binding Entries}">
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate DataType="models:LogEntry">
-                            <Grid ColumnDefinitions="Auto,Auto,*" Margin="0,1">
-                                <TextBlock Grid.Column="0"
-                                           Text="{Binding Timestamp, StringFormat='HH:mm:ss.fff'}"
-                                           FontFamily="Consolas, Courier New, monospace"
-                                           FontSize="11"
-                                           Opacity="0.6"
-                                           Margin="0,0,8,0" />
-                                <TextBlock Grid.Column="1"
-                                           Text="{Binding Level}"
-                                           FontFamily="Consolas, Courier New, monospace"
-                                           FontSize="11"
-                                           Width="45"
-                                           Margin="0,0,8,0" />
-                                <TextBlock Grid.Column="2"
-                                           Text="{Binding Message}"
-                                           FontFamily="Consolas, Courier New, monospace"
-                                           FontSize="11"
-                                           TextWrapping="NoWrap"
-                                           TextTrimming="CharacterEllipsis" />
-                            </Grid>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
-            </ScrollViewer>
+            <Grid Grid.Row="1">
+                <ScrollViewer HorizontalScrollBarVisibility="Auto"
+                              VerticalScrollBarVisibility="Auto"
+                              IsVisible="{Binding !HasNoEntries}">
+                    <ItemsControl ItemsSource="{Binding Entries}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate DataType="models:LogEntry">
+                                <Grid ColumnDefinitions="Auto,Auto,*" Margin="0,1">
+                                    <TextBlock Grid.Column="0"
+                                               Text="{Binding Timestamp, StringFormat='HH:mm:ss.fff'}"
+                                               FontFamily="Consolas, Courier New, monospace"
+                                               FontSize="11"
+                                               Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}"
+                                               Margin="0,0,8,0" />
+                                    <TextBlock Grid.Column="1"
+                                               Text="{Binding Level}"
+                                               FontFamily="Consolas, Courier New, monospace"
+                                               FontSize="11"
+                                               Width="45"
+                                               Margin="0,0,8,0" />
+                                    <TextBlock Grid.Column="2"
+                                               Text="{Binding Message}"
+                                               FontFamily="Consolas, Courier New, monospace"
+                                               FontSize="11"
+                                               TextWrapping="NoWrap"
+                                               TextTrimming="CharacterEllipsis" />
+                                </Grid>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+
+                <!-- Empty state: no log events yet. -->
+                <TextBlock Text="{Binding EmptyStateText}"
+                           IsVisible="{Binding HasNoEntries}"
+                           Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           TextWrapping="Wrap"
+                           TextAlignment="Center"
+                           Margin="24" />
+            </Grid>
 
         </Grid>
     </Border>
