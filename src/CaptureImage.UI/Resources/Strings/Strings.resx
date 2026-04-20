@@ -110,8 +110,11 @@
   <data name="About_AiSection" xml:space="preserve"><value>AI-assisted development</value></data>
   <data name="About_DisclaimersSection" xml:space="preserve"><value>Disclaimers</value></data>
   <data name="About_TranslationDisclaimer" xml:space="preserve"><value>Translations</value></data>
+  <data name="About_TranslationDisclaimerBody" xml:space="preserve"><value>Vietnamese and Arabic language packs are machine-assisted. Terminology may not match native conventions, and some technical words (hotkey, toast, frame, etc.) are kept in English on purpose. Native speakers willing to proofread are warmly invited to submit pull requests against the .resx files in src/CaptureImage.UI/Resources/Strings/.</value></data>
   <data name="About_CaptureDisclaimer" xml:space="preserve"><value>Capture support</value></data>
+  <data name="About_CaptureLimitationDisclaimerBody" xml:space="preserve"><value>CaptureImage can capture most windowed and borderless games via Windows.Graphics.Capture, but not every title works. DRM-protected surfaces, exclusive-fullscreen Direct3D 9 games, and titles with anti-cheat hooks may return black frames or refuse capture. A GDI PrintWindow fallback is attempted for legacy apps. See docs/legal/DISCLAIMER.md §2 for the full list.</value></data>
   <data name="About_LiabilityDisclaimer" xml:space="preserve"><value>No warranty</value></data>
+  <data name="About_LiabilityDisclaimerBody" xml:space="preserve"><value>CaptureImage is distributed under GPL-3.0-or-later AS IS, without warranty of any kind. The authors are not liable for lost screenshots, game crashes, anti-cheat sanctions, or data loss. Use at your own risk. See docs/legal/DISCLAIMER.md for the full text.</value></data>
   <data name="About_LegalSection" xml:space="preserve"><value>Legal documents</value></data>
   <data name="About_ThirdPartySection" xml:space="preserve"><value>Third-party components</value></data>
   <data name="About_ThirdPartyHint" xml:space="preserve"><value>Click "Third-party notices" above for the full list with upstream URLs.</value></data>

@@ -110,8 +110,11 @@
   <data name="About_AiSection" xml:space="preserve"><value>Phát triển có hỗ trợ AI</value></data>
   <data name="About_DisclaimersSection" xml:space="preserve"><value>Tuyên bố miễn trừ</value></data>
   <data name="About_TranslationDisclaimer" xml:space="preserve"><value>Bản dịch</value></data>
+  <data name="About_TranslationDisclaimerBody" xml:space="preserve"><value>Gói ngôn ngữ tiếng Việt và tiếng Ả Rập đang dùng bản dịch máy. Thuật ngữ có thể không khớp với quy ước bản ngữ, và một số từ kỹ thuật (hotkey, toast, frame, v.v.) được giữ tiếng Anh có chủ đích. Người bản ngữ sẵn lòng hiệu đính xin gửi pull request vào các tệp .resx trong src/CaptureImage.UI/Resources/Strings/.</value></data>
   <data name="About_CaptureDisclaimer" xml:space="preserve"><value>Khả năng chụp</value></data>
+  <data name="About_CaptureLimitationDisclaimerBody" xml:space="preserve"><value>CaptureImage có thể chụp hầu hết game cửa sổ và borderless qua Windows.Graphics.Capture, nhưng không phải game nào cũng hoạt động. Bề mặt có DRM, game Direct3D 9 exclusive-fullscreen, và game có hook anti-cheat có thể trả khung đen hoặc từ chối chụp. Cơ chế dự phòng GDI PrintWindow được thử cho ứng dụng cũ. Xem docs/legal/DISCLAIMER.md §2 để biết danh sách đầy đủ.</value></data>
   <data name="About_LiabilityDisclaimer" xml:space="preserve"><value>Không bảo hành</value></data>
+  <data name="About_LiabilityDisclaimerBody" xml:space="preserve"><value>CaptureImage được phân phối theo GPL-3.0-or-later NGUYÊN TRẠNG, không kèm bảo đảm dưới bất kỳ hình thức nào. Các tác giả không chịu trách nhiệm về ảnh chụp bị mất, game crash, chế tài từ anti-cheat, hay mất dữ liệu. Dùng với rủi ro của chính bạn. Xem docs/legal/DISCLAIMER.md để biết toàn văn.</value></data>
   <data name="About_LegalSection" xml:space="preserve"><value>Tài liệu pháp lý</value></data>
   <data name="About_ThirdPartySection" xml:space="preserve"><value>Thành phần third-party</value></data>
   <data name="About_ThirdPartyHint" xml:space="preserve"><value>Bấm "Third-party notices" phía trên để xem danh sách đầy đủ kèm URL upstream.</value></data>

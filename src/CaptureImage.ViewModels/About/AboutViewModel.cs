@@ -29,11 +29,19 @@ public sealed partial class AboutViewModel : ViewModelBase
         // explicit PropertyChanged on culture switch so the compiled indexer bindings
         // re-resolve their path — the Localization service's own Item[] notification
         // isn't picked up through the intermediate property in every case.
+        //
+        // Disclaimer bodies are computed properties reading through Localization[...] but
+        // the view binds them by property name (`{Binding TranslationDisclaimer}`), so the
+        // indexer refresh alone won't wake those bindings — raise each disclaimer property
+        // explicitly so their bound TextBlocks retranslate in place.
         Localization.PropertyChanged += (_, e) =>
         {
             if (e.PropertyName is "Item[]" or nameof(ILocalizationService.CurrentCulture))
             {
                 OnPropertyChanged(nameof(Localization));
+                OnPropertyChanged(nameof(TranslationDisclaimer));
+                OnPropertyChanged(nameof(CaptureLimitationDisclaimer));
+                OnPropertyChanged(nameof(LiabilityDisclaimer));
             }
         };
 
@@ -81,22 +89,11 @@ public sealed partial class AboutViewModel : ViewModelBase
         "by the human maintainer before landing. Commits that involve meaningful AI authorship " +
         "carry a Co-Authored-By trailer naming the model. See docs/CONTRIBUTORS.md for details.";
 
-    public string TranslationDisclaimer =>
-        "Vietnamese and Arabic language packs are machine-assisted. Terminology may not match " +
-        "native conventions, and some technical words (hotkey, toast, frame, etc.) are kept in " +
-        "English on purpose. Native speakers willing to proofread are warmly invited to submit " +
-        "pull requests against the .resx files in src/CaptureImage.UI/Resources/Strings/.";
+    public string TranslationDisclaimer => Localization["About_TranslationDisclaimerBody"];
 
-    public string CaptureLimitationDisclaimer =>
-        "CaptureImage can capture most windowed and borderless games via Windows.Graphics.Capture, " +
-        "but not every title works. DRM-protected surfaces, exclusive-fullscreen Direct3D 9 games, " +
-        "and titles with anti-cheat hooks may return black frames or refuse capture. A GDI PrintWindow " +
-        "fallback is attempted for legacy apps. See docs/legal/DISCLAIMER.md §2 for the full list.";
+    public string CaptureLimitationDisclaimer => Localization["About_CaptureLimitationDisclaimerBody"];
 
-    public string LiabilityDisclaimer =>
-        "CaptureImage is distributed under GPL-3.0-or-later AS IS, without warranty of any kind. " +
-        "The authors are not liable for lost screenshots, game crashes, anti-cheat sanctions, or " +
-        "data loss. Use at your own risk. See docs/legal/DISCLAIMER.md for the full text.";
+    public string LiabilityDisclaimer => Localization["About_LiabilityDisclaimerBody"];
 
     public ObservableCollection<ThirdPartyItem> ThirdPartyItems { get; }
 
