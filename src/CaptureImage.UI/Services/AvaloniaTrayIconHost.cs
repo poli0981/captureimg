@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using System.Diagnostics;
 using Avalonia;
 using Avalonia.Controls;
@@ -53,15 +54,27 @@ public sealed class AvaloniaTrayIconHost : ITrayIconHost
         TrayIcon.SetIcons(Application.Current!, icons);
 
         _mainWindow.Closing += OnMainWindowClosing;
-        _localization.PropertyChanged += (_, _) => RefreshMenuLabels();
+        _localization.PropertyChanged += OnLocalizationChanged;
 
         _logger.LogInformation("Tray icon initialized.");
+    }
+
+    private void OnLocalizationChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        // `ResxLocalizationService.SetCulture` raises three events per switch
+        // (Item[], CurrentCulture, CurrentFlowDirection). Rebuild the menu once, not
+        // three times — Item[] is the canonical "all lookups may have changed" signal.
+        if (e.PropertyName == "Item[]")
+        {
+            RefreshMenuLabels();
+        }
     }
 
     public void Dispose()
     {
         if (_disposed) return;
         _disposed = true;
+        _localization.PropertyChanged -= OnLocalizationChanged;
         if (_mainWindow is not null)
         {
             _mainWindow.Closing -= OnMainWindowClosing;

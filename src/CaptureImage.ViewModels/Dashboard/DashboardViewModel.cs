@@ -112,23 +112,7 @@ public sealed partial class DashboardViewModel : ViewModelBase, IDisposable
         _hotkeys.Triggered += OnHotkeyTriggered;
         _settings.Changed += OnSettingsChanged;
 
-        Localization.PropertyChanged += (_, e) =>
-        {
-            if (e.PropertyName is "Item[]" or nameof(ILocalizationService.CurrentCulture))
-            {
-                // StatusMessage is a stored [ObservableProperty], not a computed getter —
-                // re-raising PropertyChanged alone would hand the UI the same stale string.
-                // Re-derive it from the state machine so the new culture's template wins.
-                UpdateStatusForState();
-                OnPropertyChanged(nameof(TargetsCountText));
-                OnPropertyChanged(nameof(LoadingText));
-                OnPropertyChanged(nameof(EmptyStateText));
-                // Forces `{Binding Localization[Key]}` bindings on DashboardView to
-                // re-resolve the indexer path in-place (Title, Subtitle, Refresh / Arm /
-                // Disarm button labels). See v1.1.1 hotfix notes.
-                OnPropertyChanged(nameof(Localization));
-            }
-        };
+        Localization.PropertyChanged += OnLocalizationChanged;
 
         // TargetsCountText depends on Targets.Count — refresh whenever the collection changes.
         Targets.CollectionChanged += (_, _) =>
@@ -139,6 +123,25 @@ public sealed partial class DashboardViewModel : ViewModelBase, IDisposable
 
         // Fire the first refresh without blocking the constructor.
         _ = RefreshAsync();
+    }
+
+    private void OnLocalizationChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+    {
+        if (_disposed) return;
+        if (e.PropertyName is "Item[]" or nameof(ILocalizationService.CurrentCulture))
+        {
+            // StatusMessage is a stored [ObservableProperty], not a computed getter —
+            // re-raising PropertyChanged alone would hand the UI the same stale string.
+            // Re-derive it from the state machine so the new culture's template wins.
+            UpdateStatusForState();
+            OnPropertyChanged(nameof(TargetsCountText));
+            OnPropertyChanged(nameof(LoadingText));
+            OnPropertyChanged(nameof(EmptyStateText));
+            // Forces `{Binding Localization[Key]}` bindings on DashboardView to
+            // re-resolve the indexer path in-place (Title, Subtitle, Refresh / Arm /
+            // Disarm button labels). See v1.1.1 hotfix notes.
+            OnPropertyChanged(nameof(Localization));
+        }
     }
 
     // HasNoTargets depends on IsLoading — refresh when the loading flag flips.
@@ -507,6 +510,7 @@ public sealed partial class DashboardViewModel : ViewModelBase, IDisposable
         _watcher.Changed -= OnProcessChanged;
         _settings.Changed -= OnSettingsChanged;
         _stateMachine.StateChanged -= OnStateChanged;
+        Localization.PropertyChanged -= OnLocalizationChanged;
         _pendingRefresh?.Cancel();
         _pendingRefresh?.Dispose();
     }

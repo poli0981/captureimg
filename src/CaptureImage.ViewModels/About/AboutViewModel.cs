@@ -34,16 +34,11 @@ public sealed partial class AboutViewModel : ViewModelBase
         // the view binds them by property name (`{Binding TranslationDisclaimer}`), so the
         // indexer refresh alone won't wake those bindings — raise each disclaimer property
         // explicitly so their bound TextBlocks retranslate in place.
-        Localization.PropertyChanged += (_, e) =>
-        {
-            if (e.PropertyName is "Item[]" or nameof(ILocalizationService.CurrentCulture))
-            {
-                OnPropertyChanged(nameof(Localization));
-                OnPropertyChanged(nameof(TranslationDisclaimer));
-                OnPropertyChanged(nameof(CaptureLimitationDisclaimer));
-                OnPropertyChanged(nameof(LiabilityDisclaimer));
-            }
-        };
+        //
+        // AboutViewModel is a DI singleton with process-long lifetime (nav owns it), so we
+        // skip IDisposable and rely on the container tearing the subscription down on app
+        // exit — adding IDisposable here would be cosmetic and the leak is theoretical.
+        Localization.PropertyChanged += OnLocalizationChanged;
 
         var asm = typeof(AboutViewModel).Assembly;
         AppVersion = asm.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion
@@ -65,6 +60,17 @@ public sealed partial class AboutViewModel : ViewModelBase
             new("Velopack",                   "MIT",        "https://github.com/velopack/velopack"),
             new("Inter typeface",             "OFL-1.1",    "https://github.com/rsms/inter"),
         };
+    }
+
+    private void OnLocalizationChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName is "Item[]" or nameof(ILocalizationService.CurrentCulture))
+        {
+            OnPropertyChanged(nameof(Localization));
+            OnPropertyChanged(nameof(TranslationDisclaimer));
+            OnPropertyChanged(nameof(CaptureLimitationDisclaimer));
+            OnPropertyChanged(nameof(LiabilityDisclaimer));
+        }
     }
 
     public string AppName => "CaptureImage";

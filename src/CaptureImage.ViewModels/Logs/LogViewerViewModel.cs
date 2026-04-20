@@ -1,5 +1,6 @@
 using System;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,7 +15,7 @@ namespace CaptureImage.ViewModels.Logs;
 /// Live log viewer for the drawer pane. Hydrates from the ring buffer on first show,
 /// appends new entries as they fire, and supports pause/resume/clear/export.
 /// </summary>
-public sealed partial class LogViewerViewModel : ViewModelBase
+public sealed partial class LogViewerViewModel : ViewModelBase, IDisposable
 {
     /// <summary>UI cap — the sink buffer holds more, but rendering 2000 rows is already
     /// the budget; we don't push them all into <see cref="Entries"/>.</summary>
@@ -23,6 +24,7 @@ public sealed partial class LogViewerViewModel : ViewModelBase
     private readonly ILogBufferSource _source;
     private readonly IUIThreadDispatcher _dispatcher;
     private bool _hydrated;
+    private bool _disposed;
 
     public ILocalizationService Localization { get; }
 
@@ -44,26 +46,36 @@ public sealed partial class LogViewerViewModel : ViewModelBase
         Localization = localization;
 
         _source.Emitted += OnEmitted;
-
-        Localization.PropertyChanged += (_, e) =>
-        {
-            if (e.PropertyName is "Item[]" or nameof(ILocalizationService.CurrentCulture))
-            {
-                OnPropertyChanged(nameof(TogglePauseLabel));
-                OnPropertyChanged(nameof(EventsCountText));
-                OnPropertyChanged(nameof(EmptyStateText));
-                // Refresh the `{Binding Localization[Log_Title]}` / `[Log_Clear]` direct
-                // indexer bindings in the header. v1.1.1 hotfix — the service's own
-                // Item[] notification alone doesn't reliably re-resolve the path.
-                OnPropertyChanged(nameof(Localization));
-            }
-        };
+        Localization.PropertyChanged += OnLocalizationChanged;
 
         Entries.CollectionChanged += (_, _) =>
         {
             OnPropertyChanged(nameof(EventsCountText));
             OnPropertyChanged(nameof(HasNoEntries));
         };
+    }
+
+    private void OnLocalizationChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (_disposed) return;
+        if (e.PropertyName is "Item[]" or nameof(ILocalizationService.CurrentCulture))
+        {
+            OnPropertyChanged(nameof(TogglePauseLabel));
+            OnPropertyChanged(nameof(EventsCountText));
+            OnPropertyChanged(nameof(EmptyStateText));
+            // Refresh the `{Binding Localization[Log_Title]}` / `[Log_Clear]` direct
+            // indexer bindings in the header. v1.1.1 hotfix — the service's own
+            // Item[] notification alone doesn't reliably re-resolve the path.
+            OnPropertyChanged(nameof(Localization));
+        }
+    }
+
+    public void Dispose()
+    {
+        if (_disposed) return;
+        _disposed = true;
+        _source.Emitted -= OnEmitted;
+        Localization.PropertyChanged -= OnLocalizationChanged;
     }
 
     /// <summary>

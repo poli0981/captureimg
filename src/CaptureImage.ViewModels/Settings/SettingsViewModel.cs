@@ -16,12 +16,13 @@ namespace CaptureImage.ViewModels.Settings;
 /// open-settings-file. Persists every change through <see cref="ISettingsStore.Update"/> so
 /// the debounced writer handles the disk.
 /// </summary>
-public sealed partial class SettingsViewModel : ViewModelBase
+public sealed partial class SettingsViewModel : ViewModelBase, IDisposable
 {
     private readonly ISettingsStore _settings;
     private readonly IToastService _toasts;
     private readonly ILogger<SettingsViewModel> _logger;
     private bool _suppressPush;
+    private bool _disposed;
 
     public ILocalizationService Localization { get; }
 
@@ -79,7 +80,7 @@ public sealed partial class SettingsViewModel : ViewModelBase
         _selectedCulture = FindCulture(settings.Current.Culture) ?? SupportedCultures[0];
 
         Hydrate();
-        _settings.Changed += (_, _) => Hydrate();
+        _settings.Changed += OnSettingsStoreChanged;
 
         // Raise OnPropertyChanged(nameof(Localization)) on culture switch so every
         // `{Binding Localization[Key]}` in SettingsView re-resolves the full path and
@@ -90,12 +91,27 @@ public sealed partial class SettingsViewModel : ViewModelBase
         Localization.PropertyChanged += OnLocalizationChanged;
     }
 
+    private void OnSettingsStoreChanged(object? sender, EventArgs e)
+    {
+        if (_disposed) return;
+        Hydrate();
+    }
+
     private void OnLocalizationChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
     {
+        if (_disposed) return;
         if (e.PropertyName is "Item[]" or nameof(ILocalizationService.CurrentCulture))
         {
             OnPropertyChanged(nameof(Localization));
         }
+    }
+
+    public void Dispose()
+    {
+        if (_disposed) return;
+        _disposed = true;
+        _settings.Changed -= OnSettingsStoreChanged;
+        Localization.PropertyChanged -= OnLocalizationChanged;
     }
 
     private CultureInfo? FindCulture(string name)
