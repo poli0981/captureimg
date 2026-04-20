@@ -79,7 +79,7 @@ public partial class SettingsView : UserControl
 
         var files = await top.StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
         {
-            Title = "Import settings",
+            Title = vm.Localization["Settings_ImportTitle"],
             AllowMultiple = false,
             FileTypeFilter = new[]
             {
@@ -105,7 +105,7 @@ public partial class SettingsView : UserControl
 
         var file = await top.StorageProvider.SaveFilePickerAsync(new FilePickerSaveOptions
         {
-            Title = "Export settings",
+            Title = vm.Localization["Settings_ExportTitle"],
             DefaultExtension = "json",
             SuggestedFileName = "captureimage-settings.json",
             FileTypeChoices = new[]

@@ -199,7 +199,7 @@ public sealed partial class SettingsViewModel : ViewModelBase
         catch (Exception ex)
         {
             _logger.LogWarning(ex, "Failed to open settings file.");
-            _toasts.ShowError("Error", ex.Message);
+            _toasts.ShowError(Localization["Toast_Error"], ex.Message);
         }
     }
 
@@ -219,7 +219,7 @@ public sealed partial class SettingsViewModel : ViewModelBase
         catch (Exception ex)
         {
             _logger.LogError(ex, "Settings export failed.");
-            _toasts.ShowError("Error", ex.Message);
+            _toasts.ShowError(Localization["Toast_Error"], ex.Message);
         }
     }
 
@@ -235,7 +235,7 @@ public sealed partial class SettingsViewModel : ViewModelBase
         catch (Exception ex)
         {
             _logger.LogError(ex, "Settings import failed.");
-            _toasts.ShowError("Error", ex.Message);
+            _toasts.ShowError(Localization["Toast_Error"], ex.Message);
         }
     }
 }

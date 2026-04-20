@@ -39,7 +39,10 @@ public sealed class AvaloniaPreviewPresenter : IPreviewPresenter
         {
             try
             {
-                var vm = new PreviewViewModel(_localization);
+                // `using` so the VM's Localization.PropertyChanged subscription is detached
+                // after the modal closes — otherwise every preview leaks one handler into
+                // the singleton localization service.
+                using var vm = new PreviewViewModel(_localization);
                 vm.SetFrame(frame, target, pngBytes);
 
                 var window = new PreviewWindow

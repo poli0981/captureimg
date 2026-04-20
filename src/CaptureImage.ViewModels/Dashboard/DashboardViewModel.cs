@@ -116,7 +116,10 @@ public sealed partial class DashboardViewModel : ViewModelBase, IDisposable
         {
             if (e.PropertyName is "Item[]" or nameof(ILocalizationService.CurrentCulture))
             {
-                OnPropertyChanged(nameof(StatusMessage));
+                // StatusMessage is a stored [ObservableProperty], not a computed getter —
+                // re-raising PropertyChanged alone would hand the UI the same stale string.
+                // Re-derive it from the state machine so the new culture's template wins.
+                UpdateStatusForState();
                 OnPropertyChanged(nameof(TargetsCountText));
                 OnPropertyChanged(nameof(LoadingText));
                 OnPropertyChanged(nameof(EmptyStateText));

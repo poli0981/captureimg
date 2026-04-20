@@ -86,6 +86,8 @@
   <data name="Settings_SoundEnabled" xml:space="preserve"><value>تشغيل صوت الالتقاط</value></data>
   <data name="Settings_Import" xml:space="preserve"><value>استيراد…</value></data>
   <data name="Settings_Export" xml:space="preserve"><value>تصدير…</value></data>
+  <data name="Settings_ImportTitle" xml:space="preserve"><value>استيراد الإعدادات</value></data>
+  <data name="Settings_ExportTitle" xml:space="preserve"><value>تصدير الإعدادات</value></data>
   <data name="Settings_OpenFile" xml:space="preserve"><value>فتح ملف الإعدادات</value></data>
 
   <!-- Update -->
@@ -140,6 +142,7 @@
   <data name="Toast_CaptureFailed" xml:space="preserve"><value>فشل الالتقاط</value></data>
   <data name="Toast_SettingsImported" xml:space="preserve"><value>تم استيراد الإعدادات</value></data>
   <data name="Toast_SettingsExported" xml:space="preserve"><value>تم تصدير الإعدادات</value></data>
+  <data name="Toast_Error" xml:space="preserve"><value>خطأ</value></data>
 
   <!-- Tray menu -->
   <data name="Tray_ShowWindow" xml:space="preserve"><value>عرض CaptureImage</value></data>

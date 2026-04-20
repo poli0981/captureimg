@@ -7,10 +7,11 @@
         mc:Ignorable="d"
         x:Class="CaptureImage.UI.Views.PreviewWindow"
         x:DataType="vm:PreviewViewModel"
-        Title="Preview"
+        Title="{Binding Localization[Preview_Title]}"
         Width="720" Height="560"
         WindowStartupLocation="CenterOwner"
-        CanResize="False">
+        CanResize="False"
+        FlowDirection="{Binding Localization.CurrentFlowDirection, Converter={x:Static conv:FlowDirectionConverter.Instance}}">
 
     <Grid RowDefinitions="Auto,*,Auto" Margin="16">
 
