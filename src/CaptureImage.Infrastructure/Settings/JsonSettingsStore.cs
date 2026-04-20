@@ -52,35 +52,84 @@ public sealed class JsonSettingsStore : ISettingsStore, IDisposable
     public async Task LoadAsync(CancellationToken cancellationToken = default)
     {
         AppSettings loaded;
+        // Ensure settings.json exists on disk after a successful load. Four paths trigger
+        // a write-back:
+        //   (1) file missing — first run, we want the user to see defaults they can edit;
+        //   (2) parse failure — bad/corrupt JSON, replace with defaults so next run is clean;
+        //   (3) version newer than we support — fall back to defaults;
+        //   (4) partial/missing/extra fields — `System.Text.Json` fills init defaults for
+        //       absent properties on deserialize, but on-disk file stays skewed; normalize
+        //       by comparing re-serialized form with the raw JSON.
+        var needsWriteBack = false;
         try
         {
             if (!_fs.File.Exists(_filePath))
             {
-                _logger.LogInformation("Settings file not found; using defaults at {Path}.", _filePath);
+                _logger.LogInformation(
+                    "Settings file not found at {Path}; initialising with defaults.", _filePath);
                 loaded = new AppSettings();
+                needsWriteBack = true;
             }
             else
             {
                 var json = await _fs.File.ReadAllTextAsync(_filePath, cancellationToken).ConfigureAwait(false);
-                loaded = Deserialize(json) ?? new AppSettings();
-                if (loaded.Version > SupportedVersion)
+                var parsed = Deserialize(json);
+                if (parsed is null)
+                {
+                    _logger.LogWarning(
+                        "Settings file {Path} could not be parsed; replacing with defaults.", _filePath);
+                    loaded = new AppSettings();
+                    needsWriteBack = true;
+                }
+                else if (parsed.Version > SupportedVersion)
                 {
                     _logger.LogWarning(
                         "Settings file version {Found} is newer than supported {Supported}; using defaults.",
-                        loaded.Version, SupportedVersion);
+                        parsed.Version, SupportedVersion);
                     loaded = new AppSettings();
+                    needsWriteBack = true;
                 }
-                _logger.LogInformation("Settings loaded from {Path} (version {Version}).",
-                    _filePath, loaded.Version);
+                else
+                {
+                    loaded = parsed;
+                    // Partial/missing/extra fields — re-serializing fills init defaults, so
+                    // if the canonical form differs from the raw JSON, write back to
+                    // normalize the on-disk file.
+                    var canonical = Serialize(loaded);
+                    if (!string.Equals(json.Trim(), canonical.Trim(), StringComparison.Ordinal))
+                    {
+                        _logger.LogInformation(
+                            "Settings file {Path} differs from canonical form; normalizing.", _filePath);
+                        needsWriteBack = true;
+                    }
+                    _logger.LogInformation(
+                        "Settings loaded from {Path} (version {Version}).", _filePath, loaded.Version);
+                }
             }
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Failed to load settings from {Path}; reverting to defaults.", _filePath);
             loaded = new AppSettings();
+            needsWriteBack = true;
         }
 
         SetCurrent(loaded, persistImmediately: false);
+
+        if (needsWriteBack)
+        {
+            try
+            {
+                await WriteAsync(loaded, cancellationToken).ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                // Best-effort: Load must succeed even if the disk is read-only. A subsequent
+                // Update() will retry via the debounced write path.
+                _logger.LogWarning(
+                    ex, "Could not write initial/normalized settings file to {Path}.", _filePath);
+            }
+        }
     }
 
     public void Update(Func<AppSettings, AppSettings> mutator)

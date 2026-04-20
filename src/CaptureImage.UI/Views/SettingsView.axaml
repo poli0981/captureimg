@@ -12,11 +12,11 @@
     <ScrollViewer>
         <StackPanel Margin="24,16" Spacing="18" MaxWidth="620">
 
-            <TextBlock Text="{Binding Localization[Settings_Title]}" FontSize="22" FontWeight="SemiBold" />
+            <TextBlock Text="{Binding TitleLabel}" FontSize="22" FontWeight="SemiBold" />
 
             <!-- Language -->
             <StackPanel Spacing="4">
-                <TextBlock Text="{Binding Localization[Settings_Language]}" Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}" FontSize="12" />
+                <TextBlock Text="{Binding LanguageLabel}" Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}" FontSize="12" />
                 <ComboBox ItemsSource="{Binding SupportedCultures}"
                           SelectedItem="{Binding SelectedCulture, Mode=TwoWay}"
                           HorizontalAlignment="Stretch">
@@ -30,14 +30,14 @@
 
             <!-- Hotkey -->
             <StackPanel Spacing="4">
-                <TextBlock Text="{Binding Localization[Settings_Hotkey]}" Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}" FontSize="12" />
+                <TextBlock Text="{Binding HotkeyLabel}" Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}" FontSize="12" />
                 <ctrl:HotkeyRecorder DataContext="{Binding Hotkey}" />
-                <TextBlock Text="{Binding Localization[Settings_HotkeyHint]}" FontSize="11" Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}" />
+                <TextBlock Text="{Binding HotkeyHint}" FontSize="11" Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}" />
             </StackPanel>
 
             <!-- Default format -->
             <StackPanel Spacing="4">
-                <TextBlock Text="{Binding Localization[Settings_Format]}" Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}" FontSize="12" />
+                <TextBlock Text="{Binding FormatLabel}" Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}" FontSize="12" />
                 <ComboBox ItemsSource="{Binding SupportedFormats}"
                           SelectedItem="{Binding DefaultFormat, Mode=TwoWay}"
                           HorizontalAlignment="Stretch" />
@@ -46,12 +46,12 @@
             <!-- Quality sliders -->
             <Grid ColumnDefinitions="*,16,*">
                 <StackPanel Grid.Column="0" Spacing="4">
-                    <TextBlock Text="{Binding Localization[Settings_JpegQuality]}" Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}" FontSize="12" />
+                    <TextBlock Text="{Binding JpegQualityLabel}" Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}" FontSize="12" />
                     <Slider Minimum="1" Maximum="100" Value="{Binding JpegQuality, Mode=TwoWay}" TickFrequency="10" />
                     <TextBlock Text="{Binding JpegQuality}" FontSize="11" Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}" HorizontalAlignment="Right" />
                 </StackPanel>
                 <StackPanel Grid.Column="2" Spacing="4">
-                    <TextBlock Text="{Binding Localization[Settings_WebpQuality]}" Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}" FontSize="12" />
+                    <TextBlock Text="{Binding WebpQualityLabel}" Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}" FontSize="12" />
                     <Slider Minimum="1" Maximum="100" Value="{Binding WebpQuality, Mode=TwoWay}" TickFrequency="10" />
                     <TextBlock Text="{Binding WebpQuality}" FontSize="11" Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}" HorizontalAlignment="Right" />
                 </StackPanel>
@@ -59,41 +59,41 @@
 
             <!-- Output folder -->
             <StackPanel Spacing="4">
-                <TextBlock Text="{Binding Localization[Settings_OutputFolder]}" Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}" FontSize="12" />
+                <TextBlock Text="{Binding OutputFolderLabel}" Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}" FontSize="12" />
                 <Grid ColumnDefinitions="*,8,Auto">
                     <TextBox Grid.Column="0"
                              Text="{Binding OutputDirectory, Mode=TwoWay}"
-                             Watermark="{Binding Localization[Settings_OutputFolderDefault]}" />
+                             Watermark="{Binding OutputFolderWatermark}" />
                     <Button Grid.Column="2"
                             Name="BrowseOutputButton"
-                            Content="{Binding Localization[Settings_Browse]}"
-                            ToolTip.Tip="{Binding Localization[Settings_BrowseTooltip]}"
+                            Content="{Binding BrowseLabel}"
+                            ToolTip.Tip="{Binding BrowseTooltip}"
                             MinWidth="100" />
                 </Grid>
             </StackPanel>
 
             <!-- File name template -->
             <StackPanel Spacing="4">
-                <TextBlock Text="{Binding Localization[Settings_FileNameTemplate]}" Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}" FontSize="12" />
+                <TextBlock Text="{Binding FileNameTemplateLabel}" Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}" FontSize="12" />
                 <TextBox Text="{Binding FileNameTemplate, Mode=TwoWay}"
                          FontFamily="Consolas, Courier New, monospace" />
             </StackPanel>
 
             <!-- Toggles -->
             <StackPanel Spacing="6">
-                <CheckBox Content="{Binding Localization[Settings_PreviewBeforeSave]}"
+                <CheckBox Content="{Binding PreviewBeforeSaveLabel}"
                           IsChecked="{Binding PreviewBeforeSave, Mode=TwoWay}" />
-                <CheckBox Content="{Binding Localization[Settings_MinimizeToTray]}"
+                <CheckBox Content="{Binding MinimizeToTrayLabel}"
                           IsChecked="{Binding MinimizeToTray, Mode=TwoWay}" />
-                <CheckBox Content="{Binding Localization[Settings_SoundEnabled]}"
+                <CheckBox Content="{Binding SoundEnabledLabel}"
                           IsChecked="{Binding SoundEnabled, Mode=TwoWay}" />
             </StackPanel>
 
             <!-- Import / export / open -->
             <StackPanel Orientation="Horizontal" Spacing="8">
-                <Button Name="ImportButton" Content="{Binding Localization[Settings_Import]}" />
-                <Button Name="ExportButton" Content="{Binding Localization[Settings_Export]}" />
-                <Button Content="{Binding Localization[Settings_OpenFile]}"
+                <Button Name="ImportButton" Content="{Binding ImportLabel}" />
+                <Button Name="ExportButton" Content="{Binding ExportLabel}" />
+                <Button Content="{Binding OpenFileLabel}"
                         Command="{Binding OpenSettingsFileCommand}" />
             </StackPanel>
 

@@ -53,6 +53,22 @@ public sealed partial class HotkeyBindingViewModel : ViewModelBase, IDisposable
         _ => string.Empty,
     };
 
+    // -- localized labels ---------------------------------------------------
+    //
+    // Plain computed properties exposing each Localization[key] the HotkeyRecorder
+    // control binds to. Compiled indexer bindings (`{Binding Localization[Settings_Foo]}`)
+    // don't reevaluate reliably when the intermediate `Localization` reference is
+    // unchanged on the live view — binding to a plain property and raising
+    // OnPropertyChanged on culture switch is the reliable pattern. Matches the same
+    // refactor applied to SettingsViewModel and MainWindowViewModel.
+
+    public string HotkeyFieldAutomationName => Localization["Settings_Hotkey"];
+    public string RecorderPromptText => Localization["Settings_HotkeyRecorderPrompt"];
+    public string RecordLabel => Localization["Settings_HotkeyRecord"];
+    public string CancelLabel => Localization["Settings_HotkeyCancel"];
+    public string ResetLabel => Localization["Settings_HotkeyReset"];
+    public string ConflictWarningText => Localization["Settings_HotkeyConflictWarning"];
+
     public HotkeyBindingViewModel(
         ISettingsStore settings,
         IHotkeyService hotkeys,
@@ -80,9 +96,15 @@ public sealed partial class HotkeyBindingViewModel : ViewModelBase, IDisposable
         if (e.PropertyName is "Item[]" or nameof(ILocalizationService.CurrentCulture))
         {
             OnPropertyChanged(nameof(ErrorMessage));
-            // Bubbles through to the `{Binding Localization[Settings_Hotkey*]}` bindings
-            // in HotkeyRecorder.axaml so prompt + conflict-warning text refresh live.
             OnPropertyChanged(nameof(Localization));
+            // Plain-property refresh for every HotkeyRecorder label — indexer-path
+            // bindings don't wake reliably on Localization-reference ping.
+            OnPropertyChanged(nameof(HotkeyFieldAutomationName));
+            OnPropertyChanged(nameof(RecorderPromptText));
+            OnPropertyChanged(nameof(RecordLabel));
+            OnPropertyChanged(nameof(CancelLabel));
+            OnPropertyChanged(nameof(ResetLabel));
+            OnPropertyChanged(nameof(ConflictWarningText));
         }
     }
 

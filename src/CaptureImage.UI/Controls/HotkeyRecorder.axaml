@@ -34,14 +34,14 @@
                     BorderBrush="{DynamicResource SystemControlForegroundBaseMediumLowBrush}"
                     Background="{DynamicResource SystemControlBackgroundChromeMediumLowBrush}"
                     VerticalAlignment="Center"
-                    AutomationProperties.Name="{Binding Localization[Settings_Hotkey]}"
-                    AutomationProperties.HelpText="{Binding Localization[Settings_HotkeyRecorderPrompt]}">
+                    AutomationProperties.Name="{Binding HotkeyFieldAutomationName}"
+                    AutomationProperties.HelpText="{Binding RecorderPromptText}">
                 <Grid>
                     <TextBlock Text="{Binding DisplayText}"
                                FontFamily="Consolas, Courier New, monospace"
                                VerticalAlignment="Center"
                                IsVisible="{Binding !IsRecording}" />
-                    <TextBlock Text="{Binding Localization[Settings_HotkeyRecorderPrompt]}"
+                    <TextBlock Text="{Binding RecorderPromptText}"
                                Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}"
                                FontStyle="Italic"
                                VerticalAlignment="Center"
@@ -50,18 +50,18 @@
             </Border>
 
             <Button Grid.Column="2"
-                    Content="{Binding Localization[Settings_HotkeyRecord]}"
+                    Content="{Binding RecordLabel}"
                     Command="{Binding StartRecordingCommand}"
                     IsVisible="{Binding !IsRecording}"
                     MinWidth="80" />
             <Button Grid.Column="2"
-                    Content="{Binding Localization[Settings_HotkeyCancel]}"
+                    Content="{Binding CancelLabel}"
                     Command="{Binding CancelRecordingCommand}"
                     IsVisible="{Binding IsRecording}"
                     MinWidth="80" />
 
             <Button Grid.Column="4"
-                    Content="{Binding Localization[Settings_HotkeyReset]}"
+                    Content="{Binding ResetLabel}"
                     Command="{Binding ResetToDefaultCommand}"
                     IsVisible="{Binding !IsRecording}"
                     MinWidth="80" />
@@ -75,7 +75,7 @@
                    IsVisible="{Binding HasError}" />
 
         <!-- Conflict warning — non-blocking, binding already persisted. -->
-        <TextBlock Text="{Binding Localization[Settings_HotkeyConflictWarning]}"
+        <TextBlock Text="{Binding ConflictWarningText}"
                    Foreground="#C19C00"
                    FontSize="11"
                    TextWrapping="Wrap"

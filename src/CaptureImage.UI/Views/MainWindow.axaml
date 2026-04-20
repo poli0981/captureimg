@@ -65,14 +65,14 @@
                         HorizontalContentAlignment="Left"
                         Margin="8,4,8,16"
                         Padding="12,8"
-                        AutomationProperties.Name="{Binding Localization[Dashboard_LogToggle]}"
-                        ToolTip.Tip="{Binding Localization[Dashboard_LogToggle]}">
+                        AutomationProperties.Name="{Binding LogToggleTooltip}"
+                        ToolTip.Tip="{Binding LogToggleTooltip}">
                     <StackPanel Orientation="Horizontal" Spacing="12">
                         <TextBlock Text="&#xE9F9;"
                                    FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets"
                                    FontSize="16"
                                    VerticalAlignment="Center" />
-                        <TextBlock Text="{Binding Localization[Nav_LogViewer]}"
+                        <TextBlock Text="{Binding LogToggleLabel}"
                                    VerticalAlignment="Center" />
                     </StackPanel>
                 </Button>

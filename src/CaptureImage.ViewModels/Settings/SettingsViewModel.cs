@@ -63,6 +63,35 @@ public sealed partial class SettingsViewModel : ViewModelBase, IDisposable
 
     public string SettingsFilePath => _settings.SettingsFilePath;
 
+    // -- localized labels ---------------------------------------------------
+    //
+    // Plain computed properties exposing each Localization[key] the Settings view binds
+    // to. Avalonia compiled indexer bindings (`{Binding Localization[Settings_Foo]}`)
+    // don't reevaluate reliably when the intermediate `Localization` reference is
+    // unchanged — the live SettingsView binds through an intermediate property, so the
+    // service's own Item[] notification doesn't bubble through. Binding to a plain VM
+    // property and raising OnPropertyChanged on culture switch is the reliable pattern
+    // (same as NavItemViewModel.Label and AboutViewModel disclaimer bodies).
+
+    public string TitleLabel => Localization["Settings_Title"];
+    public string LanguageLabel => Localization["Settings_Language"];
+    public string HotkeyLabel => Localization["Settings_Hotkey"];
+    public string HotkeyHint => Localization["Settings_HotkeyHint"];
+    public string FormatLabel => Localization["Settings_Format"];
+    public string JpegQualityLabel => Localization["Settings_JpegQuality"];
+    public string WebpQualityLabel => Localization["Settings_WebpQuality"];
+    public string OutputFolderLabel => Localization["Settings_OutputFolder"];
+    public string OutputFolderWatermark => Localization["Settings_OutputFolderDefault"];
+    public string BrowseLabel => Localization["Settings_Browse"];
+    public string BrowseTooltip => Localization["Settings_BrowseTooltip"];
+    public string FileNameTemplateLabel => Localization["Settings_FileNameTemplate"];
+    public string PreviewBeforeSaveLabel => Localization["Settings_PreviewBeforeSave"];
+    public string MinimizeToTrayLabel => Localization["Settings_MinimizeToTray"];
+    public string SoundEnabledLabel => Localization["Settings_SoundEnabled"];
+    public string ImportLabel => Localization["Settings_Import"];
+    public string ExportLabel => Localization["Settings_Export"];
+    public string OpenFileLabel => Localization["Settings_OpenFile"];
+
     public SettingsViewModel(
         ISettingsStore settings,
         ILocalizationService localization,
@@ -103,6 +132,26 @@ public sealed partial class SettingsViewModel : ViewModelBase, IDisposable
         if (e.PropertyName is "Item[]" or nameof(ILocalizationService.CurrentCulture))
         {
             OnPropertyChanged(nameof(Localization));
+            // Plain-property refresh for every localized label the view binds to —
+            // indexer-path bindings don't wake reliably on Localization-reference ping.
+            OnPropertyChanged(nameof(TitleLabel));
+            OnPropertyChanged(nameof(LanguageLabel));
+            OnPropertyChanged(nameof(HotkeyLabel));
+            OnPropertyChanged(nameof(HotkeyHint));
+            OnPropertyChanged(nameof(FormatLabel));
+            OnPropertyChanged(nameof(JpegQualityLabel));
+            OnPropertyChanged(nameof(WebpQualityLabel));
+            OnPropertyChanged(nameof(OutputFolderLabel));
+            OnPropertyChanged(nameof(OutputFolderWatermark));
+            OnPropertyChanged(nameof(BrowseLabel));
+            OnPropertyChanged(nameof(BrowseTooltip));
+            OnPropertyChanged(nameof(FileNameTemplateLabel));
+            OnPropertyChanged(nameof(PreviewBeforeSaveLabel));
+            OnPropertyChanged(nameof(MinimizeToTrayLabel));
+            OnPropertyChanged(nameof(SoundEnabledLabel));
+            OnPropertyChanged(nameof(ImportLabel));
+            OnPropertyChanged(nameof(ExportLabel));
+            OnPropertyChanged(nameof(OpenFileLabel));
         }
     }
 

@@ -44,6 +44,21 @@ public sealed partial class MainWindowViewModel : ViewModelBase
     public string AppTitle => "CaptureImage";
 
     /// <summary>
+    /// Localized label for the Log drawer toggle button at the bottom of the nav rail.
+    /// Exposed as a plain computed property (not via the Localization indexer) because
+    /// Avalonia's compiled indexer bindings don't reevaluate reliably when the
+    /// intermediate <c>Localization</c> property reference is unchanged — a plain
+    /// property path refresh with <c>OnPropertyChanged</c> is the reliable pattern.
+    /// </summary>
+    public string LogToggleLabel => Localization["Nav_LogViewer"];
+
+    /// <summary>
+    /// Localized tooltip / automation name for the Log drawer toggle button. Same
+    /// refresh-reliability reasoning as <see cref="LogToggleLabel"/>.
+    /// </summary>
+    public string LogToggleTooltip => Localization["Dashboard_LogToggle"];
+
+    /// <summary>
     /// Short semver pulled from the entry assembly's <c>Version</c> at runtime. Release builds
     /// set this via <c>/p:Version=&lt;git-tag&gt;</c> in release.yml; dev builds fall back to the
     /// <c>&lt;Version&gt;</c> element in CaptureImage.App.csproj. Zero-valued versions (a bare
@@ -101,6 +116,8 @@ public sealed partial class MainWindowViewModel : ViewModelBase
         if (e.PropertyName is "Item[]" or nameof(ILocalizationService.CurrentCulture))
         {
             OnPropertyChanged(nameof(Localization));
+            OnPropertyChanged(nameof(LogToggleLabel));
+            OnPropertyChanged(nameof(LogToggleTooltip));
         }
     }
 
