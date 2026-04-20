@@ -7,6 +7,133 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.0] - 2026-04-20
+
+Second release. Polish + configurability pass on top of v1.0.0 — ships a
+real hotkey rebinder, live localization fixes across every tab, an
+architecture overview for contributors, and a visual refresh aligned
+with 2025/26 Windows 11 conventions. No capture-engine changes; no new
+backends.
+
+### M4 — UI/UX polish: live-localization fixes + 2025 modernization
+
+Polish pass closing seven localization / live-refresh bugs and modernizing
+the visual system to match 2025/26 Windows 11 conventions. Commit
+[`5f5e878`](https://github.com/poli0981/captureimg/commit/5f5e878).
+
+- **Dashboard localization**: title, subtitle, Refresh / Arm / Disarm
+  buttons, "N target(s) visible" line, and the loading hint were all
+  hardcoded English; now bound through `{Binding Localization[Dashboard_*]}`
+  and refresh live on culture switch. `DashboardViewModel` grows
+  `TargetsCountText`, `LoadingText`, `EmptyStateText`, `HasNoTargets` and
+  expands its culture listener to refresh all of them.
+- **Steam badge tooltip**: `GameTargetViewModel.SteamBadgeTooltip` was a
+  hardcoded mixed EN/VI string; now formats via
+  `Dashboard_SteamBadgeTooltip` with a culture listener. The VM is now
+  `IDisposable` and the dashboard disposes rows on reconcile so the
+  listener doesn't pin dead targets.
+- **LogViewer Pause/Resume**: the button was pinned to `Log_Pause` and
+  didn't flip on state change. New `TogglePauseLabel` switches between
+  `Log_Pause` / `Log_Resume` on `IsPaused` + culture change. A new
+  culture listener on `LogViewerViewModel` also refreshes
+  `EventsCountText` + `EmptyStateText`.
+- **Hotkey error message**: `HotkeyBindingViewModel.ErrorMessage` is an
+  indexer-backed computed property; added a culture listener that raises
+  `PropertyChanged` so the Settings error text re-localizes live.
+- **MainWindow header**: hardcoded `"CaptureImage"` + stale
+  `"v0.1.0 — M3 UX polish"` replaced with `AppTitle` + `AppVersion`
+  pulled from `AssemblyInformationalVersion` / assembly metadata.
+  `App.csproj` now carries a `<Version>` element; release.yml keeps
+  overriding via `/p:Version=<git-tag>`.
+- **Inter font stack**: `Avalonia.Fonts.Inter` was in the package graph
+  but never applied. `App.axaml` now declares a global Inter style for
+  TextBlock / TextBox / Button / ComboBox / CheckBox (monospace
+  overrides remain for LogViewer entries + HotkeyRecorder display).
+- **Focus ring**: keyboard-focus `:focus-visible` style on
+  `ListBoxItem` + `Border#BindingField:focus` style on
+  `HotkeyRecorder` — both paint the border in the accent brush so Tab
+  navigation and "waiting for your key" are visually obvious.
+- **Corner radius**: unified to 8 px on cards / borders across Dashboard,
+  About, Update, Preview, LogViewer, Toast. 4 px kept only on the inline
+  Steam badge pill per the design contract.
+- **Text contrast**: every `Opacity="0.4"`–`"0.7"` on labels and hints
+  swapped for `Foreground=SystemControlForegroundBaseMediumBrush` so
+  secondary text meets WCAG AA on both light and dark theme variants.
+- **Accessibility**: `AutomationProperties.Name` + HelpText on the log
+  drawer toggle, HotkeyRecorder BindingField, and Dashboard status
+  card — screen readers now announce meaningful names.
+- **Empty states**: Dashboard and LogViewer now render a localized hint
+  when no targets / no log events. New keys `Dashboard_EmptyState`,
+  `Dashboard_LogToggle`, `Log_EmptyState`, `Log_EventsCount` added in
+  EN / VI / AR.
+- **FontSize scale**: snapped outliers to 11/12/13/14/16/22 — page
+  titles 24→22, preview dialog 20→22, nav icon 18→16, Steam badge
+  10→11.
+
+### M3 — Architecture tour + dogfood screenshots
+
+Contributor-facing documentation + real README screenshots. Commit
+[`8e374a0`](https://github.com/poli0981/captureimg/commit/8e374a0).
+
+- **`docs/ARCHITECTURE.md`** (new) — one-page-per-layer reference with
+  five Mermaid diagrams that GitHub renders inline: project dependency
+  graph, capture state machine, WGC capture pipeline sequence, DI
+  composition sketch, i18n + RTL flow, and Velopack update flow.
+- **`docs/screenshots/`** (new) — six real app screenshots
+  (Dashboard / Settings / About / Update / LogViewer / RTL Dashboard),
+  captured by dogfooding CaptureImage on itself for the passive views.
+- **README refresh** — replaces the "coming with first tagged release"
+  placeholder with a 2×3 screenshot table, and adds an Architecture
+  section linking to the new doc.
+
+### M2 — Dependabot cleanup + Node 24 runners
+
+Close the dependabot backlog ahead of the Node 20 deprecation deadline
+(2026-09-16). Commit [`d5706f2`](https://github.com/poli0981/captureimg/commit/d5706f2).
+
+- **GitHub Actions bumps** (all Node 20 → Node 24 runtime updates; no
+  API changes, `windows-latest` already supports the newer runner):
+  `actions/checkout` 4→6, `actions/setup-dotnet` 4→5,
+  `actions/upload-artifact` 4→7, `softprops/action-gh-release` 2→3.
+- **Test tooling bumps**: `xunit` 2.9.2→2.9.3 (patch),
+  `coverlet.collector` 6.0.2→8.0.1 (major — requires .NET 8 LTS floor,
+  which we already exceed on .NET 9).
+- **Release.yml audit**: `upload-artifact` v5/v6/v7 kept `name`,
+  `path`, `retention-days` intact; the v1.1 plan's speculated
+  `overwrite` default flip never happened. No YAML option changes
+  required.
+
+### M1 — Hotkey rebinder + conflict sniff
+
+First user-facing feature addition since 1.0.0. Commit
+[`0482f71`](https://github.com/poli0981/captureimg/commit/0482f71).
+
+- **`HotkeyRecorder` control** — keyboard-driven recorder in Settings.
+  Click Record, press a combination, Esc cancels. The view maps
+  Avalonia `Key` to Win32 virtual-key codes so the persisted
+  `HotkeyBinding` stays round-trippable against SharpHook's RawCode.
+- **`HotkeyBindingViewModel`** — bridges recorder → persistence and
+  calls `IHotkeyService.SetBinding` live so an armed capture picks up
+  the new combo without disarm/re-arm.
+- **`ReservedHotkeys`** (new, `CaptureImage.Core.Validation`) —
+  catalogue of combinations owned by the Windows shell (Win+L,
+  Ctrl+Shift+Esc, Alt+Tab, Alt+F4, Win snap keys, etc.).
+  `HotkeyBinding.Validate()` rejects those plus modifier-only /
+  naked-letter bindings before persistence with a localized error.
+- **`HotkeyConflictSniffer`** — `RegisterHotKey`/`UnregisterHotKey`
+  probe on `HWND=NULL`. If another process already owns the combo the
+  UI surfaces a non-blocking warning, but the user keeps control and
+  still saves.
+- **i18n strings** for every recorder surface added in EN / VI / AR.
+- **Tests**: +24 Core validation (reserved combos + `HotkeyBinding.Validate`),
+  +12 ViewModel flow with NSubstitute fakes. Total 107 pass.
+
+## [1.0.0] - 2026-04-16
+
+Initial public release. Screen-capture tool targeting Windows 11 22H2+,
+built with C# .NET 9 + Avalonia 11, distributed as a Velopack installer
+via GitHub Releases. Unsigned (SignPath application was declined).
+
 ### M5 — Release infrastructure (1.0.0 cut)
 
 Everything you need to actually ship the binary. No new product features;
