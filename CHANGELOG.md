@@ -7,6 +7,131 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.2] - 2026-04-20
+
+Localization hotfix on top of v1.1.1 — closes 13 bugs and gaps found in
+a post-v1.1.1 audit plus three bugs reported during smoke testing of
+the hotfix itself. No new features; no capture-engine changes. Velopack
+release on the same `win` channel as v1.1.1 to keep the delta chain
+intact.
+
+### Fixed
+
+- **Dashboard status line stale on culture switch.** `StatusMessage`
+  is an `[ObservableProperty]` stored backing field, so the v1.1.1
+  `OnPropertyChanged(nameof(Localization))` signal re-read the same
+  stored string. Redrive via `UpdateStatusForState()` on culture
+  change so the new culture's template wins.
+- **Preview window hardcoded English.** `PreviewWindow.axaml` had
+  `Title="Preview"` and no `FlowDirection` binding, so the modal stayed
+  in English and rendered LTR under Arabic. Title now binds to
+  `Localization[Preview_Title]`; `FlowDirection` binds to
+  `Localization.CurrentFlowDirection`.
+- **`PreviewViewModel` did not listen for culture changes.** If the
+  user switched language while the preview modal was open, the four
+  indexer bindings (`Preview_Title`, `Preview_Prompt`, `Preview_Save`,
+  `Preview_Discard`) stayed in the old culture. VM now implements
+  `IDisposable`, subscribes with a named `OnLocalizationChanged`, and
+  `AvaloniaPreviewPresenter` `using`-disposes it after the modal so
+  the subscription doesn't leak into the singleton service.
+- **File picker titles hardcoded English.** `Import settings` /
+  `Export settings` now come from new resx keys
+  `Settings_ImportTitle` / `Settings_ExportTitle` (en + vi + ar).
+- **Settings toast error title hardcoded English.**
+  `_toasts.ShowError("Error", …)` in three places now reads through
+  `Localization["Toast_Error"]` (new resx key).
+- **About tab disclaimer body paragraphs hardcoded English.** The
+  three disclaimer headings were already localized; the body
+  paragraphs were not, leaving the tab half-translated for vi / ar
+  users. Added `About_TranslationDisclaimerBody`,
+  `About_CaptureLimitationDisclaimerBody`, and
+  `About_LiabilityDisclaimerBody` in all three resx files (machine-
+  assisted translation, matching the existing Translations
+  disclaimer). `AiAssistanceNotice` intentionally stays English — it
+  describes the development process, not the user-facing product.
+- **Tray menu rebuilt 3× per culture switch.**
+  `AvaloniaTrayIconHost`'s `PropertyChanged` handler fired for every
+  notification the service raises (`Item[]` + `CurrentCulture` +
+  `CurrentFlowDirection`). Named handler now filters `"Item[]"` only,
+  and the subscription is torn down in `Dispose`.
+- **`ResxLocalizationService.SetCulture` set only
+  `DefaultThreadCurrentUICulture`.** Date / number / currency
+  formatting on the UI thread kept the OS locale. The service now
+  also sets `CultureInfo.CurrentUICulture`, `CurrentCulture`, and
+  `DefaultThreadCurrentCulture` so implicit `.ToString()` follows
+  the chosen language.
+- **Startup accepted any resolvable culture.** A hand-edited
+  `settings.json` with `Culture=fr-FR` would flip the app to fr and
+  fall through to neutral English resx while Settings still showed
+  "English" selected. `Program.cs` now validates the persisted
+  culture against `SupportedCultures` before calling `SetCulture`.
+- **Log drawer toggle button did not retranslate live.** Same
+  compiled-indexer-binding limitation as the next item — the v1.1.1
+  `OnPropertyChanged(nameof(Localization))` signal does not wake
+  Avalonia compiled indexer bindings through an intermediate
+  property. Fix: expose `LogToggleLabel` and `LogToggleTooltip` as
+  plain computed properties on `MainWindowViewModel` and bind
+  MainWindow.axaml to those instead of the indexer path.
+- **SettingsView did not retranslate live when the user switched
+  language from the Settings tab itself.** The view only refreshed
+  on re-navigation (DataTemplate re-instantiation). Added 18 plain
+  computed properties on `SettingsViewModel` and 6 on
+  `HotkeyBindingViewModel`, rewrote the bindings in
+  `SettingsView.axaml` and `HotkeyRecorder.axaml` to target them.
+- **`settings.json` was never written on first run.**
+  `JsonSettingsStore.LoadAsync` created a fresh `AppSettings()` in
+  memory when the file was missing but only persisted on the first
+  user-triggered `Update()`. Partial / malformed / future-version
+  files left the on-disk form out of sync with the in-memory form.
+  `LoadAsync` now writes back when the file is missing, unparseable,
+  version-too-new, or when the canonical re-serialized form differs
+  from the raw JSON. Write failure is logged but non-fatal so a
+  read-only disk does not break Load.
+
+### Changed
+
+- **Handler hygiene across localization subscribers.** Anonymous
+  lambda subscriptions on `Localization.PropertyChanged` extracted
+  to named methods so they can be unsubscribed
+  (`DashboardViewModel`, `AboutViewModel`, `LogViewerViewModel`,
+  `SettingsViewModel`, `AvaloniaTrayIconHost`). `LogViewerViewModel`
+  and `SettingsViewModel` now implement `IDisposable` and
+  unsubscribe both of their event sources; runtime behavior is
+  unchanged because the DI container disposes singletons on
+  shutdown.
+
+### Removed
+
+- Four unused resx keys (`Settings_Theme`, `Tray_Arm`, `Tray_Disarm`,
+  `Log_Export`) in lockstep across en / vi / ar. None were wired to
+  UI; a future v1.2+ can re-add them when a theme picker, tray
+  arm/disarm, or log export button actually ships.
+
+### Known limitations
+
+- Toast title / message snapshot the localized string at the time
+  `ToastService.Show` is called; switching culture while a toast is
+  still fading out does not retranslate it. Fixing this requires
+  threading resx keys through `ToastService` instead of strings —
+  deferred to v1.2+ to keep this hotfix focused.
+- `Dashboard` / `About` / `Update` / `LogViewer` tabs still use
+  `{Binding Localization[Key]}` indexer bindings in their
+  respective views. They refresh because navigation re-instantiates
+  them via `DataTemplate`; if a future change pins the active tab
+  through a culture switch, the same computed-property refactor may
+  be needed.
+
+### Tests
+
+- New `tests/CaptureImage.UI.Tests/` project covering
+  `ResxLocalizationService` (SetCulture thread-culture propagation,
+  FlowDirection mapping for ar-SA, event counts, indexer fallback
+  for missing keys, localized lookup for known keys, SupportedCultures
+  surface).
+- New `tests/CaptureImage.ViewModels.Tests/Preview/PreviewViewModelTests.cs`
+  covering the v1.1.2 M1 fix: Localization PropertyChanged forwarding
+  + Dispose detachment.
+
 ## [1.1.1] - 2026-04-20
 
 Hotfix on top of v1.1.0 — closes three bugs reported after the v1.1.0
