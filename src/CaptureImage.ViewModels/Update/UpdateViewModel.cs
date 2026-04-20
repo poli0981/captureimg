@@ -56,6 +56,21 @@ public sealed partial class UpdateViewModel : ViewModelBase, IDisposable
 
         _currentVersion = _updateService.CurrentVersion;
         _updateService.LogEmitted += OnLogEmitted;
+
+        // Force `{Binding Localization[Update_*]}` bindings to refresh when the user
+        // switches language from Settings while the Update tab is already active —
+        // the service's Item[] notification alone isn't reliably picked up by
+        // compiled indexer bindings through the intermediate Localization property.
+        Localization.PropertyChanged += OnLocalizationChanged;
+    }
+
+    private void OnLocalizationChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+    {
+        if (_disposed) return;
+        if (e.PropertyName is "Item[]" or nameof(ILocalizationService.CurrentCulture))
+        {
+            OnPropertyChanged(nameof(Localization));
+        }
     }
 
     public bool CanCheck => !IsBusy;
@@ -171,5 +186,6 @@ public sealed partial class UpdateViewModel : ViewModelBase, IDisposable
         if (_disposed) return;
         _disposed = true;
         _updateService.LogEmitted -= OnLogEmitted;
+        Localization.PropertyChanged -= OnLocalizationChanged;
     }
 }

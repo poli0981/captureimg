@@ -80,6 +80,9 @@ public sealed partial class HotkeyBindingViewModel : ViewModelBase, IDisposable
         if (e.PropertyName is "Item[]" or nameof(ILocalizationService.CurrentCulture))
         {
             OnPropertyChanged(nameof(ErrorMessage));
+            // Bubbles through to the `{Binding Localization[Settings_Hotkey*]}` bindings
+            // in HotkeyRecorder.axaml so prompt + conflict-warning text refresh live.
+            OnPropertyChanged(nameof(Localization));
         }
     }
 

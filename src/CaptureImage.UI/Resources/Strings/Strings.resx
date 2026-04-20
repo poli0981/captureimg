@@ -77,6 +77,9 @@
   <data name="Settings_WebpQuality" xml:space="preserve"><value>WebP quality</value></data>
   <data name="Settings_OutputFolder" xml:space="preserve"><value>Output folder</value></data>
   <data name="Settings_OutputFolderDefault" xml:space="preserve"><value>(default: Pictures\CaptureImage)</value></data>
+  <data name="Settings_Browse" xml:space="preserve"><value>Browse…</value></data>
+  <data name="Settings_BrowseTitle" xml:space="preserve"><value>Choose output folder</value></data>
+  <data name="Settings_BrowseTooltip" xml:space="preserve"><value>Pick a folder instead of typing the path.</value></data>
   <data name="Settings_FileNameTemplate" xml:space="preserve"><value>File name template</value></data>
   <data name="Settings_PreviewBeforeSave" xml:space="preserve"><value>Preview each capture before saving</value></data>
   <data name="Settings_MinimizeToTray" xml:space="preserve"><value>Close button minimizes to tray</value></data>

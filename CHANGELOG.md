@@ -7,6 +7,42 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.1] - 2026-04-20
+
+Hotfix on top of v1.1.0 — closes three bugs reported after the v1.1.0
+smoke install, and closes the CI gap that prevented in-app updates from
+working.
+
+### Fixed
+
+- **In-app update from v1.0.0 → v1.1.0 failed** because `release.yml`
+  packaged only a full `.nupkg` with the legacy `RELEASES` manifest —
+  Velopack clients ≥ 0.0.900 poll for `releases.win.json` and prefer an
+  incremental `*-delta.nupkg`. The workflow now runs
+  `vpk download github --channel win` ahead of `vpk pack` so Velopack
+  sees the previous release, emits a delta + the JSON manifest, and the
+  GitHub Release upload pattern picks up `releases.*.json`.
+- **Settings tab did not re-localize live when the language dropdown
+  was used**. The `{Binding Localization[Settings_*]}` indexer bindings
+  relied on the service's own `PropertyChanged("Item[]")` notification,
+  which Avalonia's compiled indexer bindings through an intermediate
+  property don't always pick up. Every ViewModel that exposes a
+  `Localization` property now raises
+  `OnPropertyChanged(nameof(Localization))` on culture change
+  (`SettingsViewModel`, `MainWindowViewModel`, `UpdateViewModel`,
+  `AboutViewModel`, and the existing listeners on
+  `DashboardViewModel`, `LogViewerViewModel`, `HotkeyBindingViewModel`).
+- **Log drawer toggle label on the nav rail required an app restart to
+  switch language** — same root cause as the Settings bug, same fix.
+
+### Added
+
+- **Output folder picker** in Settings. Click **Browse…** next to the
+  Output folder field to open the native folder picker instead of
+  typing a path by hand. The picker seeds from the current value when
+  set. New resx keys `Settings_Browse`, `Settings_BrowseTitle`,
+  `Settings_BrowseTooltip` in EN / VI / AR.
+
 ## [1.1.0] - 2026-04-20
 
 Second release. Polish + configurability pass on top of v1.0.0 — ships a

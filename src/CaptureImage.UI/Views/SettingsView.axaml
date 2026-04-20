@@ -61,8 +61,16 @@
             <!-- Output folder -->
             <StackPanel Spacing="4">
                 <TextBlock Text="{Binding Localization[Settings_OutputFolder]}" Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}" FontSize="12" />
-                <TextBox Text="{Binding OutputDirectory, Mode=TwoWay}"
-                         Watermark="{Binding Localization[Settings_OutputFolderDefault]}" />
+                <Grid ColumnDefinitions="*,8,Auto">
+                    <TextBox Grid.Column="0"
+                             Text="{Binding OutputDirectory, Mode=TwoWay}"
+                             Watermark="{Binding Localization[Settings_OutputFolderDefault]}" />
+                    <Button Grid.Column="2"
+                            Name="BrowseOutputButton"
+                            Content="{Binding Localization[Settings_Browse]}"
+                            ToolTip.Tip="{Binding Localization[Settings_BrowseTooltip]}"
+                            MinWidth="100" />
+                </Grid>
             </StackPanel>
 
             <!-- File name template -->

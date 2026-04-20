@@ -88,7 +88,22 @@ jobs:
         shell: pwsh
         run: echo "$env:USERPROFILE\.dotnet\tools" | Out-File -FilePath $env:GITHUB_PATH -Append
 
+      - name: Download previous release (for delta generation)
+        # Velopack only emits a *-delta.nupkg when it finds a previous full package
+        # in --outputDir. Fetching the last GitHub release before pack gives the
+        # Update tab a working incremental path from n-1 → n. Safe to continue-on-error:
+        # a first-ever release has nothing to download and we just publish full.
+        shell: pwsh
+        continue-on-error: true
+        run: |
+          New-Item -ItemType Directory -Force -Path ./releases | Out-Null
+          vpk download github --repoUrl https://github.com/${{ github.repository }} --outputDir ./releases --channel win
+
       - name: Velopack pack
+        # --channel win produces the modern releases.win.json manifest alongside the
+        # legacy RELEASES file, which is what Velopack clients >= 0.0.900 poll for.
+        # --delta BestSize keeps the hotfix payload small (typical v1.1.0 → v1.1.1
+        # delta is a few MB vs the ~55 MB full).
         run: >
           vpk pack
           --packId ${{ env.PACK_ID }}
@@ -96,6 +111,8 @@ jobs:
           --packDir ./publish
           --mainExe ${{ env.MAIN_EXE }}
           --outputDir ./releases
+          --channel win
+          --delta BestSize
 
       - name: Compute SHA256 sums
         shell: pwsh
@@ -127,6 +144,7 @@ jobs:
             ./releases/*.exe
             ./releases/*.nupkg
             ./releases/RELEASES
+            ./releases/releases.*.json
             ./releases/SHA256SUMS.txt
           body: |
             ## CaptureImage v${{ steps.version.outputs.version }}
