@@ -88,6 +88,20 @@ public sealed partial class MainWindowViewModel : ViewModelBase
 
         // Activate the first item by default.
         SelectedNavItem = NavItems[0];
+
+        // `{Binding Localization[Nav_LogViewer]}` on the log drawer toggle (and AppTitle /
+        // AppVersion / tooltip bindings) need an explicit poke at the VM level when
+        // culture changes — Avalonia's compiled indexer binding through an intermediate
+        // property doesn't always refresh on the service's own Item[] notification.
+        Localization.PropertyChanged += OnLocalizationChanged;
+    }
+
+    private void OnLocalizationChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName is "Item[]" or nameof(ILocalizationService.CurrentCulture))
+        {
+            OnPropertyChanged(nameof(Localization));
+        }
     }
 
     partial void OnSelectedNavItemChanged(NavItemViewModel? value)

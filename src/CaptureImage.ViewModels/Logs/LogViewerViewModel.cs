@@ -52,6 +52,10 @@ public sealed partial class LogViewerViewModel : ViewModelBase
                 OnPropertyChanged(nameof(TogglePauseLabel));
                 OnPropertyChanged(nameof(EventsCountText));
                 OnPropertyChanged(nameof(EmptyStateText));
+                // Refresh the `{Binding Localization[Log_Title]}` / `[Log_Clear]` direct
+                // indexer bindings in the header. v1.1.1 hotfix — the service's own
+                // Item[] notification alone doesn't reliably re-resolve the path.
+                OnPropertyChanged(nameof(Localization));
             }
         };
 

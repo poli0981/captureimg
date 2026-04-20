@@ -10,9 +10,9 @@
     <UseWpf>false</UseWpf>
     <!-- App icon + manifest are added in M4 -->
     <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
-    <!-- Release value for v1.1.0; release.yml still overrides via /p:Version=<git-tag>
+    <!-- Release value for v1.1.1; release.yml still overrides via /p:Version=<git-tag>
          for tag-driven builds. Bump to the next -dev suffix after the release lands. -->
-    <Version>1.1.0</Version>
+    <Version>1.1.1</Version>
   </PropertyGroup>
 
   <ItemGroup>

@@ -25,6 +25,18 @@ public sealed partial class AboutViewModel : ViewModelBase
         Localization = localization;
         _logger = logger;
 
+        // About view binds every label through `{Binding Localization[About_*]}`. Push an
+        // explicit PropertyChanged on culture switch so the compiled indexer bindings
+        // re-resolve their path — the Localization service's own Item[] notification
+        // isn't picked up through the intermediate property in every case.
+        Localization.PropertyChanged += (_, e) =>
+        {
+            if (e.PropertyName is "Item[]" or nameof(ILocalizationService.CurrentCulture))
+            {
+                OnPropertyChanged(nameof(Localization));
+            }
+        };
+
         var asm = typeof(AboutViewModel).Assembly;
         AppVersion = asm.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion
             ?? asm.GetName().Version?.ToString()

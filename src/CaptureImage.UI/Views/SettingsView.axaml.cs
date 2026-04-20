@@ -15,6 +15,7 @@ public partial class SettingsView : UserControl
 
         var importButton = this.FindControl<Button>("ImportButton");
         var exportButton = this.FindControl<Button>("ExportButton");
+        var browseOutputButton = this.FindControl<Button>("BrowseOutputButton");
 
         if (importButton is not null)
         {
@@ -23,6 +24,51 @@ public partial class SettingsView : UserControl
         if (exportButton is not null)
         {
             exportButton.Click += OnExportClick;
+        }
+        if (browseOutputButton is not null)
+        {
+            browseOutputButton.Click += OnBrowseOutputClick;
+        }
+    }
+
+    private async void OnBrowseOutputClick(object? sender, RoutedEventArgs e)
+    {
+        if (DataContext is not SettingsViewModel vm) return;
+
+        var top = TopLevel.GetTopLevel(this);
+        if (top is null) return;
+
+        // Seed the picker at whatever the user has configured (or the system default if
+        // the field is empty). Failing to resolve the suggested start is non-fatal — the
+        // picker falls back to its own default.
+        IStorageFolder? suggestedStart = null;
+        if (!string.IsNullOrWhiteSpace(vm.OutputDirectory))
+        {
+            try
+            {
+                suggestedStart = await top.StorageProvider.TryGetFolderFromPathAsync(vm.OutputDirectory);
+            }
+            catch
+            {
+                // Ignore — start elsewhere.
+            }
+        }
+
+        var folders = await top.StorageProvider.OpenFolderPickerAsync(new FolderPickerOpenOptions
+        {
+            Title = vm.Localization["Settings_BrowseTitle"],
+            AllowMultiple = false,
+            SuggestedStartLocation = suggestedStart,
+        });
+
+        if (folders.Count == 0) return;
+
+        var path = folders[0].TryGetLocalPath();
+        if (!string.IsNullOrEmpty(path))
+        {
+            // Two-way binding pushes back into AppSettings through the
+            // OnOutputDirectoryChanged partial handler in the VM.
+            vm.OutputDirectory = path;
         }
     }
 

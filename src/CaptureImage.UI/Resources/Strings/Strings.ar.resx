@@ -77,6 +77,9 @@
   <data name="Settings_WebpQuality" xml:space="preserve"><value>جودة WebP</value></data>
   <data name="Settings_OutputFolder" xml:space="preserve"><value>مجلد الإخراج</value></data>
   <data name="Settings_OutputFolderDefault" xml:space="preserve"><value>(افتراضي: Pictures\CaptureImage)</value></data>
+  <data name="Settings_Browse" xml:space="preserve"><value>استعراض…</value></data>
+  <data name="Settings_BrowseTitle" xml:space="preserve"><value>اختر مجلد الإخراج</value></data>
+  <data name="Settings_BrowseTooltip" xml:space="preserve"><value>اختر مجلدًا بدلاً من كتابة المسار.</value></data>
   <data name="Settings_FileNameTemplate" xml:space="preserve"><value>قالب اسم الملف</value></data>
   <data name="Settings_PreviewBeforeSave" xml:space="preserve"><value>معاينة كل التقاط قبل الحفظ</value></data>
   <data name="Settings_MinimizeToTray" xml:space="preserve"><value>زر الإغلاق يصغر إلى علبة النظام</value></data>

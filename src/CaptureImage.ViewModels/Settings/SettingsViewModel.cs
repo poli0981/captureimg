@@ -80,6 +80,22 @@ public sealed partial class SettingsViewModel : ViewModelBase
 
         Hydrate();
         _settings.Changed += (_, _) => Hydrate();
+
+        // Raise OnPropertyChanged(nameof(Localization)) on culture switch so every
+        // `{Binding Localization[Key]}` in SettingsView re-resolves the full path and
+        // picks up the new translation in-place. The service's own "Item[]" INPC fires,
+        // but Avalonia's compiled indexer bindings through an intermediate property do
+        // not always listen to that; bumping the property name at the VM level forces
+        // re-evaluation and matches the pattern used by NavItemViewModel.
+        Localization.PropertyChanged += OnLocalizationChanged;
+    }
+
+    private void OnLocalizationChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName is "Item[]" or nameof(ILocalizationService.CurrentCulture))
+        {
+            OnPropertyChanged(nameof(Localization));
+        }
     }
 
     private CultureInfo? FindCulture(string name)

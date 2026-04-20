@@ -77,6 +77,9 @@
   <data name="Settings_WebpQuality" xml:space="preserve"><value>Chất lượng WebP</value></data>
   <data name="Settings_OutputFolder" xml:space="preserve"><value>Thư mục lưu</value></data>
   <data name="Settings_OutputFolderDefault" xml:space="preserve"><value>(mặc định: Pictures\CaptureImage)</value></data>
+  <data name="Settings_Browse" xml:space="preserve"><value>Duyệt…</value></data>
+  <data name="Settings_BrowseTitle" xml:space="preserve"><value>Chọn thư mục lưu</value></data>
+  <data name="Settings_BrowseTooltip" xml:space="preserve"><value>Chọn thư mục thay vì phải gõ đường dẫn.</value></data>
   <data name="Settings_FileNameTemplate" xml:space="preserve"><value>Mẫu tên tệp</value></data>
   <data name="Settings_PreviewBeforeSave" xml:space="preserve"><value>Xem trước từng ảnh chụp trước khi lưu</value></data>
   <data name="Settings_MinimizeToTray" xml:space="preserve"><value>Nút đóng sẽ thu nhỏ xuống tray</value></data>

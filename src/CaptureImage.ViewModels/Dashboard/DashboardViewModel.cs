@@ -120,6 +120,10 @@ public sealed partial class DashboardViewModel : ViewModelBase, IDisposable
                 OnPropertyChanged(nameof(TargetsCountText));
                 OnPropertyChanged(nameof(LoadingText));
                 OnPropertyChanged(nameof(EmptyStateText));
+                // Forces `{Binding Localization[Key]}` bindings on DashboardView to
+                // re-resolve the indexer path in-place (Title, Subtitle, Refresh / Arm /
+                // Disarm button labels). See v1.1.1 hotfix notes.
+                OnPropertyChanged(nameof(Localization));
             }
         };
 
