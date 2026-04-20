@@ -42,14 +42,38 @@ internal static class Program
             settingsStore.LoadAsync().GetAwaiter().GetResult();
 
             // Apply persisted culture before the first window is constructed so nav labels etc.
-            // render in the right language from frame zero.
+            // render in the right language from frame zero. Only accept cultures the app
+            // actually ships translations for — a hand-edited settings.json with, say,
+            // Culture=fr-FR used to flip the app to fr and then fall through to neutral
+            // en strings with Settings showing "English" selected; refuse at startup
+            // instead so the default en-US stays coherent.
             var localization = services.GetRequiredService<ILocalizationService>();
             var cultureName = settingsStore.Current.Culture;
             if (!string.IsNullOrWhiteSpace(cultureName))
             {
                 try
                 {
-                    localization.SetCulture(System.Globalization.CultureInfo.GetCultureInfo(cultureName));
+                    var culture = System.Globalization.CultureInfo.GetCultureInfo(cultureName);
+                    var supported = false;
+                    foreach (var shipped in localization.SupportedCultures)
+                    {
+                        if (shipped.Name.Equals(culture.Name, StringComparison.OrdinalIgnoreCase))
+                        {
+                            supported = true;
+                            break;
+                        }
+                    }
+
+                    if (supported)
+                    {
+                        localization.SetCulture(culture);
+                    }
+                    else
+                    {
+                        Log.Warning(
+                            "Persisted culture {Culture} is not a shipped language; falling back to default.",
+                            cultureName);
+                    }
                 }
                 catch (System.Globalization.CultureNotFoundException)
                 {

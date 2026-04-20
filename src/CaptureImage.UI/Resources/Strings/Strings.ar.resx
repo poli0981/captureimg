@@ -60,7 +60,6 @@
   <!-- Settings -->
   <data name="Settings_Title" xml:space="preserve"><value>الإعدادات</value></data>
   <data name="Settings_Language" xml:space="preserve"><value>اللغة</value></data>
-  <data name="Settings_Theme" xml:space="preserve"><value>المظهر</value></data>
   <data name="Settings_Hotkey" xml:space="preserve"><value>مفتاح اختصار الالتقاط</value></data>
   <data name="Settings_HotkeyHint" xml:space="preserve"><value>انقر تسجيل ثم اضغط على مجموعة مفاتيح. Esc للإلغاء. إعادة التعيين تستعيد Ctrl+Shift+F12.</value></data>
   <data name="Settings_HotkeyRecord" xml:space="preserve"><value>تسجيل…</value></data>
@@ -130,7 +129,6 @@
   <data name="Log_Pause" xml:space="preserve"><value>إيقاف مؤقت</value></data>
   <data name="Log_Resume" xml:space="preserve"><value>استئناف</value></data>
   <data name="Log_Clear" xml:space="preserve"><value>مسح</value></data>
-  <data name="Log_Export" xml:space="preserve"><value>تصدير…</value></data>
   <data name="Log_EventsCount" xml:space="preserve"><value>{0} حدث</value></data>
   <data name="Log_EmptyState" xml:space="preserve"><value>لا توجد أحداث سجل بعد. ستظهر الأحداث المباشرة من محرك الالتقاط هنا.</value></data>
 
@@ -149,8 +147,6 @@
 
   <!-- Tray menu -->
   <data name="Tray_ShowWindow" xml:space="preserve"><value>عرض CaptureImage</value></data>
-  <data name="Tray_Arm" xml:space="preserve"><value>تفعيل الالتقاط</value></data>
-  <data name="Tray_Disarm" xml:space="preserve"><value>إلغاء تفعيل الالتقاط</value></data>
   <data name="Tray_OpenFolder" xml:space="preserve"><value>فتح مجلد اللقطات</value></data>
   <data name="Tray_Exit" xml:space="preserve"><value>خروج</value></data>
 

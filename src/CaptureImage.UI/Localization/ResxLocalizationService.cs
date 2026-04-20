@@ -69,7 +69,18 @@ public sealed class ResxLocalizationService : ILocalizationService
         }
 
         _currentCulture = culture;
+
+        // The indexer passes _currentCulture explicitly to ResourceManager so resx lookup
+        // is correct regardless of thread culture — but date/number/currency formatting
+        // elsewhere in the app uses the ambient CurrentCulture. Align both so a vi-VN
+        // user sees Vietnamese dates and an ar-SA user sees Arabic-Indic digits wherever
+        // implicit .ToString() lands. DefaultThread* sets the baseline for threads that
+        // haven't overridden their own culture (e.g. background threads the user hasn't
+        // touched yet); the UI thread gets both explicit assignments.
+        CultureInfo.CurrentUICulture = culture;
+        CultureInfo.CurrentCulture = culture;
         CultureInfo.DefaultThreadCurrentUICulture = culture;
+        CultureInfo.DefaultThreadCurrentCulture = culture;
 
         // "Item[]" is the magic property name that tells Avalonia to refresh every indexer binding.
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Item[]"));
