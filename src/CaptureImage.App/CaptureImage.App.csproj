@@ -10,6 +10,8 @@
     <UseWpf>false</UseWpf>
     <!-- App icon + manifest are added in M4 -->
     <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
+    <!-- Dev default; release.yml overrides via /p:Version=<git-tag> -->
+    <Version>1.1.0-dev</Version>
   </PropertyGroup>
 
   <ItemGroup>

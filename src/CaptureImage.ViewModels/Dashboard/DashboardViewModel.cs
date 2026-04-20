@@ -58,6 +58,18 @@ public sealed partial class DashboardViewModel : ViewModelBase, IDisposable
 
     public ObservableCollection<GameTargetViewModel> Targets { get; } = new();
 
+    /// <summary>Localized "{0} target(s) visible" line at the bottom of the dashboard.</summary>
+    public string TargetsCountText =>
+        string.Format(Localization["Dashboard_TargetsCount"], Targets.Count);
+
+    /// <summary>Localized "Loading…" hint shown while the process enumerator is running.</summary>
+    public string LoadingText => Localization["Dashboard_Loading"];
+
+    /// <summary>Localized hint shown when the target list is empty (no visible windows).</summary>
+    public string EmptyStateText => Localization["Dashboard_EmptyState"];
+
+    public bool HasNoTargets => Targets.Count == 0 && !IsLoading;
+
     public bool IsArmed => CurrentState is CaptureState.Armed or CaptureState.Capturing
                                          or CaptureState.Previewing or CaptureState.Saving
                                          or CaptureState.Complete or CaptureState.Failed;
@@ -105,11 +117,27 @@ public sealed partial class DashboardViewModel : ViewModelBase, IDisposable
             if (e.PropertyName is "Item[]" or nameof(ILocalizationService.CurrentCulture))
             {
                 OnPropertyChanged(nameof(StatusMessage));
+                OnPropertyChanged(nameof(TargetsCountText));
+                OnPropertyChanged(nameof(LoadingText));
+                OnPropertyChanged(nameof(EmptyStateText));
             }
+        };
+
+        // TargetsCountText depends on Targets.Count — refresh whenever the collection changes.
+        Targets.CollectionChanged += (_, _) =>
+        {
+            OnPropertyChanged(nameof(TargetsCountText));
+            OnPropertyChanged(nameof(HasNoTargets));
         };
 
         // Fire the first refresh without blocking the constructor.
         _ = RefreshAsync();
+    }
+
+    // HasNoTargets depends on IsLoading — refresh when the loading flag flips.
+    partial void OnIsLoadingChanged(bool value)
+    {
+        OnPropertyChanged(nameof(HasNoTargets));
     }
 
     // -- nav / refresh -------------------------------------------------------
@@ -138,10 +166,14 @@ public sealed partial class DashboardViewModel : ViewModelBase, IDisposable
     {
         var previousPid = SelectedTarget?.ProcessId;
 
+        foreach (var stale in Targets)
+        {
+            stale.Dispose();
+        }
         Targets.Clear();
         foreach (var target in newTargets)
         {
-            Targets.Add(new GameTargetViewModel(target));
+            Targets.Add(new GameTargetViewModel(target, Localization));
         }
 
         if (previousPid is { } pid)

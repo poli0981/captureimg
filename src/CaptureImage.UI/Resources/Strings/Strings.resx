@@ -52,6 +52,8 @@
   <data name="Dashboard_StatusFailed" xml:space="preserve"><value>Capture failed ({0}): {1}</value></data>
   <data name="Dashboard_TargetsCount" xml:space="preserve"><value>{0} target(s) visible</value></data>
   <data name="Dashboard_Loading" xml:space="preserve"><value>Loading…</value></data>
+  <data name="Dashboard_EmptyState" xml:space="preserve"><value>No visible windows to capture — launch your game or app, then click Refresh.</value></data>
+  <data name="Dashboard_LogToggle" xml:space="preserve"><value>Toggle real-time log drawer</value></data>
   <data name="Dashboard_SteamBadge" xml:space="preserve"><value>STEAM</value></data>
   <data name="Dashboard_SteamBadgeTooltip" xml:space="preserve"><value>Steam game: {0} (AppId {1}). F12 screenshot is available via Steam Overlay. Some anti-cheat protected games may block external capture.</value></data>
 
@@ -121,6 +123,8 @@
   <data name="Log_Resume" xml:space="preserve"><value>Resume</value></data>
   <data name="Log_Clear" xml:space="preserve"><value>Clear</value></data>
   <data name="Log_Export" xml:space="preserve"><value>Export…</value></data>
+  <data name="Log_EventsCount" xml:space="preserve"><value>{0} events</value></data>
+  <data name="Log_EmptyState" xml:space="preserve"><value>No log events yet. Live events from the capture engine will appear here.</value></data>
 
   <!-- Preview -->
   <data name="Preview_Title" xml:space="preserve"><value>Preview</value></data>
