@@ -156,6 +156,46 @@ public class JsonSettingsStoreTests
     }
 
     [Fact]
+    public async Task LoadAsync_V1File_MigratesToV2AndWritesBack()
+    {
+        var (store, fs) = Build();
+        var appDataRoot = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+        var dir = Path.Combine(appDataRoot, "CaptureImage");
+        fs.Directory.CreateDirectory(dir);
+        // Hand-crafted v1 document — no logLevel field present. System.Text.Json fills
+        // it with the init default (Information), and the migration path stamps Version=2
+        // + triggers a write-back so the on-disk file ends up canonical.
+        fs.File.WriteAllText(ExpectedPath,
+            "{\"version\": 1, \"culture\": \"vi-VN\", \"theme\": \"System\"}");
+
+        await store.LoadAsync();
+
+        store.Current.Version.Should().Be(2);
+        store.Current.Culture.Should().Be("vi-VN");
+        store.Current.LogLevel.Should().Be("Information");
+        // Write-back normalised the file — next parse sees v2 directly.
+        var written = fs.File.ReadAllText(ExpectedPath);
+        written.Should().Contain("\"version\": 2");
+        written.Should().Contain("\"logLevel\": \"Information\"");
+    }
+
+    [Fact]
+    public async Task LoadAsync_V2File_PreservesLogLevelField()
+    {
+        var (store, fs) = Build();
+        var appDataRoot = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+        var dir = Path.Combine(appDataRoot, "CaptureImage");
+        fs.Directory.CreateDirectory(dir);
+        fs.File.WriteAllText(ExpectedPath,
+            "{\"version\": 2, \"culture\": \"en-US\", \"logLevel\": \"Debug\"}");
+
+        await store.LoadAsync();
+
+        store.Current.Version.Should().Be(2);
+        store.Current.LogLevel.Should().Be("Debug");
+    }
+
+    [Fact]
     public async Task ExportAsync_WritesCurrentSettings()
     {
         var (store, fs) = Build();

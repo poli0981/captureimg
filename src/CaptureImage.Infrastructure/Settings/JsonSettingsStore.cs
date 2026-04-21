@@ -91,17 +91,32 @@ public sealed class JsonSettingsStore : ISettingsStore, IDisposable
                 }
                 else
                 {
-                    // v1 → v2 migration: earlier builds only tracked fields up to UI;
-                    // System.Text.Json fills LogLevel with its init default when
-                    // deserializing a v1 document, so the data is already correct. We
-                    // just need to stamp Version=2 so the canonical form matches the
-                    // current schema and the next load recognises it.
+                    // v1 → v2 migration: earlier builds only tracked fields up to UI.
+                    // System.Text.Json's source-gen deserializer leaves absent init-only
+                    // strings at null instead of the record's init default, so explicitly
+                    // set LogLevel here; then stamp Version=2 and trigger a write-back
+                    // so the canonical on-disk form matches the current schema.
                     if (parsed.Version < SupportedVersion)
                     {
                         _logger.LogInformation(
                             "Migrating settings file {Path} from version {From} to {To}.",
                             _filePath, parsed.Version, SupportedVersion);
-                        parsed = parsed with { Version = SupportedVersion };
+                        parsed = parsed with
+                        {
+                            Version = SupportedVersion,
+                            LogLevel = string.IsNullOrWhiteSpace(parsed.LogLevel)
+                                ? "Information"
+                                : parsed.LogLevel,
+                        };
+                        needsWriteBack = true;
+                    }
+
+                    // Defensive: even a v2-stamped file can arrive with LogLevel=null if it
+                    // was hand-edited or produced by an older preview binary. Fill in the
+                    // default so downstream code never sees null.
+                    if (string.IsNullOrWhiteSpace(parsed.LogLevel))
+                    {
+                        parsed = parsed with { LogLevel = "Information" };
                         needsWriteBack = true;
                     }
 
