@@ -88,6 +88,9 @@
   <data name="Settings_ImportTitle" xml:space="preserve"><value>استيراد الإعدادات</value></data>
   <data name="Settings_ExportTitle" xml:space="preserve"><value>تصدير الإعدادات</value></data>
   <data name="Settings_OpenFile" xml:space="preserve"><value>فتح ملف الإعدادات</value></data>
+  <data name="Settings_Logging" xml:space="preserve"><value>السجلات</value></data>
+  <data name="Settings_LogLevel" xml:space="preserve"><value>الحد الأدنى لمستوى السجل</value></data>
+  <data name="Settings_LogLevelHint" xml:space="preserve"><value>يُصفّي ملف السجل المتدوّر وعارض السجل. اختر Debug للتشخيص، Information للاستخدام اليومي، Warning أو Error لتقليل الضوضاء.</value></data>
 
   <!-- Update -->
   <data name="Update_Title" xml:space="preserve"><value>تحديث</value></data>
@@ -131,6 +134,8 @@
   <data name="Log_Clear" xml:space="preserve"><value>مسح</value></data>
   <data name="Log_EventsCount" xml:space="preserve"><value>{0} حدث</value></data>
   <data name="Log_EmptyState" xml:space="preserve"><value>لا توجد أحداث سجل بعد. ستظهر الأحداث المباشرة من محرك الالتقاط هنا.</value></data>
+  <data name="Log_Filter" xml:space="preserve"><value>الحد الأدنى:</value></data>
+  <data name="Log_RevealFolder" xml:space="preserve"><value>فتح المجلد</value></data>
 
   <!-- Preview -->
   <data name="Preview_Title" xml:space="preserve"><value>معاينة</value></data>

@@ -21,6 +21,7 @@ public sealed partial class SettingsViewModel : ViewModelBase, IDisposable
     private readonly ISettingsStore _settings;
     private readonly IToastService _toasts;
     private readonly ILogger<SettingsViewModel> _logger;
+    private readonly ILogLevelSwitcher _logLevelSwitcher;
     private bool _suppressPush;
     private bool _disposed;
 
@@ -33,6 +34,14 @@ public sealed partial class SettingsViewModel : ViewModelBase, IDisposable
 
     public ObservableCollection<ImageFormat> SupportedFormats { get; } =
         new(new[] { ImageFormat.Png, ImageFormat.Jpeg, ImageFormat.Webp, ImageFormat.Tiff });
+
+    /// <summary>
+    /// Log-level options shown in the Settings Logging picker. Order matches user
+    /// expectation (most-verbose first) and the strings match <see cref="AppSettings.LogLevel"/>
+    /// so the picker can bind directly to <see cref="SelectedLogLevel"/>.
+    /// </summary>
+    public ObservableCollection<string> SupportedLogLevels { get; } =
+        new(new[] { "Debug", "Information", "Warning", "Error" });
 
     [ObservableProperty]
     private CultureInfo _selectedCulture;
@@ -60,6 +69,9 @@ public sealed partial class SettingsViewModel : ViewModelBase, IDisposable
 
     [ObservableProperty]
     private bool _soundEnabled;
+
+    [ObservableProperty]
+    private string _selectedLogLevel = "Information";
 
     public string SettingsFilePath => _settings.SettingsFilePath;
 
@@ -91,17 +103,22 @@ public sealed partial class SettingsViewModel : ViewModelBase, IDisposable
     public string ImportLabel => Localization["Settings_Import"];
     public string ExportLabel => Localization["Settings_Export"];
     public string OpenFileLabel => Localization["Settings_OpenFile"];
+    public string LoggingLabel => Localization["Settings_Logging"];
+    public string LogLevelLabel => Localization["Settings_LogLevel"];
+    public string LogLevelHint => Localization["Settings_LogLevelHint"];
 
     public SettingsViewModel(
         ISettingsStore settings,
         ILocalizationService localization,
         IToastService toasts,
         HotkeyBindingViewModel hotkey,
-        ILogger<SettingsViewModel> logger)
+        ILogger<SettingsViewModel> logger,
+        ILogLevelSwitcher logLevelSwitcher)
     {
         _settings = settings;
         _toasts = toasts;
         _logger = logger;
+        _logLevelSwitcher = logLevelSwitcher;
         Localization = localization;
         Hotkey = hotkey;
 
@@ -152,6 +169,9 @@ public sealed partial class SettingsViewModel : ViewModelBase, IDisposable
             OnPropertyChanged(nameof(ImportLabel));
             OnPropertyChanged(nameof(ExportLabel));
             OnPropertyChanged(nameof(OpenFileLabel));
+            OnPropertyChanged(nameof(LoggingLabel));
+            OnPropertyChanged(nameof(LogLevelLabel));
+            OnPropertyChanged(nameof(LogLevelHint));
         }
     }
 
@@ -190,6 +210,11 @@ public sealed partial class SettingsViewModel : ViewModelBase, IDisposable
             PreviewBeforeSave = current.Capture.PreviewBeforeSave;
             MinimizeToTray = current.UI.MinimizeToTray;
             SoundEnabled = current.UI.SoundEnabled;
+            // Fall back to the first supported value if the persisted string doesn't match —
+            // that can happen after a hand-edit or a downgrade from a future schema.
+            SelectedLogLevel = SupportedLogLevels.Contains(current.LogLevel)
+                ? current.LogLevel
+                : SupportedLogLevels[1]; // Information
         }
         finally
         {
@@ -250,6 +275,16 @@ public sealed partial class SettingsViewModel : ViewModelBase, IDisposable
     {
         if (_suppressPush) return;
         _settings.Update(s => s with { UI = s.UI with { SoundEnabled = value } });
+    }
+
+    partial void OnSelectedLogLevelChanged(string value)
+    {
+        if (_suppressPush || string.IsNullOrWhiteSpace(value)) return;
+        _settings.Update(s => s with { LogLevel = value });
+        // Flip the live Serilog minimum level immediately — no restart needed. The
+        // persisted value syncs via the debounced settings writer.
+        _logLevelSwitcher.SetLevel(value);
+        _logger.LogInformation("Log level changed to {Level}.", value);
     }
 
     private static int Clamp(int v) => v < 1 ? 1 : v > 100 ? 100 : v;

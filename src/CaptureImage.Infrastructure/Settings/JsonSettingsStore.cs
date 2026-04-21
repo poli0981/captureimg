@@ -18,7 +18,7 @@ public sealed class JsonSettingsStore : ISettingsStore, IDisposable
     private static readonly TimeSpan WriteDebounce = TimeSpan.FromMilliseconds(300);
 
     /// <summary>Highest schema version this binary understands.</summary>
-    private const int SupportedVersion = 1;
+    private const int SupportedVersion = 2;
 
     private readonly IFileSystem _fs;
     private readonly ILogger<JsonSettingsStore> _logger;
@@ -91,6 +91,20 @@ public sealed class JsonSettingsStore : ISettingsStore, IDisposable
                 }
                 else
                 {
+                    // v1 → v2 migration: earlier builds only tracked fields up to UI;
+                    // System.Text.Json fills LogLevel with its init default when
+                    // deserializing a v1 document, so the data is already correct. We
+                    // just need to stamp Version=2 so the canonical form matches the
+                    // current schema and the next load recognises it.
+                    if (parsed.Version < SupportedVersion)
+                    {
+                        _logger.LogInformation(
+                            "Migrating settings file {Path} from version {From} to {To}.",
+                            _filePath, parsed.Version, SupportedVersion);
+                        parsed = parsed with { Version = SupportedVersion };
+                        needsWriteBack = true;
+                    }
+
                     loaded = parsed;
                     // Partial/missing/extra fields — re-serializing fills init defaults, so
                     // if the canonical form differs from the raw JSON, write back to
@@ -103,7 +117,8 @@ public sealed class JsonSettingsStore : ISettingsStore, IDisposable
                         needsWriteBack = true;
                     }
                     _logger.LogInformation(
-                        "Settings loaded from {Path} (version {Version}).", _filePath, loaded.Version);
+                        "Settings loaded from {Path} (version {Version}, log level {LogLevel}).",
+                        _filePath, loaded.Version, loaded.LogLevel);
                 }
             }
         }

@@ -36,10 +36,11 @@ public class JsonSettingsStoreTests
 
         await store.LoadAsync();
 
-        store.Current.Version.Should().Be(1);
+        store.Current.Version.Should().Be(2);
         store.Current.Culture.Should().Be("en-US");
         store.Current.CaptureHotkey.Should().Be(HotkeyBinding.Default);
         store.Current.Capture.DefaultFormat.Should().Be(ImageFormat.Png);
+        store.Current.LogLevel.Should().Be("Information");
     }
 
     [Fact]
@@ -136,7 +137,7 @@ public class JsonSettingsStoreTests
 
         await store.LoadAsync();
 
-        store.Current.Version.Should().Be(1);
+        store.Current.Version.Should().Be(2);
         store.Current.Culture.Should().Be("en-US");
     }
 

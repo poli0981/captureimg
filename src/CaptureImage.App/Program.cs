@@ -28,8 +28,8 @@ internal static class Program
         // when the launch is a normal one.
         VelopackApp.Build().Run();
 
-        // Bootstrap Serilog early (and keep the in-memory sink reference for DI).
-        var inMemorySink = LoggingSetup.Initialize();
+        // Bootstrap Serilog early (keep the in-memory sink + runtime level switch for DI).
+        var (inMemorySink, loggingLevelSwitch) = LoggingSetup.Initialize();
 
         // Catch anything that escapes try/catch on any thread. Register before we stand up DI
         // or UI so background-thread crashes during startup still reach the rolling file.
@@ -45,12 +45,20 @@ internal static class Program
                 System.Globalization.CultureInfo.CurrentUICulture.Name,
                 args);
 
-            var services = CompositionRoot.BuildServices(inMemorySink);
+            var services = CompositionRoot.BuildServices(inMemorySink, loggingLevelSwitch);
             UI.App.Services = services;
 
             // Load persisted settings before the UI binds to them.
             var settingsStore = services.GetRequiredService<ISettingsStore>();
             settingsStore.LoadAsync().GetAwaiter().GetResult();
+
+            // Narrow Serilog's minimum level from the boot default (Debug) down to whatever
+            // the user chose via Settings last run. This happens after LoadAsync so that
+            // early-startup lines — "CaptureImage starting", "Settings loaded …" — always
+            // land in the file regardless of the configured floor.
+            var configuredLevel = LoggingSetup.ParseLevel(settingsStore.Current.LogLevel);
+            loggingLevelSwitch.MinimumLevel = configuredLevel;
+            Log.Information("Log level set to {Level} from settings.", configuredLevel);
 
             // Apply persisted culture before the first window is constructed so nav labels etc.
             // render in the right language from frame zero. Only accept cultures the app

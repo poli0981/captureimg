@@ -88,6 +88,9 @@
   <data name="Settings_ImportTitle" xml:space="preserve"><value>Nhập cài đặt</value></data>
   <data name="Settings_ExportTitle" xml:space="preserve"><value>Xuất cài đặt</value></data>
   <data name="Settings_OpenFile" xml:space="preserve"><value>Mở tệp cài đặt</value></data>
+  <data name="Settings_Logging" xml:space="preserve"><value>Ghi log</value></data>
+  <data name="Settings_LogLevel" xml:space="preserve"><value>Mức log tối thiểu</value></data>
+  <data name="Settings_LogLevelHint" xml:space="preserve"><value>Lọc cả file log xoay vòng và cửa sổ Log. Chọn Debug khi gỡ lỗi, Information cho vận hành hằng ngày, Warning hoặc Error để giữ log gọn.</value></data>
 
   <!-- Update -->
   <data name="Update_Title" xml:space="preserve"><value>Cập nhật</value></data>
@@ -131,6 +134,8 @@
   <data name="Log_Clear" xml:space="preserve"><value>Xoá</value></data>
   <data name="Log_EventsCount" xml:space="preserve"><value>{0} sự kiện</value></data>
   <data name="Log_EmptyState" xml:space="preserve"><value>Chưa có sự kiện nhật ký nào. Sự kiện thời gian thực từ capture engine sẽ xuất hiện ở đây.</value></data>
+  <data name="Log_Filter" xml:space="preserve"><value>Mức tối thiểu:</value></data>
+  <data name="Log_RevealFolder" xml:space="preserve"><value>Mở thư mục</value></data>
 
   <!-- Preview -->
   <data name="Preview_Title" xml:space="preserve"><value>Xem trước</value></data>

@@ -89,6 +89,25 @@
                           IsChecked="{Binding SoundEnabled, Mode=TwoWay}" />
             </StackPanel>
 
+            <!-- Logging -->
+            <StackPanel Spacing="6">
+                <TextBlock Text="{Binding LoggingLabel}"
+                           FontSize="13"
+                           FontWeight="SemiBold" />
+                <StackPanel Spacing="4">
+                    <TextBlock Text="{Binding LogLevelLabel}"
+                               Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}"
+                               FontSize="12" />
+                    <ComboBox ItemsSource="{Binding SupportedLogLevels}"
+                              SelectedItem="{Binding SelectedLogLevel, Mode=TwoWay}"
+                              HorizontalAlignment="Stretch" />
+                    <TextBlock Text="{Binding LogLevelHint}"
+                               FontSize="11"
+                               TextWrapping="Wrap"
+                               Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}" />
+                </StackPanel>
+            </StackPanel>
+
             <!-- Import / export / open -->
             <StackPanel Orientation="Horizontal" Spacing="8">
                 <Button Name="ImportButton" Content="{Binding ImportLabel}" />

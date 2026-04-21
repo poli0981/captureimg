@@ -21,6 +21,7 @@ using CaptureImage.ViewModels.Update;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Serilog;
+using Serilog.Core;
 using Serilog.Extensions.Logging;
 
 namespace CaptureImage.App;
@@ -30,7 +31,7 @@ namespace CaptureImage.App;
 /// </summary>
 internal static class CompositionRoot
 {
-    public static IServiceProvider BuildServices(InMemorySink inMemorySink)
+    public static IServiceProvider BuildServices(InMemorySink inMemorySink, LoggingLevelSwitch loggingLevelSwitch)
     {
         var services = new ServiceCollection();
 
@@ -39,13 +40,19 @@ internal static class CompositionRoot
         {
             builder.ClearProviders();
             builder.AddProvider(new SerilogLoggerProvider(Log.Logger, dispose: false));
-            builder.SetMinimumLevel(LogLevel.Debug);
+            // MEL's minimum level needs to sit at Trace/Debug so it never filters events
+            // before they reach Serilog — the real gating happens in the LoggingLevelSwitch.
+            builder.SetMinimumLevel(LogLevel.Trace);
         });
 
         // The same InMemorySink instance is both the Serilog sink AND the log buffer source
         // used by the log viewer VM.
         services.AddSingleton(inMemorySink);
         services.AddSingleton<ILogBufferSource>(inMemorySink);
+        // Expose the Serilog level switch so Settings can mutate it live. Wrap it in the
+        // ILogLevelSwitcher abstraction so ViewModels don't take a Serilog dependency.
+        services.AddSingleton(loggingLevelSwitch);
+        services.AddSingleton<ILogLevelSwitcher, SerilogLogLevelSwitcher>();
 
         // --- Cross-cutting -----------------------------------------------------
         services.AddSingleton<IFileSystem, FileSystem>();

@@ -19,7 +19,7 @@ namespace CaptureImage.Core.Models;
 public sealed record AppSettings
 {
     /// <summary>Schema version. Bump when adding migration steps.</summary>
-    public int Version { get; init; } = 1;
+    public int Version { get; init; } = 2;
 
     /// <summary>
     /// IETF BCP-47 culture code for UI (e.g. <c>en-US</c>, <c>vi-VN</c>, <c>ar-SA</c>).
@@ -34,6 +34,19 @@ public sealed record AppSettings
     public CaptureSettings Capture { get; init; } = new();
 
     public UiSettings UI { get; init; } = new();
+
+    /// <summary>
+    /// Minimum log level retained in the rolling file and in-memory buffer.
+    /// One of <c>Debug</c>, <c>Information</c>, <c>Warning</c>, <c>Error</c> — case-insensitive
+    /// on parse. Unknown values fall back to <c>Information</c>.
+    /// </summary>
+    /// <remarks>
+    /// Stored as a string rather than an enum so hand-edited <c>settings.json</c> files stay
+    /// readable and so the persistence layer doesn't take a dependency on MEL's enum identity.
+    /// v1 files load with this defaulted to <c>Information</c>; legacy behaviour was
+    /// <c>Debug</c>, so users who relied on it get a note in CHANGELOG to flip it back.
+    /// </remarks>
+    public string LogLevel { get; init; } = "Information";
 }
 
 /// <summary>Capture-specific persisted options.</summary>

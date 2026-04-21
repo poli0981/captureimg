@@ -16,21 +16,37 @@
         <Grid RowDefinitions="Auto,*">
 
             <!-- Header + controls -->
-            <Grid Grid.Row="0" ColumnDefinitions="*,Auto,Auto,Auto" Margin="0,0,0,8">
+            <Grid Grid.Row="0"
+                  ColumnDefinitions="*,Auto,Auto,Auto,Auto,Auto,Auto"
+                  Margin="0,0,0,8">
                 <TextBlock Grid.Column="0"
                            Text="{Binding Localization[Log_Title]}"
                            FontSize="14"
                            FontWeight="SemiBold"
                            VerticalAlignment="Center" />
-                <Button Grid.Column="1"
+                <TextBlock Grid.Column="1"
+                           Text="{Binding FilterLabel}"
+                           Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}"
+                           VerticalAlignment="Center"
+                           Margin="0,0,6,0" />
+                <ComboBox Grid.Column="2"
+                          ItemsSource="{Binding FilterLevels}"
+                          SelectedItem="{Binding SelectedFilterLevel, Mode=TwoWay}"
+                          MinWidth="110"
+                          Margin="0,0,8,0" />
+                <Button Grid.Column="3"
                         Command="{Binding TogglePauseCommand}"
                         Content="{Binding TogglePauseLabel}"
                         Margin="0,0,8,0" />
-                <Button Grid.Column="2"
+                <Button Grid.Column="4"
                         Command="{Binding ClearCommand}"
                         Content="{Binding Localization[Log_Clear]}"
                         Margin="0,0,8,0" />
-                <TextBlock Grid.Column="3"
+                <Button Grid.Column="5"
+                        Command="{Binding RevealLogsFolderCommand}"
+                        Content="{Binding RevealFolderLabel}"
+                        Margin="0,0,8,0" />
+                <TextBlock Grid.Column="6"
                            Text="{Binding EventsCountText}"
                            Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}"
                            VerticalAlignment="Center" />

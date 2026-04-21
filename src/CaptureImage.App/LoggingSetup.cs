@@ -1,5 +1,7 @@
+using CaptureImage.Core.Logging;
 using CaptureImage.Infrastructure.Logging;
 using Serilog;
+using Serilog.Core;
 using Serilog.Events;
 
 namespace CaptureImage.App;
@@ -22,24 +24,27 @@ internal static class LoggingSetup
         return dir;
     }
 
-    public static string GetLogsDir()
-    {
-        var dir = Path.Combine(GetAppDataDir(), "logs");
-        Directory.CreateDirectory(dir);
-        return dir;
-    }
+    public static string GetLogsDir() => LogPaths.GetLogsDirectory();
 
     /// <summary>
-    /// Build the Serilog root logger together with the in-memory sink, and assign it to
-    /// <see cref="Log.Logger"/>. Returns the sink so the DI container can register it.
+    /// Build the Serilog root logger together with the in-memory sink and the runtime
+    /// level switch, and assign the logger to <see cref="Log.Logger"/>. Both are returned
+    /// so the DI container can register them — the sink drives the log viewer, the switch
+    /// drives the Settings → Log Level picker.
     /// </summary>
-    public static InMemorySink Initialize()
+    /// <remarks>
+    /// The switch boots at <see cref="LogEventLevel.Debug"/> so early-startup telemetry is
+    /// always captured; <c>Program.Main</c> narrows it to the user's configured value once
+    /// <c>ISettingsStore.LoadAsync</c> has finished.
+    /// </remarks>
+    public static (InMemorySink Sink, LoggingLevelSwitch LevelSwitch) Initialize()
     {
         var logPath = Path.Combine(GetLogsDir(), "captureimg-.log");
         var sink = new InMemorySink();
+        var levelSwitch = new LoggingLevelSwitch(LogEventLevel.Debug);
 
         Log.Logger = new LoggerConfiguration()
-            .MinimumLevel.Debug()
+            .MinimumLevel.ControlledBy(levelSwitch)
             .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
             .Enrich.WithProperty("App", "CaptureImage")
             .Enrich.With(new CallerPropertyDefaultsEnricher())
@@ -59,6 +64,22 @@ internal static class LoggingSetup
                 outputTemplate: "[{Timestamp:yyyy-MM-dd HH:mm:ss.fff} {Level:u3}] ({File}:{Line}) {Message:lj} {Properties:j}{NewLine}{Exception}"))
             .CreateLogger();
 
-        return sink;
+        return (sink, levelSwitch);
     }
+
+    /// <summary>
+    /// Map the persisted <c>LogLevel</c> string (one of <c>Debug</c> / <c>Information</c> /
+    /// <c>Warning</c> / <c>Error</c>) to a <see cref="LogEventLevel"/>. Unknown strings
+    /// fall back to <see cref="LogEventLevel.Information"/>.
+    /// </summary>
+    public static LogEventLevel ParseLevel(string? value) => value?.Trim().ToLowerInvariant() switch
+    {
+        "debug"       => LogEventLevel.Debug,
+        "information" => LogEventLevel.Information,
+        "info"        => LogEventLevel.Information,
+        "warning"     => LogEventLevel.Warning,
+        "warn"        => LogEventLevel.Warning,
+        "error"       => LogEventLevel.Error,
+        _             => LogEventLevel.Information,
+    };
 }
