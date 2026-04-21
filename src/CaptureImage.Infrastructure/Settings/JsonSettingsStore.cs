@@ -269,21 +269,37 @@ public sealed class JsonSettingsStore : ISettingsStore, IDisposable
 
     private void TryDelete(string path)
     {
-        try { if (_fs.File.Exists(path)) _fs.File.Delete(path); }
-        catch { /* best-effort */ }
+        try
+        {
+            if (_fs.File.Exists(path)) _fs.File.Delete(path);
+        }
+        catch (Exception ex)
+        {
+            // Best-effort cleanup — if the temp file can't be removed, a subsequent write
+            // will overwrite it via the rename-into-place path. Log at Debug so we can still
+            // correlate if it compounds into a real failure later.
+            _logger.LogDebug(ex, "Failed to delete {Path}.", path);
+        }
     }
 
     private static string Serialize(AppSettings settings) =>
         JsonSerializer.Serialize(settings, SettingsJsonContext.Default.AppSettings);
 
-    private static AppSettings? Deserialize(string json)
+    private AppSettings? Deserialize(string json)
     {
         try
         {
             return JsonSerializer.Deserialize(json, SettingsJsonContext.Default.AppSettings);
         }
-        catch (JsonException)
+        catch (JsonException ex)
         {
+            // The caller turns a null return into "replace with defaults". Surface the root
+            // cause here so the log explains why, not just that parsing failed.
+            _logger.LogWarning(
+                ex,
+                "Malformed settings JSON ({LineNumber}:{BytePositionInLine}); reverting to defaults.",
+                ex.LineNumber,
+                ex.BytePositionInLine);
             return null;
         }
     }

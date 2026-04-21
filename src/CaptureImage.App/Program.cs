@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using Avalonia;
+using Avalonia.Threading;
 using CaptureImage.Core.Abstractions;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
@@ -30,6 +31,11 @@ internal static class Program
         // Bootstrap Serilog early (and keep the in-memory sink reference for DI).
         var inMemorySink = LoggingSetup.Initialize();
 
+        // Catch anything that escapes try/catch on any thread. Register before we stand up DI
+        // or UI so background-thread crashes during startup still reach the rolling file.
+        RegisterGlobalExceptionHandlers();
+
+        var shutdownReason = "Normal";
         try
         {
             Log.Information("CaptureImage starting. Args: {Args}", args);
@@ -86,6 +92,7 @@ internal static class Program
         }
         catch (Exception ex)
         {
+            shutdownReason = "StartupCrash";
             Log.Fatal(ex, "CaptureImage crashed during startup.");
             return -1;
         }
@@ -107,6 +114,7 @@ internal static class Program
             {
                 Log.Warning(ex, "Failed to flush settings on shutdown.");
             }
+            Log.Information("CaptureImage shutting down. Reason={Reason}", shutdownReason);
             Log.CloseAndFlush();
         }
     }
@@ -118,5 +126,44 @@ internal static class Program
         => AppBuilder.Configure<UI.App>()
             .UsePlatformDetect()
             .WithInterFont()
-            .LogToTrace();
+            .LogToTrace()
+            .AfterSetup(_ =>
+            {
+                // Hook the Avalonia UI-thread dispatcher so exceptions raised by command
+                // handlers, bindings, and tick callbacks don't silently kill the UI.
+                Dispatcher.UIThread.UnhandledException += OnDispatcherUnhandledException;
+            });
+
+    private static void RegisterGlobalExceptionHandlers()
+    {
+        AppDomain.CurrentDomain.UnhandledException += (_, e) =>
+        {
+            var ex = e.ExceptionObject as Exception;
+            Log.Fatal(
+                ex,
+                "Unhandled AppDomain exception. IsTerminating={IsTerminating}",
+                e.IsTerminating);
+            if (e.IsTerminating)
+            {
+                // Last-ditch flush — CLR is about to pull the rug.
+                Log.CloseAndFlush();
+            }
+        };
+
+        TaskScheduler.UnobservedTaskException += (_, e) =>
+        {
+            Log.Error(e.Exception, "Unobserved task exception.");
+            // Claim the exception so the default .NET policy doesn't terminate the process
+            // on the next GC — structured log is enough signal for us to investigate.
+            e.SetObserved();
+        };
+    }
+
+    private static void OnDispatcherUnhandledException(object? sender, DispatcherUnhandledExceptionEventArgs e)
+    {
+        Log.Error(e.Exception, "Unhandled exception on UI dispatcher.");
+        // Don't let a single bad command tear down the window — swallow after logging so the
+        // user can keep using the app (and notice the Toast / LogViewer will surface it).
+        e.Handled = true;
+    }
 }

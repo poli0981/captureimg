@@ -59,7 +59,14 @@ public sealed class SharpHookHotkeyService : IHotkeyService
             _binding = null;
             if (_hook is not null)
             {
-                try { _hook.Dispose(); } catch { /* ignore */ }
+                try
+                {
+                    _hook.Dispose();
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogWarning(ex, "Failed to dispose SharpHook on Stop.");
+                }
                 _hook = null;
                 _logger.LogInformation("Hotkey service stopped.");
             }
@@ -72,7 +79,14 @@ public sealed class SharpHookHotkeyService : IHotkeyService
         {
             if (_disposed) return;
             _disposed = true;
-            try { _hook?.Dispose(); } catch { /* ignore */ }
+            try
+            {
+                _hook?.Dispose();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogWarning(ex, "Failed to dispose SharpHook on Dispose.");
+            }
             _hook = null;
         }
     }

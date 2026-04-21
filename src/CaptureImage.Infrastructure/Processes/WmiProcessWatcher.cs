@@ -108,8 +108,10 @@ public sealed class WmiProcessWatcher : IProcessWatcher
 
     private void DisposeWatchers_NoLock()
     {
-        try { _startWatcher?.Stop(); } catch { /* ignore */ }
-        try { _stopWatcher?.Stop(); } catch { /* ignore */ }
+        try { _startWatcher?.Stop(); }
+        catch (Exception ex) { _logger.LogDebug(ex, "Failed to stop WMI creation watcher during teardown."); }
+        try { _stopWatcher?.Stop(); }
+        catch (Exception ex) { _logger.LogDebug(ex, "Failed to stop WMI deletion watcher during teardown."); }
         _startWatcher?.Dispose();
         _stopWatcher?.Dispose();
         _startWatcher = null;
