@@ -42,6 +42,7 @@ internal static class LoggingSetup
             .MinimumLevel.Debug()
             .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
             .Enrich.WithProperty("App", "CaptureImage")
+            .Enrich.With(new CallerPropertyDefaultsEnricher())
             .WriteTo.Console()
             .WriteTo.Sink(sink)
             .WriteTo.Async(a => a.File(
@@ -51,7 +52,11 @@ internal static class LoggingSetup
                 fileSizeLimitBytes: 10L * 1024 * 1024,
                 rollOnFileSizeLimit: true,
                 shared: false,
-                outputTemplate: "[{Timestamp:yyyy-MM-dd HH:mm:ss.fff} {Level:u3}] {Message:lj} {Properties:j}{NewLine}{Exception}"))
+                // {File}:{Line} shows caller context injected by CallerAwareLoggerExtensions.
+                // Missing on legacy call sites — Serilog prints a bare ":" then, so keep the
+                // template consistent and accept that one cosmetic artifact until those are
+                // migrated. {Properties:j} still JSON-dumps every non-templated property.
+                outputTemplate: "[{Timestamp:yyyy-MM-dd HH:mm:ss.fff} {Level:u3}] ({File}:{Line}) {Message:lj} {Properties:j}{NewLine}{Exception}"))
             .CreateLogger();
 
         return sink;

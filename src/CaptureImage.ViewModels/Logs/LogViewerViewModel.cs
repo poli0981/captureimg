@@ -137,6 +137,11 @@ public sealed partial class LogViewerViewModel : ViewModelBase, IDisposable
         {
             sb.Append('[').Append(entry.Timestamp.ToString("yyyy-MM-dd HH:mm:ss.fff"));
             sb.Append(' ').Append(entry.Level.ToString().ToUpperInvariant().Substring(0, 3)).Append("] ");
+            var fileLine = entry.FileLineText;
+            if (!string.IsNullOrEmpty(fileLine))
+            {
+                sb.Append('(').Append(fileLine).Append(") ");
+            }
             if (!string.IsNullOrEmpty(entry.SourceContext))
             {
                 sb.Append(entry.SourceContext).Append(": ");

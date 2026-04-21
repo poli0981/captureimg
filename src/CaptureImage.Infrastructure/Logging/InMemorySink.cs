@@ -93,7 +93,36 @@ public sealed class InMemorySink : ILogEventSink, ILogBufferSource
             Level: MapLevel(ev.Level),
             SourceContext: sourceContext ?? string.Empty,
             Message: writer.ToString(),
-            Exception: ev.Exception?.ToString());
+            Exception: ev.Exception?.ToString())
+        {
+            // Caller-info is injected by CallerAwareLoggerExtensions via MEL scope; absent
+            // on legacy call sites that still use Log.X or bare ILogger.LogInformation.
+            File = ReadStringProperty(ev, "File"),
+            Line = ReadInt32Property(ev, "Line"),
+            Member = ReadStringProperty(ev, "Member"),
+        };
+    }
+
+    private static string? ReadStringProperty(LogEvent ev, string name)
+    {
+        if (ev.Properties.TryGetValue(name, out var value) &&
+            value is ScalarValue { Value: string s } &&
+            !string.IsNullOrEmpty(s))
+        {
+            return s;
+        }
+        return null;
+    }
+
+    private static int? ReadInt32Property(LogEvent ev, string name)
+    {
+        if (ev.Properties.TryGetValue(name, out var value) &&
+            value is ScalarValue { Value: int i } &&
+            i > 0)
+        {
+            return i;
+        }
+        return null;
     }
 
     private static LogLevel MapLevel(LogEventLevel level) => level switch
