@@ -7,6 +7,96 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.0] - 2026-04-21
+
+Logging overhaul. Turns a working-but-thin diagnostic surface into one you
+can actually rely on when things go wrong — developer and end-user alike.
+No capture-engine changes; Velopack release on the existing `win` channel
+so the delta chain from v1.1.2 stays intact.
+
+### Added
+
+- **Runtime log-level control.** New Settings → Logging group with a
+  minimum-level picker (Debug / Information / Warning / Error).
+  Persisted in `AppSettings.LogLevel` (new field, schema bump v1 → v2,
+  additive) and pushed into Serilog's `LoggingLevelSwitch` live — no
+  restart required.
+- **Log viewer min-level filter.** Dropdown in the log drawer header
+  narrows what's shown without touching the sink buffer, so Export
+  still carries the full history regardless of the filter.
+- **"Open folder" button in the log drawer.** Launches Explorer at
+  `%LocalAppData%\CaptureImage\logs` for support-session copy-paste.
+  Guarded with a Toast on failure.
+- **Caller context on every log entry** — each line carries `File`,
+  `Line`, and `Member` structured properties, captured via new
+  `LogInformationAt` / `LogWarningAt` / `LogErrorAt` / `LogDebugAt`
+  extension methods on `ILogger`. Rolling-file template now prints
+  `(File.cs:42)`; log viewer shows a subdued `File:Line` column; Export
+  includes the same. Absolute build-machine paths are stripped via
+  `Path.GetFileName` so shipped logs stay clean.
+- **Global exception handlers.** `AppDomain.UnhandledException`,
+  `TaskScheduler.UnobservedTaskException`, and
+  `Dispatcher.UIThread.UnhandledException` all now reach Serilog before
+  the process dies or the UI resumes. `SetObserved()` on unobserved
+  task exceptions keeps the default-crash policy from ending the app on
+  background-thread throws.
+- **Startup + shutdown banner** — Program.Main logs
+  `Version` / `OS` / `Culture` / `Args` on start and a
+  `Reason=Normal|StartupCrash` line on exit, so support sessions can
+  tell which build produced the log at a glance.
+- **Expanded coverage** — `Windows.Graphics.Capture` engine emits Info
+  on session start, Debug on first frame + session dispose, Warning on
+  frame timeout, Error with explicit `HRESULT=0x…` on `COMException`;
+  `HotkeyConflictSniffer` decodes Win32 error codes by name
+  (`ERROR_HOTKEY_ALREADY_REGISTERED` / `ERROR_INVALID_PARAMETER` / …);
+  `SharpHookHotkeyService` logs when `TaskPoolGlobalHook` boots;
+  `VelopackUpdateService` logs before + after
+  `ApplyUpdatesAndRestart`; `AvaloniaTrayIconHost` logs tray
+  init/dispose and guards the runtime SkiaSharp icon render so a
+  native-asset blow-up falls back to the platform default instead of
+  crashing startup; `ResxLocalizationService` warns once per
+  `(culture, key)` pair when a resource key is missing (dedup
+  prevents flooding on every refresh).
+
+### Changed
+
+- **Window widened to 1200×720** (was 960×600) and **log drawer
+  widened to 480 px** (was 400 px). The drawer now slides in with a
+  200 ms fade + 48 px translate-X easing (`CircularEaseOut`) instead
+  of snapping in and out. Content area visible while the drawer is
+  open is now ~500 px (was ~340 px).
+- **Scroll bars hidden on About + Settings tabs.** Mouse-wheel
+  scrolling still works; the track is just no longer drawn, so the
+  view reads cleanly on the fixed-size window. Horizontal scrolling
+  on those tabs is disabled entirely. Diagnostic surfaces (Update
+  log, Log viewer drawer) keep their visible bars.
+- **Default minimum log level is now `Information`** (was `Debug`).
+  v1 users are migrated in place: `settings.json` is stamped
+  Version=2 on first v1.2 launch and the LogLevel field defaults to
+  `Information`. Flip back to Debug via Settings → Logging if you
+  were relying on verbose output.
+- Four previously-silent `catch { /* ignore */ }` blocks now log
+  their exceptions: `SharpHookHotkeyService.Stop/Dispose` (Warning),
+  `WmiProcessWatcher.DisposeWatchers_NoLock` (Debug),
+  `JsonSettingsStore.Deserialize` (Warning with JSON line / byte
+  position), `JsonSettingsStore.TryDelete` (Debug).
+
+### Migration
+
+- **`settings.json` schema v1 → v2.** Automatic on first v1.2 run —
+  the file is re-written in canonical v2 form with `LogLevel =
+  "Information"` and existing values preserved. Hand-edited files
+  with `logLevel` already present keep their value.
+
+### Tests
+
+- 33 new unit tests (total 156, up from 123). Covers the
+  `InMemorySink` ring buffer / pause / clear / snapshot-copy
+  semantics, `SerilogLogLevelSwitcher` string mapping + fallback,
+  `CallerAwareLoggerExtensions` scope + path-stripping behaviour,
+  `LogViewerViewModel` hydration / filter / live-tail paths, and the
+  v1 → v2 settings migration with write-back.
+
 ## [1.1.2] - 2026-04-20
 
 Localization hotfix on top of v1.1.1 — closes 13 bugs and gaps found in
