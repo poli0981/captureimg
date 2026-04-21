@@ -7,7 +7,11 @@
              x:Class="CaptureImage.UI.Views.AboutView"
              x:DataType="vm:AboutViewModel">
 
-    <ScrollViewer>
+    <!-- HorizontalScrollBarVisibility=Disabled prevents the horizontal bar from ever
+         appearing; Vertical=Hidden lets mouse-wheel scrolling keep working but hides
+         the track so the view reads cleanly on a fixed window. -->
+    <ScrollViewer HorizontalScrollBarVisibility="Disabled"
+                  VerticalScrollBarVisibility="Hidden">
         <StackPanel Margin="24,16,24,24" Spacing="18" MaxWidth="640">
 
             <!-- Header -->

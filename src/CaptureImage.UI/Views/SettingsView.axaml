@@ -9,7 +9,11 @@
              x:Class="CaptureImage.UI.Views.SettingsView"
              x:DataType="vm:SettingsViewModel">
 
-    <ScrollViewer>
+    <!-- HorizontalScrollBarVisibility=Disabled prevents the horizontal bar from ever
+         appearing; Vertical=Hidden lets mouse-wheel scrolling keep working but hides
+         the track so the view reads cleanly on a fixed window. -->
+    <ScrollViewer HorizontalScrollBarVisibility="Disabled"
+                  VerticalScrollBarVisibility="Hidden">
         <StackPanel Margin="24,16" Spacing="18" MaxWidth="620">
 
             <TextBlock Text="{Binding TitleLabel}" FontSize="22" FontWeight="SemiBold" />

@@ -15,9 +15,9 @@
         x:Class="CaptureImage.UI.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
         Title="CaptureImage"
-        Width="960" Height="600"
-        MinWidth="960" MinHeight="600"
-        MaxWidth="960" MaxHeight="600"
+        Width="1200" Height="720"
+        MinWidth="1200" MinHeight="720"
+        MaxWidth="1200" MaxHeight="720"
         CanResize="False"
         WindowStartupLocation="CenterScreen"
         FlowDirection="{Binding Localization.CurrentFlowDirection, Converter={x:Static conv:FlowDirectionConverter.Instance}}">
@@ -108,11 +108,33 @@
 
     </Grid>
 
-    <!-- Log viewer drawer — overlays the right 400px when toggled. -->
-    <views:LogViewerView Width="400"
+    <!-- Log viewer drawer — overlays the right 480px of the content grid with a
+         200ms slide-in + fade. Always kept in the visual tree so the transitions
+         fire on every toggle; IsHitTestVisible + Classes.visible let us collapse
+         interaction + drive the animation state from IsLogViewerVisible. -->
+    <views:LogViewerView x:Name="LogDrawer"
+                         Width="480"
                          HorizontalAlignment="Right"
                          DataContext="{Binding LogViewer}"
-                         IsVisible="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).IsLogViewerVisible}" />
+                         Classes.visible="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).IsLogViewerVisible}"
+                         IsHitTestVisible="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).IsLogViewerVisible}">
+        <views:LogViewerView.Styles>
+            <Style Selector="views|LogViewerView">
+                <Setter Property="Opacity" Value="0" />
+                <Setter Property="RenderTransform" Value="translateX(48px)" />
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <DoubleTransition Property="Opacity" Duration="0:0:0.18" Easing="CircularEaseOut" />
+                        <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.22" Easing="CircularEaseOut" />
+                    </Transitions>
+                </Setter>
+            </Style>
+            <Style Selector="views|LogViewerView.visible">
+                <Setter Property="Opacity" Value="1" />
+                <Setter Property="RenderTransform" Value="translateX(0)" />
+            </Style>
+        </views:LogViewerView.Styles>
+    </views:LogViewerView>
 
     <!-- Toast overlay — anchored bottom-right, floats over the content grid.
          Under RTL FlowDirection Avalonia automatically mirrors Right/Left edges,
