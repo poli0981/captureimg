@@ -1,6 +1,8 @@
+using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
 using CaptureImage.Core.Abstractions;
 using CaptureImage.Core.Errors;
+using CaptureImage.Core.Logging;
 using CaptureImage.Core.Models;
 using Microsoft.Extensions.Logging;
 using Vortice.Direct3D11;
@@ -69,14 +71,29 @@ public sealed class WindowsGraphicsCaptureEngine : ICaptureEngine
         {
             item = CaptureItemInterop.CreateForWindow(target.WindowHandle);
         }
+        catch (COMException comEx)
+        {
+            _logger.LogWarningAt(
+                comEx,
+                "CreateForWindow failed for HWND=0x{Hwnd:X8} HRESULT=0x{HResult:X8}.",
+                target.WindowHandle,
+                comEx.HResult);
+            throw new CaptureException(CaptureError.TargetGone,
+                $"CreateForWindow failed for HWND 0x{target.WindowHandle:X} (HRESULT 0x{comEx.HResult:X8}).", comEx);
+        }
         catch (Exception ex)
         {
+            _logger.LogWarningAt(
+                ex,
+                "CreateForWindow threw for HWND=0x{Hwnd:X8}.",
+                target.WindowHandle);
             throw new CaptureException(CaptureError.TargetGone,
                 $"CreateForWindow failed for HWND 0x{target.WindowHandle:X}.", ex);
         }
 
         if (item is null)
         {
+            _logger.LogWarningAt("GraphicsCaptureItem was null for HWND=0x{Hwnd:X8}.", target.WindowHandle);
             throw new CaptureException(CaptureError.TargetGone, "GraphicsCaptureItem was null.");
         }
 
@@ -99,6 +116,12 @@ public sealed class WindowsGraphicsCaptureEngine : ICaptureEngine
             // Win11 22H2+: no yellow capture border.
             session.IsBorderRequired = false;
             session.IsCursorCaptureEnabled = false;
+
+            _logger.LogInformationAt(
+                "WGC session started for HWND=0x{Hwnd:X8} size={Width}x{Height}.",
+                target.WindowHandle,
+                item.Size.Width,
+                item.Size.Height);
 
             var tcs = new TaskCompletionSource<Direct3D11CaptureFrame>(
                 TaskCreationOptions.RunContinuationsAsynchronously);
@@ -129,11 +152,16 @@ public sealed class WindowsGraphicsCaptureEngine : ICaptureEngine
                 if (completed != tcs.Task)
                 {
                     cancellationToken.ThrowIfCancellationRequested();
+                    _logger.LogWarningAt(
+                        "WGC frame timeout after {Seconds:F1}s for HWND=0x{Hwnd:X8}.",
+                        FrameTimeout.TotalSeconds,
+                        target.WindowHandle);
                     throw new CaptureException(
                         CaptureError.NoFrameArrived,
                         $"No frame arrived within {FrameTimeout.TotalSeconds:F1}s.");
                 }
                 frame = await tcs.Task.ConfigureAwait(false);
+                _logger.LogDebugAt("WGC first frame received for HWND=0x{Hwnd:X8}.", target.WindowHandle);
             }
             finally
             {
@@ -157,15 +185,26 @@ public sealed class WindowsGraphicsCaptureEngine : ICaptureEngine
         {
             throw new CaptureException(CaptureError.Cancelled, "Capture was cancelled.");
         }
+        catch (COMException comEx)
+        {
+            _logger.LogErrorAt(
+                comEx,
+                "WGC capture COM failure for HWND=0x{Hwnd:X8} HRESULT=0x{HResult:X8}.",
+                target.WindowHandle,
+                comEx.HResult);
+            throw new CaptureException(CaptureError.Unknown,
+                $"WGC capture failed (HRESULT 0x{comEx.HResult:X8}): {comEx.Message}", comEx);
+        }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "WGC capture failed for HWND 0x{Hwnd:X}.", target.WindowHandle);
+            _logger.LogErrorAt(ex, "WGC capture failed for HWND=0x{Hwnd:X8}.", target.WindowHandle);
             throw new CaptureException(CaptureError.Unknown, "WGC capture failed: " + ex.Message, ex);
         }
         finally
         {
             session?.Dispose();
             framePool?.Dispose();
+            _logger.LogDebugAt("WGC session disposed for HWND=0x{Hwnd:X8}.", target.WindowHandle);
             // Note: `item` and `winrtDevice` are WinRT projections — they release automatically
             // when the RCW is collected. Explicit dispose is optional but not required here.
         }

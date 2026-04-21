@@ -98,6 +98,7 @@ public sealed class SharpHookHotkeyService : IHotkeyService
         _hook = new TaskPoolGlobalHook();
         _hook.KeyPressed += OnKeyPressed;
         _hook.RunAsync();
+        _logger.LogInformation("SharpHook TaskPoolGlobalHook started.");
     }
 
     private void OnKeyPressed(object? sender, KeyboardHookEventArgs e)

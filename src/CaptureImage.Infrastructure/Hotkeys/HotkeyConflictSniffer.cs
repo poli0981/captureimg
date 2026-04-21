@@ -53,10 +53,29 @@ public sealed partial class HotkeyConflictSniffer : IHotkeyConflictSniffer
 
         var err = Marshal.GetLastWin32Error();
         _logger.LogDebug(
-            "RegisterHotKey sniff failed for {Binding} (win32 error {Err}); treating as conflicted.",
-            binding, err);
+            "RegisterHotKey sniff failed for {Binding}; treating as conflicted. ({ErrCode}: {ErrText})",
+            binding,
+            err,
+            DescribeWin32Error(err));
         return true;
     }
+
+    /// <summary>
+    /// Map the handful of Win32 errors <c>RegisterHotKey</c> can realistically produce back
+    /// to human-readable names. Unknown codes fall through to <c>"UNKNOWN"</c> — the
+    /// numeric value is always logged alongside so diagnosis isn't blocked on the map
+    /// having complete coverage.
+    /// </summary>
+    private static string DescribeWin32Error(int code) => code switch
+    {
+        0    => "ERROR_SUCCESS",
+        5    => "ERROR_ACCESS_DENIED",
+        87   => "ERROR_INVALID_PARAMETER",
+        1400 => "ERROR_INVALID_WINDOW_HANDLE",
+        1409 => "ERROR_HOTKEY_ALREADY_REGISTERED",
+        1419 => "ERROR_HOTKEY_NOT_REGISTERED",
+        _    => "UNKNOWN",
+    };
 
     [LibraryImport("user32.dll", SetLastError = true)]
     [return: MarshalAs(UnmanagedType.Bool)]

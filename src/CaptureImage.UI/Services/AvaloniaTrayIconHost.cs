@@ -42,7 +42,7 @@ public sealed class AvaloniaTrayIconHost : ITrayIconHost
 
         _trayIcon = new TrayIcon
         {
-            Icon = BuildRuntimeIcon(),
+            Icon = BuildRuntimeIconSafely(),
             ToolTipText = "CaptureImage",
             IsVisible = true,
             Menu = BuildMenu(),
@@ -56,7 +56,23 @@ public sealed class AvaloniaTrayIconHost : ITrayIconHost
         _mainWindow.Closing += OnMainWindowClosing;
         _localization.PropertyChanged += OnLocalizationChanged;
 
-        _logger.LogInformation("Tray icon initialized.");
+        _logger.LogInformation("Tray icon initialized and visible.");
+    }
+
+    private WindowIcon? BuildRuntimeIconSafely()
+    {
+        try
+        {
+            return BuildRuntimeIcon();
+        }
+        catch (Exception ex)
+        {
+            // A SkiaSharp / native-asset failure here used to take the whole startup down.
+            // Fall back to a null icon (Avalonia renders a default glyph) and log — the
+            // user still gets a tray entry, just one without our branding.
+            _logger.LogWarning(ex, "Failed to render runtime tray icon via SkiaSharp; falling back to default.");
+            return null;
+        }
     }
 
     private void OnLocalizationChanged(object? sender, PropertyChangedEventArgs e)
@@ -85,6 +101,7 @@ public sealed class AvaloniaTrayIconHost : ITrayIconHost
             _trayIcon.Dispose();
             _trayIcon = null;
         }
+        _logger.LogInformation("Tray icon disposed.");
     }
 
     // -- menu ----------------------------------------------------------------

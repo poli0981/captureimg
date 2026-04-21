@@ -1,7 +1,9 @@
+using System.Collections.Concurrent;
 using System.ComponentModel;
 using System.Globalization;
 using System.Resources;
 using CaptureImage.Core.Abstractions;
+using Microsoft.Extensions.Logging;
 
 namespace CaptureImage.UI.Localization;
 
@@ -22,12 +24,22 @@ public sealed class ResxLocalizationService : ILocalizationService
     };
 
     private readonly ResourceManager _resourceManager;
+    private readonly ILogger<ResxLocalizationService> _logger;
+
+    /// <summary>
+    /// Tracks <c>(culture, key)</c> pairs we've already logged a "missing string" warning for.
+    /// Missing keys are usually the same handful repeated on every refresh; logging once per
+    /// pair per process keeps the signal without flooding the rolling file.
+    /// </summary>
+    private readonly ConcurrentDictionary<string, byte> _loggedMissingKeys = new();
+
     private CultureInfo _currentCulture;
 
-    public ResxLocalizationService()
+    public ResxLocalizationService(ILogger<ResxLocalizationService> logger)
     {
         _resourceManager = new ResourceManager(ResourceBaseName, typeof(ResxLocalizationService).Assembly);
         _currentCulture = CultureInfo.GetCultureInfo("en-US");
+        _logger = logger;
     }
 
     public event PropertyChangedEventHandler? PropertyChanged;
@@ -51,12 +63,39 @@ public sealed class ResxLocalizationService : ILocalizationService
             if (string.IsNullOrEmpty(key)) return string.Empty;
             try
             {
-                return _resourceManager.GetString(key, _currentCulture) ?? $"[{key}]";
+                var value = _resourceManager.GetString(key, _currentCulture);
+                if (value is null)
+                {
+                    LogMissingKeyOnce(key);
+                    return $"[{key}]";
+                }
+                return value;
             }
-            catch
+            catch (Exception ex)
             {
+                LogMissingKeyOnce(key, ex);
                 return $"[{key}]";
             }
+        }
+    }
+
+    private void LogMissingKeyOnce(string key, Exception? exception = null)
+    {
+        var dedupKey = $"{_currentCulture.Name}|{key}";
+        if (!_loggedMissingKeys.TryAdd(dedupKey, 0)) return;
+
+        if (exception is null)
+        {
+            _logger.LogWarning(
+                "Localization key '{Key}' missing for culture {Culture}; falling back to bracketed key.",
+                key, _currentCulture.Name);
+        }
+        else
+        {
+            _logger.LogWarning(
+                exception,
+                "Localization lookup threw for key '{Key}' culture {Culture}; falling back to bracketed key.",
+                key, _currentCulture.Name);
         }
     }
 

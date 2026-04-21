@@ -5,6 +5,7 @@ using System.Linq;
 using CaptureImage.Core.Abstractions;
 using CaptureImage.UI.Localization;
 using FluentAssertions;
+using Microsoft.Extensions.Logging.Abstractions;
 using Xunit;
 
 namespace CaptureImage.UI.Tests.Localization;
@@ -40,7 +41,7 @@ public class ResxLocalizationServiceTests : IDisposable
     [Fact]
     public void SetCulture_Vietnamese_UpdatesCurrentCultureAndThreadCulture()
     {
-        var svc = new ResxLocalizationService();
+        var svc = new ResxLocalizationService(NullLogger<ResxLocalizationService>.Instance);
         var vi = CultureInfo.GetCultureInfo("vi-VN");
 
         svc.SetCulture(vi);
@@ -55,7 +56,7 @@ public class ResxLocalizationServiceTests : IDisposable
     [Fact]
     public void SetCulture_Arabic_FlipsFlowDirectionToRightToLeft()
     {
-        var svc = new ResxLocalizationService();
+        var svc = new ResxLocalizationService(NullLogger<ResxLocalizationService>.Instance);
 
         svc.SetCulture(CultureInfo.GetCultureInfo("ar-SA"));
 
@@ -65,7 +66,7 @@ public class ResxLocalizationServiceTests : IDisposable
     [Fact]
     public void SetCulture_English_FlowDirectionLeftToRight()
     {
-        var svc = new ResxLocalizationService();
+        var svc = new ResxLocalizationService(NullLogger<ResxLocalizationService>.Instance);
 
         // Default is en-US; switch elsewhere first so SetCulture actually fires.
         svc.SetCulture(CultureInfo.GetCultureInfo("ar-SA"));
@@ -77,7 +78,7 @@ public class ResxLocalizationServiceTests : IDisposable
     [Fact]
     public void SetCulture_RaisesItemIndexer_CurrentCulture_AndFlowDirection_Once_Each()
     {
-        var svc = new ResxLocalizationService();
+        var svc = new ResxLocalizationService(NullLogger<ResxLocalizationService>.Instance);
         var names = new List<string?>();
         svc.PropertyChanged += (_, e) => names.Add(e.PropertyName);
 
@@ -92,7 +93,7 @@ public class ResxLocalizationServiceTests : IDisposable
     [Fact]
     public void SetCulture_AlsoRaisesCultureChangedEvent()
     {
-        var svc = new ResxLocalizationService();
+        var svc = new ResxLocalizationService(NullLogger<ResxLocalizationService>.Instance);
         var cultureChanged = 0;
         svc.CultureChanged += (_, _) => cultureChanged++;
 
@@ -104,7 +105,7 @@ public class ResxLocalizationServiceTests : IDisposable
     [Fact]
     public void SetCulture_SameAsCurrent_IsNoOp()
     {
-        var svc = new ResxLocalizationService();
+        var svc = new ResxLocalizationService(NullLogger<ResxLocalizationService>.Instance);
         // Constructor seeds with en-US.
         var events = 0;
         svc.PropertyChanged += (_, _) => events++;
@@ -120,7 +121,7 @@ public class ResxLocalizationServiceTests : IDisposable
     [Fact]
     public void SetCulture_Null_Throws()
     {
-        var svc = new ResxLocalizationService();
+        var svc = new ResxLocalizationService(NullLogger<ResxLocalizationService>.Instance);
 
         Action act = () => svc.SetCulture(null!);
 
@@ -130,7 +131,7 @@ public class ResxLocalizationServiceTests : IDisposable
     [Fact]
     public void Indexer_MissingKey_ReturnsKeyInBrackets()
     {
-        var svc = new ResxLocalizationService();
+        var svc = new ResxLocalizationService(NullLogger<ResxLocalizationService>.Instance);
 
         var result = svc["NoSuchKey_DefinitelyMissing_1234"];
 
@@ -140,7 +141,7 @@ public class ResxLocalizationServiceTests : IDisposable
     [Fact]
     public void Indexer_EmptyKey_ReturnsEmptyString()
     {
-        var svc = new ResxLocalizationService();
+        var svc = new ResxLocalizationService(NullLogger<ResxLocalizationService>.Instance);
 
         svc[""].Should().BeEmpty();
     }
@@ -148,7 +149,7 @@ public class ResxLocalizationServiceTests : IDisposable
     [Fact]
     public void Indexer_KnownKey_ReturnsEnglishByDefault()
     {
-        var svc = new ResxLocalizationService();
+        var svc = new ResxLocalizationService(NullLogger<ResxLocalizationService>.Instance);
 
         svc["Nav_Dashboard"].Should().Be("Dashboard");
     }
@@ -156,7 +157,7 @@ public class ResxLocalizationServiceTests : IDisposable
     [Fact]
     public void Indexer_AfterSetCulture_ReturnsLocalizedValue()
     {
-        var svc = new ResxLocalizationService();
+        var svc = new ResxLocalizationService(NullLogger<ResxLocalizationService>.Instance);
         svc.SetCulture(CultureInfo.GetCultureInfo("vi-VN"));
 
         svc["Nav_Dashboard"].Should().Be("Bảng điều khiển");
@@ -165,7 +166,7 @@ public class ResxLocalizationServiceTests : IDisposable
     [Fact]
     public void SupportedCultures_IncludesShippedLanguages()
     {
-        var svc = new ResxLocalizationService();
+        var svc = new ResxLocalizationService(NullLogger<ResxLocalizationService>.Instance);
 
         var names = svc.SupportedCultures.Select(c => c.Name).ToArray();
 

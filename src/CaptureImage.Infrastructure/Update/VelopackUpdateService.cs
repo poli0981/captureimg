@@ -144,12 +144,28 @@ public sealed class VelopackUpdateService : IUpdateService
     {
         if (_manager is null || _pendingUpdate is null)
         {
+            _logger.LogWarning(
+                "ApplyAndRestart invoked with no pending update (manager={HasManager}, pending={HasPending}).",
+                _manager is not null,
+                _pendingUpdate is not null);
             throw new InvalidOperationException(
                 "No pending update to install. Call CheckAsync + DownloadAsync first.");
         }
 
+        _logger.LogInformation(
+            "Applying update {Version} and restarting.",
+            _pendingUpdate.TargetFullRelease.Version);
         EmitLog("Applying update and restarting…");
-        _manager.ApplyUpdatesAndRestart(_pendingUpdate.TargetFullRelease);
+        try
+        {
+            _manager.ApplyUpdatesAndRestart(_pendingUpdate.TargetFullRelease);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "ApplyUpdatesAndRestart failed.");
+            EmitLog($"Apply failed: {ex.Message}");
+            throw;
+        }
     }
 
     private void EmitLog(string line)

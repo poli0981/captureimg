@@ -38,7 +38,12 @@ internal static class Program
         var shutdownReason = "Normal";
         try
         {
-            Log.Information("CaptureImage starting. Args: {Args}", args);
+            Log.Information(
+                "CaptureImage starting. Version={Version} OS={OS} Culture={Culture} Args={Args}",
+                System.Reflection.Assembly.GetExecutingAssembly().GetName().Version?.ToString() ?? "0.0.0-dev",
+                System.Runtime.InteropServices.RuntimeInformation.OSDescription,
+                System.Globalization.CultureInfo.CurrentUICulture.Name,
+                args);
 
             var services = CompositionRoot.BuildServices(inMemorySink);
             UI.App.Services = services;

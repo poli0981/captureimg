@@ -193,6 +193,37 @@ public static class CallerAwareLoggerExtensions
         }
     }
 
+    public static void LogWarningAt<T0>(
+        this ILogger logger,
+        Exception exception,
+        string messageTemplate,
+        T0 arg0,
+        [CallerMemberName] string member = "",
+        [CallerFilePath] string filePath = "",
+        [CallerLineNumber] int line = 0)
+    {
+        using (logger.BeginScope(CallerScope(member, filePath, line)))
+        {
+            logger.LogWarning(exception, messageTemplate, arg0);
+        }
+    }
+
+    public static void LogWarningAt<T0, T1>(
+        this ILogger logger,
+        Exception exception,
+        string messageTemplate,
+        T0 arg0,
+        T1 arg1,
+        [CallerMemberName] string member = "",
+        [CallerFilePath] string filePath = "",
+        [CallerLineNumber] int line = 0)
+    {
+        using (logger.BeginScope(CallerScope(member, filePath, line)))
+        {
+            logger.LogWarning(exception, messageTemplate, arg0, arg1);
+        }
+    }
+
     // --- Error --------------------------------------------------------------
 
     public static void LogErrorAt(
@@ -234,6 +265,22 @@ public static class CallerAwareLoggerExtensions
         using (logger.BeginScope(CallerScope(member, filePath, line)))
         {
             logger.LogError(exception, messageTemplate, arg0);
+        }
+    }
+
+    public static void LogErrorAt<T0, T1>(
+        this ILogger logger,
+        Exception exception,
+        string messageTemplate,
+        T0 arg0,
+        T1 arg1,
+        [CallerMemberName] string member = "",
+        [CallerFilePath] string filePath = "",
+        [CallerLineNumber] int line = 0)
+    {
+        using (logger.BeginScope(CallerScope(member, filePath, line)))
+        {
+            logger.LogError(exception, messageTemplate, arg0, arg1);
         }
     }
 
