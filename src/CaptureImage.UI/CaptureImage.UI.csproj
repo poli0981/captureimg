@@ -14,6 +14,8 @@
     <PackageReference Include="Microsoft.Windows.SDK.BuildTools" />
     <PackageReference Include="SkiaSharp" />
     <PackageReference Include="CommunityToolkit.Mvvm" />
+    <PackageReference Include="H.NotifyIcon.WinUI" />
+    <PackageReference Include="System.Drawing.Common" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
     <PackageReference Include="Microsoft.Extensions.Logging" />
   </ItemGroup>

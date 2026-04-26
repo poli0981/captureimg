@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<UserControl
+    x:Class="CaptureImage.UI.Controls.ToastHost"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    IsHitTestVisible="True">
+
+    <ItemsControl x:Name="ToastList" ItemsSource="{Binding Toasts}">
+        <ItemsControl.ItemsPanel>
+            <ItemsPanelTemplate>
+                <StackPanel Orientation="Vertical" Spacing="8" />
+            </ItemsPanelTemplate>
+        </ItemsControl.ItemsPanel>
+        <ItemsControl.ItemTemplate>
+            <DataTemplate>
+                <Border CornerRadius="{StaticResource CardCornerRadius}"
+                        Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                        BorderBrush="{Binding Kind, Converter={StaticResource ToastKindToBrushConverter}}"
+                        BorderThickness="0,0,0,3"
+                        Padding="14,10"
+                        MinWidth="260"
+                        MaxWidth="340">
+                    <StackPanel Orientation="Vertical" Spacing="2">
+                        <TextBlock Text="{Binding Title}"
+                                   FontWeight="SemiBold"
+                                   FontSize="{StaticResource FontSizeBody}"
+                                   TextTrimming="CharacterEllipsis" />
+                        <TextBlock Text="{Binding Message}"
+                                   FontSize="{StaticResource FontSizeSmall}"
+                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                   TextWrapping="Wrap"
+                                   MaxHeight="80" />
+                    </StackPanel>
+                </Border>
+            </DataTemplate>
+        </ItemsControl.ItemTemplate>
+    </ItemsControl>
+</UserControl>

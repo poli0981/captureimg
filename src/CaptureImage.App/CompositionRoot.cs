@@ -11,7 +11,6 @@ using CaptureImage.Infrastructure.Steam;
 using CaptureImage.Infrastructure.Update;
 using CaptureImage.UI.Localization;
 using CaptureImage.UI.Services;
-using CaptureImage.UI.Services.Stubs;
 using CaptureImage.ViewModels;
 using CaptureImage.ViewModels.About;
 using CaptureImage.ViewModels.Dashboard;
@@ -96,9 +95,8 @@ internal static class CompositionRoot
 
         // --- UI-side services (toasts, preview, tray) --------------------------
         services.AddSingleton<IToastService, ToastService>();
-        // M1: tray + preview are stubs; M6 swaps in H.NotifyIcon.WindowsAppSDK + WinUI 3 modal.
-        services.AddSingleton<IPreviewPresenter, StubPreviewPresenter>();
-        services.AddSingleton<ITrayIconHost, StubTrayIconHost>();
+        services.AddSingleton<IPreviewPresenter, PreviewPresenter>();
+        services.AddSingleton<ITrayIconHost, TrayIconHost>();
 
         // --- Navigation --------------------------------------------------------
         services.AddSingleton<INavigationService, NavigationService>();

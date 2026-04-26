@@ -30,7 +30,7 @@
   </ItemGroup>
 
   <ItemGroup Label="Tray">
-    <PackageVersion Include="H.NotifyIcon.WindowsAppSDK" Version="2.2.0" />
+    <PackageVersion Include="H.NotifyIcon.WinUI" Version="2.2.0" />
     <PackageVersion Include="H.NotifyIcon" Version="2.2.0" />
   </ItemGroup>
 

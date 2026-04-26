@@ -6,6 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:views="using:CaptureImage.UI.Views"
+    xmlns:controls="using:CaptureImage.UI.Controls"
     mc:Ignorable="d">
 
     <Grid x:Name="Root"
@@ -85,5 +86,15 @@
             Width="480"
             HorizontalAlignment="Right"
             DataContext="{Binding LogViewer}" />
+
+        <!-- Toast overlay — anchored bottom-right, floats over content. Inherits the
+             root Grid's MainWindowViewModel DataContext; the inner ItemsControl binds to
+             its Toasts collection. Under RTL FlowDirection mirrors Right/Left so the
+             stack ends up bottom-left for ar-SA culture. -->
+        <controls:ToastHost
+            HorizontalAlignment="Right"
+            VerticalAlignment="Bottom"
+            Margin="0,0,20,20"
+            IsHitTestVisible="True" />
     </Grid>
 </Window>

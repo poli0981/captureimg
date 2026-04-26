@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<UserControl
+    x:Class="CaptureImage.UI.Controls.HotkeyRecorder"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <StackPanel Spacing="8">
+        <Grid ColumnSpacing="8">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <!-- Focusable surface that captures key events while recording. ContentControl
+                 is the simplest WinUI 3 element that supports IsTabStop + KeyDown without
+                 a custom Control template. Border itself is not focusable. -->
+            <ContentControl
+                x:Name="BindingField"
+                Grid.Column="0"
+                IsTabStop="True"
+                MinHeight="34"
+                CornerRadius="{StaticResource CardCornerRadius}"
+                Padding="12,8"
+                BorderThickness="1"
+                BorderBrush="{ThemeResource ControlElevationBorderBrush}"
+                Background="{ThemeResource ControlFillColorDefaultBrush}"
+                HorizontalContentAlignment="Stretch"
+                VerticalContentAlignment="Center"
+                AutomationProperties.Name="{Binding HotkeyFieldAutomationName}"
+                AutomationProperties.HelpText="{Binding RecorderPromptText}"
+                KeyDown="OnFieldKeyDown">
+                <Grid>
+                    <TextBlock
+                        Text="{Binding DisplayText}"
+                        FontFamily="Consolas, Courier New"
+                        VerticalAlignment="Center"
+                        Visibility="{Binding IsRecording, Converter={StaticResource InvertedBoolToVisibilityConverter}}" />
+                    <TextBlock
+                        Text="{Binding RecorderPromptText}"
+                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                        FontStyle="Italic"
+                        VerticalAlignment="Center"
+                        Visibility="{Binding IsRecording, Converter={StaticResource BoolToVisibilityConverter}}" />
+                </Grid>
+            </ContentControl>
+
+            <Button
+                Grid.Column="1"
+                Content="{Binding RecordLabel}"
+                Command="{Binding StartRecordingCommand}"
+                Visibility="{Binding IsRecording, Converter={StaticResource InvertedBoolToVisibilityConverter}}"
+                MinWidth="80" />
+            <Button
+                Grid.Column="1"
+                Content="{Binding CancelLabel}"
+                Command="{Binding CancelRecordingCommand}"
+                Visibility="{Binding IsRecording, Converter={StaticResource BoolToVisibilityConverter}}"
+                MinWidth="80" />
+
+            <Button
+                Grid.Column="2"
+                Content="{Binding ResetLabel}"
+                Command="{Binding ResetToDefaultCommand}"
+                Visibility="{Binding IsRecording, Converter={StaticResource InvertedBoolToVisibilityConverter}}"
+                MinWidth="80" />
+        </Grid>
+
+        <TextBlock
+            Text="{Binding ErrorMessage}"
+            Foreground="#D13438"
+            FontSize="{StaticResource FontSizeCaption}"
+            TextWrapping="Wrap"
+            Visibility="{Binding HasError, Converter={StaticResource BoolToVisibilityConverter}}" />
+
+        <TextBlock
+            Text="{Binding ConflictWarningText}"
+            Foreground="#C19C00"
+            FontSize="{StaticResource FontSizeCaption}"
+            TextWrapping="Wrap"
+            Visibility="{Binding ConflictDetected, Converter={StaticResource BoolToVisibilityConverter}}" />
+    </StackPanel>
+</UserControl>

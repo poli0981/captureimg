@@ -5,6 +5,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:controls="using:CaptureImage.UI.Controls"
     mc:Ignorable="d">
 
     <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Hidden">
@@ -31,15 +32,13 @@
                 </ComboBox>
             </StackPanel>
 
-            <!-- Hotkey: M4 ships a read-only display of Hotkey.DisplayText. The real
-                 HotkeyRecorder control with key-capture lands in v1.3-M6. -->
+            <!-- Hotkey: HotkeyRecorder custom control owns the key-capture flow. Bound
+                 to the SettingsViewModel.Hotkey child VM (HotkeyBindingViewModel). -->
             <StackPanel Spacing="4">
                 <TextBlock Text="{Binding HotkeyLabel}"
                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                            FontSize="{StaticResource FontSizeSmall}" />
-                <TextBox Text="{Binding Hotkey.DisplayText, Mode=OneWay}"
-                         IsReadOnly="True"
-                         PlaceholderText="HotkeyRecorder lands in v1.3-M6" />
+                <controls:HotkeyRecorder DataContext="{Binding Hotkey}" />
                 <TextBlock Text="{Binding HotkeyHint}"
                            FontSize="{StaticResource FontSizeCaption}"
                            Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
