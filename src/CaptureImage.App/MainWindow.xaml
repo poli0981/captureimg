@@ -6,17 +6,34 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
+    <!--
+        Root Grid intentionally has no Background so the Window's MicaBackdrop shines
+        through. Any opaque fill here would defeat the Fluent 2 translucency.
+    -->
     <Grid>
-        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="8">
+        <StackPanel
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            Spacing="{StaticResource SpacingSmall}">
             <TextBlock
                 HorizontalAlignment="Center"
-                Text="CaptureImage v1.3 (WinUI 3 bootstrap)"
-                FontSize="22"
+                Text="CaptureImage v1.3"
+                FontFamily="{StaticResource BodyFontFamily}"
+                FontSize="{StaticResource FontSizeTitle}"
                 FontWeight="SemiBold" />
             <TextBlock
                 HorizontalAlignment="Center"
-                Text="M1 placeholder — milestones M2–M7 fill in theme, navigation, views, services."
-                FontSize="13" />
+                Text="WinUI 3 bootstrap with Fluent 2 theme baseline (M2)."
+                FontFamily="{StaticResource BodyFontFamily}"
+                FontSize="{StaticResource FontSizeBody}"
+                Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+            <TextBlock
+                HorizontalAlignment="Center"
+                Margin="0,16,0,0"
+                Text="Milestones M3–M7 fill in navigation, views, services."
+                FontFamily="{StaticResource BodyFontFamily}"
+                FontSize="{StaticResource FontSizeSmall}"
+                Foreground="{ThemeResource TextFillColorTertiaryBrush}" />
         </StackPanel>
     </Grid>
 </Window>

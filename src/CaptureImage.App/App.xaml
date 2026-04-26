@@ -8,6 +8,39 @@
             <ResourceDictionary.MergedDictionaries>
                 <XamlControlsResources xmlns="using:Microsoft.UI.Xaml.Controls" />
             </ResourceDictionary.MergedDictionaries>
+
+            <!--
+                Design tokens — port of the v1.2 Avalonia design-system comment block.
+                Keep the same scale (4/8/12/16/24 px spacing, 4/8 px corner radius) so the
+                M3+ view ports stay visually consistent with the v1.2 baseline.
+
+                  FontFamily  : Segoe UI Variable (Fluent 2 default — explicit for clarity).
+                                Inter is dropped; Win11 native font carries the Fluent look.
+                  FontSize    : 11 (caption) / 12 (small) / 13 (body) / 14 (body-strong) /
+                                16 (subtitle) / 22 (title).
+                  CornerRadius: 8 px for cards/borders/containers, 4 px for inline pills.
+                  Spacing     : 4 / 8 / 12 / 16 / 24 px scale.
+                  Contrast    : secondary text uses TextFillColorSecondaryBrush, not
+                                Opacity=0.6 — the theme brush keeps WCAG AA on light/dark.
+            -->
+
+            <FontFamily x:Key="BodyFontFamily">Segoe UI Variable Display</FontFamily>
+
+            <x:Double x:Key="FontSizeCaption">11</x:Double>
+            <x:Double x:Key="FontSizeSmall">12</x:Double>
+            <x:Double x:Key="FontSizeBody">13</x:Double>
+            <x:Double x:Key="FontSizeBodyStrong">14</x:Double>
+            <x:Double x:Key="FontSizeSubtitle">16</x:Double>
+            <x:Double x:Key="FontSizeTitle">22</x:Double>
+
+            <x:Double x:Key="SpacingXSmall">4</x:Double>
+            <x:Double x:Key="SpacingSmall">8</x:Double>
+            <x:Double x:Key="SpacingMedium">12</x:Double>
+            <x:Double x:Key="SpacingLarge">16</x:Double>
+            <x:Double x:Key="SpacingXLarge">24</x:Double>
+
+            <CornerRadius x:Key="PillCornerRadius">4</CornerRadius>
+            <CornerRadius x:Key="CardCornerRadius">8</CornerRadius>
         </ResourceDictionary>
     </Application.Resources>
 </Application>
