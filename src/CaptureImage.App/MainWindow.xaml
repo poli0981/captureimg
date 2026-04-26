@@ -5,6 +5,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:views="using:CaptureImage.UI.Views"
     mc:Ignorable="d">
 
     <Grid x:Name="Root"
@@ -73,5 +74,16 @@
 
             <Frame x:Name="ContentFrame" />
         </NavigationView>
+
+        <!-- Log viewer drawer overlay — stays in the visual tree always so the slide-in
+             Composition animation has something to act on every toggle. Initial collapsed
+             state (Offset = +48 px X, Opacity = 0, IsHitTestVisible = false) is set in
+             MainWindow.OnRootLoaded; show/hide animations fire from
+             OnViewModelPropertyChanged when IsLogViewerVisible flips. -->
+        <views:LogViewerView
+            x:Name="LogDrawer"
+            Width="480"
+            HorizontalAlignment="Right"
+            DataContext="{Binding LogViewer}" />
     </Grid>
 </Window>

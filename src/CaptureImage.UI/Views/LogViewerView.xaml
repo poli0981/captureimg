@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<UserControl
+    x:Class="CaptureImage.UI.Views.LogViewerView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Border Background="{ThemeResource LayerFillColorAltBrush}"
+            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+            BorderThickness="1,1,0,0"
+            CornerRadius="8,0,0,0"
+            Padding="12">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <!-- Header + controls -->
+            <Grid Grid.Row="0" Margin="0,0,0,8">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Column="0"
+                           Text="{Binding Localization[Log_Title]}"
+                           FontSize="{StaticResource FontSizeBodyStrong}"
+                           FontWeight="SemiBold"
+                           VerticalAlignment="Center" />
+
+                <TextBlock Grid.Column="1"
+                           Text="{Binding FilterLabel}"
+                           Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                           VerticalAlignment="Center"
+                           Margin="0,0,6,0" />
+
+                <ComboBox Grid.Column="2"
+                          ItemsSource="{Binding FilterLevels}"
+                          SelectedItem="{Binding SelectedFilterLevel, Mode=TwoWay}"
+                          MinWidth="110"
+                          Margin="0,0,8,0" />
+
+                <Button Grid.Column="3"
+                        Command="{Binding TogglePauseCommand}"
+                        Content="{Binding TogglePauseLabel}"
+                        Margin="0,0,8,0" />
+
+                <Button Grid.Column="4"
+                        Command="{Binding ClearCommand}"
+                        Content="{Binding Localization[Log_Clear]}"
+                        Margin="0,0,8,0" />
+
+                <Button Grid.Column="5"
+                        Command="{Binding RevealLogsFolderCommand}"
+                        Content="{Binding RevealFolderLabel}"
+                        Margin="0,0,8,0" />
+
+                <TextBlock Grid.Column="6"
+                           Text="{Binding EventsCountText}"
+                           Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                           FontSize="{StaticResource FontSizeCaption}"
+                           VerticalAlignment="Center" />
+            </Grid>
+
+            <!-- Entries list -->
+            <Grid Grid.Row="1">
+                <ScrollViewer HorizontalScrollBarVisibility="Auto"
+                              VerticalScrollBarVisibility="Auto"
+                              Visibility="{Binding HasNoEntries, Converter={StaticResource InvertedBoolToVisibilityConverter}}">
+                    <ItemsControl ItemsSource="{Binding Entries}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Margin="0,1">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0"
+                                               Text="{Binding TimestampText}"
+                                               FontFamily="Consolas, Courier New"
+                                               FontSize="{StaticResource FontSizeCaption}"
+                                               Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                               Margin="0,0,8,0" />
+                                    <TextBlock Grid.Column="1"
+                                               Text="{Binding Level}"
+                                               FontFamily="Consolas, Courier New"
+                                               FontSize="{StaticResource FontSizeCaption}"
+                                               Width="45"
+                                               Margin="0,0,8,0" />
+                                    <TextBlock Grid.Column="2"
+                                               Text="{Binding FileLineText}"
+                                               FontFamily="Consolas, Courier New"
+                                               FontSize="{StaticResource FontSizeCaption}"
+                                               Width="170"
+                                               Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                               TextTrimming="CharacterEllipsis"
+                                               Margin="0,0,8,0" />
+                                    <TextBlock Grid.Column="3"
+                                               Text="{Binding Message}"
+                                               FontFamily="Consolas, Courier New"
+                                               FontSize="{StaticResource FontSizeCaption}"
+                                               TextWrapping="NoWrap"
+                                               TextTrimming="CharacterEllipsis" />
+                                </Grid>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+
+                <!-- Empty state: no log events yet. -->
+                <TextBlock Text="{Binding EmptyStateText}"
+                           Visibility="{Binding HasNoEntries, Converter={StaticResource BoolToVisibilityConverter}}"
+                           Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           TextWrapping="Wrap"
+                           TextAlignment="Center"
+                           Margin="24" />
+            </Grid>
+        </Grid>
+    </Border>
+</UserControl>

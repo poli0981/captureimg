@@ -40,6 +40,15 @@ public sealed record LogEntry(
         !string.IsNullOrEmpty(File) && Line is > 0
             ? $"{File}:{Line}"
             : string.Empty;
+
+    /// <summary>
+    /// Pre-formatted timestamp for the log viewer column — <c>"HH:mm:ss.fff"</c>. Done as a
+    /// computed property because WinUI 3 <c>{Binding}</c> doesn't support
+    /// <c>StringFormat</c> the way Avalonia/WPF do; keeping the format in code-behind-free
+    /// view XAML means one place (here) carries the format.
+    /// </summary>
+    public string TimestampText =>
+        Timestamp.ToString("HH:mm:ss.fff", System.Globalization.CultureInfo.InvariantCulture);
 }
 
 /// <summary>Levels the log viewer filters on. Mapped from Serilog's LogEventLevel.</summary>
