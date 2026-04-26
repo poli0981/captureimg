@@ -1,4 +1,3 @@
-using System;
 using CaptureImage.Core.Abstractions;
 using CaptureImage.Core.Models;
 using CommunityToolkit.Mvvm.ComponentModel;

@@ -1,4 +1,3 @@
-using System;
 using System.Globalization;
 using CaptureImage.UI.Localization;
 using FluentAssertions;

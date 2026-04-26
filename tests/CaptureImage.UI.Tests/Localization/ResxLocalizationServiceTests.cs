@@ -1,7 +1,4 @@
-using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using CaptureImage.Core.Abstractions;
 using CaptureImage.UI.Localization;
 using FluentAssertions;

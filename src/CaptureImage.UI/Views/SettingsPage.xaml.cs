@@ -1,4 +1,3 @@
-using System;
 using CaptureImage.UI.Services;
 using CaptureImage.ViewModels.Settings;
 using Microsoft.Extensions.DependencyInjection;
@@ -56,5 +55,5 @@ public sealed partial class SettingsPage : Page
 /// </summary>
 public static class WindowHostHelper
 {
-    public static Microsoft.UI.Xaml.Window? MainWindow { get; set; }
+    public static Window? MainWindow { get; set; }
 }

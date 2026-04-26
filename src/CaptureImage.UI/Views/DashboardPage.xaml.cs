@@ -1,4 +1,3 @@
-using System;
 using CaptureImage.ViewModels.Dashboard;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml.Controls;

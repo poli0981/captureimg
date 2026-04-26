@@ -1,5 +1,3 @@
-using System;
-using System.Threading.Tasks;
 using CaptureImage.ViewModels.Preview;
 using Microsoft.UI;
 using Microsoft.UI.Composition.SystemBackdrops;

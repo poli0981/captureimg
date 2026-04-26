@@ -1,5 +1,3 @@
-using System.IO;
-using System.Runtime.InteropServices.WindowsRuntime;
 using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Media.Imaging;
 

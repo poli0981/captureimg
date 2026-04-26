@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 namespace CaptureImage.Core.Models;
 
 /// <summary>

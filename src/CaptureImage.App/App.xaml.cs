@@ -1,4 +1,3 @@
-using System;
 using CaptureImage.Core.Abstractions;
 using CaptureImage.UI.Services;
 using CaptureImage.UI.Views;

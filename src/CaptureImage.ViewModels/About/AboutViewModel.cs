@@ -1,7 +1,5 @@
-using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.IO;
 using System.Reflection;
 using CaptureImage.Core.Abstractions;
 using CommunityToolkit.Mvvm.Input;

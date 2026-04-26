@@ -1,4 +1,3 @@
-using System;
 using CaptureImage.Core.Models;
 using FluentAssertions;
 using Xunit;

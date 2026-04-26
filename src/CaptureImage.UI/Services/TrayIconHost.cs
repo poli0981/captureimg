@@ -1,9 +1,6 @@
-using System;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.IO;
 using System.Runtime.InteropServices;
-using System.Runtime.InteropServices.WindowsRuntime;
 using CaptureImage.Core.Abstractions;
 using H.NotifyIcon;
 using Microsoft.Extensions.Logging;
@@ -11,8 +8,6 @@ using Microsoft.UI;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Media.Imaging;
 using SkiaSharp;
 using WinRT.Interop;
 

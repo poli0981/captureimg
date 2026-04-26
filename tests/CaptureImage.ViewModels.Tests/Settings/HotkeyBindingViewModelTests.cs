@@ -1,8 +1,5 @@
-using System;
 using System.ComponentModel;
 using System.Globalization;
-using System.Threading;
-using System.Threading.Tasks;
 using CaptureImage.Core.Abstractions;
 using CaptureImage.Core.Models;
 using CaptureImage.ViewModels.Settings;

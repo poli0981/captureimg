@@ -1,4 +1,3 @@
-using System;
 using System.ComponentModel;
 using CaptureImage.Core.Abstractions;
 using CaptureImage.Core.Models;

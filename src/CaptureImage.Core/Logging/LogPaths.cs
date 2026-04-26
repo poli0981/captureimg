@@ -1,6 +1,3 @@
-using System;
-using System.IO;
-
 namespace CaptureImage.Core.Logging;
 
 /// <summary>

@@ -1,11 +1,9 @@
-using System;
 using System.ComponentModel;
 using System.Numerics;
 using CaptureImage.UI.Views;
 using CaptureImage.ViewModels;
 using CaptureImage.ViewModels.Navigation;
 using Microsoft.UI;
-using Microsoft.UI.Composition;
 using Microsoft.UI.Composition.SystemBackdrops;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;

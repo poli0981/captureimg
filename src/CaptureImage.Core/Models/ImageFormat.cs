@@ -31,7 +31,7 @@ public static class ImageFormatExtensions
         ImageFormat.Jpeg => "jpg",
         ImageFormat.Webp => "webp",
         ImageFormat.Tiff => "tiff",
-        _ => throw new System.ArgumentOutOfRangeException(nameof(format), format, null),
+        _ => throw new ArgumentOutOfRangeException(nameof(format), format, null),
     };
 
     /// <summary>
@@ -43,6 +43,6 @@ public static class ImageFormatExtensions
         ImageFormat.Jpeg => "image/jpeg",
         ImageFormat.Webp => "image/webp",
         ImageFormat.Tiff => "image/tiff",
-        _ => throw new System.ArgumentOutOfRangeException(nameof(format), format, null),
+        _ => throw new ArgumentOutOfRangeException(nameof(format), format, null),
     };
 }
