@@ -377,6 +377,7 @@ public sealed partial class DashboardViewModel : ViewModelBase, IDisposable
                     _toasts.ShowSuccess(
                         Localization["Toast_CaptureSaved"],
                         Path.GetFileName(ok.FilePath));
+                    PlayCaptureSoundIfEnabled();
                     break;
                 case CaptureResult.Failure fail:
                     _stateMachine.Fire(CaptureTrigger.ErrorOccurred);
@@ -485,6 +486,20 @@ public sealed partial class DashboardViewModel : ViewModelBase, IDisposable
             {
                 await Task.Delay(RefreshDebounce, token).ConfigureAwait(true);
                 if (token.IsCancellationRequested) return;
+
+                // Suppress refresh while a preview modal is up — rebuilding Targets
+                // would replace the GameTargetViewModel instances and the user-visible
+                // SelectedTarget would shuffle out from under the preview decision.
+                // The next process event after the preview closes triggers a fresh
+                // debounce, so nothing's lost.
+                if (_stateMachine.CurrentState is CaptureState.Previewing or CaptureState.Saving)
+                {
+                    _logger.LogDebug(
+                        "Suppressed dashboard refresh while in {State} state.",
+                        _stateMachine.CurrentState);
+                    return;
+                }
+
                 await RefreshAsync().ConfigureAwait(true);
             }
             catch (TaskCanceledException)
@@ -499,6 +514,35 @@ public sealed partial class DashboardViewModel : ViewModelBase, IDisposable
         if (_stateMachine.CurrentState == CaptureState.Armed)
         {
             UpdateStatusForState();
+        }
+    }
+
+    /// <summary>
+    /// Play the standard Windows "SystemAsterisk" notification sound on a successful
+    /// capture when <c>UI.SoundEnabled</c> is on. The setting has lived in
+    /// <c>AppSettings</c> since v1.0 but had no consumer until v1.3-M7a — this hooks it
+    /// up. Uses Win32 PlaySound directly (via P/Invoke) instead of
+    /// <c>System.Media.SystemSounds</c> because the latter lives in
+    /// <c>System.Windows.Extensions</c> which only ships for Windows TFMs, and the
+    /// ViewModels project is intentionally TFM-portable. Failures are non-fatal: the
+    /// capture has already succeeded; missing audio devices just get logged.
+    /// </summary>
+    [System.Runtime.InteropServices.DllImport("winmm.dll", CharSet = System.Runtime.InteropServices.CharSet.Unicode)]
+    private static extern bool PlaySound(string? pszSound, IntPtr hmod, uint fdwSound);
+
+    private const uint SND_ASYNC = 0x0001;
+    private const uint SND_ALIAS = 0x00010000;
+
+    private void PlayCaptureSoundIfEnabled()
+    {
+        if (!_settings.Current.UI.SoundEnabled) return;
+        try
+        {
+            PlaySound("SystemAsterisk", IntPtr.Zero, SND_ASYNC | SND_ALIAS);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogDebug(ex, "Failed to play capture sound.");
         }
     }
 

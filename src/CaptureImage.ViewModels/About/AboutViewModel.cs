@@ -47,7 +47,8 @@ public sealed partial class AboutViewModel : ViewModelBase
 
         ThirdPartyItems = new ObservableCollection<ThirdPartyItem>
         {
-            new("Avalonia",                   "MIT",        "https://github.com/AvaloniaUI/Avalonia"),
+            new("Windows App SDK / WinUI 3",  "MIT",        "https://github.com/microsoft/WindowsAppSDK"),
+            new("H.NotifyIcon.WinUI",         "MIT",        "https://github.com/HavenDV/H.NotifyIcon"),
             new("SkiaSharp",                  "MIT",        "https://github.com/mono/SkiaSharp"),
             new("CommunityToolkit.Mvvm",      "MIT",        "https://github.com/CommunityToolkit/dotnet"),
             new("Microsoft.Extensions.*",     "MIT",        "https://github.com/dotnet/runtime"),
@@ -58,7 +59,6 @@ public sealed partial class AboutViewModel : ViewModelBase
             new("libuiohook",                 "GPL-3.0",    "https://github.com/kwhat/libuiohook"),
             new("Stateless",                  "Apache-2.0", "https://github.com/dotnet-state-machine/stateless"),
             new("Velopack",                   "MIT",        "https://github.com/velopack/velopack"),
-            new("Inter typeface",             "OFL-1.1",    "https://github.com/rsms/inter"),
         };
     }
 

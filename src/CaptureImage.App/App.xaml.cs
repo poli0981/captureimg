@@ -1,6 +1,7 @@
 using System;
 using CaptureImage.Core.Abstractions;
 using CaptureImage.UI.Services;
+using CaptureImage.UI.Views;
 using CaptureImage.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Dispatching;
@@ -43,6 +44,10 @@ public partial class App : Application
         var vm = services.GetRequiredService<MainWindowViewModel>();
         var mainWindow = new MainWindow();
         mainWindow.SetViewModel(vm);
+        // Stash the main window on a UI-side static accessor so Pages (which can't
+        // reference back into CaptureImage.App) can reach the host HWND for
+        // FolderPicker / FilePicker InitializeWithWindow calls.
+        WindowHostHelper.MainWindow = mainWindow;
         _window = mainWindow;
         _window.Activate();
 

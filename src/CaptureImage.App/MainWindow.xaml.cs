@@ -39,6 +39,10 @@ public sealed partial class MainWindow : Window
 
         SystemBackdrop = new MicaBackdrop { Kind = MicaKind.Base };
         ExtendsContentIntoTitleBar = true;
+        // Mark the empty 48 px Border at Grid.Row=0 as the window drag region. Without
+        // this, ExtendsContentIntoTitleBar leaves no draggable strip for the user to grab,
+        // and OS-drawn caption buttons can land on top of NavigationView content.
+        SetTitleBar(AppTitleBar);
 
         var hwnd = WindowNative.GetWindowHandle(this);
         var windowId = Win32Interop.GetWindowIdFromWindow(hwnd);

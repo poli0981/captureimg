@@ -2,6 +2,7 @@ using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.WindowsRuntime;
 using CaptureImage.Core.Abstractions;
 using H.NotifyIcon;
@@ -18,13 +19,21 @@ using WinRT.Interop;
 namespace CaptureImage.UI.Services;
 
 /// <summary>
-/// WinUI 3 tray-icon host backed by <c>H.NotifyIcon.WindowsAppSDK</c>. Draws its own icon
-/// at runtime via SkiaSharp (matches v1.2 — keeps the repo free of binary assets), wires
-/// a localized context menu, and implements minimize-to-tray by intercepting the main
-/// window's <see cref="AppWindow.Closing"/> event.
+/// WinUI 3 tray-icon host backed by <c>H.NotifyIcon.WinUI</c>. Wires a localized context
+/// menu, single-click-to-restore, and minimize-to-tray by intercepting the main window's
+/// <see cref="AppWindow.Closing"/> event. Tray icon ships with the OS default glyph until
+/// a real .ico round-trip lands (see feedback_h_notifyicon_winui_quirks.md).
 /// </summary>
 public sealed class TrayIconHost : ITrayIconHost
 {
+    [DllImport("user32.dll")]
+    private static extern bool SetForegroundWindow(IntPtr hWnd);
+
+    [DllImport("user32.dll")]
+    private static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
+
+    private const int SW_RESTORE = 9;
+
     private readonly ILocalizationService _localization;
     private readonly ISettingsStore _settings;
     private readonly ILogger<TrayIconHost> _logger;
@@ -32,7 +41,12 @@ public sealed class TrayIconHost : ITrayIconHost
     private TaskbarIcon? _trayIcon;
     private Window? _mainWindow;
     private AppWindow? _appWindow;
+    private IntPtr _hwnd;
     private bool _disposed;
+    // Set by QuitApp so OnAppWindowClosing knows to allow the close instead of swallowing
+    // it for minimize-to-tray. Without this, Application.Current.Exit() would hang
+    // because the closing handler keeps cancelling the shutdown.
+    private bool _quitting;
 
     public TrayIconHost(
         ILocalizationService localization,
@@ -50,26 +64,34 @@ public sealed class TrayIconHost : ITrayIconHost
         _mainWindow = mainWindow as Window
             ?? throw new ArgumentException("mainWindow must be a WinUI 3 Window", nameof(mainWindow));
 
-        var hwnd = WindowNative.GetWindowHandle(_mainWindow);
-        var windowId = Win32Interop.GetWindowIdFromWindow(hwnd);
+        _hwnd = WindowNative.GetWindowHandle(_mainWindow);
+        var windowId = Win32Interop.GetWindowIdFromWindow(_hwnd);
         _appWindow = AppWindow.GetFromWindowId(windowId);
 
         _trayIcon = new TaskbarIcon
         {
             ToolTipText = "CaptureImage",
             ContextFlyout = BuildMenu(),
+            // Single-click should fire immediately (no double-click wait). Default
+            // H.NotifyIcon behavior is to delay LeftClick by ~500 ms looking for a
+            // double-click, which made single-click-to-restore feel unresponsive.
+            NoLeftClickDelay = true,
         };
 
-        // Render the icon at runtime via SkiaSharp PNG → BitmapImage. H.NotifyIcon converts
-        // the ImageSource to a Win32 HICON internally. Failure is non-fatal: the tray
-        // appears with the OS default glyph and a warning is logged.
-        var iconSource = TryCreateIconSource();
-        if (iconSource is not null)
-        {
-            _trayIcon.IconSource = iconSource;
-        }
+        // Render the icon at runtime via SkiaSharp PNG (kept alive for v1.4 .ico path).
+        TryCreateIconSource();
 
-        _trayIcon.LeftClickCommand = new SimpleCommand(_ => ShowMainWindow());
+        // Both single + double click restore the window — covers either user habit.
+        _trayIcon.LeftClickCommand = new SimpleCommand(_ =>
+        {
+            _logger.LogDebug("Tray left-click → restoring main window.");
+            ShowMainWindow();
+        });
+        _trayIcon.DoubleClickCommand = new SimpleCommand(_ =>
+        {
+            _logger.LogDebug("Tray double-click → restoring main window.");
+            ShowMainWindow();
+        });
         _trayIcon.ForceCreate();
 
         // close-to-tray: intercept AppWindow.Closing (Window.Closed has no cancel hook).
@@ -79,26 +101,23 @@ public sealed class TrayIconHost : ITrayIconHost
         _logger.LogInformation("Tray icon initialized and visible.");
     }
 
-    private ImageSource? TryCreateIconSource()
+    private void TryCreateIconSource()
     {
         // H.NotifyIcon.WinUI loads icons via a chain that ends in System.Drawing.Icon,
         // which only accepts .ico file streams — a runtime-generated PNG fails with
         // "Argument 'picture' must be a picture that can be used as an Icon". Generating
         // a real .ico (System.Drawing.Icon.Save round-trip via HICON) needs P/Invoke
-        // cleanup that's overkill for M6's scope; the OS default glyph is functional in
-        // the meantime. M7 polish will ship a proper .ico via SkiaSharp -> Bitmap ->
-        // GetHicon -> Icon.FromHandle -> Save with DestroyIcon cleanup.
+        // cleanup that's deferred to v1.4. OS default glyph is functional in the meantime.
         try
         {
             // Touch BuildRuntimeIconPng so the SkiaSharp drawing code stays alive +
-            // exercised under build; M7 swaps the consumer to write .ico instead.
+            // exercised under build; v1.4 swaps the consumer to write .ico instead.
             _ = BuildRuntimeIconPng();
         }
         catch (Exception ex)
         {
             _logger.LogWarning(ex, "Runtime tray-icon SkiaSharp draw failed; tray will use default glyph anyway.");
         }
-        return null;
     }
 
     private void OnLocalizationChanged(object? sender, PropertyChangedEventArgs e)
@@ -133,17 +152,29 @@ public sealed class TrayIconHost : ITrayIconHost
         var menu = new MenuFlyout();
 
         var showItem = new MenuFlyoutItem { Text = _localization["Tray_ShowWindow"] };
-        showItem.Click += (_, _) => ShowMainWindow();
+        showItem.Click += (_, _) =>
+        {
+            _logger.LogDebug("Tray menu: Show clicked.");
+            ShowMainWindow();
+        };
         menu.Items.Add(showItem);
 
         var openFolderItem = new MenuFlyoutItem { Text = _localization["Tray_OpenFolder"] };
-        openFolderItem.Click += (_, _) => OpenCaptureFolder();
+        openFolderItem.Click += (_, _) =>
+        {
+            _logger.LogDebug("Tray menu: Open Folder clicked.");
+            OpenCaptureFolder();
+        };
         menu.Items.Add(openFolderItem);
 
         menu.Items.Add(new MenuFlyoutSeparator());
 
         var exitItem = new MenuFlyoutItem { Text = _localization["Tray_Exit"] };
-        exitItem.Click += (_, _) => QuitApp();
+        exitItem.Click += (_, _) =>
+        {
+            _logger.LogDebug("Tray menu: Exit clicked.");
+            QuitApp();
+        };
         menu.Items.Add(exitItem);
 
         return menu;
@@ -154,8 +185,23 @@ public sealed class TrayIconHost : ITrayIconHost
     private void ShowMainWindow()
     {
         if (_mainWindow is null || _appWindow is null) return;
-        _appWindow.Show();
-        _mainWindow.Activate();
+        try
+        {
+            // AppWindow.Show brings the window back from Hide(). ShowWindow(SW_RESTORE)
+            // also handles the "minimized via taskbar" case (AppWindow.Show alone leaves
+            // a minimized window minimized). SetForegroundWindow forces Z-order to top
+            // even when another app has focus — without it the window comes back behind
+            // whatever the user was working in.
+            _appWindow.Show();
+            ShowWindow(_hwnd, SW_RESTORE);
+            _mainWindow.Activate();
+            SetForegroundWindow(_hwnd);
+            _logger.LogDebug("Main window restored from tray.");
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning(ex, "Failed to restore main window from tray.");
+        }
     }
 
     private void OpenCaptureFolder()
@@ -178,12 +224,14 @@ public sealed class TrayIconHost : ITrayIconHost
 
     private void QuitApp()
     {
+        // Bypass MinimizeToTray so OnAppWindowClosing lets the close through.
+        _quitting = true;
         Application.Current.Exit();
     }
 
     private void OnAppWindowClosing(AppWindow sender, AppWindowClosingEventArgs args)
     {
-        if (_disposed) return;
+        if (_disposed || _quitting) return;
         if (!_settings.Current.UI.MinimizeToTray) return;
 
         // Swallow the close, hide instead. User can quit via tray menu.

@@ -11,90 +11,111 @@
 
     <Grid x:Name="Root"
           FlowDirection="{Binding Localization.CurrentFlowDirection, Converter={StaticResource FlowDirectionConverter}}">
-        <NavigationView
-            x:Name="NavView"
-            IsBackButtonVisible="Collapsed"
-            IsSettingsVisible="False"
-            PaneDisplayMode="Left"
-            OpenPaneLength="220"
-            MenuItemsSource="{Binding NavItems}"
-            SelectedItem="{Binding SelectedNavItem, Mode=TwoWay}"
-            SelectionChanged="NavView_SelectionChanged">
+        <Grid.RowDefinitions>
+            <!-- Title-bar drag region. Reserve 48 px so the OS-drawn caption buttons
+                 (minimize / maximize / close) don't overlap the NavigationView pane
+                 header, the LogViewer drawer, or any Page content. AppTitleBar is
+                 marked as the window's title bar via Window.SetTitleBar in code-behind. -->
+            <RowDefinition Height="48" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
 
-            <NavigationView.PaneHeader>
-                <StackPanel Margin="12,8,12,8">
-                    <TextBlock
-                        Text="{Binding AppTitle}"
-                        FontFamily="{StaticResource BodyFontFamily}"
-                        FontSize="{StaticResource FontSizeTitle}"
-                        FontWeight="SemiBold" />
-                    <TextBlock
-                        Text="{Binding AppVersion}"
-                        FontFamily="{StaticResource BodyFontFamily}"
-                        FontSize="{StaticResource FontSizeCaption}"
-                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                        Margin="0,4,0,0" />
-                </StackPanel>
-            </NavigationView.PaneHeader>
+        <Border Grid.Row="0" x:Name="AppTitleBar" Background="Transparent" />
 
-            <NavigationView.MenuItemTemplate>
-                <DataTemplate>
-                    <NavigationViewItem Content="{Binding Label}">
-                        <NavigationViewItem.Icon>
-                            <FontIcon
-                                Glyph="{Binding IconGlyph}"
-                                FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" />
-                        </NavigationViewItem.Icon>
-                    </NavigationViewItem>
-                </DataTemplate>
-            </NavigationView.MenuItemTemplate>
+        <!-- Body grid: 2 columns so the LogViewer drawer can sit in a dedicated 480 px
+             column on the trailing edge instead of relying on HorizontalAlignment="Right",
+             which WinUI 3 doesn't honour reliably on first measure (the drawer would
+             render on the leading edge until a window resize forced a relayout). -->
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="480" />
+            </Grid.ColumnDefinitions>
 
-            <NavigationView.PaneFooter>
-                <Button
-                    HorizontalAlignment="Stretch"
-                    HorizontalContentAlignment="Left"
-                    Margin="8,4,8,16"
-                    Padding="12,8"
-                    Background="Transparent"
-                    BorderThickness="0"
-                    Command="{Binding ToggleLogViewerCommand}"
-                    ToolTipService.ToolTip="{Binding LogToggleTooltip}"
-                    AutomationProperties.Name="{Binding LogToggleTooltip}">
-                    <StackPanel Orientation="Horizontal" Spacing="12">
-                        <FontIcon
-                            Glyph="&#xE9F9;"
-                            FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets"
-                            FontSize="16" />
+            <NavigationView
+                Grid.ColumnSpan="2"
+                x:Name="NavView"
+                IsBackButtonVisible="Collapsed"
+                IsSettingsVisible="False"
+                PaneDisplayMode="Left"
+                OpenPaneLength="220"
+                MenuItemsSource="{Binding NavItems}"
+                SelectedItem="{Binding SelectedNavItem, Mode=TwoWay}"
+                SelectionChanged="NavView_SelectionChanged">
+
+                <NavigationView.PaneHeader>
+                    <StackPanel Margin="12,8,12,8">
                         <TextBlock
-                            Text="{Binding LogToggleLabel}"
+                            Text="{Binding AppTitle}"
                             FontFamily="{StaticResource BodyFontFamily}"
-                            VerticalAlignment="Center" />
+                            FontSize="{StaticResource FontSizeTitle}"
+                            FontWeight="SemiBold" />
+                        <TextBlock
+                            Text="{Binding AppVersion}"
+                            FontFamily="{StaticResource BodyFontFamily}"
+                            FontSize="{StaticResource FontSizeCaption}"
+                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                            Margin="0,4,0,0" />
                     </StackPanel>
-                </Button>
-            </NavigationView.PaneFooter>
+                </NavigationView.PaneHeader>
 
-            <Frame x:Name="ContentFrame" />
-        </NavigationView>
+                <NavigationView.MenuItemTemplate>
+                    <DataTemplate>
+                        <NavigationViewItem Content="{Binding Label}">
+                            <NavigationViewItem.Icon>
+                                <FontIcon
+                                    Glyph="{Binding IconGlyph}"
+                                    FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" />
+                            </NavigationViewItem.Icon>
+                        </NavigationViewItem>
+                    </DataTemplate>
+                </NavigationView.MenuItemTemplate>
 
-        <!-- Log viewer drawer overlay — stays in the visual tree always so the slide-in
-             Composition animation has something to act on every toggle. Initial collapsed
-             state (Offset = +48 px X, Opacity = 0, IsHitTestVisible = false) is set in
-             MainWindow.OnRootLoaded; show/hide animations fire from
-             OnViewModelPropertyChanged when IsLogViewerVisible flips. -->
-        <views:LogViewerView
-            x:Name="LogDrawer"
-            Width="480"
-            HorizontalAlignment="Right"
-            DataContext="{Binding LogViewer}" />
+                <NavigationView.PaneFooter>
+                    <Button
+                        HorizontalAlignment="Stretch"
+                        HorizontalContentAlignment="Left"
+                        Margin="8,4,8,16"
+                        Padding="12,8"
+                        Background="Transparent"
+                        BorderThickness="0"
+                        Command="{Binding ToggleLogViewerCommand}"
+                        ToolTipService.ToolTip="{Binding LogToggleTooltip}"
+                        AutomationProperties.Name="{Binding LogToggleTooltip}">
+                        <StackPanel Orientation="Horizontal" Spacing="12">
+                            <FontIcon
+                                Glyph="&#xE9F9;"
+                                FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets"
+                                FontSize="16" />
+                            <TextBlock
+                                Text="{Binding LogToggleLabel}"
+                                FontFamily="{StaticResource BodyFontFamily}"
+                                VerticalAlignment="Center" />
+                        </StackPanel>
+                    </Button>
+                </NavigationView.PaneFooter>
 
-        <!-- Toast overlay — anchored bottom-right, floats over content. Inherits the
-             root Grid's MainWindowViewModel DataContext; the inner ItemsControl binds to
-             its Toasts collection. Under RTL FlowDirection mirrors Right/Left so the
-             stack ends up bottom-left for ar-SA culture. -->
-        <controls:ToastHost
-            HorizontalAlignment="Right"
-            VerticalAlignment="Bottom"
-            Margin="0,0,20,20"
-            IsHitTestVisible="True" />
+                <Frame x:Name="ContentFrame" />
+            </NavigationView>
+
+            <!-- Log viewer drawer overlay — pinned to Column 1 (trailing edge under LTR,
+                 leading under RTL — FlowDirection mirrors). Stays in the visual tree
+                 always so the slide-in Composition animation has something to act on
+                 every toggle. Initial collapsed state (Offset = ±48 px X, Opacity = 0,
+                 IsHitTestVisible = false) is set in MainWindow.OnRootLoaded. -->
+            <views:LogViewerView
+                Grid.Column="1"
+                x:Name="LogDrawer"
+                DataContext="{Binding LogViewer}" />
+
+            <!-- Toast overlay — anchored bottom of the trailing edge column. Spans both
+                 columns so MaxWidth + alignment can position it freely. -->
+            <controls:ToastHost
+                Grid.ColumnSpan="2"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Bottom"
+                Margin="0,0,20,20"
+                IsHitTestVisible="True" />
+        </Grid>
     </Grid>
 </Window>
