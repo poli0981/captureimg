@@ -11,6 +11,7 @@ using CaptureImage.Infrastructure.Steam;
 using CaptureImage.Infrastructure.Update;
 using CaptureImage.UI.Localization;
 using CaptureImage.UI.Services;
+using CaptureImage.UI.Services.Stubs;
 using CaptureImage.ViewModels;
 using CaptureImage.ViewModels.About;
 using CaptureImage.ViewModels.Dashboard;
@@ -56,7 +57,11 @@ internal static class CompositionRoot
 
         // --- Cross-cutting -----------------------------------------------------
         services.AddSingleton<IFileSystem, FileSystem>();
-        services.AddSingleton<IUIThreadDispatcher, AvaloniaUIDispatcher>();
+        // Concrete WinUIThreadDispatcher exposed both as itself (so App.OnLaunched can call
+        // Bind() with the live DispatcherQueue) and behind the portable IUIThreadDispatcher
+        // contract (so VMs/services keep their abstraction).
+        services.AddSingleton<WinUIThreadDispatcher>();
+        services.AddSingleton<IUIThreadDispatcher>(sp => sp.GetRequiredService<WinUIThreadDispatcher>());
         services.AddSingleton<ILocalizationService, ResxLocalizationService>();
 
         // --- Settings ----------------------------------------------------------
@@ -91,8 +96,9 @@ internal static class CompositionRoot
 
         // --- UI-side services (toasts, preview, tray) --------------------------
         services.AddSingleton<IToastService, ToastService>();
-        services.AddSingleton<IPreviewPresenter, AvaloniaPreviewPresenter>();
-        services.AddSingleton<ITrayIconHost, AvaloniaTrayIconHost>();
+        // M1: tray + preview are stubs; M6 swaps in H.NotifyIcon.WindowsAppSDK + WinUI 3 modal.
+        services.AddSingleton<IPreviewPresenter, StubPreviewPresenter>();
+        services.AddSingleton<ITrayIconHost, StubTrayIconHost>();
 
         // --- Navigation --------------------------------------------------------
         services.AddSingleton<INavigationService, NavigationService>();

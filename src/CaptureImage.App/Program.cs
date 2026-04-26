@@ -1,9 +1,10 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
-using Avalonia;
-using Avalonia.Threading;
 using CaptureImage.Core.Abstractions;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.UI.Dispatching;
+using Microsoft.UI.Xaml;
 using Serilog;
 using Velopack;
 
@@ -18,21 +19,16 @@ internal static class Program
     /// <see cref="VelopackApp.Build"/> MUST be the very first thing <see cref="Main"/> does.
     /// The Velopack installer passes command-line arguments like <c>--squirrel-install</c>,
     /// <c>--squirrel-firstrun</c>, and <c>--squirrel-uninstall</c> on the first launch after an
-    /// install/update/uninstall event; these need to be handled before Avalonia boots,
+    /// install/update/uninstall event; these need to be handled before WinUI 3 boots,
     /// otherwise the installer will hang waiting for the previous instance to exit.
     /// </remarks>
     [STAThread]
     public static int Main(string[] args)
     {
-        // Velopack first — runs hooks for install/firstrun/update/uninstall and returns only
-        // when the launch is a normal one.
         VelopackApp.Build().Run();
 
-        // Bootstrap Serilog early (keep the in-memory sink + runtime level switch for DI).
         var (inMemorySink, loggingLevelSwitch) = LoggingSetup.Initialize();
 
-        // Catch anything that escapes try/catch on any thread. Register before we stand up DI
-        // or UI so background-thread crashes during startup still reach the rolling file.
         RegisterGlobalExceptionHandlers();
 
         var shutdownReason = "Normal";
@@ -46,26 +42,15 @@ internal static class Program
                 args);
 
             var services = CompositionRoot.BuildServices(inMemorySink, loggingLevelSwitch);
-            UI.App.Services = services;
+            App.Services = services;
 
-            // Load persisted settings before the UI binds to them.
             var settingsStore = services.GetRequiredService<ISettingsStore>();
             settingsStore.LoadAsync().GetAwaiter().GetResult();
 
-            // Narrow Serilog's minimum level from the boot default (Debug) down to whatever
-            // the user chose via Settings last run. This happens after LoadAsync so that
-            // early-startup lines — "CaptureImage starting", "Settings loaded …" — always
-            // land in the file regardless of the configured floor.
             var configuredLevel = LoggingSetup.ParseLevel(settingsStore.Current.LogLevel);
             loggingLevelSwitch.MinimumLevel = configuredLevel;
             Log.Information("Log level set to {Level} from settings.", configuredLevel);
 
-            // Apply persisted culture before the first window is constructed so nav labels etc.
-            // render in the right language from frame zero. Only accept cultures the app
-            // actually ships translations for — a hand-edited settings.json with, say,
-            // Culture=fr-FR used to flip the app to fr and then fall through to neutral
-            // en strings with Settings showing "English" selected; refuse at startup
-            // instead so the default en-US stays coherent.
             var localization = services.GetRequiredService<ILocalizationService>();
             var cultureName = settingsStore.Current.Culture;
             if (!string.IsNullOrWhiteSpace(cultureName))
@@ -100,8 +85,19 @@ internal static class Program
                 }
             }
 
-            return BuildAvaloniaApp()
-                .StartWithClassicDesktopLifetime(args);
+            // WinUI 3 entry point. Application.Start blocks until the dispatcher exits. The
+            // callback runs once on the freshly-minted UI thread before any Window is shown
+            // — install a SynchronizationContext that flows back to that thread so async
+            // continuations land where bindings can see them.
+            Application.Start(p =>
+            {
+                var ctx = new DispatcherQueueSynchronizationContext(
+                    DispatcherQueue.GetForCurrentThread());
+                SynchronizationContext.SetSynchronizationContext(ctx);
+                _ = new App();
+            });
+
+            return 0;
         }
         catch (Exception ex)
         {
@@ -111,12 +107,11 @@ internal static class Program
         }
         finally
         {
-            // Flush any pending settings writes and close the logger.
             try
             {
-                if (UI.App.Services is not null)
+                if (App.Services is not null)
                 {
-                    var store = UI.App.Services.GetService<ISettingsStore>();
+                    var store = App.Services.GetService<ISettingsStore>();
                     if (store is not null)
                     {
                         store.FlushAsync().GetAwaiter().GetResult();
@@ -132,21 +127,6 @@ internal static class Program
         }
     }
 
-    /// <summary>
-    /// Avalonia AppBuilder. Also used by the Avalonia designer — do not do expensive work here.
-    /// </summary>
-    public static AppBuilder BuildAvaloniaApp()
-        => AppBuilder.Configure<UI.App>()
-            .UsePlatformDetect()
-            .WithInterFont()
-            .LogToTrace()
-            .AfterSetup(_ =>
-            {
-                // Hook the Avalonia UI-thread dispatcher so exceptions raised by command
-                // handlers, bindings, and tick callbacks don't silently kill the UI.
-                Dispatcher.UIThread.UnhandledException += OnDispatcherUnhandledException;
-            });
-
     private static void RegisterGlobalExceptionHandlers()
     {
         AppDomain.CurrentDomain.UnhandledException += (_, e) =>
@@ -158,7 +138,6 @@ internal static class Program
                 e.IsTerminating);
             if (e.IsTerminating)
             {
-                // Last-ditch flush — CLR is about to pull the rug.
                 Log.CloseAndFlush();
             }
         };
@@ -166,17 +145,7 @@ internal static class Program
         TaskScheduler.UnobservedTaskException += (_, e) =>
         {
             Log.Error(e.Exception, "Unobserved task exception.");
-            // Claim the exception so the default .NET policy doesn't terminate the process
-            // on the next GC — structured log is enough signal for us to investigate.
             e.SetObserved();
         };
-    }
-
-    private static void OnDispatcherUnhandledException(object? sender, DispatcherUnhandledExceptionEventArgs e)
-    {
-        Log.Error(e.Exception, "Unhandled exception on UI dispatcher.");
-        // Don't let a single bad command tear down the window — swallow after logging so the
-        // user can keep using the app (and notice the Toast / LogViewer will surface it).
-        e.Handled = true;
     }
 }

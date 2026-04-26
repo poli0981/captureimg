@@ -1,5 +1,4 @@
 using System.Collections.ObjectModel;
-using Avalonia.Threading;
 using CaptureImage.Core.Abstractions;
 using CaptureImage.Core.Models;
 
@@ -10,8 +9,8 @@ namespace CaptureImage.UI.Services;
 /// dismisses each after its <see cref="ToastItem.EffectiveDuration"/> elapses.
 /// </summary>
 /// <remarks>
-/// Lives in the UI project because it touches <see cref="Dispatcher.UIThread"/> directly,
-/// which keeps the portable ViewModels assembly free of Avalonia.
+/// Lives in the UI project because it marshals through <see cref="IUIThreadDispatcher"/>;
+/// the portable ViewModels assembly stays free of any UI-framework reference.
 /// </remarks>
 public sealed class ToastService : IToastService
 {

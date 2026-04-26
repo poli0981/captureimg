@@ -1,16 +1,17 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net9.0</TargetFramework>
+    <TargetFramework>net9.0-windows10.0.22621.0</TargetFramework>
+    <SupportedOSPlatformVersion>10.0.22621.0</SupportedOSPlatformVersion>
     <RootNamespace>CaptureImage.UI</RootNamespace>
     <AssemblyName>CaptureImage.UI</AssemblyName>
-    <EnableAvaloniaXamlCompilation>true</EnableAvaloniaXamlCompilation>
+    <UseWinUI>true</UseWinUI>
+    <EnableMsixTooling>false</EnableMsixTooling>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Avalonia" />
-    <PackageReference Include="Avalonia.Themes.Fluent" />
-    <PackageReference Include="Avalonia.Fonts.Inter" />
+    <PackageReference Include="Microsoft.WindowsAppSDK" />
+    <PackageReference Include="Microsoft.Windows.SDK.BuildTools" />
     <PackageReference Include="SkiaSharp" />
     <PackageReference Include="CommunityToolkit.Mvvm" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
@@ -20,10 +21,6 @@
   <ItemGroup>
     <ProjectReference Include="..\CaptureImage.Core\CaptureImage.Core.csproj" />
     <ProjectReference Include="..\CaptureImage.ViewModels\CaptureImage.ViewModels.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <AvaloniaResource Include="Assets\**" />
   </ItemGroup>
 
 </Project>
