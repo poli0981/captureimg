@@ -11,25 +11,28 @@
             </ResourceDictionary.MergedDictionaries>
 
             <!-- Globally-available converters. Declared at Application scope so any view's
-                 {StaticResource FlowDirectionConverter} lookup walks up the chain and
-                 finds them — local Grid.Resources scope hits a forward-reference issue
-                 because the Grid itself can already use the resource when its own
-                 properties evaluate. -->
+                 {StaticResource X} lookup walks up the chain and finds them — local
+                 Element.Resources scope hits a forward-reference issue when the host
+                 element uses the converter on its own properties. See
+                 feedback_winui3_resource_scope.md. -->
             <conv:FlowDirectionConverter x:Key="FlowDirectionConverter" />
+            <conv:BytesToBitmapConverter x:Key="BytesToBitmapConverter" />
+            <conv:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+            <conv:InvertedBoolToVisibilityConverter x:Key="InvertedBoolToVisibilityConverter" />
+            <conv:NotNullToVisibilityConverter x:Key="NotNullToVisibilityConverter" />
 
-            <!--
-                Design tokens — port of the v1.2 Avalonia design-system comment block.
-                Keep the same scale (4/8/12/16/24 px spacing, 4/8 px corner radius) so the
-                M3+ view ports stay visually consistent with the v1.2 baseline.
+            <!-- Design tokens — port of the v1.2 Avalonia design-system comment block.
+                 Keep the same scale (4/8/12/16/24 px spacing, 4/8 px corner radius) so the
+                 view ports stay visually consistent with the v1.2 baseline.
 
-                  FontFamily  : Segoe UI Variable (Fluent 2 default — explicit for clarity).
-                                Inter is dropped; Win11 native font carries the Fluent look.
-                  FontSize    : 11 (caption) / 12 (small) / 13 (body) / 14 (body-strong) /
-                                16 (subtitle) / 22 (title).
-                  CornerRadius: 8 px for cards/borders/containers, 4 px for inline pills.
-                  Spacing     : 4 / 8 / 12 / 16 / 24 px scale.
-                  Contrast    : secondary text uses TextFillColorSecondaryBrush, not
-                                Opacity=0.6 — the theme brush keeps WCAG AA on light/dark.
+                   FontFamily  : Segoe UI Variable (Fluent 2 default — explicit for clarity).
+                                 Inter is dropped; Win11 native font carries the Fluent look.
+                   FontSize    : 11 (caption) / 12 (small) / 13 (body) / 14 (body-strong) /
+                                 16 (subtitle) / 22 (title).
+                   CornerRadius: 8 px for cards/borders/containers, 4 px for inline pills.
+                   Spacing     : 4 / 8 / 12 / 16 / 24 px scale.
+                   Contrast    : secondary text uses TextFillColorSecondaryBrush, not
+                                 Opacity=0.6 — the theme brush keeps WCAG AA on light/dark.
             -->
 
             <FontFamily x:Key="BodyFontFamily">Segoe UI Variable Display</FontFamily>

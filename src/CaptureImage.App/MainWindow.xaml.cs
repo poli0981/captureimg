@@ -74,7 +74,10 @@ public sealed partial class MainWindow : Window
 
         if (pageType is not null && ContentFrame.CurrentSourcePageType != pageType)
         {
-            ContentFrame.Navigate(pageType);
+            // Pass App.Services through Frame.Navigate's parameter so each Page can
+            // resolve its own VM from DI without taking a project reference back to
+            // CaptureImage.App. Each Page reads it in OnNavigatedTo.
+            ContentFrame.Navigate(pageType, App.Services);
         }
     }
 }

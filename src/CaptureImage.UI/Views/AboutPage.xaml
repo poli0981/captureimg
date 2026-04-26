@@ -6,13 +6,160 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
-    <Grid>
-        <TextBlock
-            HorizontalAlignment="Center"
-            VerticalAlignment="Center"
-            Text="About — coming in v1.3-M4"
-            FontFamily="{StaticResource BodyFontFamily}"
-            FontSize="{StaticResource FontSizeSubtitle}"
-            Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
-    </Grid>
+
+    <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Hidden">
+        <StackPanel Margin="24,16,24,24" Spacing="18" MaxWidth="640" HorizontalAlignment="Left">
+
+            <!-- Header -->
+            <StackPanel Spacing="4">
+                <TextBlock Text="{Binding Localization[About_Title]}"
+                           FontFamily="{StaticResource BodyFontFamily}"
+                           FontSize="{StaticResource FontSizeTitle}"
+                           FontWeight="SemiBold" />
+                <TextBlock Text="{Binding Localization[About_Tagline]}"
+                           FontFamily="{StaticResource BodyFontFamily}"
+                           FontSize="{StaticResource FontSizeSmall}"
+                           Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+            </StackPanel>
+
+            <!-- App metadata -->
+            <Border Padding="16"
+                    CornerRadius="{StaticResource CardCornerRadius}"
+                    BorderThickness="1"
+                    BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                    Background="{ThemeResource CardBackgroundFillColorDefaultBrush}">
+                <Grid ColumnSpacing="16" RowSpacing="6">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="140" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding Localization[About_AppLabel]}"
+                               Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                    <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding AppName}" FontWeight="SemiBold" />
+
+                    <TextBlock Grid.Row="1" Grid.Column="0" Text="{Binding Localization[About_VersionLabel]}"
+                               Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                    <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding AppVersion}" />
+
+                    <TextBlock Grid.Row="2" Grid.Column="0" Text="{Binding Localization[About_LicenseLabel]}"
+                               Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                    <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding License}" />
+
+                    <TextBlock Grid.Row="3" Grid.Column="0" Text="{Binding Localization[About_DeveloperLabel]}"
+                               Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                    <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding Developer}" />
+
+                    <TextBlock Grid.Row="4" Grid.Column="0" Text="{Binding Localization[About_RepositoryLabel]}"
+                               Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                    <HyperlinkButton Grid.Row="4" Grid.Column="1"
+                                     Content="{Binding RepositoryUrl}"
+                                     Command="{Binding OpenRepositoryCommand}"
+                                     Padding="0"
+                                     HorizontalAlignment="Left" />
+                </Grid>
+            </Border>
+
+            <!-- AI assistance disclosure -->
+            <StackPanel Spacing="4">
+                <TextBlock Text="{Binding Localization[About_AiSection]}" FontWeight="SemiBold" />
+                <TextBlock Text="{Binding AiAssistanceNotice}"
+                           TextWrapping="Wrap"
+                           Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                           FontSize="{StaticResource FontSizeSmall}" />
+            </StackPanel>
+
+            <!-- Disclaimers -->
+            <StackPanel Spacing="10">
+                <TextBlock Text="{Binding Localization[About_DisclaimersSection]}" FontWeight="SemiBold" />
+
+                <StackPanel Spacing="3">
+                    <TextBlock Text="{Binding Localization[About_TranslationDisclaimer]}"
+                               FontWeight="SemiBold"
+                               FontSize="{StaticResource FontSizeSmall}" />
+                    <TextBlock Text="{Binding TranslationDisclaimer}"
+                               TextWrapping="Wrap"
+                               Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                               FontSize="{StaticResource FontSizeSmall}" />
+                </StackPanel>
+
+                <StackPanel Spacing="3">
+                    <TextBlock Text="{Binding Localization[About_CaptureDisclaimer]}"
+                               FontWeight="SemiBold"
+                               FontSize="{StaticResource FontSizeSmall}" />
+                    <TextBlock Text="{Binding CaptureLimitationDisclaimer}"
+                               TextWrapping="Wrap"
+                               Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                               FontSize="{StaticResource FontSizeSmall}" />
+                </StackPanel>
+
+                <StackPanel Spacing="3">
+                    <TextBlock Text="{Binding Localization[About_LiabilityDisclaimer]}"
+                               FontWeight="SemiBold"
+                               FontSize="{StaticResource FontSizeSmall}" />
+                    <TextBlock Text="{Binding LiabilityDisclaimer}"
+                               TextWrapping="Wrap"
+                               Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                               FontSize="{StaticResource FontSizeSmall}" />
+                </StackPanel>
+            </StackPanel>
+
+            <!-- Legal document links — StackPanel horizontal because WinUI 3 has no built-in
+                 WrapPanel; the 6 buttons fit in one row at 1200 px width. M7 polish can
+                 introduce a real wrap layout if smaller window sizes ever ship. -->
+            <StackPanel Spacing="6">
+                <TextBlock Text="{Binding Localization[About_LegalSection]}" FontWeight="SemiBold" />
+                <StackPanel Orientation="Horizontal" Spacing="6">
+                    <Button Content="{Binding Localization[About_OpenDisclaimer]}"   Command="{Binding OpenDisclaimerCommand}" />
+                    <Button Content="{Binding Localization[About_OpenPrivacy]}"      Command="{Binding OpenPrivacyCommand}" />
+                    <Button Content="{Binding Localization[About_OpenTerms]}"        Command="{Binding OpenTermsCommand}" />
+                    <Button Content="{Binding Localization[About_OpenLicense]}"      Command="{Binding OpenLicenseCommand}" />
+                    <Button Content="{Binding Localization[About_OpenThirdParty]}"   Command="{Binding OpenThirdPartyCommand}" />
+                    <Button Content="{Binding Localization[About_OpenContributors]}" Command="{Binding OpenContributorsCommand}" />
+                </StackPanel>
+            </StackPanel>
+
+            <!-- Third-party list -->
+            <StackPanel Spacing="6">
+                <TextBlock Text="{Binding Localization[About_ThirdPartySection]}" FontWeight="SemiBold" />
+                <Border BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                        BorderThickness="1"
+                        CornerRadius="{StaticResource CardCornerRadius}"
+                        Padding="8">
+                    <ItemsControl ItemsSource="{Binding ThirdPartyItems}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Margin="0,2">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0"
+                                               Text="{Binding Name}"
+                                               FontSize="{StaticResource FontSizeSmall}"
+                                               TextTrimming="CharacterEllipsis" />
+                                    <TextBlock Grid.Column="1"
+                                               Text="{Binding License}"
+                                               FontSize="{StaticResource FontSizeCaption}"
+                                               Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                               Margin="8,0,0,0" />
+                                </Grid>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </Border>
+                <TextBlock Text="{Binding Localization[About_ThirdPartyHint]}"
+                           FontSize="{StaticResource FontSizeCaption}"
+                           Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+            </StackPanel>
+
+        </StackPanel>
+    </ScrollViewer>
 </Page>

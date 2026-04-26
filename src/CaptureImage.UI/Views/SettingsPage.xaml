@@ -6,13 +6,159 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
-    <Grid>
-        <TextBlock
-            HorizontalAlignment="Center"
-            VerticalAlignment="Center"
-            Text="Settings — coming in v1.3-M4"
-            FontFamily="{StaticResource BodyFontFamily}"
-            FontSize="{StaticResource FontSizeSubtitle}"
-            Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
-    </Grid>
+
+    <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Hidden">
+        <StackPanel Margin="24,16" Spacing="18" MaxWidth="620" HorizontalAlignment="Left">
+
+            <TextBlock Text="{Binding TitleLabel}"
+                       FontFamily="{StaticResource BodyFontFamily}"
+                       FontSize="{StaticResource FontSizeTitle}"
+                       FontWeight="SemiBold" />
+
+            <!-- Language -->
+            <StackPanel Spacing="4">
+                <TextBlock Text="{Binding LanguageLabel}"
+                           Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                           FontSize="{StaticResource FontSizeSmall}" />
+                <ComboBox ItemsSource="{Binding SupportedCultures}"
+                          SelectedItem="{Binding SelectedCulture, Mode=TwoWay}"
+                          HorizontalAlignment="Stretch">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding DisplayName}" />
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+            </StackPanel>
+
+            <!-- Hotkey: M4 ships a read-only display of Hotkey.DisplayText. The real
+                 HotkeyRecorder control with key-capture lands in v1.3-M6. -->
+            <StackPanel Spacing="4">
+                <TextBlock Text="{Binding HotkeyLabel}"
+                           Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                           FontSize="{StaticResource FontSizeSmall}" />
+                <TextBox Text="{Binding Hotkey.DisplayText, Mode=OneWay}"
+                         IsReadOnly="True"
+                         PlaceholderText="HotkeyRecorder lands in v1.3-M6" />
+                <TextBlock Text="{Binding HotkeyHint}"
+                           FontSize="{StaticResource FontSizeCaption}"
+                           Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+            </StackPanel>
+
+            <!-- Default format -->
+            <StackPanel Spacing="4">
+                <TextBlock Text="{Binding FormatLabel}"
+                           Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                           FontSize="{StaticResource FontSizeSmall}" />
+                <ComboBox ItemsSource="{Binding SupportedFormats}"
+                          SelectedItem="{Binding DefaultFormat, Mode=TwoWay}"
+                          HorizontalAlignment="Stretch" />
+            </StackPanel>
+
+            <!-- Quality sliders side-by-side -->
+            <Grid ColumnSpacing="16">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <StackPanel Grid.Column="0" Spacing="4">
+                    <TextBlock Text="{Binding JpegQualityLabel}"
+                               Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                               FontSize="{StaticResource FontSizeSmall}" />
+                    <Slider Minimum="1" Maximum="100"
+                            Value="{Binding JpegQuality, Mode=TwoWay}"
+                            TickFrequency="10" />
+                    <TextBlock Text="{Binding JpegQuality}"
+                               FontSize="{StaticResource FontSizeCaption}"
+                               Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                               HorizontalAlignment="Right" />
+                </StackPanel>
+                <StackPanel Grid.Column="1" Spacing="4">
+                    <TextBlock Text="{Binding WebpQualityLabel}"
+                               Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                               FontSize="{StaticResource FontSizeSmall}" />
+                    <Slider Minimum="1" Maximum="100"
+                            Value="{Binding WebpQuality, Mode=TwoWay}"
+                            TickFrequency="10" />
+                    <TextBlock Text="{Binding WebpQuality}"
+                               FontSize="{StaticResource FontSizeCaption}"
+                               Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                               HorizontalAlignment="Right" />
+                </StackPanel>
+            </Grid>
+
+            <!-- Output folder -->
+            <StackPanel Spacing="4">
+                <TextBlock Text="{Binding OutputFolderLabel}"
+                           Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                           FontSize="{StaticResource FontSizeSmall}" />
+                <Grid ColumnSpacing="8">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <TextBox Grid.Column="0"
+                             Text="{Binding OutputDirectory, Mode=TwoWay}"
+                             PlaceholderText="{Binding OutputFolderWatermark}" />
+                    <Button Grid.Column="1"
+                            x:Name="BrowseOutputButton"
+                            Content="{Binding BrowseLabel}"
+                            ToolTipService.ToolTip="{Binding BrowseTooltip}"
+                            MinWidth="100" />
+                </Grid>
+            </StackPanel>
+
+            <!-- File name template -->
+            <StackPanel Spacing="4">
+                <TextBlock Text="{Binding FileNameTemplateLabel}"
+                           Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                           FontSize="{StaticResource FontSizeSmall}" />
+                <TextBox Text="{Binding FileNameTemplate, Mode=TwoWay}"
+                         FontFamily="Consolas, Courier New" />
+            </StackPanel>
+
+            <!-- Toggles -->
+            <StackPanel Spacing="6">
+                <CheckBox Content="{Binding PreviewBeforeSaveLabel}"
+                          IsChecked="{Binding PreviewBeforeSave, Mode=TwoWay}" />
+                <CheckBox Content="{Binding MinimizeToTrayLabel}"
+                          IsChecked="{Binding MinimizeToTray, Mode=TwoWay}" />
+                <CheckBox Content="{Binding SoundEnabledLabel}"
+                          IsChecked="{Binding SoundEnabled, Mode=TwoWay}" />
+            </StackPanel>
+
+            <!-- Logging -->
+            <StackPanel Spacing="6">
+                <TextBlock Text="{Binding LoggingLabel}"
+                           FontSize="{StaticResource FontSizeBody}"
+                           FontWeight="SemiBold" />
+                <StackPanel Spacing="4">
+                    <TextBlock Text="{Binding LogLevelLabel}"
+                               Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                               FontSize="{StaticResource FontSizeSmall}" />
+                    <ComboBox ItemsSource="{Binding SupportedLogLevels}"
+                              SelectedItem="{Binding SelectedLogLevel, Mode=TwoWay}"
+                              HorizontalAlignment="Stretch" />
+                    <TextBlock Text="{Binding LogLevelHint}"
+                               FontSize="{StaticResource FontSizeCaption}"
+                               TextWrapping="Wrap"
+                               Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                </StackPanel>
+            </StackPanel>
+
+            <!-- Import / export / open settings file -->
+            <StackPanel Orientation="Horizontal" Spacing="8">
+                <Button x:Name="ImportButton" Content="{Binding ImportLabel}" />
+                <Button x:Name="ExportButton" Content="{Binding ExportLabel}" />
+                <Button Content="{Binding OpenFileLabel}"
+                        Command="{Binding OpenSettingsFileCommand}" />
+            </StackPanel>
+
+            <TextBlock Text="{Binding SettingsFilePath}"
+                       Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                       FontSize="{StaticResource FontSizeCaption}"
+                       TextWrapping="Wrap" />
+
+        </StackPanel>
+    </ScrollViewer>
 </Page>

@@ -6,13 +6,108 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
-    <Grid>
-        <TextBlock
-            HorizontalAlignment="Center"
-            VerticalAlignment="Center"
-            Text="Update — coming in v1.3-M4"
-            FontFamily="{StaticResource BodyFontFamily}"
-            FontSize="{StaticResource FontSizeSubtitle}"
-            Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+
+    <Grid Margin="24,16">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <StackPanel Grid.Row="0" Spacing="4" Margin="0,0,0,16">
+            <TextBlock Text="{Binding Localization[Update_Title]}"
+                       FontFamily="{StaticResource BodyFontFamily}"
+                       FontSize="{StaticResource FontSizeTitle}"
+                       FontWeight="SemiBold" />
+            <TextBlock Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                       FontFamily="{StaticResource BodyFontFamily}">
+                <Run Text="{Binding Localization[About_VersionLabel]}" />
+                <Run Text=": " />
+                <Run Text="{Binding CurrentVersion}" />
+            </TextBlock>
+        </StackPanel>
+
+        <!-- Available version + release notes -->
+        <Border Grid.Row="1"
+                Visibility="{Binding AvailableVersion, Converter={StaticResource NotNullToVisibilityConverter}}"
+                Padding="12"
+                CornerRadius="{StaticResource CardCornerRadius}"
+                BorderThickness="1"
+                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                Margin="0,0,0,12">
+            <StackPanel Spacing="6">
+                <TextBlock FontWeight="SemiBold">
+                    <Run Text="{Binding Localization[Update_NewVersion]}" />
+                    <Run Text=" " />
+                    <Run Text="{Binding AvailableVersion}" />
+                </TextBlock>
+                <TextBlock Text="{Binding ReleaseNotes}"
+                           Visibility="{Binding ReleaseNotes, Converter={StaticResource NotNullToVisibilityConverter}}"
+                           TextWrapping="Wrap"
+                           Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                           FontSize="{StaticResource FontSizeSmall}" />
+            </StackPanel>
+        </Border>
+
+        <!-- Action buttons -->
+        <StackPanel Grid.Row="2" Orientation="Horizontal" Spacing="8" Margin="0,0,0,12">
+            <Button Content="{Binding Localization[Update_Check]}"
+                    Command="{Binding CheckCommand}" />
+            <Button Content="{Binding Localization[Update_Download]}"
+                    Command="{Binding DownloadCommand}"
+                    Style="{StaticResource AccentButtonStyle}" />
+            <Button Content="{Binding Localization[Update_Install]}"
+                    Command="{Binding InstallCommand}"
+                    Style="{StaticResource AccentButtonStyle}" />
+        </StackPanel>
+
+        <!-- Progress + status -->
+        <StackPanel Grid.Row="3" Spacing="6" Margin="0,0,0,12">
+            <ProgressBar Value="{Binding DownloadProgress}"
+                         Minimum="0" Maximum="100"
+                         Visibility="{Binding IsBusy, Converter={StaticResource BoolToVisibilityConverter}}" />
+            <TextBlock Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                       FontSize="{StaticResource FontSizeSmall}">
+                <Run Text="{Binding Localization[Update_Status]}" />
+                <Run Text=": " />
+                <Run Text="{Binding Status}" />
+            </TextBlock>
+        </StackPanel>
+
+        <!-- Log section -->
+        <Border Grid.Row="4"
+                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                BorderThickness="1"
+                CornerRadius="{StaticResource CardCornerRadius}"
+                Padding="10">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0"
+                           Text="{Binding Localization[Update_Log]}"
+                           FontWeight="SemiBold"
+                           FontSize="{StaticResource FontSizeSmall}"
+                           Margin="0,0,0,8" />
+                <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Auto">
+                    <ItemsControl ItemsSource="{Binding LogLines}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding}"
+                                           FontFamily="Consolas, Courier New"
+                                           FontSize="{StaticResource FontSizeCaption}"
+                                           TextWrapping="NoWrap" />
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+            </Grid>
+        </Border>
+
     </Grid>
 </Page>

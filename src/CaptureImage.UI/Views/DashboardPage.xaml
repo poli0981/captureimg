@@ -6,13 +6,167 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
-    <Grid>
-        <TextBlock
-            HorizontalAlignment="Center"
-            VerticalAlignment="Center"
-            Text="Dashboard — coming in v1.3-M4"
-            FontFamily="{StaticResource BodyFontFamily}"
-            FontSize="{StaticResource FontSizeSubtitle}"
-            Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+
+    <Grid Margin="24,16,24,16">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <Grid Grid.Row="0" Margin="0,0,0,12">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <StackPanel Grid.Column="0">
+                <TextBlock Text="{Binding Localization[Dashboard_Title]}"
+                           FontFamily="{StaticResource BodyFontFamily}"
+                           FontSize="{StaticResource FontSizeTitle}"
+                           FontWeight="SemiBold" />
+                <TextBlock Text="{Binding Localization[Dashboard_Subtitle]}"
+                           FontFamily="{StaticResource BodyFontFamily}"
+                           FontSize="{StaticResource FontSizeSmall}"
+                           Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                           Margin="0,4,0,0" />
+            </StackPanel>
+
+            <Button Grid.Column="1"
+                    Content="{Binding Localization[Dashboard_Refresh]}"
+                    Command="{Binding RefreshCommand}"
+                    IsEnabled="{Binding IsLoading, Converter={StaticResource InvertedBoolToVisibilityConverter}}"
+                    VerticalAlignment="Center"
+                    Margin="0,0,8,0" />
+
+            <Button Grid.Column="2"
+                    Content="{Binding Localization[Dashboard_Arm]}"
+                    Command="{Binding ArmCommand}"
+                    Visibility="{Binding IsArmed, Converter={StaticResource InvertedBoolToVisibilityConverter}}"
+                    VerticalAlignment="Center"
+                    Style="{StaticResource AccentButtonStyle}"
+                    Margin="0,0,8,0" />
+
+            <Button Grid.Column="3"
+                    Content="{Binding Localization[Dashboard_Disarm]}"
+                    Command="{Binding DisarmCommand}"
+                    Visibility="{Binding IsArmed, Converter={StaticResource BoolToVisibilityConverter}}"
+                    VerticalAlignment="Center" />
+        </Grid>
+
+        <!-- Target list -->
+        <Border Grid.Row="1"
+                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                BorderThickness="1"
+                CornerRadius="{StaticResource CardCornerRadius}">
+            <Grid>
+                <ListView ItemsSource="{Binding Targets}"
+                          SelectedItem="{Binding SelectedTarget, Mode=TwoWay}"
+                          Background="Transparent"
+                          BorderThickness="0"
+                          Padding="4"
+                          Visibility="{Binding HasNoTargets, Converter={StaticResource InvertedBoolToVisibilityConverter}}">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <Grid Height="40" Margin="4,2">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="32" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+
+                                <Image Grid.Column="0"
+                                       Source="{Binding IconBytes, Converter={StaticResource BytesToBitmapConverter}}"
+                                       Width="24" Height="24"
+                                       VerticalAlignment="Center" />
+
+                                <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="8,0,0,0">
+                                    <TextBlock Text="{Binding DisplayName}"
+                                               FontWeight="SemiBold"
+                                               TextTrimming="CharacterEllipsis" />
+                                    <TextBlock Text="{Binding ProcessName}"
+                                               FontSize="{StaticResource FontSizeCaption}"
+                                               Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                               TextTrimming="CharacterEllipsis" />
+                                </StackPanel>
+
+                                <Border Grid.Column="2"
+                                        Visibility="{Binding IsSteamGame, Converter={StaticResource BoolToVisibilityConverter}}"
+                                        Background="#FF6B35"
+                                        CornerRadius="{StaticResource PillCornerRadius}"
+                                        Padding="8,2"
+                                        VerticalAlignment="Center"
+                                        ToolTipService.ToolTip="{Binding SteamBadgeTooltip}">
+                                    <TextBlock Text="STEAM"
+                                               FontSize="{StaticResource FontSizeCaption}"
+                                               FontWeight="Bold"
+                                               Foreground="White" />
+                                </Border>
+                            </Grid>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+
+                <!-- Empty state: no top-level windows detected. -->
+                <TextBlock Text="{Binding EmptyStateText}"
+                           Visibility="{Binding HasNoTargets, Converter={StaticResource BoolToVisibilityConverter}}"
+                           Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           TextWrapping="Wrap"
+                           TextAlignment="Center"
+                           Margin="24" />
+            </Grid>
+        </Border>
+
+        <!-- Armed / capture state -->
+        <Border Grid.Row="2"
+                Margin="0,12,0,0"
+                Padding="12,8"
+                CornerRadius="{StaticResource CardCornerRadius}"
+                BorderThickness="1"
+                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                AutomationProperties.Name="{Binding StatusMessage}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Grid Grid.Column="0" Width="10" Height="10" VerticalAlignment="Center" Margin="0,0,12,0">
+                    <Border CornerRadius="5" Background="Gray"
+                            Visibility="{Binding IsArmed, Converter={StaticResource InvertedBoolToVisibilityConverter}}" />
+                    <Border CornerRadius="5" Background="#3CB371"
+                            Visibility="{Binding IsArmed, Converter={StaticResource BoolToVisibilityConverter}}" />
+                    <Border CornerRadius="5" Background="#FFA500"
+                            Visibility="{Binding IsCapturing, Converter={StaticResource BoolToVisibilityConverter}}" />
+                </Grid>
+                <TextBlock Grid.Column="1"
+                           Text="{Binding StatusMessage}"
+                           VerticalAlignment="Center"
+                           TextTrimming="CharacterEllipsis" />
+            </Grid>
+        </Border>
+
+        <!-- Status bar -->
+        <Grid Grid.Row="3" Margin="0,8,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0"
+                       Text="{Binding TargetsCountText}"
+                       Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                       VerticalAlignment="Center" />
+            <TextBlock Grid.Column="1"
+                       Text="{Binding LoadingText}"
+                       Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                       Visibility="{Binding IsLoading, Converter={StaticResource BoolToVisibilityConverter}}"
+                       VerticalAlignment="Center" />
+        </Grid>
+
     </Grid>
 </Page>
