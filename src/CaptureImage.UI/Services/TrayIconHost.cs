@@ -151,29 +151,45 @@ public sealed class TrayIconHost : ITrayIconHost
     {
         var menu = new MenuFlyout();
 
-        var showItem = new MenuFlyoutItem { Text = _localization["Tray_ShowWindow"] };
-        showItem.Click += (_, _) =>
+        // MenuFlyoutItem.Click events don't fire reliably when the flyout is shown
+        // from a TaskbarIcon ContextFlyout — H.NotifyIcon hosts the popup outside the
+        // normal XAML routing chain so click routing drops on the floor. Command
+        // bindings on MenuFlyoutItem.Command DO route correctly (same path as the
+        // working LeftClickCommand / DoubleClickCommand on the TaskbarIcon itself).
+        // v1.3-M7a (1st pass) used Click; user-reported regression in 2nd pass.
+
+        var showItem = new MenuFlyoutItem
         {
-            _logger.LogDebug("Tray menu: Show clicked.");
-            ShowMainWindow();
+            Text = _localization["Tray_ShowWindow"],
+            Command = new SimpleCommand(_ =>
+            {
+                _logger.LogInformation("Tray menu: Show invoked.");
+                ShowMainWindow();
+            }),
         };
         menu.Items.Add(showItem);
 
-        var openFolderItem = new MenuFlyoutItem { Text = _localization["Tray_OpenFolder"] };
-        openFolderItem.Click += (_, _) =>
+        var openFolderItem = new MenuFlyoutItem
         {
-            _logger.LogDebug("Tray menu: Open Folder clicked.");
-            OpenCaptureFolder();
+            Text = _localization["Tray_OpenFolder"],
+            Command = new SimpleCommand(_ =>
+            {
+                _logger.LogInformation("Tray menu: Open Folder invoked.");
+                OpenCaptureFolder();
+            }),
         };
         menu.Items.Add(openFolderItem);
 
         menu.Items.Add(new MenuFlyoutSeparator());
 
-        var exitItem = new MenuFlyoutItem { Text = _localization["Tray_Exit"] };
-        exitItem.Click += (_, _) =>
+        var exitItem = new MenuFlyoutItem
         {
-            _logger.LogDebug("Tray menu: Exit clicked.");
-            QuitApp();
+            Text = _localization["Tray_Exit"],
+            Command = new SimpleCommand(_ =>
+            {
+                _logger.LogInformation("Tray menu: Exit invoked.");
+                QuitApp();
+            }),
         };
         menu.Items.Add(exitItem);
 

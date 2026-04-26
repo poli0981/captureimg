@@ -20,7 +20,7 @@ namespace CaptureImage.App;
 public sealed partial class MainWindow : Window
 {
     // Logical dimensions carried over from v1.2-M7. AppWindow.Resize takes physical
-    // pixels — DPI scaling refinement is deferred to M7 polish.
+    // pixels — DPI scaling refinement is deferred to v1.4 polish.
     private const int InitialWidth = 1200;
     private const int InitialHeight = 720;
 
@@ -39,9 +39,6 @@ public sealed partial class MainWindow : Window
 
         SystemBackdrop = new MicaBackdrop { Kind = MicaKind.Base };
         ExtendsContentIntoTitleBar = true;
-        // Mark the empty 48 px Border at Grid.Row=0 as the window drag region. Without
-        // this, ExtendsContentIntoTitleBar leaves no draggable strip for the user to grab,
-        // and OS-drawn caption buttons can land on top of NavigationView content.
         SetTitleBar(AppTitleBar);
 
         var hwnd = WindowNative.GetWindowHandle(this);
@@ -54,11 +51,6 @@ public sealed partial class MainWindow : Window
 
     public MainWindowViewModel? ViewModel { get; private set; }
 
-    /// <summary>
-    /// Wires the VM after construction. Window has no DataContext property in WinUI 3 —
-    /// content elements (the root Grid) carry it instead. Called from App.OnLaunched
-    /// after DI resolves the VM.
-    /// </summary>
     public void SetViewModel(MainWindowViewModel vm)
     {
         if (ViewModel is not null)
@@ -70,8 +62,6 @@ public sealed partial class MainWindow : Window
         Root.DataContext = vm;
         vm.PropertyChanged += OnViewModelPropertyChanged;
 
-        // The VM seeds SelectedNavItem to NavItems[0] in its constructor; mirror that
-        // into the Frame so M1's blank window doesn't linger before the user clicks.
         if (vm.SelectedNavItem is { } first)
         {
             NavigateToNavItem(first);
@@ -80,10 +70,19 @@ public sealed partial class MainWindow : Window
 
     private void OnRootLoaded(object sender, RoutedEventArgs e)
     {
-        // Push the drawer off-screen + invisible without animation. Subsequent
-        // IsLogViewerVisible toggles drive the animated transition.
+        // Enable the Composition `Translation` property on the drawer's visual. WITHOUT
+        // this, animating Translation has no effect. WITH it, Translation is added on
+        // top of the layout-computed position — which is what we want: the drawer stays
+        // pinned to Grid.Column=1 (right 480 px) while Translation supplies the slide
+        // offset. Setting `visual.Offset` directly (the v1.3-M5 approach) OVERRODE
+        // layout position and made the drawer render from x=±48 absolute, ignoring its
+        // Grid cell.
+        ElementCompositionPreview.SetIsTranslationEnabled(LogDrawer, true);
+
         var visual = ElementCompositionPreview.GetElementVisual(LogDrawer);
-        visual.Offset = new Vector3(GetCollapsedOffsetX(), 0f, 0f);
+        // Seed Translation to the collapsed offset; subsequent toggles animate via
+        // visual.StartAnimation("Translation", ...).
+        visual.Properties.InsertVector3("Translation", new Vector3(GetCollapsedOffsetX(), 0f, 0f));
         visual.Opacity = 0f;
         LogDrawer.IsHitTestVisible = false;
     }
@@ -112,9 +111,6 @@ public sealed partial class MainWindow : Window
 
         if (pageType is not null && ContentFrame.CurrentSourcePageType != pageType)
         {
-            // Pass App.Services through Frame.Navigate's parameter so each Page can
-            // resolve its own VM from DI without taking a project reference back to
-            // CaptureImage.App. Each Page reads it in OnNavigatedTo.
             ContentFrame.Navigate(pageType, App.Services);
         }
     }
@@ -131,33 +127,34 @@ public sealed partial class MainWindow : Window
 
     private void ShowLogDrawer()
     {
-        // Mark hit-testable up-front so a click during the slide registers correctly.
         LogDrawer.IsHitTestVisible = true;
-        AnimateDrawer(targetOffsetX: 0f, targetOpacity: 1f);
+        AnimateDrawer(targetTranslationX: 0f, targetOpacity: 1f);
     }
 
     private void HideLogDrawer()
     {
-        AnimateDrawer(targetOffsetX: GetCollapsedOffsetX(), targetOpacity: 0f);
-        // Drop hit-testing immediately — clicks during the fade-out aren't intentional.
+        AnimateDrawer(targetTranslationX: GetCollapsedOffsetX(), targetOpacity: 0f);
         LogDrawer.IsHitTestVisible = false;
     }
 
-    private void AnimateDrawer(float targetOffsetX, float targetOpacity)
+    private void AnimateDrawer(float targetTranslationX, float targetOpacity)
     {
         var visual = ElementCompositionPreview.GetElementVisual(LogDrawer);
         var compositor = visual.Compositor;
 
-        // CubicBezier(0.4, 0, 0.2, 1) — Material/Fluent-style "decelerate"; close to v1.2's
-        // CircularEaseOut without the slight overshoot the literal circular curve gives at
-        // the end. Visually indistinguishable for sub-300 ms motions.
+        // CubicBezier(0.4, 0, 0.2, 1) — Material/Fluent decelerate. Visually
+        // indistinguishable from v1.2's Avalonia CircularEaseOut for sub-300ms motion.
         var easing = compositor.CreateCubicBezierEasingFunction(
             new Vector2(0.4f, 0f), new Vector2(0.2f, 1f));
 
-        var offsetAnim = compositor.CreateVector3KeyFrameAnimation();
-        offsetAnim.InsertKeyFrame(1f, new Vector3(targetOffsetX, 0f, 0f), easing);
-        offsetAnim.Duration = SlideDuration;
-        visual.StartAnimation("Offset", offsetAnim);
+        // Animate Translation (an additive transform that respects layout) instead of
+        // Offset (which overrides layout). Target name "Translation" routes through the
+        // Properties dictionary set up in OnRootLoaded.
+        var translationAnim = compositor.CreateVector3KeyFrameAnimation();
+        translationAnim.InsertKeyFrame(1f, new Vector3(targetTranslationX, 0f, 0f), easing);
+        translationAnim.Duration = SlideDuration;
+        translationAnim.Target = "Translation";
+        visual.StartAnimation("Translation", translationAnim);
 
         var opacityAnim = compositor.CreateScalarKeyFrameAnimation();
         opacityAnim.InsertKeyFrame(1f, targetOpacity, easing);
