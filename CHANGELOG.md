@@ -7,6 +7,103 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.3.0] - 2026-04-26
+
+UI framework migration from Avalonia 11 to **WinUI 3 (Windows App SDK 1.8.x)**
+with Fluent 2 design — Mica backdrop, Segoe UI Variable, integrated title bar,
+Composition-API animations. Logic layers (Core / Infrastructure / ViewModels)
+were intentionally left untouched: the entire ~5,000-line domain + capture +
+hotkey + settings + logging stack carries forward unchanged. Velopack ships
+on the existing `win` channel so v1.2.x users auto-update; multi-file
+WindowsAppSDK self-contained payload is ~80–120 MB (vs the v1.2 single-file
+~30 MB) — accepted trade for stack-Microsoft-native parity on Windows-only.
+
+### Added
+
+- **Sound on capture success** (`UI.SoundEnabled` setting now has a consumer
+  for the first time since v1.0). Plays Windows `SystemAsterisk` via Win32
+  `PlaySound` P/Invoke, gated on the existing checkbox.
+- **Browse button** on Settings → Output folder. Opens the modern
+  `IFileOpenDialog` (Vista+ folder picker) seeded at the current
+  OutputDirectory. Win32 COM-interop fallback because
+  `Windows.Storage.Pickers.FolderPicker` is unreliable in unpackaged
+  WinUI 3.
+- **Mica backdrop** on the main window — translucent Win11 wallpaper tint.
+- **Borderless title bar** integrated with the Fluent 2 chrome; caption
+  buttons sit in a 48 px reserved drag region.
+- **Composition slide animation** on the log drawer — 220 ms slide + 180 ms
+  fade with CubicBezier(0.4, 0, 0.2, 1) decelerate. Mirrors the v1.2
+  Avalonia drawer at the visual layer; uses `UIElement.Translation` (additive
+  on layout) instead of `Visual.Offset` (overrides layout) so the drawer
+  stays anchored to its Grid column under all window sizes.
+- **+164 tests, total 320** (up from 156). New coverage:
+  - 18 converter tests (FlowDirection / BoolToVisibility / InvertedBoolToVisibility / NotNullToVisibility).
+  - 5 LogEntry tests (TimestampText format, FileLineText edge cases).
+  - 141 Theory cases for localization completeness — 47 load-bearing keys
+    × 3 cultures (en-US / vi-VN / ar-SA) — every shipping label asserted
+    non-empty + non-bracketed.
+
+### Changed
+
+- **UI framework**: Avalonia 11.2.3 → WinUI 3 (Windows App SDK
+  1.8.260416003) self-contained x64. ViewModels project still
+  TFM-portable (`net9.0`); UI + UI.Tests TFM bumped to
+  `net9.0-windows10.0.22621.0` to link WinAppSDK assemblies.
+- **Tray icon**: `H.NotifyIcon.WindowsAppSDK` → `H.NotifyIcon.WinUI` (the
+  actual nuget.org package id; the WindowsAppSDK suffix never existed on
+  nuget). Tray ships with OS default glyph for v1.3.0 — proper .ico
+  round-trip via `System.Drawing.Bitmap.GetHicon` + `Icon.Save` deferred
+  to v1.4.
+- **Folder picker**: Win32 `IFileOpenDialog` COM interop replaces the
+  unreliable `Windows.Storage.Pickers.FolderPicker` in
+  `CaptureImage.UI.Services.Win32FolderPicker`.
+- **Tray menu commands** wired through `MenuFlyoutItem.Command` (not
+  `Click` event) — the latter doesn't fire reliably from H.NotifyIcon's
+  out-of-tree popup.
+- **Sound playback** uses Win32 `PlaySound` P/Invoke instead of
+  `System.Media.SystemSounds` (the latter ships in
+  `System.Windows.Extensions` which only targets Windows TFMs, too
+  restrictive for the portable ViewModels project).
+- **Tray-restore from minimize** uses `AppWindow.Show` +
+  `User32.ShowWindow(SW_RESTORE)` + `Window.Activate` +
+  `User32.SetForegroundWindow` — `Show` alone leaves taskbar-minimized
+  windows minimized + behind whatever has foreground focus.
+- **Auto-refresh suppression** while a preview modal is up — Dashboard's
+  WMI-driven Targets refresh used to clobber the in-flight
+  `SelectedTarget` and disrupt the preview decision; now skipped when
+  state is Previewing or Saving.
+- **3rd-party list** in About: drop Avalonia + Inter typeface, add
+  Windows App SDK / WinUI 3 + H.NotifyIcon.WinUI.
+
+### Removed
+
+- `Avalonia.*` packages (Avalonia, Avalonia.Desktop, Avalonia.Themes.Fluent,
+  Avalonia.Fonts.Inter, Avalonia.Diagnostics) and 25 .axaml files / Avalonia
+  service implementations (`AvaloniaTrayIconHost`, `AvaloniaPreviewPresenter`,
+  `AvaloniaUIDispatcher`, `BytesToBitmapConverter` for Avalonia.Bitmap,
+  `ToastKindToBrushConverter` for Avalonia.IBrush). All replaced with WinUI 3
+  equivalents.
+- Inter typeface — Fluent 2's Segoe UI Variable is the explicit body font now.
+- `PublishSingleFile` from the release workflow — WinAppSDK can't be
+  bundled into a single .exe, ships as multi-file folder packaged by
+  Velopack.
+
+### Fixed
+
+- (in v1.3 from v1.2 carry-overs) Title-bar caption buttons no longer
+  overlap nav rail / Page content — 48 px drag region reserved at top
+  via `Window.SetTitleBar(AppTitleBar)`.
+
+### Deferred to v1.4
+
+- Real .ico tray icon via `System.Drawing.Bitmap.GetHicon` round-trip
+  (currently OS default glyph). H.NotifyIcon.WinUI's IconSource pipeline
+  ends in `System.Drawing.Icon` which only accepts .ico file streams.
+- `release.yml` upload of `CaptureImage-win-Portable.zip` (carry-over
+  from v1.2 — added in v1.3 release cut).
+- DPI-aware initial window sizing (`AppWindow.Resize` takes physical
+  pixels; v1.3 hardcodes 1200×720).
+
 ## [1.2.0] - 2026-04-21
 
 Logging overhaul. Turns a working-but-thin diagnostic surface into one you

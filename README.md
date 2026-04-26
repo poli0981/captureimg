@@ -139,9 +139,10 @@ src/
                                watcher, Steam detector, hotkeys, settings, logging,
                                Velopack updater. net9.0-windows10.0.22621.0.
   CaptureImage.ViewModels      MVVM layer — reusable across UI frameworks, no
-                               Avalonia references.
-  CaptureImage.UI              Avalonia views, custom controls (ToastHost, etc.),
-                               converters, resx localization.
+                               WinUI 3 references.
+  CaptureImage.UI              WinUI 3 Pages + UserControls (HotkeyRecorder,
+                               ToastHost, LogViewerView, PreviewWindow),
+                               converters, resx localization, tray host.
   CaptureImage.App             Entry point, DI composition root, Serilog setup,
                                Velopack startup hook.
 tests/

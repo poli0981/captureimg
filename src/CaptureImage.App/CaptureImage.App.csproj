@@ -16,7 +16,7 @@
     <RuntimeIdentifier>win-x64</RuntimeIdentifier>
     <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
     <DefineConstants>$(DefineConstants);DISABLE_XAML_GENERATED_MAIN</DefineConstants>
-    <Version>1.3.0-dev</Version>
+    <Version>1.3.0</Version>
   </PropertyGroup>
 
   <ItemGroup>

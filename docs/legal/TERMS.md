@@ -58,8 +58,9 @@ freely, subject to the GPL's attribution requirements.
 
 Third-party trademarks that appear in the source code, documentation,
 user interface, or release notes (including but not limited to Microsoft,
-Windows, DirectX, Steam, Valve, Avalonia, Velopack, SkiaSharp, ImageSharp,
-Serilog, SharpHook, GitHub) are property of their respective owners. They
+Windows, DirectX, WinUI, Windows App SDK, Steam, Valve, Velopack,
+SkiaSharp, ImageSharp, Serilog, SharpHook, GitHub) are property of their
+respective owners. They
 are referenced for identification and interoperability only. No
 endorsement is implied.
 

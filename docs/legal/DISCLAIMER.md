@@ -110,8 +110,9 @@ invited to open a pull request — see [`CONTRIBUTORS.md`](../CONTRIBUTORS.md).
 ## 5. Trademarks
 
 "Steam", "Dota", "Counter-Strike", "Windows", "DirectX",
-"Microsoft .NET", "Avalonia", "Velopack", "SkiaSharp", "ImageSharp",
-"Serilog", "SharpHook", and any other third-party names that appear in the
+"Microsoft .NET", "WinUI", "Windows App SDK", "Velopack", "SkiaSharp",
+"ImageSharp", "Serilog", "SharpHook", and any other third-party names that
+appear in the
 source, documentation, or UI strings are trademarks or registered
 trademarks of their respective owners. Their use in this project is for
 identification purposes only and does not imply any affiliation with, or

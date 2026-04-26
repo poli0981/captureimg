@@ -20,10 +20,11 @@ Five projects, four rules:
   JSON settings. **Depends on Core.**
 - **`CaptureImage.ViewModels`** (net9.0) — MVVM layer using
   CommunityToolkit.Mvvm source generators. Platform-agnostic — these
-  types exist so the UI logic is testable without Avalonia.
+  types exist so the UI logic is testable without WinUI 3.
   **Depends on Core only.**
-- **`CaptureImage.UI`** (net9.0) — Avalonia views, custom controls,
-  converters, resx localization. **Depends on Core + ViewModels.**
+- **`CaptureImage.UI`** (net9.0-windows10.0.22621.0) — WinUI 3 Pages +
+  UserControls, converters, resx localization, tray host, picker COM
+  interop. **Depends on Core + ViewModels.**
 - **`CaptureImage.App`** (net9.0-windows10.0.22621.0) — the composition
   root. `Program.cs` + [`CompositionRoot.cs`](../src/CaptureImage.App/CompositionRoot.cs).
   Single point of DI wiring. **Depends on all four projects.**
@@ -31,7 +32,7 @@ Five projects, four rules:
 ```mermaid
 graph LR
   App[CaptureImage.App<br/>net9.0-windows]
-  UI[CaptureImage.UI<br/>net9.0 · Avalonia]
+  UI[CaptureImage.UI<br/>net9.0-windows · WinUI 3]
   VM[CaptureImage.ViewModels<br/>net9.0 · MVVM]
   Infra[CaptureImage.Infrastructure<br/>net9.0-windows · P/Invoke]
   Core[CaptureImage.Core<br/>net9.0 · pure domain]
@@ -50,8 +51,9 @@ graph LR
 
 - `Core` stays portable so the domain logic is trivially testable. The
   Core test project runs on plain `net9.0`, no Windows 11 SDK needed.
-- `ViewModels` stays off `net9.0-windows` so Avalonia's designer +
-  hot-reload tooling work without dragging in WinRT projections.
+- `ViewModels` stays off `net9.0-windows` so the type system stays
+  portable — VM tests run on plain `net9.0` without dragging in WinAppSDK
+  or WinRT projections.
 - `Infrastructure` is the only project that touches `Windows.*`. If a
   future milestone ports to another desktop platform, that's the project
   that gets replaced.
@@ -223,13 +225,16 @@ at startup.
 
 1. `VelopackApp.Build().Run()` — must be the first line of `Main` so
    Velopack can handle `--squirrel-install`, `--squirrel-firstrun`, etc.
-   before Avalonia spins up.
+   before WinUI 3 spins up.
 2. Serilog configured (file sink + in-memory ring buffer for the log
    drawer).
 3. `BuildServices(inMemorySink)` — container built.
 4. `ISettingsStore.LoadAsync()` — settings file read before any VM that
    depends on them is resolved.
-5. Avalonia `BuildAvaloniaApp().StartWithClassicDesktopLifetime(args)`.
+5. `Microsoft.UI.Xaml.Application.Start(...)` — installs a
+   `DispatcherQueueSynchronizationContext` on the freshly-minted UI
+   thread, then constructs the `App` instance which `OnLaunched` shows
+   the main window.
 
 ## 5. i18n + RTL
 
@@ -245,7 +250,7 @@ sequenceDiagram
   participant Settings as SettingsViewModel
   participant Loc as ResxLocalizationService
   participant RM as ResourceManager
-  participant XAML as Avalonia bindings
+  participant XAML as WinUI 3 bindings
 
   User->>Settings: Pick "العربية" in Language dropdown
   Settings->>Loc: SetCulture(ar-SA)
@@ -261,11 +266,15 @@ sequenceDiagram
 **Key properties:**
 
 - `PropertyChanged("Item[]")` is the magic indexer-binding refresh
-  signal for Avalonia. Firing it once after a culture change refreshes
-  every `{Binding Localization[...]}` in the tree.
-- `MainWindow.axaml` binds `FlowDirection` to
-  `Localization.CurrentFlowDirection`. Arabic, Hebrew, Farsi, Urdu —
-  any two-letter language code in the RTL set — mirrors the whole tree.
+  signal. WinUI 3 picks it up reliably for direct `{Binding Localization[Key]}`
+  paths; computed `XLabel` properties on each VM (the pattern adopted in
+  v1.1.2 to work around an Avalonia compiled-binding quirk) carry forward
+  for live culture switching.
+- `MainWindow.xaml` binds `FlowDirection` on its root Grid to
+  `Localization.CurrentFlowDirection` via `FlowDirectionConverter` (a
+  static IValueConverter declared at App.xaml `Application.Resources`
+  scope). Arabic, Hebrew, Farsi, Urdu — any two-letter language code in
+  the RTL set — mirrors the whole tree.
 - No app restart required. Every VM that stores localized text holds
   only the key, looks up via the indexer, and refreshes on the
   `PropertyChanged` broadcast.
@@ -294,7 +303,7 @@ sequenceDiagram
 
   Main->>Velo: Build().Run(args)
   Note over Velo: Handles --squirrel-install,<br/>--squirrel-firstrun etc.<br/>then returns to caller
-  Main->>Main: BuildAvaloniaApp()
+  Main->>Main: Application.Start(...)
 
   User->>UI: Click "Check for updates"
   UI->>VM: CheckCommand

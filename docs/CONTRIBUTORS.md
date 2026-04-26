@@ -73,8 +73,13 @@ CaptureImage stands on the shoulders of several open-source projects.
 See [`THIRD_PARTY_NOTICES.md`](legal/THIRD_PARTY_NOTICES.md) for the full
 list with licenses. Special thanks to:
 
-- The **Avalonia UI** team for a modern, cross-platform XAML framework
-  that also happens to run beautifully on Windows.
+- The **Windows App SDK / WinUI 3** team at Microsoft for the modern
+  Win11-native XAML framework underneath the v1.3+ UI.
+- The **Avalonia UI** team — v1.0 through v1.2 of CaptureImage shipped on
+  Avalonia, and the project owes a substantial debt to the cross-platform
+  XAML framework that got us off the ground.
+- The **H.NotifyIcon** team for the WinUI 3 tray-icon library that fills
+  the gap WinAppSDK doesn't (yet) cover natively.
 - The **OBS Studio** team for blazing the trail on Windows Graphics
   Capture integration — their public source code was a useful reference
   while wiring up `IGraphicsCaptureItemInterop`.

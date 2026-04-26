@@ -1,9 +1,9 @@
 name: Release
 
-# Cut a new release when a tag of the form v1.2.3 is pushed. Packages the
-# CaptureImage.App project as a single-file self-contained Win64 build,
-# wraps it in a Velopack installer, and uploads the result to a GitHub
-# Release matching the tag.
+# Cut a new release when a tag of the form v1.2.3 is pushed. Publishes the
+# CaptureImage.App project as a multi-file WinAppSDK self-contained Win64
+# build (WinUI 3 can't bundle into a single .exe), wraps it in a Velopack
+# installer, and uploads the result to a GitHub Release matching the tag.
 #
 # Code signing is NOT performed yet (SignPath application was declined).
 # The installer will trigger Windows SmartScreen "Unknown publisher" until
@@ -67,15 +67,19 @@ jobs:
           dotnet restore CaptureImage.sln
           dotnet test CaptureImage.sln -c Release --logger "trx;LogFileName=test-results.trx" --results-directory ./TestResults
 
-      - name: Publish CaptureImage.App (win-x64 self-contained)
+      - name: Publish CaptureImage.App (win-x64 self-contained, multi-file)
+        # WinUI 3's WindowsAppSDK runtime can't be bundled into a single .exe —
+        # PublishSingleFile / IncludeNativeLibrariesForSelfExtract are dropped
+        # in v1.3. WindowsAppSDKSelfContained=true (set in the csproj) ships
+        # the runtime as ~50 .dll files alongside the .exe. Velopack packages
+        # the whole folder.
         run: >
           dotnet publish src/CaptureImage.App/CaptureImage.App.csproj
           -c Release
           -r win-x64
           --self-contained
-          /p:PublishSingleFile=true
-          /p:IncludeNativeLibrariesForSelfExtract=true
-          /p:EnableCompressionInSingleFile=true
+          /p:Platform=x64
+          /p:WindowsPackageType=None
           /p:Version=${{ steps.version.outputs.version }}
           /p:AssemblyVersion=${{ steps.version.outputs.version }}.0
           /p:FileVersion=${{ steps.version.outputs.version }}.0
@@ -143,6 +147,7 @@ jobs:
           files: |
             ./releases/*.exe
             ./releases/*.nupkg
+            ./releases/*.zip
             ./releases/RELEASES
             ./releases/releases.*.json
             ./releases/SHA256SUMS.txt
@@ -154,6 +159,7 @@ jobs:
             ### Downloads
             - **`Setup.exe`** — Velopack installer. Windows 11 22H2+ only.
             - **`*.nupkg`** — portable Velopack package for manual install / CI updates.
+            - **`*-Portable.zip`** — extract-and-run multi-file build, no installer.
             - **`RELEASES`** — Velopack release manifest.
             - **`SHA256SUMS.txt`** — checksums for manual verification.
 

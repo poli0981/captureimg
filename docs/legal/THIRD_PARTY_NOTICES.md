@@ -16,14 +16,13 @@ CaptureImage binary is distributed under.
 
 | Package | License | Upstream |
 |---|---|---|
-| Avalonia | MIT | <https://github.com/AvaloniaUI/Avalonia> |
-| Avalonia.Desktop | MIT | <https://github.com/AvaloniaUI/Avalonia> |
-| Avalonia.Themes.Fluent | MIT | <https://github.com/AvaloniaUI/Avalonia> |
-| Avalonia.Fonts.Inter | MIT | <https://github.com/AvaloniaUI/Avalonia> |
-| Avalonia.Diagnostics | MIT | <https://github.com/AvaloniaUI/Avalonia> |
-| Inter typeface | SIL Open Font License 1.1 | <https://github.com/rsms/inter> |
+| Microsoft.WindowsAppSDK (WinUI 3) | MIT | <https://github.com/microsoft/WindowsAppSDK> |
+| Microsoft.WindowsAppSDK.WinUI | MIT | <https://github.com/microsoft/WindowsAppSDK> |
+| Microsoft.Windows.SDK.BuildTools | MIT | <https://github.com/microsoft/Windows.SDK.BuildTools> |
+| H.NotifyIcon.WinUI | MIT | <https://github.com/HavenDV/H.NotifyIcon> |
 | SkiaSharp | MIT | <https://github.com/mono/SkiaSharp> |
 | SkiaSharp.NativeAssets.Win32 | MIT | <https://github.com/mono/SkiaSharp> |
+| System.Drawing.Common | MIT | <https://github.com/dotnet/runtime> |
 
 ### MVVM + DI + logging
 
