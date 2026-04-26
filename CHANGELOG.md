@@ -7,6 +7,33 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.3.1] - 2026-04-26
+
+**Critical hotfix.** v1.3.0 shipped broken — the WinUI 3 publish pipeline
+omitted `.xbf` (compiled XAML binary) and `CaptureImage.App.pri` (resource
+manifest) files from the self-contained publish output, so the installed
+app silently failed at MainWindow.InitializeComponent on every launch
+(the process stayed alive zombie-style; no window ever appeared). v1.2.x
+auto-update users hit this on the first launch after Velopack restart.
+
+### Fixed
+
+- Add a `CopyWinUIArtifactsToPublishDirectory` MSBuild target to
+  `CaptureImage.App.csproj` that propagates every `.xbf` and the
+  `CaptureImage.App.pri` from `bin/.../win-x64/` into the publish
+  output, preserving the cross-assembly XAML resolution subfolders
+  (`CaptureImage.UI/Controls/`, `CaptureImage.UI/Views/`). `dotnet
+  publish` for unpackaged WinUI 3 self-contained apps doesn't include
+  these by default — known WinAppSDK gap.
+
+### Recovery for v1.3.0 users
+
+If you already updated to broken v1.3.0:
+- The Update tab can't help (the app's window doesn't open).
+- Download `CaptureImage-win-Setup.exe` from the v1.3.1 GitHub Release
+  and run it — the installer detects the existing install and replaces
+  it cleanly. Your `settings.json` and capture folder are untouched.
+
 ## [1.3.0] - 2026-04-26
 
 UI framework migration from Avalonia 11 to **WinUI 3 (Windows App SDK 1.8.x)**
