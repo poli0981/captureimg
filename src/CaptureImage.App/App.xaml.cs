@@ -1,6 +1,7 @@
 using System;
 using CaptureImage.Core.Abstractions;
 using CaptureImage.UI.Services;
+using CaptureImage.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Dispatching;
 using Microsoft.UI.Xaml;
@@ -39,7 +40,10 @@ public partial class App : Application
         var dispatcher = services.GetRequiredService<WinUIThreadDispatcher>();
         dispatcher.Bind(DispatcherQueue.GetForCurrentThread());
 
-        _window = new MainWindow();
+        var vm = services.GetRequiredService<MainWindowViewModel>();
+        var mainWindow = new MainWindow();
+        mainWindow.SetViewModel(vm);
+        _window = mainWindow;
         _window.Activate();
 
         // Tray host attaches to the live Window. M1 ships a no-op stub; M6 wires the real

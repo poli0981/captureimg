@@ -6,34 +6,72 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
-    <!--
-        Root Grid intentionally has no Background so the Window's MicaBackdrop shines
-        through. Any opaque fill here would defeat the Fluent 2 translucency.
-    -->
-    <Grid>
-        <StackPanel
-            HorizontalAlignment="Center"
-            VerticalAlignment="Center"
-            Spacing="{StaticResource SpacingSmall}">
-            <TextBlock
-                HorizontalAlignment="Center"
-                Text="CaptureImage v1.3"
-                FontFamily="{StaticResource BodyFontFamily}"
-                FontSize="{StaticResource FontSizeTitle}"
-                FontWeight="SemiBold" />
-            <TextBlock
-                HorizontalAlignment="Center"
-                Text="WinUI 3 bootstrap with Fluent 2 theme baseline (M2)."
-                FontFamily="{StaticResource BodyFontFamily}"
-                FontSize="{StaticResource FontSizeBody}"
-                Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
-            <TextBlock
-                HorizontalAlignment="Center"
-                Margin="0,16,0,0"
-                Text="Milestones M3–M7 fill in navigation, views, services."
-                FontFamily="{StaticResource BodyFontFamily}"
-                FontSize="{StaticResource FontSizeSmall}"
-                Foreground="{ThemeResource TextFillColorTertiaryBrush}" />
-        </StackPanel>
+
+    <Grid x:Name="Root"
+          FlowDirection="{Binding Localization.CurrentFlowDirection, Converter={StaticResource FlowDirectionConverter}}">
+        <NavigationView
+            x:Name="NavView"
+            IsBackButtonVisible="Collapsed"
+            IsSettingsVisible="False"
+            PaneDisplayMode="Left"
+            OpenPaneLength="220"
+            MenuItemsSource="{Binding NavItems}"
+            SelectedItem="{Binding SelectedNavItem, Mode=TwoWay}"
+            SelectionChanged="NavView_SelectionChanged">
+
+            <NavigationView.PaneHeader>
+                <StackPanel Margin="12,8,12,8">
+                    <TextBlock
+                        Text="{Binding AppTitle}"
+                        FontFamily="{StaticResource BodyFontFamily}"
+                        FontSize="{StaticResource FontSizeTitle}"
+                        FontWeight="SemiBold" />
+                    <TextBlock
+                        Text="{Binding AppVersion}"
+                        FontFamily="{StaticResource BodyFontFamily}"
+                        FontSize="{StaticResource FontSizeCaption}"
+                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                        Margin="0,4,0,0" />
+                </StackPanel>
+            </NavigationView.PaneHeader>
+
+            <NavigationView.MenuItemTemplate>
+                <DataTemplate>
+                    <NavigationViewItem Content="{Binding Label}">
+                        <NavigationViewItem.Icon>
+                            <FontIcon
+                                Glyph="{Binding IconGlyph}"
+                                FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" />
+                        </NavigationViewItem.Icon>
+                    </NavigationViewItem>
+                </DataTemplate>
+            </NavigationView.MenuItemTemplate>
+
+            <NavigationView.PaneFooter>
+                <Button
+                    HorizontalAlignment="Stretch"
+                    HorizontalContentAlignment="Left"
+                    Margin="8,4,8,16"
+                    Padding="12,8"
+                    Background="Transparent"
+                    BorderThickness="0"
+                    Command="{Binding ToggleLogViewerCommand}"
+                    ToolTipService.ToolTip="{Binding LogToggleTooltip}"
+                    AutomationProperties.Name="{Binding LogToggleTooltip}">
+                    <StackPanel Orientation="Horizontal" Spacing="12">
+                        <FontIcon
+                            Glyph="&#xE9F9;"
+                            FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets"
+                            FontSize="16" />
+                        <TextBlock
+                            Text="{Binding LogToggleLabel}"
+                            FontFamily="{StaticResource BodyFontFamily}"
+                            VerticalAlignment="Center" />
+                    </StackPanel>
+                </Button>
+            </NavigationView.PaneFooter>
+
+            <Frame x:Name="ContentFrame" />
+        </NavigationView>
     </Grid>
 </Window>
