@@ -97,17 +97,22 @@ public sealed class Win32ForegroundWindowWatcher : IForegroundWindowWatcher
         IntPtr hWinEventHook, uint eventType, IntPtr hwnd,
         int idObject, int idChild, uint dwEventThread, uint dwmsEventTime)
     {
-        if (hwnd == IntPtr.Zero) return;
-        // idObject != OBJID_WINDOW (0) means a child accessibility object — skip.
-        if (idObject != 0) return;
+        // Use GetForegroundWindow() rather than the event's hwnd. On Win11 Alt-Tab the
+        // event-supplied hwnd can be the modern Task View overlay (idObject != 0) or a
+        // transient cloaked window — which got the original watcher to filter the event
+        // out and miss the actual destination. Polling the OS at callback time always
+        // returns the real foreground HWND. Mouse-click activations happened to ship a
+        // single clean event so they worked under the old code; Alt-Tab didn't.
+        var foreground = User32.GetForegroundWindow();
+        if (foreground == IntPtr.Zero) return;
 
         // WINEVENT_SKIPOWNPROCESS already filters most own-window events, but a defensive
         // pid check covers edge cases (e.g. a brokered window owned by another process).
-        User32.GetWindowThreadProcessId(hwnd, out var pid);
+        User32.GetWindowThreadProcessId(foreground, out var pid);
         if (pid == _ownProcessId) return;
         if (pid == 0) return;
 
-        _pendingHwnd = hwnd;
+        _pendingHwnd = foreground;
         _debounceTimer.Change(DebounceDelay, Timeout.InfiniteTimeSpan);
     }
 
@@ -121,6 +126,8 @@ public sealed class Win32ForegroundWindowWatcher : IForegroundWindowWatcher
             _pendingHwnd = IntPtr.Zero;
         }
         if (hwnd == IntPtr.Zero) return;
+
+        _logger.LogDebug("Foreground window watcher firing for HWND 0x{Hwnd:X}.", hwnd);
 
         try
         {

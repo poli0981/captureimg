@@ -35,6 +35,9 @@ internal static partial class User32
     [LibraryImport("user32.dll", SetLastError = true)]
     public static partial IntPtr GetWindow(IntPtr hWnd, uint uCmd);
 
+    [LibraryImport("user32.dll", SetLastError = true)]
+    public static partial IntPtr GetForegroundWindow();
+
     // SetWinEventHook callback signature. Stays a classic [UnmanagedFunctionPointer]
     // delegate (not [LibraryImport]) because [LibraryImport] doesn't support delegate
     // parameters yet — the source generator won't marshal them.
