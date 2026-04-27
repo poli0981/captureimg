@@ -137,14 +137,14 @@ public sealed partial class AboutViewModel : ViewModelBase
             var full = Path.Combine(basePath, relativePath);
             if (!File.Exists(full))
             {
-                _logger.LogWarning("Document not found: {Path}", full);
+                _logger.LogWarning("Document not found at {Path}.", full);
                 return;
             }
             Process.Start(new ProcessStartInfo(full) { UseShellExecute = true });
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Failed to open document {Path}.", relativePath);
+            _logger.LogError(ex, "Couldn't open the document at {Path}.", relativePath);
         }
     }
 
@@ -156,7 +156,7 @@ public sealed partial class AboutViewModel : ViewModelBase
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Failed to open URL {Url}.", url);
+            _logger.LogError(ex, "Couldn't open the link {Url}.", url);
         }
     }
 }

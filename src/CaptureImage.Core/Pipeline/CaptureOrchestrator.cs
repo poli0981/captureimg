@@ -48,8 +48,8 @@ public sealed class CaptureOrchestrator
                     $"No encoder registered for format {request.Format}.");
 
             _logger.LogInformation(
-                "Capturing target {Target} → {Format} at {Dir}.",
-                request.Target.DisplayName, request.Format, request.OutputDirectory);
+                "Starting picture capture of {Target} as {Format}...",
+                request.Target.DisplayName, request.Format);
 
             var frame = await _engine.CaptureAsync(request.Target, cancellationToken).ConfigureAwait(false);
 
@@ -93,9 +93,12 @@ public sealed class CaptureOrchestrator
             }
 
             stopwatch.Stop();
+            var fileName = Path.GetFileName(finalPath);
+            var directory = Path.GetDirectoryName(finalPath) ?? string.Empty;
+            var sizeKb = fileSize / 1024d;
             _logger.LogInformation(
-                "Capture OK → {Path} ({Width}x{Height}, {Size} bytes, {Ms}ms).",
-                finalPath, frame.Width, frame.Height, fileSize, stopwatch.ElapsedMilliseconds);
+                "Picture captured: {Name} ({Width}x{Height}, {SizeKb:F1} KB) at {Path} [{Format}].",
+                fileName, frame.Width, frame.Height, sizeKb, directory, request.Format);
 
             return new CaptureResult.Success(
                 FilePath: finalPath,
@@ -106,21 +109,29 @@ public sealed class CaptureOrchestrator
         }
         catch (CaptureException ex)
         {
-            _logger.LogWarning(ex, "Capture failed with known error {Code}.", ex.ErrorCode);
+            if (ex.ErrorCode == CaptureError.Cancelled)
+            {
+                _logger.LogInformation("Picture capture cancelled by user.");
+            }
+            else
+            {
+                _logger.LogWarning(ex, "Picture capture failed: {Reason}", ex.Message);
+            }
             return new CaptureResult.Failure(ex.ErrorCode, ex.Message, ex);
         }
         catch (OperationCanceledException)
         {
+            _logger.LogInformation("Picture capture cancelled by user.");
             return new CaptureResult.Failure(CaptureError.Cancelled, "Capture was cancelled.");
         }
         catch (IOException ex)
         {
-            _logger.LogError(ex, "File write failed during capture.");
+            _logger.LogError(ex, "Picture capture failed: couldn't write to {Path}.", request.OutputDirectory);
             return new CaptureResult.Failure(CaptureError.FileWriteFailure, ex.Message, ex);
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Unexpected exception during capture.");
+            _logger.LogError(ex, "Picture capture failed unexpectedly.");
             return new CaptureResult.Failure(CaptureError.Unknown, ex.Message, ex);
         }
     }

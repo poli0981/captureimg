@@ -164,7 +164,7 @@ public sealed partial class DashboardViewModel : ViewModelBase, IDisposable
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Failed to enumerate capture targets.");
+            _logger.LogError(ex, "Couldn't load the list of windows. Try clicking Refresh again.");
         }
         finally
         {
@@ -341,7 +341,7 @@ public sealed partial class DashboardViewModel : ViewModelBase, IDisposable
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Capture engine threw.");
+            _logger.LogError(ex, "Picture capture failed: the capture engine reported an error.");
             _stateMachine.Fire(CaptureTrigger.ErrorOccurred);
             _toasts.ShowError(Localization["Toast_CaptureFailed"], ex.Message);
             return;
@@ -392,7 +392,7 @@ public sealed partial class DashboardViewModel : ViewModelBase, IDisposable
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Save path threw unexpectedly.");
+            _logger.LogError(ex, "Picture capture failed while saving: {Reason}", ex.Message);
             _stateMachine.Fire(CaptureTrigger.ErrorOccurred);
             _toasts.ShowError(Localization["Toast_CaptureFailed"], ex.Message);
         }

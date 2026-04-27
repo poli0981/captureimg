@@ -193,7 +193,7 @@ public sealed partial class LogViewerViewModel : ViewModelBase, IDisposable
         }
         catch (Exception ex)
         {
-            _logger.LogWarning(ex, "Failed to open logs folder {Path}.", folder);
+            _logger.LogWarning(ex, "Couldn't open the logs folder at {Path}.", folder);
             _toasts.ShowError(Localization["Toast_Error"], ex.Message);
         }
     }

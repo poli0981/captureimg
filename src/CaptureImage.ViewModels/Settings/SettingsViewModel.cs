@@ -247,6 +247,7 @@ public sealed partial class SettingsViewModel : ViewModelBase, IDisposable
         if (_suppressPush || value is null) return;
         _settings.Update(s => s with { Culture = value.Name });
         Localization.SetCulture(value);
+        _logger.LogInformation("Language switched to {Code} ({Name}).", value.Name, value.NativeName);
     }
 
     partial void OnSelectedThemeChanged(ThemeOption? value)
@@ -326,6 +327,7 @@ public sealed partial class SettingsViewModel : ViewModelBase, IDisposable
     {
         if (_suppressPush) return;
         _settings.Update(s => s with { Capture = s.Capture with { AutoSwitchOnAltTab = value } });
+        _logger.LogInformation("Auto-switch on Alt-Tab {State}.", value ? "enabled" : "disabled");
     }
 
     partial void OnMinimizeToTrayChanged(bool value)
@@ -338,6 +340,7 @@ public sealed partial class SettingsViewModel : ViewModelBase, IDisposable
     {
         if (_suppressPush) return;
         _settings.Update(s => s with { UI = s.UI with { SoundEnabled = value } });
+        _logger.LogInformation("Capture sound {State}.", value ? "enabled" : "disabled");
     }
 
     partial void OnSelectedLogLevelChanged(string value)
@@ -361,7 +364,7 @@ public sealed partial class SettingsViewModel : ViewModelBase, IDisposable
         }
         catch (Exception ex)
         {
-            _logger.LogWarning(ex, "Failed to open settings file.");
+            _logger.LogWarning(ex, "Couldn't open the settings file.");
             _toasts.ShowError(Localization["Toast_Error"], ex.Message);
         }
     }
@@ -381,7 +384,7 @@ public sealed partial class SettingsViewModel : ViewModelBase, IDisposable
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Settings export failed.");
+            _logger.LogError(ex, "Couldn't export settings.");
             _toasts.ShowError(Localization["Toast_Error"], ex.Message);
         }
     }
@@ -397,7 +400,7 @@ public sealed partial class SettingsViewModel : ViewModelBase, IDisposable
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Settings import failed.");
+            _logger.LogError(ex, "Couldn't import settings.");
             _toasts.ShowError(Localization["Toast_Error"], ex.Message);
         }
     }
