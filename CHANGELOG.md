@@ -7,6 +7,47 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.4.0] - 2026-04-27
+
+UX polish + accessibility cycle. No breaking changes; settings.json
+schema unchanged.
+
+### Added
+
+- **Light / Dark / System theme** picker on the Settings tab. The
+  preference was already reserved in `AppSettings.Theme` since v1.3
+  but had no consumer; v1.4 wires it through to
+  `FrameworkElement.RequestedTheme` and re-applies on every
+  `ISettingsStore.Changed`. Mica retints automatically with the
+  resolved theme.
+- **Auto-switch on Alt-Tab** (opt-in, default off). When enabled,
+  the dashboard's selected target follows the OS foreground window
+  via a `SetWinEventHook(EVENT_SYSTEM_FOREGROUND)` watcher with a
+  250 ms debounce. Apps not in the target list keep your current
+  selection. Toggle lives next to the existing capture toggles.
+- **Four new language packs**: Japanese (ja-JP), Simplified Chinese
+  (zh-Hans), Korean (ko-KR), Spanish (es-ES). All machine-assisted —
+  the About → Translations disclaimer lists every machine-assisted
+  pack and invites native-speaker proofreading PRs.
+- **Friendlier log lines** for end-user lifecycle events: `Picture
+  captured: {Name} ({W}×{H}, {KB} KB) at {Path} [{Format}]`,
+  `Picture capture cancelled by user.`, `Language switched to
+  {Code} ({Name}).`, `Theme switched to {Theme}.`, `Capture sound
+  {State}.`, `Auto-switch on Alt-Tab {State}.` Logs remain
+  English-only by design (file shareability + parser stability
+  across cultures).
+
+### Changed
+
+- **Window is now fixed-size** at 1200×720. Both maximize and
+  resize are disabled via `OverlappedPresenter.IsMaximizable` /
+  `IsResizable`; minimize remains enabled for the tray flow.
+- **Tone shift on existing log call sites**: "Failed to X" →
+  "Couldn't X" across `DashboardViewModel`, `SettingsViewModel`,
+  `UpdateViewModel`, `AboutViewModel`, `LogViewerViewModel`.
+  Structured properties are unchanged so log queries and external
+  diagnostics still work.
+
 ## [1.3.1] - 2026-04-26
 
 **Critical hotfix.** v1.3.0 shipped broken — the WinUI 3 publish pipeline
