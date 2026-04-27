@@ -32,6 +32,23 @@
                 </ComboBox>
             </StackPanel>
 
+            <!-- Theme: System / Light / Dark. ItemTemplate binds to ThemeOption.DisplayLabel
+                 (already localized in the VM by RebuildThemeOptions). -->
+            <StackPanel Spacing="4">
+                <TextBlock Text="{Binding ThemeLabel}"
+                           Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                           FontSize="{StaticResource FontSizeSmall}" />
+                <ComboBox ItemsSource="{Binding SupportedThemes}"
+                          SelectedItem="{Binding SelectedTheme, Mode=TwoWay}"
+                          HorizontalAlignment="Stretch">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding DisplayLabel}" />
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+            </StackPanel>
+
             <!-- Hotkey: HotkeyRecorder custom control owns the key-capture flow. Bound
                  to the SettingsViewModel.Hotkey child VM (HotkeyBindingViewModel). -->
             <StackPanel Spacing="4">

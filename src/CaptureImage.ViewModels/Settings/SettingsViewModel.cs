@@ -2,6 +2,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Globalization;
+using System.Linq;
 using System.Threading.Tasks;
 using CaptureImage.Core.Abstractions;
 using CaptureImage.Core.Models;
@@ -32,6 +33,8 @@ public sealed partial class SettingsViewModel : ViewModelBase, IDisposable
 
     public ObservableCollection<CultureInfo> SupportedCultures { get; }
 
+    public ObservableCollection<ThemeOption> SupportedThemes { get; } = new();
+
     public ObservableCollection<ImageFormat> SupportedFormats { get; } =
         new(new[] { ImageFormat.Png, ImageFormat.Jpeg, ImageFormat.Webp, ImageFormat.Tiff });
 
@@ -45,6 +48,9 @@ public sealed partial class SettingsViewModel : ViewModelBase, IDisposable
 
     [ObservableProperty]
     private CultureInfo _selectedCulture;
+
+    [ObservableProperty]
+    private ThemeOption? _selectedTheme;
 
     [ObservableProperty]
     private ImageFormat _defaultFormat;
@@ -87,6 +93,7 @@ public sealed partial class SettingsViewModel : ViewModelBase, IDisposable
 
     public string TitleLabel => Localization["Settings_Title"];
     public string LanguageLabel => Localization["Settings_Language"];
+    public string ThemeLabel => Localization["Settings_Theme"];
     public string HotkeyLabel => Localization["Settings_Hotkey"];
     public string HotkeyHint => Localization["Settings_HotkeyHint"];
     public string FormatLabel => Localization["Settings_Format"];
@@ -125,6 +132,8 @@ public sealed partial class SettingsViewModel : ViewModelBase, IDisposable
         SupportedCultures = new ObservableCollection<CultureInfo>(localization.SupportedCultures);
         _selectedCulture = FindCulture(settings.Current.Culture) ?? SupportedCultures[0];
 
+        RebuildThemeOptions();
+
         Hydrate();
         _settings.Changed += OnSettingsStoreChanged;
 
@@ -149,10 +158,12 @@ public sealed partial class SettingsViewModel : ViewModelBase, IDisposable
         if (e.PropertyName is "Item[]" or nameof(ILocalizationService.CurrentCulture))
         {
             OnPropertyChanged(nameof(Localization));
+            RebuildThemeOptions();
             // Plain-property refresh for every localized label the view binds to —
             // indexer-path bindings don't wake reliably on Localization-reference ping.
             OnPropertyChanged(nameof(TitleLabel));
             OnPropertyChanged(nameof(LanguageLabel));
+            OnPropertyChanged(nameof(ThemeLabel));
             OnPropertyChanged(nameof(HotkeyLabel));
             OnPropertyChanged(nameof(HotkeyHint));
             OnPropertyChanged(nameof(FormatLabel));
@@ -202,6 +213,7 @@ public sealed partial class SettingsViewModel : ViewModelBase, IDisposable
         {
             var current = _settings.Current;
             SelectedCulture = FindCulture(current.Culture) ?? SupportedCultures[0];
+            SelectedTheme = FindTheme(current.Theme) ?? SupportedThemes[0];
             DefaultFormat = current.Capture.DefaultFormat;
             JpegQuality = current.Capture.JpegQuality;
             WebpQuality = current.Capture.WebpQuality;
@@ -227,6 +239,43 @@ public sealed partial class SettingsViewModel : ViewModelBase, IDisposable
         if (_suppressPush || value is null) return;
         _settings.Update(s => s with { Culture = value.Name });
         Localization.SetCulture(value);
+    }
+
+    partial void OnSelectedThemeChanged(ThemeOption? value)
+    {
+        if (_suppressPush || value is null) return;
+        _settings.Update(s => s with { Theme = value.Code });
+        _logger.LogInformation("Theme switched to {Theme}.", value.Code);
+    }
+
+    private ThemeOption? FindTheme(string code)
+    {
+        foreach (var t in SupportedThemes)
+        {
+            if (t.Code.Equals(code, StringComparison.OrdinalIgnoreCase))
+            {
+                return t;
+            }
+        }
+        return null;
+    }
+
+    private void RebuildThemeOptions()
+    {
+        var keepCode = SelectedTheme?.Code;
+        SupportedThemes.Clear();
+        SupportedThemes.Add(new ThemeOption("System", Localization["Settings_Theme_System"]));
+        SupportedThemes.Add(new ThemeOption("Light",  Localization["Settings_Theme_Light"]));
+        SupportedThemes.Add(new ThemeOption("Dark",   Localization["Settings_Theme_Dark"]));
+
+        // After a culture switch the bound SelectedTheme reference points at a stale
+        // option — rebind by Code so the ComboBox shows the right entry.
+        if (keepCode is not null)
+        {
+            _suppressPush = true;
+            try { SelectedTheme = FindTheme(keepCode) ?? SupportedThemes[0]; }
+            finally { _suppressPush = false; }
+        }
     }
 
     partial void OnDefaultFormatChanged(ImageFormat value)

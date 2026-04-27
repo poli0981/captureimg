@@ -47,6 +47,7 @@ public class LocalizationCompletenessTests : IDisposable
         "Dashboard_Title", "Dashboard_Subtitle", "Dashboard_Refresh",
         "Dashboard_Arm", "Dashboard_Disarm", "Dashboard_StatusIdle",
         "Settings_Title", "Settings_Language", "Settings_Hotkey",
+        "Settings_Theme", "Settings_Theme_System", "Settings_Theme_Light", "Settings_Theme_Dark",
         "Settings_Format", "Settings_OutputFolder", "Settings_Browse",
         "Settings_PreviewBeforeSave", "Settings_MinimizeToTray", "Settings_SoundEnabled",
         "Settings_Logging", "Settings_LogLevel",

@@ -55,6 +55,28 @@ public sealed partial class MainWindow : Window
 
     public MainWindowViewModel? ViewModel { get; private set; }
 
+    /// <summary>
+    /// Apply the persisted theme preference to the window root. <c>System</c> falls back
+    /// to <see cref="ElementTheme.Default"/> which lets the OS theme drive everything,
+    /// including Mica. Called at startup and whenever <c>ISettingsStore.Changed</c> fires.
+    /// Safe to call from any thread — internally hops to the dispatcher.
+    /// </summary>
+    public void ApplyTheme(string theme)
+    {
+        DispatcherQueue.TryEnqueue(() =>
+        {
+            if (Content is FrameworkElement root)
+            {
+                root.RequestedTheme = theme switch
+                {
+                    "Light" => ElementTheme.Light,
+                    "Dark"  => ElementTheme.Dark,
+                    _       => ElementTheme.Default,
+                };
+            }
+        });
+    }
+
     public void SetViewModel(MainWindowViewModel vm)
     {
         if (ViewModel is not null)

@@ -60,6 +60,10 @@
   <!-- Settings -->
   <data name="Settings_Title" xml:space="preserve"><value>الإعدادات</value></data>
   <data name="Settings_Language" xml:space="preserve"><value>اللغة</value></data>
+  <data name="Settings_Theme" xml:space="preserve"><value>السمة</value></data>
+  <data name="Settings_Theme_System" xml:space="preserve"><value>حسب النظام</value></data>
+  <data name="Settings_Theme_Light" xml:space="preserve"><value>فاتح</value></data>
+  <data name="Settings_Theme_Dark" xml:space="preserve"><value>داكن</value></data>
   <data name="Settings_Hotkey" xml:space="preserve"><value>مفتاح اختصار الالتقاط</value></data>
   <data name="Settings_HotkeyHint" xml:space="preserve"><value>انقر تسجيل ثم اضغط على مجموعة مفاتيح. Esc للإلغاء. إعادة التعيين تستعيد Ctrl+Shift+F12.</value></data>
   <data name="Settings_HotkeyRecord" xml:space="preserve"><value>تسجيل…</value></data>

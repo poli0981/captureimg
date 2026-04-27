@@ -48,6 +48,12 @@ public partial class App : Application
         // FolderPicker / FilePicker InitializeWithWindow calls.
         WindowHostHelper.MainWindow = mainWindow;
         _window = mainWindow;
+
+        // Apply persisted theme before first paint, then keep it in sync with settings.
+        var settings = services.GetRequiredService<ISettingsStore>();
+        mainWindow.ApplyTheme(settings.Current.Theme);
+        settings.Changed += (_, _) => mainWindow.ApplyTheme(settings.Current.Theme);
+
         _window.Activate();
 
         // Tray host attaches to the live Window. M1 ships a no-op stub; M6 wires the real
