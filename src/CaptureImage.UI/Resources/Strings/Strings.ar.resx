@@ -85,6 +85,8 @@
   <data name="Settings_BrowseTooltip" xml:space="preserve"><value>اختر مجلدًا بدلاً من كتابة المسار.</value></data>
   <data name="Settings_FileNameTemplate" xml:space="preserve"><value>قالب اسم الملف</value></data>
   <data name="Settings_PreviewBeforeSave" xml:space="preserve"><value>معاينة كل التقاط قبل الحفظ</value></data>
+  <data name="Settings_AutoSwitchOnAltTab" xml:space="preserve"><value>التبديل التلقائي للهدف عند Alt-Tab</value></data>
+  <data name="Settings_AutoSwitchOnAltTabHint" xml:space="preserve"><value>يتبع الهدف المحدد النافذة في المقدمة. التطبيقات غير المدرجة تترك تحديدك الحالي كما هو.</value></data>
   <data name="Settings_MinimizeToTray" xml:space="preserve"><value>زر الإغلاق يصغر إلى علبة النظام</value></data>
   <data name="Settings_SoundEnabled" xml:space="preserve"><value>تشغيل صوت الالتقاط</value></data>
   <data name="Settings_Import" xml:space="preserve"><value>استيراد…</value></data>

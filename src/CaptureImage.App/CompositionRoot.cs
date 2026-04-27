@@ -75,6 +75,7 @@ internal static class CompositionRoot
         services.AddSingleton<IconExtractor>();
         services.AddSingleton<IProcessDetector, GameDetector>();
         services.AddSingleton<IProcessWatcher, WmiProcessWatcher>();
+        services.AddSingleton<IForegroundWindowWatcher, Win32ForegroundWindowWatcher>();
 
         // --- Capture engine + encoders -----------------------------------------
         services.AddSingleton<D3D11DeviceManager>();

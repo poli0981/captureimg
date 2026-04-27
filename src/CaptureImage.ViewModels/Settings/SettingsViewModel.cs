@@ -71,6 +71,9 @@ public sealed partial class SettingsViewModel : ViewModelBase, IDisposable
     private bool _previewBeforeSave;
 
     [ObservableProperty]
+    private bool _autoSwitchOnAltTab;
+
+    [ObservableProperty]
     private bool _minimizeToTray;
 
     [ObservableProperty]
@@ -105,6 +108,8 @@ public sealed partial class SettingsViewModel : ViewModelBase, IDisposable
     public string BrowseTooltip => Localization["Settings_BrowseTooltip"];
     public string FileNameTemplateLabel => Localization["Settings_FileNameTemplate"];
     public string PreviewBeforeSaveLabel => Localization["Settings_PreviewBeforeSave"];
+    public string AutoSwitchOnAltTabLabel => Localization["Settings_AutoSwitchOnAltTab"];
+    public string AutoSwitchOnAltTabHint => Localization["Settings_AutoSwitchOnAltTabHint"];
     public string MinimizeToTrayLabel => Localization["Settings_MinimizeToTray"];
     public string SoundEnabledLabel => Localization["Settings_SoundEnabled"];
     public string ImportLabel => Localization["Settings_Import"];
@@ -175,6 +180,8 @@ public sealed partial class SettingsViewModel : ViewModelBase, IDisposable
             OnPropertyChanged(nameof(BrowseTooltip));
             OnPropertyChanged(nameof(FileNameTemplateLabel));
             OnPropertyChanged(nameof(PreviewBeforeSaveLabel));
+            OnPropertyChanged(nameof(AutoSwitchOnAltTabLabel));
+            OnPropertyChanged(nameof(AutoSwitchOnAltTabHint));
             OnPropertyChanged(nameof(MinimizeToTrayLabel));
             OnPropertyChanged(nameof(SoundEnabledLabel));
             OnPropertyChanged(nameof(ImportLabel));
@@ -220,6 +227,7 @@ public sealed partial class SettingsViewModel : ViewModelBase, IDisposable
             OutputDirectory = current.Capture.OutputDirectory;
             FileNameTemplate = current.Capture.FileNameTemplate;
             PreviewBeforeSave = current.Capture.PreviewBeforeSave;
+            AutoSwitchOnAltTab = current.Capture.AutoSwitchOnAltTab;
             MinimizeToTray = current.UI.MinimizeToTray;
             SoundEnabled = current.UI.SoundEnabled;
             // Fall back to the first supported value if the persisted string doesn't match —
@@ -312,6 +320,12 @@ public sealed partial class SettingsViewModel : ViewModelBase, IDisposable
     {
         if (_suppressPush) return;
         _settings.Update(s => s with { Capture = s.Capture with { PreviewBeforeSave = value } });
+    }
+
+    partial void OnAutoSwitchOnAltTabChanged(bool value)
+    {
+        if (_suppressPush) return;
+        _settings.Update(s => s with { Capture = s.Capture with { AutoSwitchOnAltTab = value } });
     }
 
     partial void OnMinimizeToTrayChanged(bool value)

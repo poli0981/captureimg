@@ -20,6 +20,7 @@ public sealed partial class DashboardViewModel : ViewModelBase, IDisposable
 
     private readonly IProcessDetector _detector;
     private readonly IProcessWatcher _watcher;
+    private readonly IForegroundWindowWatcher _foregroundWatcher;
     private readonly IHotkeyService _hotkeys;
     private readonly ICaptureEngine _captureEngine;
     private readonly IReadOnlyList<IImageEncoder> _encoders;
@@ -74,6 +75,7 @@ public sealed partial class DashboardViewModel : ViewModelBase, IDisposable
     public DashboardViewModel(
         IProcessDetector detector,
         IProcessWatcher watcher,
+        IForegroundWindowWatcher foregroundWatcher,
         IHotkeyService hotkeys,
         ICaptureEngine captureEngine,
         IEnumerable<IImageEncoder> encoders,
@@ -87,6 +89,7 @@ public sealed partial class DashboardViewModel : ViewModelBase, IDisposable
     {
         _detector = detector;
         _watcher = watcher;
+        _foregroundWatcher = foregroundWatcher;
         _hotkeys = hotkeys;
         _captureEngine = captureEngine;
         _encoders = new List<IImageEncoder>(encoders).AsReadOnly();
@@ -106,6 +109,8 @@ public sealed partial class DashboardViewModel : ViewModelBase, IDisposable
         _watcher.Start();
         _hotkeys.Triggered += OnHotkeyTriggered;
         _settings.Changed += OnSettingsChanged;
+        _foregroundWatcher.ForegroundChanged += OnForegroundChanged;
+        ApplyAutoSwitchSetting();
 
         Localization.PropertyChanged += OnLocalizationChanged;
 
@@ -510,6 +515,50 @@ public sealed partial class DashboardViewModel : ViewModelBase, IDisposable
         {
             UpdateStatusForState();
         }
+
+        ApplyAutoSwitchSetting();
+    }
+
+    private void ApplyAutoSwitchSetting()
+    {
+        var enabled = _settings.Current.Capture.AutoSwitchOnAltTab;
+        if (enabled && !_foregroundWatcher.IsRunning)
+        {
+            _foregroundWatcher.Start();
+        }
+        else if (!enabled && _foregroundWatcher.IsRunning)
+        {
+            _foregroundWatcher.Stop();
+        }
+    }
+
+    private void OnForegroundChanged(object? sender, nint hwnd)
+    {
+        // Watcher runs on a thread-pool timer; marshal to the UI thread before touching
+        // SelectedTarget so binding updates land on the dispatcher.
+        _dispatcher.Post(() =>
+        {
+            if (_disposed) return;
+            if (!_settings.Current.Capture.AutoSwitchOnAltTab) return;
+
+            foreach (var vm in Targets)
+            {
+                if (vm.Target.WindowHandle == hwnd)
+                {
+                    if (!ReferenceEquals(SelectedTarget, vm))
+                    {
+                        SelectedTarget = vm;
+                        _logger.LogDebug(
+                            "Auto-switched target to PID {Pid} ({Name}).",
+                            vm.ProcessId, vm.DisplayName);
+                    }
+                    return;
+                }
+            }
+            // No match — keep the current selection. Clearing it would surprise users
+            // who Alt-Tab to apps that are filtered out of the target list (Explorer,
+            // Settings, etc.).
+        });
     }
 
     /// <summary>
@@ -548,6 +597,8 @@ public sealed partial class DashboardViewModel : ViewModelBase, IDisposable
         _hotkeys.Triggered -= OnHotkeyTriggered;
         _watcher.Changed -= OnProcessChanged;
         _settings.Changed -= OnSettingsChanged;
+        _foregroundWatcher.ForegroundChanged -= OnForegroundChanged;
+        _foregroundWatcher.Stop();
         _stateMachine.StateChanged -= OnStateChanged;
         Localization.PropertyChanged -= OnLocalizationChanged;
         _pendingRefresh?.Cancel();

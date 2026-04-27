@@ -85,6 +85,8 @@
   <data name="Settings_BrowseTooltip" xml:space="preserve"><value>Pick a folder instead of typing the path.</value></data>
   <data name="Settings_FileNameTemplate" xml:space="preserve"><value>File name template</value></data>
   <data name="Settings_PreviewBeforeSave" xml:space="preserve"><value>Preview each capture before saving</value></data>
+  <data name="Settings_AutoSwitchOnAltTab" xml:space="preserve"><value>Auto-switch target when I Alt-Tab</value></data>
+  <data name="Settings_AutoSwitchOnAltTabHint" xml:space="preserve"><value>The selected target follows the foreground window. Apps not in the target list keep your current selection.</value></data>
   <data name="Settings_MinimizeToTray" xml:space="preserve"><value>Close button minimizes to tray</value></data>
   <data name="Settings_SoundEnabled" xml:space="preserve"><value>Play capture sound</value></data>
   <data name="Settings_Import" xml:space="preserve"><value>Import…</value></data>

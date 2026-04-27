@@ -85,6 +85,8 @@
   <data name="Settings_BrowseTooltip" xml:space="preserve"><value>Chọn thư mục thay vì phải gõ đường dẫn.</value></data>
   <data name="Settings_FileNameTemplate" xml:space="preserve"><value>Mẫu tên tệp</value></data>
   <data name="Settings_PreviewBeforeSave" xml:space="preserve"><value>Xem trước từng ảnh chụp trước khi lưu</value></data>
+  <data name="Settings_AutoSwitchOnAltTab" xml:space="preserve"><value>Tự động chuyển mục tiêu khi Alt-Tab</value></data>
+  <data name="Settings_AutoSwitchOnAltTabHint" xml:space="preserve"><value>Mục tiêu được chọn sẽ theo cửa sổ đang foreground. Các ứng dụng không có trong danh sách sẽ giữ nguyên lựa chọn hiện tại.</value></data>
   <data name="Settings_MinimizeToTray" xml:space="preserve"><value>Nút đóng sẽ thu nhỏ xuống tray</value></data>
   <data name="Settings_SoundEnabled" xml:space="preserve"><value>Phát âm thanh khi chụp</value></data>
   <data name="Settings_Import" xml:space="preserve"><value>Nhập…</value></data>
