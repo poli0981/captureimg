@@ -44,6 +44,12 @@ public sealed partial class MainWindow : Window
         var appWindow = AppWindow.GetFromWindowId(windowId);
         appWindow.Resize(new SizeInt32(InitialWidth, InitialHeight));
 
+        if (appWindow.Presenter is OverlappedPresenter presenter)
+        {
+            presenter.IsMaximizable = false;
+            presenter.IsResizable = false;
+        }
+
         Root.Loaded += OnRootLoaded;
     }
 
