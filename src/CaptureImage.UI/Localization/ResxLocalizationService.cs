@@ -21,6 +21,10 @@ public sealed class ResxLocalizationService : ILocalizationService
         new("en-US"),
         new("vi-VN"),
         new("ar-SA"),
+        new("ja-JP"),
+        new("zh-Hans"),
+        new("ko-KR"),
+        new("es-ES"),
     };
 
     private readonly ResourceManager _resourceManager;

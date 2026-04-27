@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="xml:space" type="xsd:string" msdata:Ordinal="4" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+
+  <!-- Navigation -->
+  <data name="Nav_Dashboard" xml:space="preserve"><value>仪表板</value></data>
+  <data name="Nav_Update" xml:space="preserve"><value>更新</value></data>
+  <data name="Nav_Settings" xml:space="preserve"><value>设置</value></data>
+  <data name="Nav_About" xml:space="preserve"><value>关于</value></data>
+  <data name="Nav_LogViewer" xml:space="preserve"><value>日志</value></data>
+
+  <!-- Dashboard -->
+  <data name="Dashboard_Title" xml:space="preserve"><value>仪表板</value></data>
+  <data name="Dashboard_Subtitle" xml:space="preserve"><value>选择目标并启动 — 按热键即可截图。</value></data>
+  <data name="Dashboard_Refresh" xml:space="preserve"><value>刷新</value></data>
+  <data name="Dashboard_Arm" xml:space="preserve"><value>启动</value></data>
+  <data name="Dashboard_Disarm" xml:space="preserve"><value>停止</value></data>
+  <data name="Dashboard_StatusIdle" xml:space="preserve"><value>空闲 — 选择目标并启动后开始。</value></data>
+  <data name="Dashboard_StatusArmed" xml:space="preserve"><value>已启动:按 {0} 截取 {1}。</value></data>
+  <data name="Dashboard_StatusCapturing" xml:space="preserve"><value>正在截取 {0}…</value></data>
+  <data name="Dashboard_StatusDisarmed" xml:space="preserve"><value>已停止。</value></data>
+  <data name="Dashboard_StatusSaved" xml:space="preserve"><value>已保存:{0} ({1}x{2}, {3} ms)</value></data>
+  <data name="Dashboard_StatusFailed" xml:space="preserve"><value>截图失败 ({0}):{1}</value></data>
+  <data name="Dashboard_TargetsCount" xml:space="preserve"><value>显示 {0} 个目标</value></data>
+  <data name="Dashboard_Loading" xml:space="preserve"><value>正在加载…</value></data>
+  <data name="Dashboard_EmptyState" xml:space="preserve"><value>没有可截取的可见窗口 — 启动游戏或应用后单击"刷新"。</value></data>
+  <data name="Dashboard_LogToggle" xml:space="preserve"><value>切换实时日志面板</value></data>
+  <data name="Dashboard_SteamBadge" xml:space="preserve"><value>STEAM</value></data>
+  <data name="Dashboard_SteamBadgeTooltip" xml:space="preserve"><value>Steam 游戏:{0} (AppId {1})。可通过 Steam 叠加层使用 F12 截图。部分受反作弊保护的游戏可能会阻止外部截图。</value></data>
+
+  <!-- Settings -->
+  <data name="Settings_Title" xml:space="preserve"><value>设置</value></data>
+  <data name="Settings_Language" xml:space="preserve"><value>语言</value></data>
+  <data name="Settings_Theme" xml:space="preserve"><value>主题</value></data>
+  <data name="Settings_Theme_System" xml:space="preserve"><value>系统</value></data>
+  <data name="Settings_Theme_Light" xml:space="preserve"><value>浅色</value></data>
+  <data name="Settings_Theme_Dark" xml:space="preserve"><value>深色</value></data>
+  <data name="Settings_Hotkey" xml:space="preserve"><value>截图热键</value></data>
+  <data name="Settings_HotkeyHint" xml:space="preserve"><value>单击"录制"并按下组合键。Esc 取消。"重置"将恢复 Ctrl+Shift+F12。</value></data>
+  <data name="Settings_HotkeyRecord" xml:space="preserve"><value>录制…</value></data>
+  <data name="Settings_HotkeyCancel" xml:space="preserve"><value>取消</value></data>
+  <data name="Settings_HotkeyReset" xml:space="preserve"><value>重置</value></data>
+  <data name="Settings_HotkeyRecorderPrompt" xml:space="preserve"><value>请按下组合键(按 Esc 取消)…</value></data>
+  <data name="Settings_HotkeyErrorNoPrimary" xml:space="preserve"><value>请选择主键(例如字母键或 F 键)。</value></data>
+  <data name="Settings_HotkeyErrorModifierOnly" xml:space="preserve"><value>仅修饰键不够 — 请添加字母或 F 键。</value></data>
+  <data name="Settings_HotkeyErrorNeedsModifier" xml:space="preserve"><value>普通字母和数字至少需要一个修饰键(Ctrl/Alt/Shift/Win)。</value></data>
+  <data name="Settings_HotkeyErrorReserved" xml:space="preserve"><value>该组合键已被 Windows 保留,无法使用。</value></data>
+  <data name="Settings_HotkeyConflictWarning" xml:space="preserve"><value>另一个应用程序可能已经占用了该组合键 — 当该应用运行时可能不会触发。</value></data>
+  <data name="Settings_Format" xml:space="preserve"><value>默认格式</value></data>
+  <data name="Settings_JpegQuality" xml:space="preserve"><value>JPEG 质量</value></data>
+  <data name="Settings_WebpQuality" xml:space="preserve"><value>WebP 质量</value></data>
+  <data name="Settings_OutputFolder" xml:space="preserve"><value>输出文件夹</value></data>
+  <data name="Settings_OutputFolderDefault" xml:space="preserve"><value>(默认:Pictures\CaptureImage)</value></data>
+  <data name="Settings_Browse" xml:space="preserve"><value>浏览…</value></data>
+  <data name="Settings_BrowseTitle" xml:space="preserve"><value>选择输出文件夹</value></data>
+  <data name="Settings_BrowseTooltip" xml:space="preserve"><value>选择文件夹而不是手动输入路径。</value></data>
+  <data name="Settings_FileNameTemplate" xml:space="preserve"><value>文件名模板</value></data>
+  <data name="Settings_PreviewBeforeSave" xml:space="preserve"><value>保存前预览每张截图</value></data>
+  <data name="Settings_AutoSwitchOnAltTab" xml:space="preserve"><value>Alt-Tab 时自动切换目标</value></data>
+  <data name="Settings_AutoSwitchOnAltTabHint" xml:space="preserve"><value>所选目标将跟随前台窗口。不在目标列表中的应用将保留当前选择。</value></data>
+  <data name="Settings_MinimizeToTray" xml:space="preserve"><value>关闭按钮最小化到系统托盘</value></data>
+  <data name="Settings_SoundEnabled" xml:space="preserve"><value>播放截图音效</value></data>
+  <data name="Settings_Import" xml:space="preserve"><value>导入…</value></data>
+  <data name="Settings_Export" xml:space="preserve"><value>导出…</value></data>
+  <data name="Settings_ImportTitle" xml:space="preserve"><value>导入设置</value></data>
+  <data name="Settings_ExportTitle" xml:space="preserve"><value>导出设置</value></data>
+  <data name="Settings_OpenFile" xml:space="preserve"><value>打开设置文件</value></data>
+  <data name="Settings_Logging" xml:space="preserve"><value>日志</value></data>
+  <data name="Settings_LogLevel" xml:space="preserve"><value>最低日志级别</value></data>
+  <data name="Settings_LogLevelHint" xml:space="preserve"><value>过滤滚动日志文件和查看器。支持诊断时选 Debug,日常使用选 Information,如需安静可选 Warning 或 Error。</value></data>
+
+  <!-- Update -->
+  <data name="Update_Title" xml:space="preserve"><value>更新</value></data>
+  <data name="Update_Check" xml:space="preserve"><value>检查更新</value></data>
+  <data name="Update_Download" xml:space="preserve"><value>下载</value></data>
+  <data name="Update_Install" xml:space="preserve"><value>安装并重启</value></data>
+  <data name="Update_Status" xml:space="preserve"><value>状态</value></data>
+  <data name="Update_Log" xml:space="preserve"><value>日志</value></data>
+  <data name="Update_NewVersion" xml:space="preserve"><value>新版本:</value></data>
+
+  <!-- About -->
+  <data name="About_Title" xml:space="preserve"><value>关于 CaptureImage</value></data>
+  <data name="About_Tagline" xml:space="preserve"><value>面向无内置截图键游戏的轻量级 Windows 屏幕截图工具。</value></data>
+  <data name="About_AppLabel" xml:space="preserve"><value>应用</value></data>
+  <data name="About_VersionLabel" xml:space="preserve"><value>版本</value></data>
+  <data name="About_LicenseLabel" xml:space="preserve"><value>许可证</value></data>
+  <data name="About_DeveloperLabel" xml:space="preserve"><value>开发者</value></data>
+  <data name="About_RepositoryLabel" xml:space="preserve"><value>仓库</value></data>
+  <data name="About_AiSection" xml:space="preserve"><value>AI 辅助开发</value></data>
+  <data name="About_DisclaimersSection" xml:space="preserve"><value>免责声明</value></data>
+  <data name="About_TranslationDisclaimer" xml:space="preserve"><value>翻译</value></data>
+  <data name="About_TranslationDisclaimerBody" xml:space="preserve"><value>日语、简体中文、韩语和西班牙语语言包采用机器辅助翻译。术语可能与母语习惯不一致,部分技术术语(hotkey、toast、frame 等)有意保留为英文。欢迎母语为相关语言的志愿者校对,可通过对 src/CaptureImage.UI/Resources/Strings/ 下的 .resx 文件提交 Pull Request。</value></data>
+  <data name="About_CaptureDisclaimer" xml:space="preserve"><value>截图支持</value></data>
+  <data name="About_CaptureLimitationDisclaimerBody" xml:space="preserve"><value>CaptureImage 通过 Windows.Graphics.Capture 可截取大多数窗口化和无边框游戏,但并非所有游戏都受支持。受 DRM 保护的画面、独占全屏 Direct3D 9 游戏以及带反作弊钩子的游戏可能会返回黑屏或拒绝截图。对于旧应用会尝试 GDI PrintWindow 回退。完整列表请参阅 docs/legal/DISCLAIMER.md §2。</value></data>
+  <data name="About_LiabilityDisclaimer" xml:space="preserve"><value>无担保</value></data>
+  <data name="About_LiabilityDisclaimerBody" xml:space="preserve"><value>CaptureImage 按 GPL-3.0-or-later 协议"按原样"分发,不提供任何形式的担保。作者对截图丢失、游戏崩溃、反作弊处罚或数据丢失不承担责任。使用风险自负。完整文本请参阅 docs/legal/DISCLAIMER.md。</value></data>
+  <data name="About_LegalSection" xml:space="preserve"><value>法律文件</value></data>
+  <data name="About_ThirdPartySection" xml:space="preserve"><value>第三方组件</value></data>
+  <data name="About_ThirdPartyHint" xml:space="preserve"><value>单击上方"第三方声明"查看包含上游 URL 的完整列表。</value></data>
+  <data name="About_OpenDisclaimer" xml:space="preserve"><value>免责声明</value></data>
+  <data name="About_OpenPrivacy" xml:space="preserve"><value>隐私</value></data>
+  <data name="About_OpenTerms" xml:space="preserve"><value>条款</value></data>
+  <data name="About_OpenLicense" xml:space="preserve"><value>许可证 (GPL-3.0)</value></data>
+  <data name="About_OpenThirdParty" xml:space="preserve"><value>第三方声明</value></data>
+  <data name="About_OpenContributors" xml:space="preserve"><value>贡献者</value></data>
+
+  <!-- Log viewer -->
+  <data name="Log_Title" xml:space="preserve"><value>实时日志</value></data>
+  <data name="Log_Pause" xml:space="preserve"><value>暂停</value></data>
+  <data name="Log_Resume" xml:space="preserve"><value>继续</value></data>
+  <data name="Log_Clear" xml:space="preserve"><value>清除</value></data>
+  <data name="Log_EventsCount" xml:space="preserve"><value>{0} 条事件</value></data>
+  <data name="Log_EmptyState" xml:space="preserve"><value>尚无日志事件。截图引擎的实时事件将显示在此处。</value></data>
+  <data name="Log_Filter" xml:space="preserve"><value>最低级别:</value></data>
+  <data name="Log_RevealFolder" xml:space="preserve"><value>打开文件夹</value></data>
+
+  <!-- Preview -->
+  <data name="Preview_Title" xml:space="preserve"><value>预览</value></data>
+  <data name="Preview_Prompt" xml:space="preserve"><value>是否保存此截图?</value></data>
+  <data name="Preview_Save" xml:space="preserve"><value>保存</value></data>
+  <data name="Preview_Discard" xml:space="preserve"><value>放弃</value></data>
+
+  <!-- Toasts -->
+  <data name="Toast_CaptureSaved" xml:space="preserve"><value>截图已保存</value></data>
+  <data name="Toast_CaptureFailed" xml:space="preserve"><value>截图失败</value></data>
+  <data name="Toast_SettingsImported" xml:space="preserve"><value>设置已导入</value></data>
+  <data name="Toast_SettingsExported" xml:space="preserve"><value>设置已导出</value></data>
+  <data name="Toast_Error" xml:space="preserve"><value>错误</value></data>
+
+  <!-- Tray menu -->
+  <data name="Tray_ShowWindow" xml:space="preserve"><value>显示 CaptureImage</value></data>
+  <data name="Tray_OpenFolder" xml:space="preserve"><value>打开截图文件夹</value></data>
+  <data name="Tray_Exit" xml:space="preserve"><value>退出</value></data>
+
+</root>

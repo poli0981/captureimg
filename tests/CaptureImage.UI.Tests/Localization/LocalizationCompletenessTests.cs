@@ -67,7 +67,7 @@ public class LocalizationCompletenessTests : IDisposable
 
     public static IEnumerable<object[]> CultureMatrix()
     {
-        foreach (var culture in new[] { "en-US", "vi-VN", "ar-SA" })
+        foreach (var culture in new[] { "en-US", "vi-VN", "ar-SA", "ja-JP", "zh-Hans", "ko-KR", "es-ES" })
         {
             foreach (var key in LoadBearingKeys)
             {
