@@ -60,6 +60,10 @@
   <!-- Settings -->
   <data name="Settings_Title" xml:space="preserve"><value>الإعدادات</value></data>
   <data name="Settings_Language" xml:space="preserve"><value>اللغة</value></data>
+  <data name="Settings_Theme" xml:space="preserve"><value>السمة</value></data>
+  <data name="Settings_Theme_System" xml:space="preserve"><value>حسب النظام</value></data>
+  <data name="Settings_Theme_Light" xml:space="preserve"><value>فاتح</value></data>
+  <data name="Settings_Theme_Dark" xml:space="preserve"><value>داكن</value></data>
   <data name="Settings_Hotkey" xml:space="preserve"><value>مفتاح اختصار الالتقاط</value></data>
   <data name="Settings_HotkeyHint" xml:space="preserve"><value>انقر تسجيل ثم اضغط على مجموعة مفاتيح. Esc للإلغاء. إعادة التعيين تستعيد Ctrl+Shift+F12.</value></data>
   <data name="Settings_HotkeyRecord" xml:space="preserve"><value>تسجيل…</value></data>
@@ -81,6 +85,8 @@
   <data name="Settings_BrowseTooltip" xml:space="preserve"><value>اختر مجلدًا بدلاً من كتابة المسار.</value></data>
   <data name="Settings_FileNameTemplate" xml:space="preserve"><value>قالب اسم الملف</value></data>
   <data name="Settings_PreviewBeforeSave" xml:space="preserve"><value>معاينة كل التقاط قبل الحفظ</value></data>
+  <data name="Settings_AutoSwitchOnAltTab" xml:space="preserve"><value>التبديل التلقائي للهدف عند Alt-Tab</value></data>
+  <data name="Settings_AutoSwitchOnAltTabHint" xml:space="preserve"><value>يتبع الهدف المحدد النافذة في المقدمة. التطبيقات غير المدرجة تترك تحديدك الحالي كما هو.</value></data>
   <data name="Settings_MinimizeToTray" xml:space="preserve"><value>زر الإغلاق يصغر إلى علبة النظام</value></data>
   <data name="Settings_SoundEnabled" xml:space="preserve"><value>تشغيل صوت الالتقاط</value></data>
   <data name="Settings_Import" xml:space="preserve"><value>استيراد…</value></data>
@@ -112,7 +118,7 @@
   <data name="About_AiSection" xml:space="preserve"><value>التطوير بمساعدة الذكاء الاصطناعي</value></data>
   <data name="About_DisclaimersSection" xml:space="preserve"><value>إخلاءات المسؤولية</value></data>
   <data name="About_TranslationDisclaimer" xml:space="preserve"><value>الترجمات</value></data>
-  <data name="About_TranslationDisclaimerBody" xml:space="preserve"><value>حزم اللغة العربية والفيتنامية مترجمة بمساعدة الآلة. قد لا تتطابق المصطلحات مع العرف المحلي، وبعض الكلمات التقنية (hotkey، toast، frame، إلخ) تُركت بالإنجليزية عمداً. نرحب بمتحدثي اللغة الأم الراغبين في المراجعة لإرسال طلبات سحب على ملفات .resx في src/CaptureImage.UI/Resources/Strings/.</value></data>
+  <data name="About_TranslationDisclaimerBody" xml:space="preserve"><value>حزم لغة الفيتنامية والعربية واليابانية والصينية المبسطة والكورية والإسبانية مترجمة بمساعدة الآلة. قد لا تتطابق المصطلحات مع العرف المحلي، وبعض الكلمات التقنية (hotkey، toast، frame، إلخ) تُركت بالإنجليزية عمداً. نرحب بمتحدثي اللغة الأم الراغبين في المراجعة لإرسال طلبات سحب على ملفات .resx في src/CaptureImage.UI/Resources/Strings/.</value></data>
   <data name="About_CaptureDisclaimer" xml:space="preserve"><value>دعم الالتقاط</value></data>
   <data name="About_CaptureLimitationDisclaimerBody" xml:space="preserve"><value>يمكن لـ CaptureImage التقاط معظم الألعاب النافذية وعديمة الحدود عبر Windows.Graphics.Capture، لكن ليست كل لعبة تعمل. الأسطح المحمية بـ DRM، وألعاب Direct3D 9 بالشاشة الكاملة الحصرية، والألعاب ذات خطافات anti-cheat قد تعيد إطارات سوداء أو ترفض الالتقاط. تُجرَّب آلية احتياطية GDI PrintWindow للتطبيقات القديمة. راجع docs/legal/DISCLAIMER.md §2 للقائمة الكاملة.</value></data>
   <data name="About_LiabilityDisclaimer" xml:space="preserve"><value>بدون ضمان</value></data>

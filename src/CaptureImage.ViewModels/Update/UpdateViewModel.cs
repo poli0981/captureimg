@@ -111,7 +111,7 @@ public sealed partial class UpdateViewModel : ViewModelBase, IDisposable
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Update check failed.");
+            _logger.LogError(ex, "Couldn't check for updates.");
             Status = UpdateStatus.Failed;
         }
         finally
@@ -139,7 +139,7 @@ public sealed partial class UpdateViewModel : ViewModelBase, IDisposable
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Update download failed.");
+            _logger.LogError(ex, "Couldn't download the update.");
             Status = UpdateStatus.Failed;
         }
         finally
@@ -160,7 +160,7 @@ public sealed partial class UpdateViewModel : ViewModelBase, IDisposable
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Update install failed.");
+            _logger.LogError(ex, "Couldn't install the update.");
             Status = UpdateStatus.Failed;
             IsBusy = false;
         }

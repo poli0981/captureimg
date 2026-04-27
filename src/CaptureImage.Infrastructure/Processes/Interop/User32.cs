@@ -4,8 +4,9 @@ using System.Text;
 namespace CaptureImage.Infrastructure.Processes.Interop;
 
 /// <summary>
-/// Minimal Win32 surface used by <see cref="WindowEnumerator"/>. Only the calls we actually
-/// make land here — do not grow this file into a general user32 wrapper.
+/// Minimal Win32 surface used by the Processes module (window enumeration + foreground
+/// hook). Only the calls we actually make land here — do not grow this file into a
+/// general user32 wrapper.
 /// </summary>
 internal static partial class User32
 {
@@ -33,6 +34,35 @@ internal static partial class User32
 
     [LibraryImport("user32.dll", SetLastError = true)]
     public static partial IntPtr GetWindow(IntPtr hWnd, uint uCmd);
+
+    [LibraryImport("user32.dll", SetLastError = true)]
+    public static partial IntPtr GetForegroundWindow();
+
+    // SetWinEventHook callback signature. Stays a classic [UnmanagedFunctionPointer]
+    // delegate (not [LibraryImport]) because [LibraryImport] doesn't support delegate
+    // parameters yet — the source generator won't marshal them.
+    public delegate void WinEventDelegate(
+        IntPtr hWinEventHook, uint eventType, IntPtr hwnd,
+        int idObject, int idChild, uint dwEventThread, uint dwmsEventTime);
+
+    [DllImport("user32.dll", SetLastError = true)]
+    public static extern IntPtr SetWinEventHook(
+        uint eventMin, uint eventMax,
+        IntPtr hmodWinEventProc,
+        WinEventDelegate lpfnWinEventProc,
+        uint idProcess, uint idThread,
+        uint dwFlags);
+
+    [DllImport("user32.dll", SetLastError = true)]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    public static extern bool UnhookWinEvent(IntPtr hWinEventHook);
+
+    // SetWinEventHook event constants
+    public const uint EVENT_SYSTEM_FOREGROUND = 0x0003;
+
+    // SetWinEventHook flags
+    public const uint WINEVENT_OUTOFCONTEXT   = 0x0000;
+    public const uint WINEVENT_SKIPOWNPROCESS = 0x0002;
 
     // GetWindowLongPtr indices
     public const int GWL_EXSTYLE = -20;

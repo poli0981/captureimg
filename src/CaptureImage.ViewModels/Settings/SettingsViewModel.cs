@@ -2,6 +2,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Globalization;
+using System.Linq;
 using System.Threading.Tasks;
 using CaptureImage.Core.Abstractions;
 using CaptureImage.Core.Models;
@@ -32,6 +33,8 @@ public sealed partial class SettingsViewModel : ViewModelBase, IDisposable
 
     public ObservableCollection<CultureInfo> SupportedCultures { get; }
 
+    public ObservableCollection<ThemeOption> SupportedThemes { get; } = new();
+
     public ObservableCollection<ImageFormat> SupportedFormats { get; } =
         new(new[] { ImageFormat.Png, ImageFormat.Jpeg, ImageFormat.Webp, ImageFormat.Tiff });
 
@@ -45,6 +48,9 @@ public sealed partial class SettingsViewModel : ViewModelBase, IDisposable
 
     [ObservableProperty]
     private CultureInfo _selectedCulture;
+
+    [ObservableProperty]
+    private ThemeOption? _selectedTheme;
 
     [ObservableProperty]
     private ImageFormat _defaultFormat;
@@ -63,6 +69,9 @@ public sealed partial class SettingsViewModel : ViewModelBase, IDisposable
 
     [ObservableProperty]
     private bool _previewBeforeSave;
+
+    [ObservableProperty]
+    private bool _autoSwitchOnAltTab;
 
     [ObservableProperty]
     private bool _minimizeToTray;
@@ -87,6 +96,7 @@ public sealed partial class SettingsViewModel : ViewModelBase, IDisposable
 
     public string TitleLabel => Localization["Settings_Title"];
     public string LanguageLabel => Localization["Settings_Language"];
+    public string ThemeLabel => Localization["Settings_Theme"];
     public string HotkeyLabel => Localization["Settings_Hotkey"];
     public string HotkeyHint => Localization["Settings_HotkeyHint"];
     public string FormatLabel => Localization["Settings_Format"];
@@ -98,6 +108,8 @@ public sealed partial class SettingsViewModel : ViewModelBase, IDisposable
     public string BrowseTooltip => Localization["Settings_BrowseTooltip"];
     public string FileNameTemplateLabel => Localization["Settings_FileNameTemplate"];
     public string PreviewBeforeSaveLabel => Localization["Settings_PreviewBeforeSave"];
+    public string AutoSwitchOnAltTabLabel => Localization["Settings_AutoSwitchOnAltTab"];
+    public string AutoSwitchOnAltTabHint => Localization["Settings_AutoSwitchOnAltTabHint"];
     public string MinimizeToTrayLabel => Localization["Settings_MinimizeToTray"];
     public string SoundEnabledLabel => Localization["Settings_SoundEnabled"];
     public string ImportLabel => Localization["Settings_Import"];
@@ -125,6 +137,8 @@ public sealed partial class SettingsViewModel : ViewModelBase, IDisposable
         SupportedCultures = new ObservableCollection<CultureInfo>(localization.SupportedCultures);
         _selectedCulture = FindCulture(settings.Current.Culture) ?? SupportedCultures[0];
 
+        RebuildThemeOptions();
+
         Hydrate();
         _settings.Changed += OnSettingsStoreChanged;
 
@@ -149,10 +163,12 @@ public sealed partial class SettingsViewModel : ViewModelBase, IDisposable
         if (e.PropertyName is "Item[]" or nameof(ILocalizationService.CurrentCulture))
         {
             OnPropertyChanged(nameof(Localization));
+            RebuildThemeOptions();
             // Plain-property refresh for every localized label the view binds to —
             // indexer-path bindings don't wake reliably on Localization-reference ping.
             OnPropertyChanged(nameof(TitleLabel));
             OnPropertyChanged(nameof(LanguageLabel));
+            OnPropertyChanged(nameof(ThemeLabel));
             OnPropertyChanged(nameof(HotkeyLabel));
             OnPropertyChanged(nameof(HotkeyHint));
             OnPropertyChanged(nameof(FormatLabel));
@@ -164,6 +180,8 @@ public sealed partial class SettingsViewModel : ViewModelBase, IDisposable
             OnPropertyChanged(nameof(BrowseTooltip));
             OnPropertyChanged(nameof(FileNameTemplateLabel));
             OnPropertyChanged(nameof(PreviewBeforeSaveLabel));
+            OnPropertyChanged(nameof(AutoSwitchOnAltTabLabel));
+            OnPropertyChanged(nameof(AutoSwitchOnAltTabHint));
             OnPropertyChanged(nameof(MinimizeToTrayLabel));
             OnPropertyChanged(nameof(SoundEnabledLabel));
             OnPropertyChanged(nameof(ImportLabel));
@@ -202,12 +220,14 @@ public sealed partial class SettingsViewModel : ViewModelBase, IDisposable
         {
             var current = _settings.Current;
             SelectedCulture = FindCulture(current.Culture) ?? SupportedCultures[0];
+            SelectedTheme = FindTheme(current.Theme) ?? SupportedThemes[0];
             DefaultFormat = current.Capture.DefaultFormat;
             JpegQuality = current.Capture.JpegQuality;
             WebpQuality = current.Capture.WebpQuality;
             OutputDirectory = current.Capture.OutputDirectory;
             FileNameTemplate = current.Capture.FileNameTemplate;
             PreviewBeforeSave = current.Capture.PreviewBeforeSave;
+            AutoSwitchOnAltTab = current.Capture.AutoSwitchOnAltTab;
             MinimizeToTray = current.UI.MinimizeToTray;
             SoundEnabled = current.UI.SoundEnabled;
             // Fall back to the first supported value if the persisted string doesn't match —
@@ -227,6 +247,44 @@ public sealed partial class SettingsViewModel : ViewModelBase, IDisposable
         if (_suppressPush || value is null) return;
         _settings.Update(s => s with { Culture = value.Name });
         Localization.SetCulture(value);
+        _logger.LogInformation("Language switched to {Code} ({Name}).", value.Name, value.NativeName);
+    }
+
+    partial void OnSelectedThemeChanged(ThemeOption? value)
+    {
+        if (_suppressPush || value is null) return;
+        _settings.Update(s => s with { Theme = value.Code });
+        _logger.LogInformation("Theme switched to {Theme}.", value.Code);
+    }
+
+    private ThemeOption? FindTheme(string code)
+    {
+        foreach (var t in SupportedThemes)
+        {
+            if (t.Code.Equals(code, StringComparison.OrdinalIgnoreCase))
+            {
+                return t;
+            }
+        }
+        return null;
+    }
+
+    private void RebuildThemeOptions()
+    {
+        var keepCode = SelectedTheme?.Code;
+        SupportedThemes.Clear();
+        SupportedThemes.Add(new ThemeOption("System", Localization["Settings_Theme_System"]));
+        SupportedThemes.Add(new ThemeOption("Light",  Localization["Settings_Theme_Light"]));
+        SupportedThemes.Add(new ThemeOption("Dark",   Localization["Settings_Theme_Dark"]));
+
+        // After a culture switch the bound SelectedTheme reference points at a stale
+        // option — rebind by Code so the ComboBox shows the right entry.
+        if (keepCode is not null)
+        {
+            _suppressPush = true;
+            try { SelectedTheme = FindTheme(keepCode) ?? SupportedThemes[0]; }
+            finally { _suppressPush = false; }
+        }
     }
 
     partial void OnDefaultFormatChanged(ImageFormat value)
@@ -265,6 +323,13 @@ public sealed partial class SettingsViewModel : ViewModelBase, IDisposable
         _settings.Update(s => s with { Capture = s.Capture with { PreviewBeforeSave = value } });
     }
 
+    partial void OnAutoSwitchOnAltTabChanged(bool value)
+    {
+        if (_suppressPush) return;
+        _settings.Update(s => s with { Capture = s.Capture with { AutoSwitchOnAltTab = value } });
+        _logger.LogInformation("Auto-switch on Alt-Tab {State}.", value ? "enabled" : "disabled");
+    }
+
     partial void OnMinimizeToTrayChanged(bool value)
     {
         if (_suppressPush) return;
@@ -275,6 +340,7 @@ public sealed partial class SettingsViewModel : ViewModelBase, IDisposable
     {
         if (_suppressPush) return;
         _settings.Update(s => s with { UI = s.UI with { SoundEnabled = value } });
+        _logger.LogInformation("Capture sound {State}.", value ? "enabled" : "disabled");
     }
 
     partial void OnSelectedLogLevelChanged(string value)
@@ -298,7 +364,7 @@ public sealed partial class SettingsViewModel : ViewModelBase, IDisposable
         }
         catch (Exception ex)
         {
-            _logger.LogWarning(ex, "Failed to open settings file.");
+            _logger.LogWarning(ex, "Couldn't open the settings file.");
             _toasts.ShowError(Localization["Toast_Error"], ex.Message);
         }
     }
@@ -318,7 +384,7 @@ public sealed partial class SettingsViewModel : ViewModelBase, IDisposable
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Settings export failed.");
+            _logger.LogError(ex, "Couldn't export settings.");
             _toasts.ShowError(Localization["Toast_Error"], ex.Message);
         }
     }
@@ -334,7 +400,7 @@ public sealed partial class SettingsViewModel : ViewModelBase, IDisposable
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Settings import failed.");
+            _logger.LogError(ex, "Couldn't import settings.");
             _toasts.ShowError(Localization["Toast_Error"], ex.Message);
         }
     }

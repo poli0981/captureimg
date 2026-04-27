@@ -73,6 +73,13 @@ public sealed record CaptureSettings
     /// lands on disk. When <c>false</c>, captures are saved immediately.
     /// </summary>
     public bool PreviewBeforeSave { get; init; } = false;
+
+    /// <summary>
+    /// When <c>true</c>, the dashboard's selected target follows the OS foreground window —
+    /// Alt-Tab to a target and CaptureImage re-selects it automatically. Off by default to
+    /// keep behaviour predictable for users who curate the list manually.
+    /// </summary>
+    public bool AutoSwitchOnAltTab { get; init; } = false;
 }
 
 /// <summary>UI / behaviour preferences not tied to a specific tab.</summary>

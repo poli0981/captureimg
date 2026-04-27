@@ -60,6 +60,10 @@
   <!-- Settings -->
   <data name="Settings_Title" xml:space="preserve"><value>Settings</value></data>
   <data name="Settings_Language" xml:space="preserve"><value>Language</value></data>
+  <data name="Settings_Theme" xml:space="preserve"><value>Theme</value></data>
+  <data name="Settings_Theme_System" xml:space="preserve"><value>System</value></data>
+  <data name="Settings_Theme_Light" xml:space="preserve"><value>Light</value></data>
+  <data name="Settings_Theme_Dark" xml:space="preserve"><value>Dark</value></data>
   <data name="Settings_Hotkey" xml:space="preserve"><value>Capture hotkey</value></data>
   <data name="Settings_HotkeyHint" xml:space="preserve"><value>Click Record and press a combination. Esc cancels. Reset restores Ctrl+Shift+F12.</value></data>
   <data name="Settings_HotkeyRecord" xml:space="preserve"><value>Record…</value></data>
@@ -81,6 +85,8 @@
   <data name="Settings_BrowseTooltip" xml:space="preserve"><value>Pick a folder instead of typing the path.</value></data>
   <data name="Settings_FileNameTemplate" xml:space="preserve"><value>File name template</value></data>
   <data name="Settings_PreviewBeforeSave" xml:space="preserve"><value>Preview each capture before saving</value></data>
+  <data name="Settings_AutoSwitchOnAltTab" xml:space="preserve"><value>Auto-switch target when I Alt-Tab</value></data>
+  <data name="Settings_AutoSwitchOnAltTabHint" xml:space="preserve"><value>The selected target follows the foreground window. Apps not in the target list keep your current selection.</value></data>
   <data name="Settings_MinimizeToTray" xml:space="preserve"><value>Close button minimizes to tray</value></data>
   <data name="Settings_SoundEnabled" xml:space="preserve"><value>Play capture sound</value></data>
   <data name="Settings_Import" xml:space="preserve"><value>Import…</value></data>
@@ -112,7 +118,7 @@
   <data name="About_AiSection" xml:space="preserve"><value>AI-assisted development</value></data>
   <data name="About_DisclaimersSection" xml:space="preserve"><value>Disclaimers</value></data>
   <data name="About_TranslationDisclaimer" xml:space="preserve"><value>Translations</value></data>
-  <data name="About_TranslationDisclaimerBody" xml:space="preserve"><value>Vietnamese and Arabic language packs are machine-assisted. Terminology may not match native conventions, and some technical words (hotkey, toast, frame, etc.) are kept in English on purpose. Native speakers willing to proofread are warmly invited to submit pull requests against the .resx files in src/CaptureImage.UI/Resources/Strings/.</value></data>
+  <data name="About_TranslationDisclaimerBody" xml:space="preserve"><value>The Vietnamese, Arabic, Japanese, Simplified Chinese, Korean, and Spanish language packs are machine-assisted. Terminology may not match native conventions, and some technical words (hotkey, toast, frame, etc.) are kept in English on purpose. Native speakers willing to proofread are warmly invited to submit pull requests against the .resx files in src/CaptureImage.UI/Resources/Strings/.</value></data>
   <data name="About_CaptureDisclaimer" xml:space="preserve"><value>Capture support</value></data>
   <data name="About_CaptureLimitationDisclaimerBody" xml:space="preserve"><value>CaptureImage can capture most windowed and borderless games via Windows.Graphics.Capture, but not every title works. DRM-protected surfaces, exclusive-fullscreen Direct3D 9 games, and titles with anti-cheat hooks may return black frames or refuse capture. A GDI PrintWindow fallback is attempted for legacy apps. See docs/legal/DISCLAIMER.md §2 for the full list.</value></data>
   <data name="About_LiabilityDisclaimer" xml:space="preserve"><value>No warranty</value></data>

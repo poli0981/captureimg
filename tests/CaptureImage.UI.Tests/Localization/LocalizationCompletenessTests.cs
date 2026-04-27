@@ -47,8 +47,10 @@ public class LocalizationCompletenessTests : IDisposable
         "Dashboard_Title", "Dashboard_Subtitle", "Dashboard_Refresh",
         "Dashboard_Arm", "Dashboard_Disarm", "Dashboard_StatusIdle",
         "Settings_Title", "Settings_Language", "Settings_Hotkey",
+        "Settings_Theme", "Settings_Theme_System", "Settings_Theme_Light", "Settings_Theme_Dark",
         "Settings_Format", "Settings_OutputFolder", "Settings_Browse",
-        "Settings_PreviewBeforeSave", "Settings_MinimizeToTray", "Settings_SoundEnabled",
+        "Settings_PreviewBeforeSave", "Settings_AutoSwitchOnAltTab", "Settings_AutoSwitchOnAltTabHint",
+        "Settings_MinimizeToTray", "Settings_SoundEnabled",
         "Settings_Logging", "Settings_LogLevel",
         "About_Title", "About_Tagline", "About_VersionLabel", "About_LicenseLabel",
         "Update_Title", "Update_Check", "Update_Download", "Update_Install",
@@ -65,7 +67,7 @@ public class LocalizationCompletenessTests : IDisposable
 
     public static IEnumerable<object[]> CultureMatrix()
     {
-        foreach (var culture in new[] { "en-US", "vi-VN", "ar-SA" })
+        foreach (var culture in new[] { "en-US", "vi-VN", "ar-SA", "ja-JP", "zh-Hans", "ko-KR", "es-ES" })
         {
             foreach (var key in LoadBearingKeys)
             {

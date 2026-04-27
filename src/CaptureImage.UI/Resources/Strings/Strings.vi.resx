@@ -60,6 +60,10 @@
   <!-- Settings -->
   <data name="Settings_Title" xml:space="preserve"><value>Cài đặt</value></data>
   <data name="Settings_Language" xml:space="preserve"><value>Ngôn ngữ</value></data>
+  <data name="Settings_Theme" xml:space="preserve"><value>Giao diện</value></data>
+  <data name="Settings_Theme_System" xml:space="preserve"><value>Theo hệ thống</value></data>
+  <data name="Settings_Theme_Light" xml:space="preserve"><value>Sáng</value></data>
+  <data name="Settings_Theme_Dark" xml:space="preserve"><value>Tối</value></data>
   <data name="Settings_Hotkey" xml:space="preserve"><value>Hotkey chụp</value></data>
   <data name="Settings_HotkeyHint" xml:space="preserve"><value>Nhấn Ghi rồi nhấn tổ hợp phím. Esc để huỷ. Đặt lại sẽ khôi phục Ctrl+Shift+F12.</value></data>
   <data name="Settings_HotkeyRecord" xml:space="preserve"><value>Ghi…</value></data>
@@ -81,6 +85,8 @@
   <data name="Settings_BrowseTooltip" xml:space="preserve"><value>Chọn thư mục thay vì phải gõ đường dẫn.</value></data>
   <data name="Settings_FileNameTemplate" xml:space="preserve"><value>Mẫu tên tệp</value></data>
   <data name="Settings_PreviewBeforeSave" xml:space="preserve"><value>Xem trước từng ảnh chụp trước khi lưu</value></data>
+  <data name="Settings_AutoSwitchOnAltTab" xml:space="preserve"><value>Tự động chuyển mục tiêu khi Alt-Tab</value></data>
+  <data name="Settings_AutoSwitchOnAltTabHint" xml:space="preserve"><value>Mục tiêu được chọn sẽ theo cửa sổ đang foreground. Các ứng dụng không có trong danh sách sẽ giữ nguyên lựa chọn hiện tại.</value></data>
   <data name="Settings_MinimizeToTray" xml:space="preserve"><value>Nút đóng sẽ thu nhỏ xuống tray</value></data>
   <data name="Settings_SoundEnabled" xml:space="preserve"><value>Phát âm thanh khi chụp</value></data>
   <data name="Settings_Import" xml:space="preserve"><value>Nhập…</value></data>
@@ -112,7 +118,7 @@
   <data name="About_AiSection" xml:space="preserve"><value>Phát triển có hỗ trợ AI</value></data>
   <data name="About_DisclaimersSection" xml:space="preserve"><value>Tuyên bố miễn trừ</value></data>
   <data name="About_TranslationDisclaimer" xml:space="preserve"><value>Bản dịch</value></data>
-  <data name="About_TranslationDisclaimerBody" xml:space="preserve"><value>Gói ngôn ngữ tiếng Việt và tiếng Ả Rập đang dùng bản dịch máy. Thuật ngữ có thể không khớp với quy ước bản ngữ, và một số từ kỹ thuật (hotkey, toast, frame, v.v.) được giữ tiếng Anh có chủ đích. Người bản ngữ sẵn lòng hiệu đính xin gửi pull request vào các tệp .resx trong src/CaptureImage.UI/Resources/Strings/.</value></data>
+  <data name="About_TranslationDisclaimerBody" xml:space="preserve"><value>Các gói ngôn ngữ tiếng Việt, tiếng Ả Rập, tiếng Nhật, tiếng Trung giản thể, tiếng Hàn và tiếng Tây Ban Nha đang dùng bản dịch máy. Thuật ngữ có thể không khớp với quy ước bản ngữ, và một số từ kỹ thuật (hotkey, toast, frame, v.v.) được giữ tiếng Anh có chủ đích. Người bản ngữ sẵn lòng hiệu đính xin gửi pull request vào các tệp .resx trong src/CaptureImage.UI/Resources/Strings/.</value></data>
   <data name="About_CaptureDisclaimer" xml:space="preserve"><value>Khả năng chụp</value></data>
   <data name="About_CaptureLimitationDisclaimerBody" xml:space="preserve"><value>CaptureImage có thể chụp hầu hết game cửa sổ và borderless qua Windows.Graphics.Capture, nhưng không phải game nào cũng hoạt động. Bề mặt có DRM, game Direct3D 9 exclusive-fullscreen, và game có hook anti-cheat có thể trả khung đen hoặc từ chối chụp. Cơ chế dự phòng GDI PrintWindow được thử cho ứng dụng cũ. Xem docs/legal/DISCLAIMER.md §2 để biết danh sách đầy đủ.</value></data>
   <data name="About_LiabilityDisclaimer" xml:space="preserve"><value>Không bảo hành</value></data>
