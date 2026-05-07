@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="xml:space" type="xsd:string" msdata:Ordinal="4" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+
+  <!-- Navigation -->
+  <data name="Nav_Dashboard" xml:space="preserve"><value>Панель</value></data>
+  <data name="Nav_Update" xml:space="preserve"><value>Обновление</value></data>
+  <data name="Nav_Settings" xml:space="preserve"><value>Настройки</value></data>
+  <data name="Nav_About" xml:space="preserve"><value>О программе</value></data>
+  <data name="Nav_LogViewer" xml:space="preserve"><value>Журнал</value></data>
+
+  <!-- Dashboard -->
+  <data name="Dashboard_Title" xml:space="preserve"><value>Панель</value></data>
+  <data name="Dashboard_Subtitle" xml:space="preserve"><value>Выберите цель и активируйте — нажмите горячую клавишу, чтобы сделать снимок.</value></data>
+  <data name="Dashboard_Refresh" xml:space="preserve"><value>Обновить</value></data>
+  <data name="Dashboard_Arm" xml:space="preserve"><value>Активировать</value></data>
+  <data name="Dashboard_Disarm" xml:space="preserve"><value>Деактивировать</value></data>
+  <data name="Dashboard_StatusIdle" xml:space="preserve"><value>Ожидание — выберите цель и активируйте, чтобы начать.</value></data>
+  <data name="Dashboard_StatusArmed" xml:space="preserve"><value>Активно: нажмите {0}, чтобы захватить {1}.</value></data>
+  <data name="Dashboard_StatusCapturing" xml:space="preserve"><value>Захват {0}…</value></data>
+  <data name="Dashboard_StatusDisarmed" xml:space="preserve"><value>Деактивировано.</value></data>
+  <data name="Dashboard_StatusSaved" xml:space="preserve"><value>Сохранено: {0} ({1}x{2}, {3} мс)</value></data>
+  <data name="Dashboard_StatusFailed" xml:space="preserve"><value>Ошибка захвата ({0}): {1}</value></data>
+  <data name="Dashboard_TargetsCount" xml:space="preserve"><value>Видимых целей: {0}</value></data>
+  <data name="Dashboard_Loading" xml:space="preserve"><value>Загрузка…</value></data>
+  <data name="Dashboard_EmptyState" xml:space="preserve"><value>Нет видимых окон для захвата — запустите игру или приложение и нажмите Обновить.</value></data>
+  <data name="Dashboard_LogToggle" xml:space="preserve"><value>Открыть/закрыть панель журнала в реальном времени</value></data>
+  <data name="Dashboard_SteamBadge" xml:space="preserve"><value>STEAM</value></data>
+  <data name="Dashboard_SteamBadgeTooltip" xml:space="preserve"><value>Игра Steam: {0} (AppId {1}). Скриншоты по F12 доступны через Steam Overlay. Игры с защитой от читов могут блокировать внешний захват.</value></data>
+
+  <!-- Settings -->
+  <data name="Settings_Title" xml:space="preserve"><value>Настройки</value></data>
+  <data name="Settings_Language" xml:space="preserve"><value>Язык</value></data>
+  <data name="Settings_Theme" xml:space="preserve"><value>Тема</value></data>
+  <data name="Settings_Theme_System" xml:space="preserve"><value>Системная</value></data>
+  <data name="Settings_Theme_Light" xml:space="preserve"><value>Светлая</value></data>
+  <data name="Settings_Theme_Dark" xml:space="preserve"><value>Тёмная</value></data>
+  <data name="Settings_Hotkey" xml:space="preserve"><value>Горячая клавиша захвата</value></data>
+  <data name="Settings_HotkeyHint" xml:space="preserve"><value>Нажмите Записать и введите комбинацию. Esc отменяет. Сброс возвращает Ctrl+Shift+F12.</value></data>
+  <data name="Settings_HotkeyRecord" xml:space="preserve"><value>Записать…</value></data>
+  <data name="Settings_HotkeyCancel" xml:space="preserve"><value>Отмена</value></data>
+  <data name="Settings_HotkeyReset" xml:space="preserve"><value>Сброс</value></data>
+  <data name="Settings_HotkeyRecorderPrompt" xml:space="preserve"><value>Нажмите комбинацию клавиш (Esc для отмены)…</value></data>
+  <data name="Settings_HotkeyErrorNoPrimary" xml:space="preserve"><value>Выберите основную клавишу (например букву или функциональную клавишу).</value></data>
+  <data name="Settings_HotkeyErrorModifierOnly" xml:space="preserve"><value>Одной модификаторной клавиши недостаточно — добавьте букву или F-клавишу.</value></data>
+  <data name="Settings_HotkeyErrorNeedsModifier" xml:space="preserve"><value>Обычным буквам и цифрам нужен хотя бы один модификатор (Ctrl/Alt/Shift/Win).</value></data>
+  <data name="Settings_HotkeyErrorReserved" xml:space="preserve"><value>Эта комбинация зарезервирована Windows и не может быть захвачена.</value></data>
+  <data name="Settings_HotkeyConflictWarning" xml:space="preserve"><value>Другое приложение, возможно, уже использует эту комбинацию — она может не сработать, пока то приложение запущено.</value></data>
+  <data name="Settings_Format" xml:space="preserve"><value>Формат по умолчанию</value></data>
+  <data name="Settings_JpegQuality" xml:space="preserve"><value>Качество JPEG</value></data>
+  <data name="Settings_WebpQuality" xml:space="preserve"><value>Качество WebP</value></data>
+  <data name="Settings_OutputFolder" xml:space="preserve"><value>Папка вывода</value></data>
+  <data name="Settings_OutputFolderDefault" xml:space="preserve"><value>(по умолчанию: Изображения\CaptureImage)</value></data>
+  <data name="Settings_Browse" xml:space="preserve"><value>Обзор…</value></data>
+  <data name="Settings_BrowseTitle" xml:space="preserve"><value>Выберите папку вывода</value></data>
+  <data name="Settings_BrowseTooltip" xml:space="preserve"><value>Выберите папку вместо ввода пути вручную.</value></data>
+  <data name="Settings_FileNameTemplate" xml:space="preserve"><value>Шаблон имени файла</value></data>
+  <data name="Settings_PreviewBeforeSave" xml:space="preserve"><value>Показывать каждый снимок перед сохранением</value></data>
+  <data name="Settings_AutoSwitchOnAltTab" xml:space="preserve"><value>Автоматически менять цель при Alt-Tab</value></data>
+  <data name="Settings_AutoSwitchOnAltTabHint" xml:space="preserve"><value>Выбранная цель следует за активным окном. Приложения вне списка целей сохраняют текущий выбор.</value></data>
+  <data name="Settings_MinimizeToTray" xml:space="preserve"><value>Кнопка закрытия сворачивает в трей</value></data>
+  <data name="Settings_SoundEnabled" xml:space="preserve"><value>Воспроизводить звук захвата</value></data>
+  <data name="Settings_Import" xml:space="preserve"><value>Импорт…</value></data>
+  <data name="Settings_Export" xml:space="preserve"><value>Экспорт…</value></data>
+  <data name="Settings_ImportTitle" xml:space="preserve"><value>Импорт настроек</value></data>
+  <data name="Settings_ExportTitle" xml:space="preserve"><value>Экспорт настроек</value></data>
+  <data name="Settings_OpenFile" xml:space="preserve"><value>Открыть файл настроек</value></data>
+  <data name="Settings_Logging" xml:space="preserve"><value>Журналирование</value></data>
+  <data name="Settings_LogLevel" xml:space="preserve"><value>Минимальный уровень журнала</value></data>
+  <data name="Settings_LogLevelHint" xml:space="preserve"><value>Фильтрует файл журнала и панель просмотра. Debug — для диагностики, Information — для обычной работы, Warning или Error — чтобы свести шум к минимуму.</value></data>
+
+  <!-- Update -->
+  <data name="Update_Title" xml:space="preserve"><value>Обновление</value></data>
+  <data name="Update_Check" xml:space="preserve"><value>Проверить обновления</value></data>
+  <data name="Update_Download" xml:space="preserve"><value>Скачать</value></data>
+  <data name="Update_Install" xml:space="preserve"><value>Установить и перезапустить</value></data>
+  <data name="Update_Status" xml:space="preserve"><value>Состояние</value></data>
+  <data name="Update_Log" xml:space="preserve"><value>Журнал</value></data>
+  <data name="Update_NewVersion" xml:space="preserve"><value>Новая версия:</value></data>
+
+  <!-- About -->
+  <data name="About_Title" xml:space="preserve"><value>О программе CaptureImage</value></data>
+  <data name="About_Tagline" xml:space="preserve"><value>Лёгкая утилита захвата экрана Windows для игр без встроенной клавиши скриншота.</value></data>
+  <data name="About_AppLabel" xml:space="preserve"><value>Приложение</value></data>
+  <data name="About_VersionLabel" xml:space="preserve"><value>Версия</value></data>
+  <data name="About_LicenseLabel" xml:space="preserve"><value>Лицензия</value></data>
+  <data name="About_DeveloperLabel" xml:space="preserve"><value>Разработчик</value></data>
+  <data name="About_RepositoryLabel" xml:space="preserve"><value>Репозиторий</value></data>
+  <data name="About_AiSection" xml:space="preserve"><value>Разработка с помощью ИИ</value></data>
+  <data name="About_DisclaimersSection" xml:space="preserve"><value>Примечания</value></data>
+  <data name="About_TranslationDisclaimer" xml:space="preserve"><value>Переводы</value></data>
+  <data name="About_TranslationDisclaimerBody" xml:space="preserve"><value>Языковые пакеты вьетнамский, арабский, японский, упрощённый китайский, корейский, испанский, французский, немецкий, бразильский португальский и русский подготовлены при помощи машинного перевода. Терминология может отличаться от привычной носителям, а некоторые технические слова (hotkey, toast, frame и т.п.) намеренно оставлены на английском. Носители языка, готовые проверить переводы, приглашаются открыть pull request к файлам .resx в src/CaptureImage.UI/Resources/Strings/.</value></data>
+  <data name="About_CaptureDisclaimer" xml:space="preserve"><value>Поддержка захвата</value></data>
+  <data name="About_CaptureLimitationDisclaimerBody" xml:space="preserve"><value>CaptureImage может захватывать большинство оконных и безрамочных игр через Windows.Graphics.Capture, но не каждый тайтл. Поверхности с DRM, эксклюзивный полноэкранный Direct3D 9 и игры с анти-чит хуками могут возвращать чёрные кадры или отказывать в захвате. Для устаревших приложений используется резервный механизм GDI PrintWindow. Полный список — docs/legal/DISCLAIMER.md §2.</value></data>
+  <data name="About_LiabilityDisclaimer" xml:space="preserve"><value>Без гарантии</value></data>
+  <data name="About_LiabilityDisclaimerBody" xml:space="preserve"><value>CaptureImage распространяется по GPL-3.0-or-later КАК ЕСТЬ, без каких-либо гарантий. Авторы не несут ответственности за потерянные скриншоты, сбои игр, санкции анти-читов или потерю данных. Используйте на свой риск. Полный текст — docs/legal/DISCLAIMER.md.</value></data>
+  <data name="About_LegalSection" xml:space="preserve"><value>Юридические документы</value></data>
+  <data name="About_ThirdPartySection" xml:space="preserve"><value>Сторонние компоненты</value></data>
+  <data name="About_ThirdPartyHint" xml:space="preserve"><value>Нажмите «Уведомления о сторонних компонентах» выше, чтобы увидеть полный список с исходными ссылками.</value></data>
+  <data name="About_OpenDisclaimer" xml:space="preserve"><value>Отказ от ответственности</value></data>
+  <data name="About_OpenPrivacy" xml:space="preserve"><value>Конфиденциальность</value></data>
+  <data name="About_OpenTerms" xml:space="preserve"><value>Условия</value></data>
+  <data name="About_OpenLicense" xml:space="preserve"><value>Лицензия (GPL-3.0)</value></data>
+  <data name="About_OpenThirdParty" xml:space="preserve"><value>Уведомления о сторонних компонентах</value></data>
+  <data name="About_OpenContributors" xml:space="preserve"><value>Соавторы</value></data>
+
+  <!-- Log viewer -->
+  <data name="Log_Title" xml:space="preserve"><value>Журнал в реальном времени</value></data>
+  <data name="Log_Pause" xml:space="preserve"><value>Пауза</value></data>
+  <data name="Log_Resume" xml:space="preserve"><value>Продолжить</value></data>
+  <data name="Log_Clear" xml:space="preserve"><value>Очистить</value></data>
+  <data name="Log_EventsCount" xml:space="preserve"><value>событий: {0}</value></data>
+  <data name="Log_EmptyState" xml:space="preserve"><value>Записей журнала пока нет. Здесь появятся события движка захвата в реальном времени.</value></data>
+  <data name="Log_Filter" xml:space="preserve"><value>Мин. уровень:</value></data>
+  <data name="Log_RevealFolder" xml:space="preserve"><value>Открыть папку</value></data>
+
+  <!-- Preview -->
+  <data name="Preview_Title" xml:space="preserve"><value>Предпросмотр</value></data>
+  <data name="Preview_Prompt" xml:space="preserve"><value>Сохранить этот снимок?</value></data>
+  <data name="Preview_Save" xml:space="preserve"><value>Сохранить</value></data>
+  <data name="Preview_Discard" xml:space="preserve"><value>Отбросить</value></data>
+
+  <!-- Toasts -->
+  <data name="Toast_CaptureSaved" xml:space="preserve"><value>Снимок сохранён</value></data>
+  <data name="Toast_CaptureFailed" xml:space="preserve"><value>Ошибка захвата</value></data>
+  <data name="Toast_SettingsImported" xml:space="preserve"><value>Настройки импортированы</value></data>
+  <data name="Toast_SettingsExported" xml:space="preserve"><value>Настройки экспортированы</value></data>
+  <data name="Toast_Error" xml:space="preserve"><value>Ошибка</value></data>
+
+  <!-- Tray menu -->
+  <data name="Tray_ShowWindow" xml:space="preserve"><value>Показать CaptureImage</value></data>
+  <data name="Tray_OpenFolder" xml:space="preserve"><value>Открыть папку снимков</value></data>
+  <data name="Tray_Exit" xml:space="preserve"><value>Выход</value></data>
+
+</root>

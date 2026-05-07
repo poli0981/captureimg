@@ -118,7 +118,7 @@
   <data name="About_AiSection" xml:space="preserve"><value>AI 支援開発</value></data>
   <data name="About_DisclaimersSection" xml:space="preserve"><value>免責事項</value></data>
   <data name="About_TranslationDisclaimer" xml:space="preserve"><value>翻訳について</value></data>
-  <data name="About_TranslationDisclaimerBody" xml:space="preserve"><value>日本語、中国語(簡体)、韓国語、スペイン語の言語パックは機械支援で翻訳されています。用語が母語の慣習と一致しない場合があり、一部の技術用語(hotkey、toast、frame など)はあえて英語のままにしています。校正に協力してくださるネイティブスピーカーの方は、src/CaptureImage.UI/Resources/Strings/ の .resx ファイルへの Pull Request を歓迎します。</value></data>
+  <data name="About_TranslationDisclaimerBody" xml:space="preserve"><value>ベトナム語、アラビア語、日本語、中国語(簡体)、韓国語、スペイン語、フランス語、ドイツ語、ポルトガル語(ブラジル)、ロシア語の言語パックは機械支援で翻訳されています。用語が母語の慣習と一致しない場合があり、一部の技術用語(hotkey、toast、frame など)はあえて英語のままにしています。校正に協力してくださるネイティブスピーカーの方は、src/CaptureImage.UI/Resources/Strings/ の .resx ファイルへの Pull Request を歓迎します。</value></data>
   <data name="About_CaptureDisclaimer" xml:space="preserve"><value>キャプチャ対応</value></data>
   <data name="About_CaptureLimitationDisclaimerBody" xml:space="preserve"><value>CaptureImage は Windows.Graphics.Capture により多くのウィンドウ・ボーダーレスゲームをキャプチャできますが、すべてのタイトルで動作するわけではありません。DRM 保護されたサーフェス、排他的フルスクリーンの Direct3D 9 ゲーム、アンチチートフックを持つタイトルは、黒フレームを返したりキャプチャを拒否することがあります。レガシーアプリには GDI PrintWindow フォールバックを試みます。完全な一覧は docs/legal/DISCLAIMER.md §2 を参照してください。</value></data>
   <data name="About_LiabilityDisclaimer" xml:space="preserve"><value>無保証</value></data>

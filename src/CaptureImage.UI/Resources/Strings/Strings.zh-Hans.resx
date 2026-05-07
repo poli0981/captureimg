@@ -118,7 +118,7 @@
   <data name="About_AiSection" xml:space="preserve"><value>AI 辅助开发</value></data>
   <data name="About_DisclaimersSection" xml:space="preserve"><value>免责声明</value></data>
   <data name="About_TranslationDisclaimer" xml:space="preserve"><value>翻译</value></data>
-  <data name="About_TranslationDisclaimerBody" xml:space="preserve"><value>日语、简体中文、韩语和西班牙语语言包采用机器辅助翻译。术语可能与母语习惯不一致,部分技术术语(hotkey、toast、frame 等)有意保留为英文。欢迎母语为相关语言的志愿者校对,可通过对 src/CaptureImage.UI/Resources/Strings/ 下的 .resx 文件提交 Pull Request。</value></data>
+  <data name="About_TranslationDisclaimerBody" xml:space="preserve"><value>越南语、阿拉伯语、日语、简体中文、韩语、西班牙语、法语、德语、巴西葡萄牙语和俄语语言包采用机器辅助翻译。术语可能与母语习惯不一致,部分技术术语(hotkey、toast、frame 等)有意保留为英文。欢迎母语为相关语言的志愿者校对,可通过对 src/CaptureImage.UI/Resources/Strings/ 下的 .resx 文件提交 Pull Request。</value></data>
   <data name="About_CaptureDisclaimer" xml:space="preserve"><value>截图支持</value></data>
   <data name="About_CaptureLimitationDisclaimerBody" xml:space="preserve"><value>CaptureImage 通过 Windows.Graphics.Capture 可截取大多数窗口化和无边框游戏,但并非所有游戏都受支持。受 DRM 保护的画面、独占全屏 Direct3D 9 游戏以及带反作弊钩子的游戏可能会返回黑屏或拒绝截图。对于旧应用会尝试 GDI PrintWindow 回退。完整列表请参阅 docs/legal/DISCLAIMER.md §2。</value></data>
   <data name="About_LiabilityDisclaimer" xml:space="preserve"><value>无担保</value></data>
