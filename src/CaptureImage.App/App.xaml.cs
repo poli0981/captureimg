@@ -1,3 +1,4 @@
+using CaptureImage.App.SingleInstance;
 using CaptureImage.Core.Abstractions;
 using CaptureImage.UI.Services;
 using CaptureImage.UI.Views;
@@ -23,6 +24,7 @@ public partial class App : Application
     public static IServiceProvider? Services { get; set; }
 
     private Window? _window;
+    private ActivationListener? _activationListener;
 
     public App()
     {
@@ -60,6 +62,15 @@ public partial class App : Application
         // H.NotifyIcon.WindowsAppSDK implementation.
         var tray = services.GetRequiredService<ITrayIconHost>();
         tray.Initialize(_window);
+
+        // Listen for ACTIVATE messages from secondary launches so a double-click on
+        // the shortcut restores this instance instead of orphaning a new one. The
+        // listener owns its own background task; disposed via the IServiceProvider
+        // chain at shutdown (registered just below).
+        _activationListener = ActivationListener.Start(
+            _window,
+            services.GetRequiredService<IUIThreadDispatcher>());
+        _window.Closed += (_, _) => _activationListener?.Dispose();
     }
 
     private static void OnUnhandledException(object sender, Microsoft.UI.Xaml.UnhandledExceptionEventArgs e)

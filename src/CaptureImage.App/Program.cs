@@ -1,3 +1,4 @@
+using CaptureImage.App.SingleInstance;
 using CaptureImage.Core.Abstractions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Dispatching;
@@ -23,6 +24,17 @@ internal static class Program
     public static int Main(string[] args)
     {
         VelopackApp.Build().Run();
+
+        // Single-instance guard runs AFTER Velopack hooks so installer/uninstaller
+        // launches (--squirrel-*) aren't blocked. If another instance owns the
+        // mutex, we ping it via named pipe (ActivationListener restores its
+        // window) and exit immediately without bringing up our own UI.
+        if (!SingleInstanceGuard.TryAcquire(out var instanceReleaser))
+        {
+            return 0;
+        }
+
+        using var _instanceReleaser = instanceReleaser;
 
         var (inMemorySink, loggingLevelSwitch) = LoggingSetup.Initialize();
 
