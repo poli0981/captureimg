@@ -118,7 +118,7 @@
   <data name="About_AiSection" xml:space="preserve"><value>AI 辅助开发</value></data>
   <data name="About_DisclaimersSection" xml:space="preserve"><value>免责声明</value></data>
   <data name="About_TranslationDisclaimer" xml:space="preserve"><value>翻译</value></data>
-  <data name="About_TranslationDisclaimerBody" xml:space="preserve"><value>日语、简体中文、韩语和西班牙语语言包采用机器辅助翻译。术语可能与母语习惯不一致,部分技术术语(hotkey、toast、frame 等)有意保留为英文。欢迎母语为相关语言的志愿者校对,可通过对 src/CaptureImage.UI/Resources/Strings/ 下的 .resx 文件提交 Pull Request。</value></data>
+  <data name="About_TranslationDisclaimerBody" xml:space="preserve"><value>越南语、阿拉伯语、日语、简体中文、韩语、西班牙语、法语、德语、巴西葡萄牙语和俄语语言包采用机器辅助翻译。术语可能与母语习惯不一致,部分技术术语(hotkey、toast、frame 等)有意保留为英文。欢迎母语为相关语言的志愿者校对,可通过对 src/CaptureImage.UI/Resources/Strings/ 下的 .resx 文件提交 Pull Request。</value></data>
   <data name="About_CaptureDisclaimer" xml:space="preserve"><value>截图支持</value></data>
   <data name="About_CaptureLimitationDisclaimerBody" xml:space="preserve"><value>CaptureImage 通过 Windows.Graphics.Capture 可截取大多数窗口化和无边框游戏,但并非所有游戏都受支持。受 DRM 保护的画面、独占全屏 Direct3D 9 游戏以及带反作弊钩子的游戏可能会返回黑屏或拒绝截图。对于旧应用会尝试 GDI PrintWindow 回退。完整列表请参阅 docs/legal/DISCLAIMER.md §2。</value></data>
   <data name="About_LiabilityDisclaimer" xml:space="preserve"><value>无担保</value></data>
@@ -160,5 +160,37 @@
   <data name="Tray_ShowWindow" xml:space="preserve"><value>显示 CaptureImage</value></data>
   <data name="Tray_OpenFolder" xml:space="preserve"><value>打开截图文件夹</value></data>
   <data name="Tray_Exit" xml:space="preserve"><value>退出</value></data>
+
+  <!-- v1.5 quick wins -->
+  <data name="Settings_Countdown" xml:space="preserve"><value>拍摄倒计时</value></data>
+  <data name="Settings_CountdownOff" xml:space="preserve"><value>关闭(无延迟)</value></data>
+  <data name="Settings_Countdown3s" xml:space="preserve"><value>3 秒</value></data>
+  <data name="Settings_Countdown5s" xml:space="preserve"><value>5 秒</value></data>
+  <data name="Settings_Countdown10s" xml:space="preserve"><value>10 秒</value></data>
+  <data name="Settings_Clipboard" xml:space="preserve"><value>剪贴板模式</value></data>
+  <data name="Settings_ClipboardNone" xml:space="preserve"><value>关闭(仅文件)</value></data>
+  <data name="Settings_ClipboardCopy" xml:space="preserve"><value>仅复制(不保存文件)</value></data>
+  <data name="Settings_ClipboardCopySave" xml:space="preserve"><value>复制 + 保存文件</value></data>
+  <data name="Settings_OpenFolderAfterSave" xml:space="preserve"><value>保存后打开输出文件夹</value></data>
+  <data name="Toast_Countdown" xml:space="preserve"><value>{0} 秒后拍摄…</value></data>
+  <data name="Toast_ClipboardCopied" xml:space="preserve"><value>已复制到剪贴板</value></data>
+
+  <!-- v1.5 pinned thumbnail -->
+  <data name="Settings_AutoPinAfterCapture" xml:space="preserve"><value>每次拍摄后固定一个浮动缩略图</value></data>
+  <data name="PinnedWindow_Open" xml:space="preserve"><value>在资源管理器中显示</value></data>
+  <data name="PinnedWindow_Close" xml:space="preserve"><value>关闭</value></data>
+
+  <!-- v1.5 OCR -->
+  <data name="Preview_ExtractText" xml:space="preserve"><value>提取文字 (OCR)</value></data>
+  <data name="Toast_OcrSuccess" xml:space="preserve"><value>已复制 {0} 个词</value></data>
+  <data name="Toast_OcrEmpty" xml:space="preserve"><value>图像中未发现文字</value></data>
+  <data name="Toast_OcrUnavailable" xml:space="preserve"><value>该语言的 OCR 引擎不可用</value></data>
+
+  <!-- v1.5 region capture -->
+  <data name="Settings_CaptureMode" xml:space="preserve"><value>拍摄模式</value></data>
+  <data name="Settings_CaptureModeWindow" xml:space="preserve"><value>单个窗口</value></data>
+  <data name="Settings_CaptureModeRegion" xml:space="preserve"><value>区域(拖动选择)</value></data>
+  <data name="Region_TargetName" xml:space="preserve"><value>区域</value></data>
+  <data name="Region_DragHint" xml:space="preserve"><value>拖动一个矩形。按 Esc 取消。</value></data>
 
 </root>

@@ -5,6 +5,7 @@ using CaptureImage.Infrastructure.Capture;
 using CaptureImage.Infrastructure.Hotkeys;
 using CaptureImage.Infrastructure.Imaging;
 using CaptureImage.Infrastructure.Logging;
+using CaptureImage.Infrastructure.Ocr;
 using CaptureImage.Infrastructure.Processes;
 using CaptureImage.Infrastructure.Settings;
 using CaptureImage.Infrastructure.Steam;
@@ -98,6 +99,10 @@ internal static class CompositionRoot
         services.AddSingleton<IToastService, ToastService>();
         services.AddSingleton<IPreviewPresenter, PreviewPresenter>();
         services.AddSingleton<ITrayIconHost, TrayIconHost>();
+        services.AddSingleton<IClipboardService, WinAppSDKClipboardService>();
+        services.AddSingleton<IPinnedThumbnailHost, PinnedThumbnailHost>();
+        services.AddSingleton<IOcrService, WindowsOcrService>();
+        services.AddSingleton<IRegionCaptureService, WindowsRegionCaptureService>();
 
         // --- Navigation --------------------------------------------------------
         services.AddSingleton<INavigationService, NavigationService>();

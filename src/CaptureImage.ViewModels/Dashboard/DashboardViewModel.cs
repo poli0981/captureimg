@@ -28,6 +28,9 @@ public sealed partial class DashboardViewModel : ViewModelBase, IDisposable
     private readonly IPreviewPresenter _previewPresenter;
     private readonly ISettingsStore _settings;
     private readonly IToastService _toasts;
+    private readonly IClipboardService _clipboard;
+    private readonly IPinnedThumbnailHost _pinnedThumbnail;
+    private readonly IRegionCaptureService _regionCapture;
     private readonly IUIThreadDispatcher _dispatcher;
     private readonly ILogger<DashboardViewModel> _logger;
     private readonly CaptureStateMachine _stateMachine;
@@ -83,6 +86,9 @@ public sealed partial class DashboardViewModel : ViewModelBase, IDisposable
         IPreviewPresenter previewPresenter,
         ISettingsStore settings,
         IToastService toasts,
+        IClipboardService clipboard,
+        IPinnedThumbnailHost pinnedThumbnail,
+        IRegionCaptureService regionCapture,
         IUIThreadDispatcher dispatcher,
         ILocalizationService localization,
         ILogger<DashboardViewModel> logger)
@@ -97,6 +103,9 @@ public sealed partial class DashboardViewModel : ViewModelBase, IDisposable
         _previewPresenter = previewPresenter;
         _settings = settings;
         _toasts = toasts;
+        _clipboard = clipboard;
+        _pinnedThumbnail = pinnedThumbnail;
+        _regionCapture = regionCapture;
         _dispatcher = dispatcher;
         Localization = localization;
         _logger = logger;
@@ -327,17 +336,63 @@ public sealed partial class DashboardViewModel : ViewModelBase, IDisposable
 
     private async Task CaptureOnceAsync()
     {
-        if (_disposed || SelectedTarget is null) return;
+        if (_disposed) return;
         if (_stateMachine.CurrentState != CaptureState.Armed) return;
 
-        var target = SelectedTarget.Target;
         var settings = _settings.Current;
+        var isRegionMode = string.Equals(settings.Capture.Mode, "Region", StringComparison.OrdinalIgnoreCase);
+
+        // Window mode needs a selected target; Region mode does not.
+        if (!isRegionMode && SelectedTarget is null) return;
+        var target = isRegionMode
+            ? new GameTarget(
+                ProcessId: 0u,
+                WindowHandle: nint.Zero,
+                ProcessName: "Region",
+                WindowTitle: Localization["Region_TargetName"],
+                ExecutablePath: string.Empty,
+                IconBytes: null,
+                SteamInfo: null)
+            : SelectedTarget!.Target;
+
+        // Countdown gate — done BEFORE firing HotkeyPressed so the state machine still
+        // shows Armed during the wait. Only fires when the user opted in (>0 seconds).
+        var countdown = NormalizeCountdown(settings.Capture.CountdownSeconds);
+        if (countdown > 0)
+        {
+            for (var remaining = countdown; remaining > 0; remaining--)
+            {
+                if (_disposed) return;
+                StatusMessage = string.Format(
+                    Localization["Toast_Countdown"], remaining);
+                try
+                {
+                    await Task.Delay(TimeSpan.FromSeconds(1)).ConfigureAwait(true);
+                }
+                catch (TaskCanceledException) { return; }
+            }
+        }
+
         _stateMachine.Fire(CaptureTrigger.HotkeyPressed);
 
         CapturedFrame? frame;
         try
         {
-            frame = await _captureEngine.CaptureAsync(target).ConfigureAwait(true);
+            if (isRegionMode)
+            {
+                frame = await _regionCapture.SelectAndCaptureAsync().ConfigureAwait(true);
+                if (frame is null)
+                {
+                    // User cancelled the region selection (Esc / micro-drag) — return to
+                    // Armed state without firing FrameCaptured.
+                    _stateMachine.Fire(CaptureTrigger.PreviewRejected);
+                    return;
+                }
+            }
+            else
+            {
+                frame = await _captureEngine.CaptureAsync(target).ConfigureAwait(true);
+            }
         }
         catch (Exception ex)
         {
@@ -361,33 +416,94 @@ public sealed partial class DashboardViewModel : ViewModelBase, IDisposable
             _stateMachine.Fire(CaptureTrigger.PreviewAccepted);
         }
 
+        var clipboardMode = settings.Capture.ClipboardMode;
+        var copyToClipboard = string.Equals(clipboardMode, "Copy", StringComparison.OrdinalIgnoreCase)
+            || string.Equals(clipboardMode, "CopyAndSave", StringComparison.OrdinalIgnoreCase);
+        var saveToFile = !string.Equals(clipboardMode, "Copy", StringComparison.OrdinalIgnoreCase);
+        var autoPin = settings.UI.AutoPinAfterCapture;
+        // PNG bytes are needed if either clipboard or auto-pin is on. Encode lazily to
+        // avoid re-encoding when the user wants neither.
+        byte[]? cachedPngBytes = null;
+        async Task<byte[]?> EnsurePngAsync()
+            => cachedPngBytes ??= await EncodePngBytesAsync(frame).ConfigureAwait(true);
+
         // Saving ------------------------------------------------------------
         try
         {
-            var result = await SaveAsync(frame, target, settings).ConfigureAwait(true);
-            switch (result)
+            CaptureResult.Success? successResult = null;
+            CaptureResult.Failure? failureResult = null;
+
+            if (saveToFile)
             {
-                case CaptureResult.Success ok:
-                    LastCapturePath = ok.FilePath;
-                    _stateMachine.Fire(CaptureTrigger.Saved);
-                    StatusMessage = string.Format(
-                        Localization["Dashboard_StatusSaved"],
-                        Path.GetFileName(ok.FilePath),
-                        ok.Width, ok.Height, (int)ok.Duration.TotalMilliseconds);
-                    _toasts.ShowSuccess(
-                        Localization["Toast_CaptureSaved"],
-                        Path.GetFileName(ok.FilePath));
-                    PlayCaptureSoundIfEnabled();
-                    break;
-                case CaptureResult.Failure fail:
-                    _stateMachine.Fire(CaptureTrigger.ErrorOccurred);
-                    StatusMessage = string.Format(
-                        Localization["Dashboard_StatusFailed"],
-                        fail.ErrorCode, fail.DeveloperMessage);
-                    _toasts.ShowError(
-                        Localization["Toast_CaptureFailed"],
-                        fail.DeveloperMessage);
-                    break;
+                var result = await SaveAsync(frame, target, settings).ConfigureAwait(true);
+                switch (result)
+                {
+                    case CaptureResult.Success ok:
+                        successResult = ok;
+                        LastCapturePath = ok.FilePath;
+                        StatusMessage = string.Format(
+                            Localization["Dashboard_StatusSaved"],
+                            Path.GetFileName(ok.FilePath),
+                            ok.Width, ok.Height, (int)ok.Duration.TotalMilliseconds);
+                        _toasts.ShowSuccess(
+                            Localization["Toast_CaptureSaved"],
+                            Path.GetFileName(ok.FilePath));
+                        break;
+                    case CaptureResult.Failure fail:
+                        failureResult = fail;
+                        break;
+                }
+            }
+
+            if (copyToClipboard && failureResult is null)
+            {
+                var pngBytes = await EnsurePngAsync().ConfigureAwait(true);
+                if (pngBytes is not null)
+                {
+                    var copied = await _clipboard.CopyImageAsync(pngBytes).ConfigureAwait(true);
+                    if (copied)
+                    {
+                        _toasts.ShowInfo(
+                            Localization["Toast_ClipboardCopied"],
+                            string.Empty);
+                        if (!saveToFile)
+                        {
+                            // Copy-only mode — synthesise a status update mirroring StatusSaved
+                            // so the dashboard tells the user something happened.
+                            StatusMessage = Localization["Toast_ClipboardCopied"];
+                        }
+                    }
+                }
+            }
+
+            if (failureResult is not null)
+            {
+                _stateMachine.Fire(CaptureTrigger.ErrorOccurred);
+                StatusMessage = string.Format(
+                    Localization["Dashboard_StatusFailed"],
+                    failureResult.ErrorCode, failureResult.DeveloperMessage);
+                _toasts.ShowError(
+                    Localization["Toast_CaptureFailed"],
+                    failureResult.DeveloperMessage);
+            }
+            else
+            {
+                _stateMachine.Fire(CaptureTrigger.Saved);
+                PlayCaptureSoundIfEnabled();
+
+                if (settings.UI.OpenFolderAfterSave && successResult is not null)
+                {
+                    TryOpenContainingFolder(successResult.FilePath);
+                }
+
+                if (autoPin)
+                {
+                    var pngBytes = await EnsurePngAsync().ConfigureAwait(true);
+                    if (pngBytes is not null)
+                    {
+                        _pinnedThumbnail.Show(pngBytes, successResult?.FilePath, target.DisplayName);
+                    }
+                }
             }
         }
         catch (Exception ex)
@@ -395,6 +511,50 @@ public sealed partial class DashboardViewModel : ViewModelBase, IDisposable
             _logger.LogError(ex, "Picture capture failed while saving: {Reason}", ex.Message);
             _stateMachine.Fire(CaptureTrigger.ErrorOccurred);
             _toasts.ShowError(Localization["Toast_CaptureFailed"], ex.Message);
+        }
+    }
+
+    /// <summary>Snap the persisted countdown to one of the supported tiers (0/3/5/10).</summary>
+    private static int NormalizeCountdown(int raw) => raw switch
+    {
+        3 or 5 or 10 => raw,
+        _ => 0,
+    };
+
+    private async Task<byte[]?> EncodePngBytesAsync(CapturedFrame frame)
+    {
+        var encoder = ResolveEncoder(ImageFormat.Png);
+        if (encoder is null)
+        {
+            _logger.LogWarning("No PNG encoder registered; clipboard copy skipped.");
+            return null;
+        }
+        try
+        {
+            using var ms = new MemoryStream();
+            await encoder.EncodeAsync(frame, ImageFormat.Png, jpegQuality: 100, webpQuality: 100, ms)
+                .ConfigureAwait(true);
+            return ms.ToArray();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning(ex, "Failed to encode capture as PNG for clipboard.");
+            return null;
+        }
+    }
+
+    private void TryOpenContainingFolder(string filePath)
+    {
+        try
+        {
+            var folder = Path.GetDirectoryName(filePath);
+            if (string.IsNullOrWhiteSpace(folder)) return;
+            System.Diagnostics.Process.Start(
+                new System.Diagnostics.ProcessStartInfo(folder) { UseShellExecute = true });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogDebug(ex, "Failed to open output folder after save.");
         }
     }
 
@@ -599,6 +759,11 @@ public sealed partial class DashboardViewModel : ViewModelBase, IDisposable
         _settings.Changed -= OnSettingsChanged;
         _foregroundWatcher.ForegroundChanged -= OnForegroundChanged;
         _foregroundWatcher.Stop();
+        // The WMI watcher's ManagementEventWatcher subscriptions run on non-background
+        // threads. If these aren't stopped, the CLR can't tear down on app exit and the
+        // process becomes a zombie — every subsequent launch then accumulates a duplicate
+        // CaptureImage.exe in Task Manager. Symmetric with the Start() call in the ctor.
+        _watcher.Stop();
         _stateMachine.StateChanged -= OnStateChanged;
         Localization.PropertyChanged -= OnLocalizationChanged;
         _pendingRefresh?.Cancel();

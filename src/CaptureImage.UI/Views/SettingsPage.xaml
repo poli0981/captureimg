@@ -133,6 +133,54 @@
                          FontFamily="Consolas, Courier New" />
             </StackPanel>
 
+            <!-- Capture mode (Window / Region) -->
+            <StackPanel Spacing="4">
+                <TextBlock Text="{Binding CaptureModeLabel}"
+                           Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                           FontSize="{StaticResource FontSizeSmall}" />
+                <ComboBox ItemsSource="{Binding SupportedCaptureModes}"
+                          SelectedItem="{Binding SelectedCaptureMode, Mode=TwoWay}"
+                          HorizontalAlignment="Stretch">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding DisplayLabel}" />
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+            </StackPanel>
+
+            <!-- Capture countdown -->
+            <StackPanel Spacing="4">
+                <TextBlock Text="{Binding CountdownLabel}"
+                           Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                           FontSize="{StaticResource FontSizeSmall}" />
+                <ComboBox ItemsSource="{Binding SupportedCountdowns}"
+                          SelectedItem="{Binding SelectedCountdown, Mode=TwoWay}"
+                          HorizontalAlignment="Stretch">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding DisplayLabel}" />
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+            </StackPanel>
+
+            <!-- Clipboard mode -->
+            <StackPanel Spacing="4">
+                <TextBlock Text="{Binding ClipboardLabel}"
+                           Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                           FontSize="{StaticResource FontSizeSmall}" />
+                <ComboBox ItemsSource="{Binding SupportedClipboardModes}"
+                          SelectedItem="{Binding SelectedClipboardMode, Mode=TwoWay}"
+                          HorizontalAlignment="Stretch">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding DisplayLabel}" />
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+            </StackPanel>
+
             <!-- Toggles -->
             <StackPanel Spacing="6">
                 <CheckBox Content="{Binding PreviewBeforeSaveLabel}"
@@ -150,6 +198,10 @@
                           IsChecked="{Binding MinimizeToTray, Mode=TwoWay}" />
                 <CheckBox Content="{Binding SoundEnabledLabel}"
                           IsChecked="{Binding SoundEnabled, Mode=TwoWay}" />
+                <CheckBox Content="{Binding OpenFolderAfterSaveLabel}"
+                          IsChecked="{Binding OpenFolderAfterSave, Mode=TwoWay}" />
+                <CheckBox Content="{Binding AutoPinAfterCaptureLabel}"
+                          IsChecked="{Binding AutoPinAfterCapture, Mode=TwoWay}" />
             </StackPanel>
 
             <!-- Logging -->

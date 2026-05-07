@@ -118,7 +118,7 @@
   <data name="About_AiSection" xml:space="preserve"><value>Phát triển có hỗ trợ AI</value></data>
   <data name="About_DisclaimersSection" xml:space="preserve"><value>Tuyên bố miễn trừ</value></data>
   <data name="About_TranslationDisclaimer" xml:space="preserve"><value>Bản dịch</value></data>
-  <data name="About_TranslationDisclaimerBody" xml:space="preserve"><value>Các gói ngôn ngữ tiếng Việt, tiếng Ả Rập, tiếng Nhật, tiếng Trung giản thể, tiếng Hàn và tiếng Tây Ban Nha đang dùng bản dịch máy. Thuật ngữ có thể không khớp với quy ước bản ngữ, và một số từ kỹ thuật (hotkey, toast, frame, v.v.) được giữ tiếng Anh có chủ đích. Người bản ngữ sẵn lòng hiệu đính xin gửi pull request vào các tệp .resx trong src/CaptureImage.UI/Resources/Strings/.</value></data>
+  <data name="About_TranslationDisclaimerBody" xml:space="preserve"><value>Các gói ngôn ngữ tiếng Việt, tiếng Ả Rập, tiếng Nhật, tiếng Trung giản thể, tiếng Hàn, tiếng Tây Ban Nha, tiếng Pháp, tiếng Đức, tiếng Bồ Đào Nha (Brazil) và tiếng Nga đang dùng bản dịch máy. Thuật ngữ có thể không khớp với quy ước bản ngữ, và một số từ kỹ thuật (hotkey, toast, frame, v.v.) được giữ tiếng Anh có chủ đích. Người bản ngữ sẵn lòng hiệu đính xin gửi pull request vào các tệp .resx trong src/CaptureImage.UI/Resources/Strings/.</value></data>
   <data name="About_CaptureDisclaimer" xml:space="preserve"><value>Khả năng chụp</value></data>
   <data name="About_CaptureLimitationDisclaimerBody" xml:space="preserve"><value>CaptureImage có thể chụp hầu hết game cửa sổ và borderless qua Windows.Graphics.Capture, nhưng không phải game nào cũng hoạt động. Bề mặt có DRM, game Direct3D 9 exclusive-fullscreen, và game có hook anti-cheat có thể trả khung đen hoặc từ chối chụp. Cơ chế dự phòng GDI PrintWindow được thử cho ứng dụng cũ. Xem docs/legal/DISCLAIMER.md §2 để biết danh sách đầy đủ.</value></data>
   <data name="About_LiabilityDisclaimer" xml:space="preserve"><value>Không bảo hành</value></data>
@@ -160,5 +160,37 @@
   <data name="Tray_ShowWindow" xml:space="preserve"><value>Hiện CaptureImage</value></data>
   <data name="Tray_OpenFolder" xml:space="preserve"><value>Mở thư mục ảnh</value></data>
   <data name="Tray_Exit" xml:space="preserve"><value>Thoát</value></data>
+
+  <!-- v1.5 quick wins -->
+  <data name="Settings_Countdown" xml:space="preserve"><value>Đếm ngược trước khi chụp</value></data>
+  <data name="Settings_CountdownOff" xml:space="preserve"><value>Tắt (không trễ)</value></data>
+  <data name="Settings_Countdown3s" xml:space="preserve"><value>3 giây</value></data>
+  <data name="Settings_Countdown5s" xml:space="preserve"><value>5 giây</value></data>
+  <data name="Settings_Countdown10s" xml:space="preserve"><value>10 giây</value></data>
+  <data name="Settings_Clipboard" xml:space="preserve"><value>Chế độ clipboard</value></data>
+  <data name="Settings_ClipboardNone" xml:space="preserve"><value>Tắt (chỉ lưu file)</value></data>
+  <data name="Settings_ClipboardCopy" xml:space="preserve"><value>Chỉ copy (không lưu file)</value></data>
+  <data name="Settings_ClipboardCopySave" xml:space="preserve"><value>Copy + lưu file</value></data>
+  <data name="Settings_OpenFolderAfterSave" xml:space="preserve"><value>Mở thư mục đầu ra sau khi lưu</value></data>
+  <data name="Toast_Countdown" xml:space="preserve"><value>Chụp sau {0}…</value></data>
+  <data name="Toast_ClipboardCopied" xml:space="preserve"><value>Đã copy vào clipboard</value></data>
+
+  <!-- v1.5 pinned thumbnail -->
+  <data name="Settings_AutoPinAfterCapture" xml:space="preserve"><value>Ghim ảnh nhỏ nổi sau mỗi lần chụp</value></data>
+  <data name="PinnedWindow_Open" xml:space="preserve"><value>Hiện trong Explorer</value></data>
+  <data name="PinnedWindow_Close" xml:space="preserve"><value>Đóng</value></data>
+
+  <!-- v1.5 OCR -->
+  <data name="Preview_ExtractText" xml:space="preserve"><value>Trích xuất văn bản (OCR)</value></data>
+  <data name="Toast_OcrSuccess" xml:space="preserve"><value>Đã copy {0} từ</value></data>
+  <data name="Toast_OcrEmpty" xml:space="preserve"><value>Không tìm thấy văn bản trong ảnh</value></data>
+  <data name="Toast_OcrUnavailable" xml:space="preserve"><value>Bộ máy OCR không khả dụng cho ngôn ngữ này</value></data>
+
+  <!-- v1.5 region capture -->
+  <data name="Settings_CaptureMode" xml:space="preserve"><value>Chế độ chụp</value></data>
+  <data name="Settings_CaptureModeWindow" xml:space="preserve"><value>Một cửa sổ</value></data>
+  <data name="Settings_CaptureModeRegion" xml:space="preserve"><value>Vùng (kéo để chọn)</value></data>
+  <data name="Region_TargetName" xml:space="preserve"><value>Vùng</value></data>
+  <data name="Region_DragHint" xml:space="preserve"><value>Kéo để chọn vùng. Nhấn Esc để huỷ.</value></data>
 
 </root>

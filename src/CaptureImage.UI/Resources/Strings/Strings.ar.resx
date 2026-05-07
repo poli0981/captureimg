@@ -118,7 +118,7 @@
   <data name="About_AiSection" xml:space="preserve"><value>التطوير بمساعدة الذكاء الاصطناعي</value></data>
   <data name="About_DisclaimersSection" xml:space="preserve"><value>إخلاءات المسؤولية</value></data>
   <data name="About_TranslationDisclaimer" xml:space="preserve"><value>الترجمات</value></data>
-  <data name="About_TranslationDisclaimerBody" xml:space="preserve"><value>حزم لغة الفيتنامية والعربية واليابانية والصينية المبسطة والكورية والإسبانية مترجمة بمساعدة الآلة. قد لا تتطابق المصطلحات مع العرف المحلي، وبعض الكلمات التقنية (hotkey، toast، frame، إلخ) تُركت بالإنجليزية عمداً. نرحب بمتحدثي اللغة الأم الراغبين في المراجعة لإرسال طلبات سحب على ملفات .resx في src/CaptureImage.UI/Resources/Strings/.</value></data>
+  <data name="About_TranslationDisclaimerBody" xml:space="preserve"><value>حزم لغة الفيتنامية والعربية واليابانية والصينية المبسطة والكورية والإسبانية والفرنسية والألمانية والبرتغالية البرازيلية والروسية مترجمة بمساعدة الآلة. قد لا تتطابق المصطلحات مع العرف المحلي، وبعض الكلمات التقنية (hotkey، toast، frame، إلخ) تُركت بالإنجليزية عمداً. نرحب بمتحدثي اللغة الأم الراغبين في المراجعة لإرسال طلبات سحب على ملفات .resx في src/CaptureImage.UI/Resources/Strings/.</value></data>
   <data name="About_CaptureDisclaimer" xml:space="preserve"><value>دعم الالتقاط</value></data>
   <data name="About_CaptureLimitationDisclaimerBody" xml:space="preserve"><value>يمكن لـ CaptureImage التقاط معظم الألعاب النافذية وعديمة الحدود عبر Windows.Graphics.Capture، لكن ليست كل لعبة تعمل. الأسطح المحمية بـ DRM، وألعاب Direct3D 9 بالشاشة الكاملة الحصرية، والألعاب ذات خطافات anti-cheat قد تعيد إطارات سوداء أو ترفض الالتقاط. تُجرَّب آلية احتياطية GDI PrintWindow للتطبيقات القديمة. راجع docs/legal/DISCLAIMER.md §2 للقائمة الكاملة.</value></data>
   <data name="About_LiabilityDisclaimer" xml:space="preserve"><value>بدون ضمان</value></data>
@@ -160,5 +160,37 @@
   <data name="Tray_ShowWindow" xml:space="preserve"><value>عرض CaptureImage</value></data>
   <data name="Tray_OpenFolder" xml:space="preserve"><value>فتح مجلد اللقطات</value></data>
   <data name="Tray_Exit" xml:space="preserve"><value>خروج</value></data>
+
+  <!-- v1.5 quick wins -->
+  <data name="Settings_Countdown" xml:space="preserve"><value>العد التنازلي قبل الالتقاط</value></data>
+  <data name="Settings_CountdownOff" xml:space="preserve"><value>إيقاف (بدون تأخير)</value></data>
+  <data name="Settings_Countdown3s" xml:space="preserve"><value>3 ثوانٍ</value></data>
+  <data name="Settings_Countdown5s" xml:space="preserve"><value>5 ثوانٍ</value></data>
+  <data name="Settings_Countdown10s" xml:space="preserve"><value>10 ثوانٍ</value></data>
+  <data name="Settings_Clipboard" xml:space="preserve"><value>وضع الحافظة</value></data>
+  <data name="Settings_ClipboardNone" xml:space="preserve"><value>إيقاف (ملف فقط)</value></data>
+  <data name="Settings_ClipboardCopy" xml:space="preserve"><value>نسخ فقط (بدون ملف)</value></data>
+  <data name="Settings_ClipboardCopySave" xml:space="preserve"><value>نسخ + حفظ الملف</value></data>
+  <data name="Settings_OpenFolderAfterSave" xml:space="preserve"><value>فتح مجلد الإخراج بعد الحفظ</value></data>
+  <data name="Toast_Countdown" xml:space="preserve"><value>الالتقاط خلال {0}…</value></data>
+  <data name="Toast_ClipboardCopied" xml:space="preserve"><value>تم النسخ إلى الحافظة</value></data>
+
+  <!-- v1.5 pinned thumbnail -->
+  <data name="Settings_AutoPinAfterCapture" xml:space="preserve"><value>تثبيت صورة مصغرة عائمة بعد كل لقطة</value></data>
+  <data name="PinnedWindow_Open" xml:space="preserve"><value>إظهار في المستكشف</value></data>
+  <data name="PinnedWindow_Close" xml:space="preserve"><value>إغلاق</value></data>
+
+  <!-- v1.5 OCR -->
+  <data name="Preview_ExtractText" xml:space="preserve"><value>استخراج النص (OCR)</value></data>
+  <data name="Toast_OcrSuccess" xml:space="preserve"><value>تم نسخ {0} كلمة</value></data>
+  <data name="Toast_OcrEmpty" xml:space="preserve"><value>لم يُعثر على نص في الصورة</value></data>
+  <data name="Toast_OcrUnavailable" xml:space="preserve"><value>محرك OCR غير متوفر لهذه اللغة</value></data>
+
+  <!-- v1.5 region capture -->
+  <data name="Settings_CaptureMode" xml:space="preserve"><value>وضع الالتقاط</value></data>
+  <data name="Settings_CaptureModeWindow" xml:space="preserve"><value>نافذة واحدة</value></data>
+  <data name="Settings_CaptureModeRegion" xml:space="preserve"><value>منطقة (اسحب للتحديد)</value></data>
+  <data name="Region_TargetName" xml:space="preserve"><value>منطقة</value></data>
+  <data name="Region_DragHint" xml:space="preserve"><value>اسحب مستطيلاً. اضغط Esc للإلغاء.</value></data>
 
 </root>

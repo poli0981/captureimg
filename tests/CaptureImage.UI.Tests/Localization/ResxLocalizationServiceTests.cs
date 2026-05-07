@@ -12,6 +12,7 @@ namespace CaptureImage.UI.Tests.Localization;
 /// restores in <see cref="Dispose"/> so setting <c>CultureInfo.CurrentCulture</c> from one
 /// test doesn't leak into the next one running on the same test runner thread.
 /// </summary>
+[Collection(LocalizationTestCollection.Name)]
 public class ResxLocalizationServiceTests : IDisposable
 {
     private readonly CultureInfo _savedUICulture;

@@ -118,7 +118,7 @@
   <data name="About_AiSection" xml:space="preserve"><value>AI-assisted development</value></data>
   <data name="About_DisclaimersSection" xml:space="preserve"><value>Disclaimers</value></data>
   <data name="About_TranslationDisclaimer" xml:space="preserve"><value>Translations</value></data>
-  <data name="About_TranslationDisclaimerBody" xml:space="preserve"><value>The Vietnamese, Arabic, Japanese, Simplified Chinese, Korean, and Spanish language packs are machine-assisted. Terminology may not match native conventions, and some technical words (hotkey, toast, frame, etc.) are kept in English on purpose. Native speakers willing to proofread are warmly invited to submit pull requests against the .resx files in src/CaptureImage.UI/Resources/Strings/.</value></data>
+  <data name="About_TranslationDisclaimerBody" xml:space="preserve"><value>The Vietnamese, Arabic, Japanese, Simplified Chinese, Korean, Spanish, French, German, Brazilian Portuguese, and Russian language packs are machine-assisted. Terminology may not match native conventions, and some technical words (hotkey, toast, frame, etc.) are kept in English on purpose. Native speakers willing to proofread are warmly invited to submit pull requests against the .resx files in src/CaptureImage.UI/Resources/Strings/.</value></data>
   <data name="About_CaptureDisclaimer" xml:space="preserve"><value>Capture support</value></data>
   <data name="About_CaptureLimitationDisclaimerBody" xml:space="preserve"><value>CaptureImage can capture most windowed and borderless games via Windows.Graphics.Capture, but not every title works. DRM-protected surfaces, exclusive-fullscreen Direct3D 9 games, and titles with anti-cheat hooks may return black frames or refuse capture. A GDI PrintWindow fallback is attempted for legacy apps. See docs/legal/DISCLAIMER.md §2 for the full list.</value></data>
   <data name="About_LiabilityDisclaimer" xml:space="preserve"><value>No warranty</value></data>
@@ -160,5 +160,37 @@
   <data name="Tray_ShowWindow" xml:space="preserve"><value>Show CaptureImage</value></data>
   <data name="Tray_OpenFolder" xml:space="preserve"><value>Open captures folder</value></data>
   <data name="Tray_Exit" xml:space="preserve"><value>Exit</value></data>
+
+  <!-- v1.5 quick wins -->
+  <data name="Settings_Countdown" xml:space="preserve"><value>Capture countdown</value></data>
+  <data name="Settings_CountdownOff" xml:space="preserve"><value>Off (no delay)</value></data>
+  <data name="Settings_Countdown3s" xml:space="preserve"><value>3 seconds</value></data>
+  <data name="Settings_Countdown5s" xml:space="preserve"><value>5 seconds</value></data>
+  <data name="Settings_Countdown10s" xml:space="preserve"><value>10 seconds</value></data>
+  <data name="Settings_Clipboard" xml:space="preserve"><value>Clipboard mode</value></data>
+  <data name="Settings_ClipboardNone" xml:space="preserve"><value>Off (file only)</value></data>
+  <data name="Settings_ClipboardCopy" xml:space="preserve"><value>Copy only (no file)</value></data>
+  <data name="Settings_ClipboardCopySave" xml:space="preserve"><value>Copy + save file</value></data>
+  <data name="Settings_OpenFolderAfterSave" xml:space="preserve"><value>Open output folder after save</value></data>
+  <data name="Toast_Countdown" xml:space="preserve"><value>Capturing in {0}…</value></data>
+  <data name="Toast_ClipboardCopied" xml:space="preserve"><value>Copied to clipboard</value></data>
+
+  <!-- v1.5 pinned thumbnail -->
+  <data name="Settings_AutoPinAfterCapture" xml:space="preserve"><value>Pin a floating thumbnail after each capture</value></data>
+  <data name="PinnedWindow_Open" xml:space="preserve"><value>Show in Explorer</value></data>
+  <data name="PinnedWindow_Close" xml:space="preserve"><value>Close</value></data>
+
+  <!-- v1.5 OCR -->
+  <data name="Preview_ExtractText" xml:space="preserve"><value>Extract text (OCR)</value></data>
+  <data name="Toast_OcrSuccess" xml:space="preserve"><value>{0} words copied</value></data>
+  <data name="Toast_OcrEmpty" xml:space="preserve"><value>No text found in image</value></data>
+  <data name="Toast_OcrUnavailable" xml:space="preserve"><value>OCR engine unavailable for this language</value></data>
+
+  <!-- v1.5 region capture -->
+  <data name="Settings_CaptureMode" xml:space="preserve"><value>Capture mode</value></data>
+  <data name="Settings_CaptureModeWindow" xml:space="preserve"><value>Single window</value></data>
+  <data name="Settings_CaptureModeRegion" xml:space="preserve"><value>Region (drag to select)</value></data>
+  <data name="Region_TargetName" xml:space="preserve"><value>Region</value></data>
+  <data name="Region_DragHint" xml:space="preserve"><value>Drag a rectangle. Press Esc to cancel.</value></data>
 
 </root>

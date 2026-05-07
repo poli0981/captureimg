@@ -1,3 +1,4 @@
+using CaptureImage.App.SingleInstance;
 using CaptureImage.Core.Abstractions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Dispatching;
@@ -23,6 +24,17 @@ internal static class Program
     public static int Main(string[] args)
     {
         VelopackApp.Build().Run();
+
+        // Single-instance guard runs AFTER Velopack hooks so installer/uninstaller
+        // launches (--squirrel-*) aren't blocked. If another instance owns the
+        // mutex, we ping it via named pipe (ActivationListener restores its
+        // window) and exit immediately without bringing up our own UI.
+        if (!SingleInstanceGuard.TryAcquire(out var instanceReleaser))
+        {
+            return 0;
+        }
+
+        using var _instanceReleaser = instanceReleaser;
 
         var (inMemorySink, loggingLevelSwitch) = LoggingSetup.Initialize();
 
@@ -118,6 +130,19 @@ internal static class Program
             catch (Exception ex)
             {
                 Log.Warning(ex, "Failed to flush settings on shutdown.");
+            }
+            // Dispose the DI container so every IDisposable singleton runs its cleanup —
+            // most importantly WmiProcessWatcher (WMI subscriptions on non-background
+            // threads), Win32ForegroundWindowWatcher (WinEventHook), and TrayIconHost.
+            // Without this, the process can't fully exit and Task Manager accumulates one
+            // zombie CaptureImage.exe per launch.
+            try
+            {
+                (App.Services as IDisposable)?.Dispose();
+            }
+            catch (Exception ex)
+            {
+                Log.Warning(ex, "Failed to dispose service provider on shutdown.");
             }
             Log.Information("CaptureImage shutting down. Reason={Reason}", shutdownReason);
             Log.CloseAndFlush();

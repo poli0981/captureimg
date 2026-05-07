@@ -118,7 +118,7 @@
   <data name="About_AiSection" xml:space="preserve"><value>Desarrollo asistido por IA</value></data>
   <data name="About_DisclaimersSection" xml:space="preserve"><value>Avisos legales</value></data>
   <data name="About_TranslationDisclaimer" xml:space="preserve"><value>Traducciones</value></data>
-  <data name="About_TranslationDisclaimerBody" xml:space="preserve"><value>Los paquetes de idioma japonés, chino simplificado, coreano y español están traducidos con asistencia automática. Es posible que la terminología no coincida con las convenciones nativas, y algunos términos técnicos (hotkey, toast, frame, etc.) se mantienen en inglés a propósito. Los hablantes nativos dispuestos a revisarlos pueden enviar pull requests sobre los archivos .resx en src/CaptureImage.UI/Resources/Strings/.</value></data>
+  <data name="About_TranslationDisclaimerBody" xml:space="preserve"><value>Los paquetes de idioma vietnamita, árabe, japonés, chino simplificado, coreano, español, francés, alemán, portugués (Brasil) y ruso están traducidos con asistencia automática. Es posible que la terminología no coincida con las convenciones nativas, y algunos términos técnicos (hotkey, toast, frame, etc.) se mantienen en inglés a propósito. Los hablantes nativos dispuestos a revisarlos pueden enviar pull requests sobre los archivos .resx en src/CaptureImage.UI/Resources/Strings/.</value></data>
   <data name="About_CaptureDisclaimer" xml:space="preserve"><value>Compatibilidad de captura</value></data>
   <data name="About_CaptureLimitationDisclaimerBody" xml:space="preserve"><value>CaptureImage puede capturar la mayoría de los juegos en ventana o sin bordes mediante Windows.Graphics.Capture, pero no todos los títulos funcionan. Las superficies protegidas por DRM, los juegos en pantalla completa exclusiva con Direct3D 9 y los títulos con ganchos anticheat pueden devolver fotogramas en negro o rechazar la captura. Para apps antiguas se intenta un fallback con GDI PrintWindow. Consulta la lista completa en docs/legal/DISCLAIMER.md §2.</value></data>
   <data name="About_LiabilityDisclaimer" xml:space="preserve"><value>Sin garantía</value></data>
@@ -160,5 +160,37 @@
   <data name="Tray_ShowWindow" xml:space="preserve"><value>Mostrar CaptureImage</value></data>
   <data name="Tray_OpenFolder" xml:space="preserve"><value>Abrir carpeta de capturas</value></data>
   <data name="Tray_Exit" xml:space="preserve"><value>Salir</value></data>
+
+  <!-- v1.5 quick wins -->
+  <data name="Settings_Countdown" xml:space="preserve"><value>Cuenta atrás de captura</value></data>
+  <data name="Settings_CountdownOff" xml:space="preserve"><value>Desactivada (sin retraso)</value></data>
+  <data name="Settings_Countdown3s" xml:space="preserve"><value>3 segundos</value></data>
+  <data name="Settings_Countdown5s" xml:space="preserve"><value>5 segundos</value></data>
+  <data name="Settings_Countdown10s" xml:space="preserve"><value>10 segundos</value></data>
+  <data name="Settings_Clipboard" xml:space="preserve"><value>Modo del portapapeles</value></data>
+  <data name="Settings_ClipboardNone" xml:space="preserve"><value>Desactivado (solo archivo)</value></data>
+  <data name="Settings_ClipboardCopy" xml:space="preserve"><value>Solo copiar (sin archivo)</value></data>
+  <data name="Settings_ClipboardCopySave" xml:space="preserve"><value>Copiar + guardar archivo</value></data>
+  <data name="Settings_OpenFolderAfterSave" xml:space="preserve"><value>Abrir carpeta de salida tras guardar</value></data>
+  <data name="Toast_Countdown" xml:space="preserve"><value>Capturando en {0}…</value></data>
+  <data name="Toast_ClipboardCopied" xml:space="preserve"><value>Copiado al portapapeles</value></data>
+
+  <!-- v1.5 pinned thumbnail -->
+  <data name="Settings_AutoPinAfterCapture" xml:space="preserve"><value>Fijar una miniatura flotante tras cada captura</value></data>
+  <data name="PinnedWindow_Open" xml:space="preserve"><value>Mostrar en el Explorador</value></data>
+  <data name="PinnedWindow_Close" xml:space="preserve"><value>Cerrar</value></data>
+
+  <!-- v1.5 OCR -->
+  <data name="Preview_ExtractText" xml:space="preserve"><value>Extraer texto (OCR)</value></data>
+  <data name="Toast_OcrSuccess" xml:space="preserve"><value>{0} palabras copiadas</value></data>
+  <data name="Toast_OcrEmpty" xml:space="preserve"><value>No se encontró texto en la imagen</value></data>
+  <data name="Toast_OcrUnavailable" xml:space="preserve"><value>Motor OCR no disponible para este idioma</value></data>
+
+  <!-- v1.5 region capture -->
+  <data name="Settings_CaptureMode" xml:space="preserve"><value>Modo de captura</value></data>
+  <data name="Settings_CaptureModeWindow" xml:space="preserve"><value>Ventana única</value></data>
+  <data name="Settings_CaptureModeRegion" xml:space="preserve"><value>Región (arrastrar para seleccionar)</value></data>
+  <data name="Region_TargetName" xml:space="preserve"><value>Región</value></data>
+  <data name="Region_DragHint" xml:space="preserve"><value>Arrastra un rectángulo. Pulsa Esc para cancelar.</value></data>
 
 </root>

@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="xml:space" type="xsd:string" msdata:Ordinal="4" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+
+  <!-- Navigation -->
+  <data name="Nav_Dashboard" xml:space="preserve"><value>Tableau de bord</value></data>
+  <data name="Nav_Update" xml:space="preserve"><value>Mise à jour</value></data>
+  <data name="Nav_Settings" xml:space="preserve"><value>Paramètres</value></data>
+  <data name="Nav_About" xml:space="preserve"><value>À propos</value></data>
+  <data name="Nav_LogViewer" xml:space="preserve"><value>Journal</value></data>
+
+  <!-- Dashboard -->
+  <data name="Dashboard_Title" xml:space="preserve"><value>Tableau de bord</value></data>
+  <data name="Dashboard_Subtitle" xml:space="preserve"><value>Choisissez une cible et armez-la — appuyez sur le raccourci pour capturer.</value></data>
+  <data name="Dashboard_Refresh" xml:space="preserve"><value>Actualiser</value></data>
+  <data name="Dashboard_Arm" xml:space="preserve"><value>Armer</value></data>
+  <data name="Dashboard_Disarm" xml:space="preserve"><value>Désarmer</value></data>
+  <data name="Dashboard_StatusIdle" xml:space="preserve"><value>Inactif — choisissez une cible et armez-la pour commencer.</value></data>
+  <data name="Dashboard_StatusArmed" xml:space="preserve"><value>Armé : appuyez sur {0} pour capturer {1}.</value></data>
+  <data name="Dashboard_StatusCapturing" xml:space="preserve"><value>Capture de {0}…</value></data>
+  <data name="Dashboard_StatusDisarmed" xml:space="preserve"><value>Désarmé.</value></data>
+  <data name="Dashboard_StatusSaved" xml:space="preserve"><value>Enregistré : {0} ({1}x{2}, {3} ms)</value></data>
+  <data name="Dashboard_StatusFailed" xml:space="preserve"><value>Échec de la capture ({0}) : {1}</value></data>
+  <data name="Dashboard_TargetsCount" xml:space="preserve"><value>{0} cible(s) visible(s)</value></data>
+  <data name="Dashboard_Loading" xml:space="preserve"><value>Chargement…</value></data>
+  <data name="Dashboard_EmptyState" xml:space="preserve"><value>Aucune fenêtre visible à capturer — lancez votre jeu ou application puis cliquez sur Actualiser.</value></data>
+  <data name="Dashboard_LogToggle" xml:space="preserve"><value>Afficher/masquer le tiroir de journal en temps réel</value></data>
+  <data name="Dashboard_SteamBadge" xml:space="preserve"><value>STEAM</value></data>
+  <data name="Dashboard_SteamBadgeTooltip" xml:space="preserve"><value>Jeu Steam : {0} (AppId {1}). Les captures F12 sont disponibles via la superposition Steam. Certains jeux protégés par anti-triche peuvent bloquer la capture externe.</value></data>
+
+  <!-- Settings -->
+  <data name="Settings_Title" xml:space="preserve"><value>Paramètres</value></data>
+  <data name="Settings_Language" xml:space="preserve"><value>Langue</value></data>
+  <data name="Settings_Theme" xml:space="preserve"><value>Thème</value></data>
+  <data name="Settings_Theme_System" xml:space="preserve"><value>Système</value></data>
+  <data name="Settings_Theme_Light" xml:space="preserve"><value>Clair</value></data>
+  <data name="Settings_Theme_Dark" xml:space="preserve"><value>Sombre</value></data>
+  <data name="Settings_Hotkey" xml:space="preserve"><value>Raccourci de capture</value></data>
+  <data name="Settings_HotkeyHint" xml:space="preserve"><value>Cliquez sur Enregistrer puis appuyez sur une combinaison. Échap annule. Réinitialiser restaure Ctrl+Maj+F12.</value></data>
+  <data name="Settings_HotkeyRecord" xml:space="preserve"><value>Enregistrer…</value></data>
+  <data name="Settings_HotkeyCancel" xml:space="preserve"><value>Annuler</value></data>
+  <data name="Settings_HotkeyReset" xml:space="preserve"><value>Réinitialiser</value></data>
+  <data name="Settings_HotkeyRecorderPrompt" xml:space="preserve"><value>Appuyez sur une combinaison de touches (Échap pour annuler)…</value></data>
+  <data name="Settings_HotkeyErrorNoPrimary" xml:space="preserve"><value>Choisissez une touche principale (par exemple une lettre ou une touche F).</value></data>
+  <data name="Settings_HotkeyErrorModifierOnly" xml:space="preserve"><value>Une touche modificatrice seule ne suffit pas — ajoutez une lettre ou une touche F.</value></data>
+  <data name="Settings_HotkeyErrorNeedsModifier" xml:space="preserve"><value>Les lettres et chiffres simples nécessitent au moins un modificateur (Ctrl/Alt/Maj/Win).</value></data>
+  <data name="Settings_HotkeyErrorReserved" xml:space="preserve"><value>Cette combinaison est réservée par Windows et ne peut pas être capturée.</value></data>
+  <data name="Settings_HotkeyConflictWarning" xml:space="preserve"><value>Une autre application possède peut-être déjà cette combinaison — elle pourrait ne pas se déclencher tant que cette application est en cours d'exécution.</value></data>
+  <data name="Settings_Format" xml:space="preserve"><value>Format par défaut</value></data>
+  <data name="Settings_JpegQuality" xml:space="preserve"><value>Qualité JPEG</value></data>
+  <data name="Settings_WebpQuality" xml:space="preserve"><value>Qualité WebP</value></data>
+  <data name="Settings_OutputFolder" xml:space="preserve"><value>Dossier de sortie</value></data>
+  <data name="Settings_OutputFolderDefault" xml:space="preserve"><value>(par défaut : Images\CaptureImage)</value></data>
+  <data name="Settings_Browse" xml:space="preserve"><value>Parcourir…</value></data>
+  <data name="Settings_BrowseTitle" xml:space="preserve"><value>Choisir le dossier de sortie</value></data>
+  <data name="Settings_BrowseTooltip" xml:space="preserve"><value>Choisissez un dossier au lieu de saisir le chemin.</value></data>
+  <data name="Settings_FileNameTemplate" xml:space="preserve"><value>Modèle de nom de fichier</value></data>
+  <data name="Settings_PreviewBeforeSave" xml:space="preserve"><value>Aperçu de chaque capture avant l'enregistrement</value></data>
+  <data name="Settings_AutoSwitchOnAltTab" xml:space="preserve"><value>Changer automatiquement de cible avec Alt-Tab</value></data>
+  <data name="Settings_AutoSwitchOnAltTabHint" xml:space="preserve"><value>La cible sélectionnée suit la fenêtre au premier plan. Les applications hors liste conservent votre sélection actuelle.</value></data>
+  <data name="Settings_MinimizeToTray" xml:space="preserve"><value>Le bouton Fermer minimise dans la barre d'état</value></data>
+  <data name="Settings_SoundEnabled" xml:space="preserve"><value>Lire un son lors de la capture</value></data>
+  <data name="Settings_Import" xml:space="preserve"><value>Importer…</value></data>
+  <data name="Settings_Export" xml:space="preserve"><value>Exporter…</value></data>
+  <data name="Settings_ImportTitle" xml:space="preserve"><value>Importer les paramètres</value></data>
+  <data name="Settings_ExportTitle" xml:space="preserve"><value>Exporter les paramètres</value></data>
+  <data name="Settings_OpenFile" xml:space="preserve"><value>Ouvrir le fichier de paramètres</value></data>
+  <data name="Settings_Logging" xml:space="preserve"><value>Journalisation</value></data>
+  <data name="Settings_LogLevel" xml:space="preserve"><value>Niveau de journal minimal</value></data>
+  <data name="Settings_LogLevelHint" xml:space="preserve"><value>Filtre le fichier journal et la visionneuse. Choisissez Debug pour le diagnostic, Information pour l'usage quotidien, Warning ou Error pour réduire le bruit.</value></data>
+
+  <!-- Update -->
+  <data name="Update_Title" xml:space="preserve"><value>Mise à jour</value></data>
+  <data name="Update_Check" xml:space="preserve"><value>Rechercher des mises à jour</value></data>
+  <data name="Update_Download" xml:space="preserve"><value>Télécharger</value></data>
+  <data name="Update_Install" xml:space="preserve"><value>Installer et redémarrer</value></data>
+  <data name="Update_Status" xml:space="preserve"><value>État</value></data>
+  <data name="Update_Log" xml:space="preserve"><value>Journal</value></data>
+  <data name="Update_NewVersion" xml:space="preserve"><value>Nouvelle version :</value></data>
+
+  <!-- About -->
+  <data name="About_Title" xml:space="preserve"><value>À propos de CaptureImage</value></data>
+  <data name="About_Tagline" xml:space="preserve"><value>Capture d'écran Windows légère pour les jeux sans touche de capture intégrée.</value></data>
+  <data name="About_AppLabel" xml:space="preserve"><value>Application</value></data>
+  <data name="About_VersionLabel" xml:space="preserve"><value>Version</value></data>
+  <data name="About_LicenseLabel" xml:space="preserve"><value>Licence</value></data>
+  <data name="About_DeveloperLabel" xml:space="preserve"><value>Développeur</value></data>
+  <data name="About_RepositoryLabel" xml:space="preserve"><value>Dépôt</value></data>
+  <data name="About_AiSection" xml:space="preserve"><value>Développement assisté par IA</value></data>
+  <data name="About_DisclaimersSection" xml:space="preserve"><value>Avertissements</value></data>
+  <data name="About_TranslationDisclaimer" xml:space="preserve"><value>Traductions</value></data>
+  <data name="About_TranslationDisclaimerBody" xml:space="preserve"><value>Les packs de langue vietnamien, arabe, japonais, chinois simplifié, coréen, espagnol, français, allemand, portugais (Brésil) et russe sont assistés par machine. La terminologie peut ne pas correspondre aux conventions natives, et certains termes techniques (hotkey, toast, frame, etc.) sont volontairement conservés en anglais. Les locuteurs natifs prêts à relire sont chaleureusement invités à soumettre des pull requests sur les fichiers .resx dans src/CaptureImage.UI/Resources/Strings/.</value></data>
+  <data name="About_CaptureDisclaimer" xml:space="preserve"><value>Prise en charge de la capture</value></data>
+  <data name="About_CaptureLimitationDisclaimerBody" xml:space="preserve"><value>CaptureImage peut capturer la plupart des jeux fenêtrés et sans bordure via Windows.Graphics.Capture, mais pas tous. Les surfaces protégées par DRM, les jeux Direct3D 9 en plein écran exclusif et les titres avec hooks anti-triche peuvent renvoyer des images noires ou refuser la capture. Un repli GDI PrintWindow est tenté pour les applications héritées. Voir docs/legal/DISCLAIMER.md §2 pour la liste complète.</value></data>
+  <data name="About_LiabilityDisclaimer" xml:space="preserve"><value>Aucune garantie</value></data>
+  <data name="About_LiabilityDisclaimerBody" xml:space="preserve"><value>CaptureImage est distribué sous GPL-3.0-or-later EN L'ÉTAT, sans aucune garantie. Les auteurs ne sont pas responsables des captures perdues, des plantages de jeu, des sanctions anti-triche ou des pertes de données. Utilisation à vos propres risques. Voir docs/legal/DISCLAIMER.md pour le texte complet.</value></data>
+  <data name="About_LegalSection" xml:space="preserve"><value>Documents juridiques</value></data>
+  <data name="About_ThirdPartySection" xml:space="preserve"><value>Composants tiers</value></data>
+  <data name="About_ThirdPartyHint" xml:space="preserve"><value>Cliquez sur « Avis tiers » ci-dessus pour la liste complète avec les URL en amont.</value></data>
+  <data name="About_OpenDisclaimer" xml:space="preserve"><value>Avertissement</value></data>
+  <data name="About_OpenPrivacy" xml:space="preserve"><value>Confidentialité</value></data>
+  <data name="About_OpenTerms" xml:space="preserve"><value>Conditions</value></data>
+  <data name="About_OpenLicense" xml:space="preserve"><value>Licence (GPL-3.0)</value></data>
+  <data name="About_OpenThirdParty" xml:space="preserve"><value>Avis tiers</value></data>
+  <data name="About_OpenContributors" xml:space="preserve"><value>Contributeurs</value></data>
+
+  <!-- Log viewer -->
+  <data name="Log_Title" xml:space="preserve"><value>Journal en temps réel</value></data>
+  <data name="Log_Pause" xml:space="preserve"><value>Pause</value></data>
+  <data name="Log_Resume" xml:space="preserve"><value>Reprendre</value></data>
+  <data name="Log_Clear" xml:space="preserve"><value>Effacer</value></data>
+  <data name="Log_EventsCount" xml:space="preserve"><value>{0} événements</value></data>
+  <data name="Log_EmptyState" xml:space="preserve"><value>Aucun événement de journal pour le moment. Les événements en direct du moteur de capture apparaîtront ici.</value></data>
+  <data name="Log_Filter" xml:space="preserve"><value>Niveau min :</value></data>
+  <data name="Log_RevealFolder" xml:space="preserve"><value>Ouvrir le dossier</value></data>
+
+  <!-- Preview -->
+  <data name="Preview_Title" xml:space="preserve"><value>Aperçu</value></data>
+  <data name="Preview_Prompt" xml:space="preserve"><value>Enregistrer cette capture ?</value></data>
+  <data name="Preview_Save" xml:space="preserve"><value>Enregistrer</value></data>
+  <data name="Preview_Discard" xml:space="preserve"><value>Ignorer</value></data>
+
+  <!-- Toasts -->
+  <data name="Toast_CaptureSaved" xml:space="preserve"><value>Capture enregistrée</value></data>
+  <data name="Toast_CaptureFailed" xml:space="preserve"><value>Échec de la capture</value></data>
+  <data name="Toast_SettingsImported" xml:space="preserve"><value>Paramètres importés</value></data>
+  <data name="Toast_SettingsExported" xml:space="preserve"><value>Paramètres exportés</value></data>
+  <data name="Toast_Error" xml:space="preserve"><value>Erreur</value></data>
+
+  <!-- Tray menu -->
+  <data name="Tray_ShowWindow" xml:space="preserve"><value>Afficher CaptureImage</value></data>
+  <data name="Tray_OpenFolder" xml:space="preserve"><value>Ouvrir le dossier des captures</value></data>
+  <data name="Tray_Exit" xml:space="preserve"><value>Quitter</value></data>
+
+  <!-- v1.5 quick wins -->
+  <data name="Settings_Countdown" xml:space="preserve"><value>Compte à rebours de capture</value></data>
+  <data name="Settings_CountdownOff" xml:space="preserve"><value>Désactivé (pas de délai)</value></data>
+  <data name="Settings_Countdown3s" xml:space="preserve"><value>3 secondes</value></data>
+  <data name="Settings_Countdown5s" xml:space="preserve"><value>5 secondes</value></data>
+  <data name="Settings_Countdown10s" xml:space="preserve"><value>10 secondes</value></data>
+  <data name="Settings_Clipboard" xml:space="preserve"><value>Mode presse-papiers</value></data>
+  <data name="Settings_ClipboardNone" xml:space="preserve"><value>Désactivé (fichier uniquement)</value></data>
+  <data name="Settings_ClipboardCopy" xml:space="preserve"><value>Copier uniquement (pas de fichier)</value></data>
+  <data name="Settings_ClipboardCopySave" xml:space="preserve"><value>Copier + enregistrer le fichier</value></data>
+  <data name="Settings_OpenFolderAfterSave" xml:space="preserve"><value>Ouvrir le dossier de sortie après l'enregistrement</value></data>
+  <data name="Toast_Countdown" xml:space="preserve"><value>Capture dans {0}…</value></data>
+  <data name="Toast_ClipboardCopied" xml:space="preserve"><value>Copié dans le presse-papiers</value></data>
+
+  <!-- v1.5 pinned thumbnail -->
+  <data name="Settings_AutoPinAfterCapture" xml:space="preserve"><value>Épingler une miniature flottante après chaque capture</value></data>
+  <data name="PinnedWindow_Open" xml:space="preserve"><value>Afficher dans l'Explorateur</value></data>
+  <data name="PinnedWindow_Close" xml:space="preserve"><value>Fermer</value></data>
+
+  <!-- v1.5 OCR -->
+  <data name="Preview_ExtractText" xml:space="preserve"><value>Extraire le texte (OCR)</value></data>
+  <data name="Toast_OcrSuccess" xml:space="preserve"><value>{0} mots copiés</value></data>
+  <data name="Toast_OcrEmpty" xml:space="preserve"><value>Aucun texte trouvé dans l'image</value></data>
+  <data name="Toast_OcrUnavailable" xml:space="preserve"><value>Moteur OCR indisponible pour cette langue</value></data>
+
+  <!-- v1.5 region capture -->
+  <data name="Settings_CaptureMode" xml:space="preserve"><value>Mode de capture</value></data>
+  <data name="Settings_CaptureModeWindow" xml:space="preserve"><value>Fenêtre unique</value></data>
+  <data name="Settings_CaptureModeRegion" xml:space="preserve"><value>Zone (glisser pour sélectionner)</value></data>
+  <data name="Region_TargetName" xml:space="preserve"><value>Zone</value></data>
+  <data name="Region_DragHint" xml:space="preserve"><value>Glissez un rectangle. Appuyez sur Échap pour annuler.</value></data>
+
+</root>

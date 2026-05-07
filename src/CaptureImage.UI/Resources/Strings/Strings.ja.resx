@@ -118,7 +118,7 @@
   <data name="About_AiSection" xml:space="preserve"><value>AI 支援開発</value></data>
   <data name="About_DisclaimersSection" xml:space="preserve"><value>免責事項</value></data>
   <data name="About_TranslationDisclaimer" xml:space="preserve"><value>翻訳について</value></data>
-  <data name="About_TranslationDisclaimerBody" xml:space="preserve"><value>日本語、中国語(簡体)、韓国語、スペイン語の言語パックは機械支援で翻訳されています。用語が母語の慣習と一致しない場合があり、一部の技術用語(hotkey、toast、frame など)はあえて英語のままにしています。校正に協力してくださるネイティブスピーカーの方は、src/CaptureImage.UI/Resources/Strings/ の .resx ファイルへの Pull Request を歓迎します。</value></data>
+  <data name="About_TranslationDisclaimerBody" xml:space="preserve"><value>ベトナム語、アラビア語、日本語、中国語(簡体)、韓国語、スペイン語、フランス語、ドイツ語、ポルトガル語(ブラジル)、ロシア語の言語パックは機械支援で翻訳されています。用語が母語の慣習と一致しない場合があり、一部の技術用語(hotkey、toast、frame など)はあえて英語のままにしています。校正に協力してくださるネイティブスピーカーの方は、src/CaptureImage.UI/Resources/Strings/ の .resx ファイルへの Pull Request を歓迎します。</value></data>
   <data name="About_CaptureDisclaimer" xml:space="preserve"><value>キャプチャ対応</value></data>
   <data name="About_CaptureLimitationDisclaimerBody" xml:space="preserve"><value>CaptureImage は Windows.Graphics.Capture により多くのウィンドウ・ボーダーレスゲームをキャプチャできますが、すべてのタイトルで動作するわけではありません。DRM 保護されたサーフェス、排他的フルスクリーンの Direct3D 9 ゲーム、アンチチートフックを持つタイトルは、黒フレームを返したりキャプチャを拒否することがあります。レガシーアプリには GDI PrintWindow フォールバックを試みます。完全な一覧は docs/legal/DISCLAIMER.md §2 を参照してください。</value></data>
   <data name="About_LiabilityDisclaimer" xml:space="preserve"><value>無保証</value></data>
@@ -160,5 +160,37 @@
   <data name="Tray_ShowWindow" xml:space="preserve"><value>CaptureImage を表示</value></data>
   <data name="Tray_OpenFolder" xml:space="preserve"><value>キャプチャフォルダーを開く</value></data>
   <data name="Tray_Exit" xml:space="preserve"><value>終了</value></data>
+
+  <!-- v1.5 quick wins -->
+  <data name="Settings_Countdown" xml:space="preserve"><value>キャプチャのカウントダウン</value></data>
+  <data name="Settings_CountdownOff" xml:space="preserve"><value>オフ(遅延なし)</value></data>
+  <data name="Settings_Countdown3s" xml:space="preserve"><value>3 秒</value></data>
+  <data name="Settings_Countdown5s" xml:space="preserve"><value>5 秒</value></data>
+  <data name="Settings_Countdown10s" xml:space="preserve"><value>10 秒</value></data>
+  <data name="Settings_Clipboard" xml:space="preserve"><value>クリップボードモード</value></data>
+  <data name="Settings_ClipboardNone" xml:space="preserve"><value>オフ(ファイルのみ)</value></data>
+  <data name="Settings_ClipboardCopy" xml:space="preserve"><value>コピーのみ(ファイル無し)</value></data>
+  <data name="Settings_ClipboardCopySave" xml:space="preserve"><value>コピー + ファイル保存</value></data>
+  <data name="Settings_OpenFolderAfterSave" xml:space="preserve"><value>保存後に出力フォルダーを開く</value></data>
+  <data name="Toast_Countdown" xml:space="preserve"><value>{0} 秒後にキャプチャ…</value></data>
+  <data name="Toast_ClipboardCopied" xml:space="preserve"><value>クリップボードにコピーしました</value></data>
+
+  <!-- v1.5 pinned thumbnail -->
+  <data name="Settings_AutoPinAfterCapture" xml:space="preserve"><value>キャプチャごとにフローティングサムネイルをピン留めする</value></data>
+  <data name="PinnedWindow_Open" xml:space="preserve"><value>エクスプローラーで表示</value></data>
+  <data name="PinnedWindow_Close" xml:space="preserve"><value>閉じる</value></data>
+
+  <!-- v1.5 OCR -->
+  <data name="Preview_ExtractText" xml:space="preserve"><value>テキストを抽出 (OCR)</value></data>
+  <data name="Toast_OcrSuccess" xml:space="preserve"><value>{0} 単語をコピーしました</value></data>
+  <data name="Toast_OcrEmpty" xml:space="preserve"><value>画像内にテキストが見つかりません</value></data>
+  <data name="Toast_OcrUnavailable" xml:space="preserve"><value>この言語の OCR エンジンが利用できません</value></data>
+
+  <!-- v1.5 region capture -->
+  <data name="Settings_CaptureMode" xml:space="preserve"><value>キャプチャモード</value></data>
+  <data name="Settings_CaptureModeWindow" xml:space="preserve"><value>ウィンドウ単体</value></data>
+  <data name="Settings_CaptureModeRegion" xml:space="preserve"><value>範囲(ドラッグで選択)</value></data>
+  <data name="Region_TargetName" xml:space="preserve"><value>範囲</value></data>
+  <data name="Region_DragHint" xml:space="preserve"><value>四角形をドラッグしてください。Esc でキャンセル。</value></data>
 
 </root>

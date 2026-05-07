@@ -7,10 +7,11 @@ using Xunit;
 namespace CaptureImage.UI.Tests.Localization;
 
 /// <summary>
-/// Asserts that every load-bearing UI string is translated in all 3 shipped cultures
-/// (en-US / vi-VN / ar-SA). The bracketed fallback (e.g. <c>"[Nav_Dashboard]"</c>) means
-/// a key is missing from the resx — these tests catch that before it reaches the user.
+/// Asserts that every load-bearing UI string is translated in all shipped cultures.
+/// The bracketed fallback (e.g. <c>"[Nav_Dashboard]"</c>) means a key is missing from
+/// the resx — these tests catch that before it reaches the user.
 /// </summary>
+[Collection(LocalizationTestCollection.Name)]
 public class LocalizationCompletenessTests : IDisposable
 {
     private readonly CultureInfo _savedUICulture;
@@ -67,7 +68,13 @@ public class LocalizationCompletenessTests : IDisposable
 
     public static IEnumerable<object[]> CultureMatrix()
     {
-        foreach (var culture in new[] { "en-US", "vi-VN", "ar-SA", "ja-JP", "zh-Hans", "ko-KR", "es-ES" })
+        var cultures = new[]
+        {
+            "en-US", "vi-VN", "ar-SA",
+            "ja-JP", "zh-Hans", "ko-KR", "es-ES",
+            "fr-FR", "de-DE", "pt-BR", "ru-RU",
+        };
+        foreach (var culture in cultures)
         {
             foreach (var key in LoadBearingKeys)
             {
