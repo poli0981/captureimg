@@ -161,4 +161,18 @@
   <data name="Tray_OpenFolder" xml:space="preserve"><value>캡처 폴더 열기</value></data>
   <data name="Tray_Exit" xml:space="preserve"><value>종료</value></data>
 
+  <!-- v1.5 quick wins -->
+  <data name="Settings_Countdown" xml:space="preserve"><value>캡처 카운트다운</value></data>
+  <data name="Settings_CountdownOff" xml:space="preserve"><value>끔(지연 없음)</value></data>
+  <data name="Settings_Countdown3s" xml:space="preserve"><value>3초</value></data>
+  <data name="Settings_Countdown5s" xml:space="preserve"><value>5초</value></data>
+  <data name="Settings_Countdown10s" xml:space="preserve"><value>10초</value></data>
+  <data name="Settings_Clipboard" xml:space="preserve"><value>클립보드 모드</value></data>
+  <data name="Settings_ClipboardNone" xml:space="preserve"><value>끔(파일만)</value></data>
+  <data name="Settings_ClipboardCopy" xml:space="preserve"><value>복사만(파일 없음)</value></data>
+  <data name="Settings_ClipboardCopySave" xml:space="preserve"><value>복사 + 파일 저장</value></data>
+  <data name="Settings_OpenFolderAfterSave" xml:space="preserve"><value>저장 후 출력 폴더 열기</value></data>
+  <data name="Toast_Countdown" xml:space="preserve"><value>{0}초 후 캡처…</value></data>
+  <data name="Toast_ClipboardCopied" xml:space="preserve"><value>클립보드에 복사됨</value></data>
+
 </root>

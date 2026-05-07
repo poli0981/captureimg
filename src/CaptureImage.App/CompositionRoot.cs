@@ -98,6 +98,7 @@ internal static class CompositionRoot
         services.AddSingleton<IToastService, ToastService>();
         services.AddSingleton<IPreviewPresenter, PreviewPresenter>();
         services.AddSingleton<ITrayIconHost, TrayIconHost>();
+        services.AddSingleton<IClipboardService, WinAppSDKClipboardService>();
 
         // --- Navigation --------------------------------------------------------
         services.AddSingleton<INavigationService, NavigationService>();

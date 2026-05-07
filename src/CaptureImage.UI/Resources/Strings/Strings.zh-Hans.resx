@@ -161,4 +161,18 @@
   <data name="Tray_OpenFolder" xml:space="preserve"><value>打开截图文件夹</value></data>
   <data name="Tray_Exit" xml:space="preserve"><value>退出</value></data>
 
+  <!-- v1.5 quick wins -->
+  <data name="Settings_Countdown" xml:space="preserve"><value>拍摄倒计时</value></data>
+  <data name="Settings_CountdownOff" xml:space="preserve"><value>关闭(无延迟)</value></data>
+  <data name="Settings_Countdown3s" xml:space="preserve"><value>3 秒</value></data>
+  <data name="Settings_Countdown5s" xml:space="preserve"><value>5 秒</value></data>
+  <data name="Settings_Countdown10s" xml:space="preserve"><value>10 秒</value></data>
+  <data name="Settings_Clipboard" xml:space="preserve"><value>剪贴板模式</value></data>
+  <data name="Settings_ClipboardNone" xml:space="preserve"><value>关闭(仅文件)</value></data>
+  <data name="Settings_ClipboardCopy" xml:space="preserve"><value>仅复制(不保存文件)</value></data>
+  <data name="Settings_ClipboardCopySave" xml:space="preserve"><value>复制 + 保存文件</value></data>
+  <data name="Settings_OpenFolderAfterSave" xml:space="preserve"><value>保存后打开输出文件夹</value></data>
+  <data name="Toast_Countdown" xml:space="preserve"><value>{0} 秒后拍摄…</value></data>
+  <data name="Toast_ClipboardCopied" xml:space="preserve"><value>已复制到剪贴板</value></data>
+
 </root>

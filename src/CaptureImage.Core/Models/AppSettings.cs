@@ -80,6 +80,21 @@ public sealed record CaptureSettings
     /// keep behaviour predictable for users who curate the list manually.
     /// </summary>
     public bool AutoSwitchOnAltTab { get; init; } = false;
+
+    /// <summary>
+    /// Optional countdown in seconds before the actual capture fires after the hotkey is
+    /// pressed. <c>0</c> = disabled (default — capture immediately). Valid values are
+    /// 0, 3, 5, 10. Useful for capturing tooltips, hover states, or menu open/close
+    /// animations that disappear when you Alt-Tab back.
+    /// </summary>
+    public int CountdownSeconds { get; init; } = 0;
+
+    /// <summary>
+    /// Clipboard side-effect on save. Stored as a string for forward compatibility:
+    /// <c>None</c> (default) = file only, <c>Copy</c> = clipboard only (no file written),
+    /// <c>CopyAndSave</c> = both. Anything else falls back to <c>None</c>.
+    /// </summary>
+    public string ClipboardMode { get; init; } = "None";
 }
 
 /// <summary>UI / behaviour preferences not tied to a specific tab.</summary>
@@ -92,4 +107,10 @@ public sealed record UiSettings
     public bool ShowLogViewer { get; init; } = false;
 
     public bool SoundEnabled { get; init; } = true;
+
+    /// <summary>
+    /// Open the output folder in Explorer after each successful save. Off by default —
+    /// most users prefer not to be interrupted while gaming.
+    /// </summary>
+    public bool OpenFolderAfterSave { get; init; } = false;
 }

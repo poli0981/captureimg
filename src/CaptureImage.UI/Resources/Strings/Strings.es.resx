@@ -161,4 +161,18 @@
   <data name="Tray_OpenFolder" xml:space="preserve"><value>Abrir carpeta de capturas</value></data>
   <data name="Tray_Exit" xml:space="preserve"><value>Salir</value></data>
 
+  <!-- v1.5 quick wins -->
+  <data name="Settings_Countdown" xml:space="preserve"><value>Cuenta atrás de captura</value></data>
+  <data name="Settings_CountdownOff" xml:space="preserve"><value>Desactivada (sin retraso)</value></data>
+  <data name="Settings_Countdown3s" xml:space="preserve"><value>3 segundos</value></data>
+  <data name="Settings_Countdown5s" xml:space="preserve"><value>5 segundos</value></data>
+  <data name="Settings_Countdown10s" xml:space="preserve"><value>10 segundos</value></data>
+  <data name="Settings_Clipboard" xml:space="preserve"><value>Modo del portapapeles</value></data>
+  <data name="Settings_ClipboardNone" xml:space="preserve"><value>Desactivado (solo archivo)</value></data>
+  <data name="Settings_ClipboardCopy" xml:space="preserve"><value>Solo copiar (sin archivo)</value></data>
+  <data name="Settings_ClipboardCopySave" xml:space="preserve"><value>Copiar + guardar archivo</value></data>
+  <data name="Settings_OpenFolderAfterSave" xml:space="preserve"><value>Abrir carpeta de salida tras guardar</value></data>
+  <data name="Toast_Countdown" xml:space="preserve"><value>Capturando en {0}…</value></data>
+  <data name="Toast_ClipboardCopied" xml:space="preserve"><value>Copiado al portapapeles</value></data>
+
 </root>

@@ -161,4 +161,18 @@
   <data name="Tray_OpenFolder" xml:space="preserve"><value>فتح مجلد اللقطات</value></data>
   <data name="Tray_Exit" xml:space="preserve"><value>خروج</value></data>
 
+  <!-- v1.5 quick wins -->
+  <data name="Settings_Countdown" xml:space="preserve"><value>العد التنازلي قبل الالتقاط</value></data>
+  <data name="Settings_CountdownOff" xml:space="preserve"><value>إيقاف (بدون تأخير)</value></data>
+  <data name="Settings_Countdown3s" xml:space="preserve"><value>3 ثوانٍ</value></data>
+  <data name="Settings_Countdown5s" xml:space="preserve"><value>5 ثوانٍ</value></data>
+  <data name="Settings_Countdown10s" xml:space="preserve"><value>10 ثوانٍ</value></data>
+  <data name="Settings_Clipboard" xml:space="preserve"><value>وضع الحافظة</value></data>
+  <data name="Settings_ClipboardNone" xml:space="preserve"><value>إيقاف (ملف فقط)</value></data>
+  <data name="Settings_ClipboardCopy" xml:space="preserve"><value>نسخ فقط (بدون ملف)</value></data>
+  <data name="Settings_ClipboardCopySave" xml:space="preserve"><value>نسخ + حفظ الملف</value></data>
+  <data name="Settings_OpenFolderAfterSave" xml:space="preserve"><value>فتح مجلد الإخراج بعد الحفظ</value></data>
+  <data name="Toast_Countdown" xml:space="preserve"><value>الالتقاط خلال {0}…</value></data>
+  <data name="Toast_ClipboardCopied" xml:space="preserve"><value>تم النسخ إلى الحافظة</value></data>
+
 </root>

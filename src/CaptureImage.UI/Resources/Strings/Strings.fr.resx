@@ -161,4 +161,18 @@
   <data name="Tray_OpenFolder" xml:space="preserve"><value>Ouvrir le dossier des captures</value></data>
   <data name="Tray_Exit" xml:space="preserve"><value>Quitter</value></data>
 
+  <!-- v1.5 quick wins -->
+  <data name="Settings_Countdown" xml:space="preserve"><value>Compte à rebours de capture</value></data>
+  <data name="Settings_CountdownOff" xml:space="preserve"><value>Désactivé (pas de délai)</value></data>
+  <data name="Settings_Countdown3s" xml:space="preserve"><value>3 secondes</value></data>
+  <data name="Settings_Countdown5s" xml:space="preserve"><value>5 secondes</value></data>
+  <data name="Settings_Countdown10s" xml:space="preserve"><value>10 secondes</value></data>
+  <data name="Settings_Clipboard" xml:space="preserve"><value>Mode presse-papiers</value></data>
+  <data name="Settings_ClipboardNone" xml:space="preserve"><value>Désactivé (fichier uniquement)</value></data>
+  <data name="Settings_ClipboardCopy" xml:space="preserve"><value>Copier uniquement (pas de fichier)</value></data>
+  <data name="Settings_ClipboardCopySave" xml:space="preserve"><value>Copier + enregistrer le fichier</value></data>
+  <data name="Settings_OpenFolderAfterSave" xml:space="preserve"><value>Ouvrir le dossier de sortie après l'enregistrement</value></data>
+  <data name="Toast_Countdown" xml:space="preserve"><value>Capture dans {0}…</value></data>
+  <data name="Toast_ClipboardCopied" xml:space="preserve"><value>Copié dans le presse-papiers</value></data>
+
 </root>

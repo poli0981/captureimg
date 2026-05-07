@@ -161,4 +161,18 @@
   <data name="Tray_OpenFolder" xml:space="preserve"><value>Abrir pasta de capturas</value></data>
   <data name="Tray_Exit" xml:space="preserve"><value>Sair</value></data>
 
+  <!-- v1.5 quick wins -->
+  <data name="Settings_Countdown" xml:space="preserve"><value>Contagem regressiva da captura</value></data>
+  <data name="Settings_CountdownOff" xml:space="preserve"><value>Desligado (sem atraso)</value></data>
+  <data name="Settings_Countdown3s" xml:space="preserve"><value>3 segundos</value></data>
+  <data name="Settings_Countdown5s" xml:space="preserve"><value>5 segundos</value></data>
+  <data name="Settings_Countdown10s" xml:space="preserve"><value>10 segundos</value></data>
+  <data name="Settings_Clipboard" xml:space="preserve"><value>Modo da área de transferência</value></data>
+  <data name="Settings_ClipboardNone" xml:space="preserve"><value>Desligado (apenas arquivo)</value></data>
+  <data name="Settings_ClipboardCopy" xml:space="preserve"><value>Apenas copiar (sem arquivo)</value></data>
+  <data name="Settings_ClipboardCopySave" xml:space="preserve"><value>Copiar + salvar arquivo</value></data>
+  <data name="Settings_OpenFolderAfterSave" xml:space="preserve"><value>Abrir pasta de saída após salvar</value></data>
+  <data name="Toast_Countdown" xml:space="preserve"><value>Capturando em {0}…</value></data>
+  <data name="Toast_ClipboardCopied" xml:space="preserve"><value>Copiado para a área de transferência</value></data>
+
 </root>

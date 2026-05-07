@@ -80,7 +80,20 @@ public sealed partial class SettingsViewModel : ViewModelBase, IDisposable
     private bool _soundEnabled;
 
     [ObservableProperty]
+    private CountdownOption? _selectedCountdown;
+
+    [ObservableProperty]
+    private ClipboardOption? _selectedClipboardMode;
+
+    [ObservableProperty]
+    private bool _openFolderAfterSave;
+
+    [ObservableProperty]
     private string _selectedLogLevel = "Information";
+
+    public ObservableCollection<CountdownOption> SupportedCountdowns { get; } = new();
+
+    public ObservableCollection<ClipboardOption> SupportedClipboardModes { get; } = new();
 
     public string SettingsFilePath => _settings.SettingsFilePath;
 
@@ -112,6 +125,9 @@ public sealed partial class SettingsViewModel : ViewModelBase, IDisposable
     public string AutoSwitchOnAltTabHint => Localization["Settings_AutoSwitchOnAltTabHint"];
     public string MinimizeToTrayLabel => Localization["Settings_MinimizeToTray"];
     public string SoundEnabledLabel => Localization["Settings_SoundEnabled"];
+    public string CountdownLabel => Localization["Settings_Countdown"];
+    public string ClipboardLabel => Localization["Settings_Clipboard"];
+    public string OpenFolderAfterSaveLabel => Localization["Settings_OpenFolderAfterSave"];
     public string ImportLabel => Localization["Settings_Import"];
     public string ExportLabel => Localization["Settings_Export"];
     public string OpenFileLabel => Localization["Settings_OpenFile"];
@@ -138,6 +154,8 @@ public sealed partial class SettingsViewModel : ViewModelBase, IDisposable
         _selectedCulture = FindCulture(settings.Current.Culture) ?? SupportedCultures[0];
 
         RebuildThemeOptions();
+        RebuildCountdownOptions();
+        RebuildClipboardOptions();
 
         Hydrate();
         _settings.Changed += OnSettingsStoreChanged;
@@ -184,6 +202,11 @@ public sealed partial class SettingsViewModel : ViewModelBase, IDisposable
             OnPropertyChanged(nameof(AutoSwitchOnAltTabHint));
             OnPropertyChanged(nameof(MinimizeToTrayLabel));
             OnPropertyChanged(nameof(SoundEnabledLabel));
+            OnPropertyChanged(nameof(CountdownLabel));
+            OnPropertyChanged(nameof(ClipboardLabel));
+            OnPropertyChanged(nameof(OpenFolderAfterSaveLabel));
+            RebuildCountdownOptions();
+            RebuildClipboardOptions();
             OnPropertyChanged(nameof(ImportLabel));
             OnPropertyChanged(nameof(ExportLabel));
             OnPropertyChanged(nameof(OpenFileLabel));
@@ -230,6 +253,9 @@ public sealed partial class SettingsViewModel : ViewModelBase, IDisposable
             AutoSwitchOnAltTab = current.Capture.AutoSwitchOnAltTab;
             MinimizeToTray = current.UI.MinimizeToTray;
             SoundEnabled = current.UI.SoundEnabled;
+            OpenFolderAfterSave = current.UI.OpenFolderAfterSave;
+            SelectedCountdown = FindCountdown(current.Capture.CountdownSeconds) ?? SupportedCountdowns[0];
+            SelectedClipboardMode = FindClipboardMode(current.Capture.ClipboardMode) ?? SupportedClipboardModes[0];
             // Fall back to the first supported value if the persisted string doesn't match —
             // that can happen after a hand-edit or a downgrade from a future schema.
             SelectedLogLevel = SupportedLogLevels.Contains(current.LogLevel)
@@ -341,6 +367,77 @@ public sealed partial class SettingsViewModel : ViewModelBase, IDisposable
         if (_suppressPush) return;
         _settings.Update(s => s with { UI = s.UI with { SoundEnabled = value } });
         _logger.LogInformation("Capture sound {State}.", value ? "enabled" : "disabled");
+    }
+
+    partial void OnSelectedCountdownChanged(CountdownOption? value)
+    {
+        if (_suppressPush || value is null) return;
+        _settings.Update(s => s with { Capture = s.Capture with { CountdownSeconds = value.Seconds } });
+        _logger.LogInformation("Capture countdown set to {Seconds}s.", value.Seconds);
+    }
+
+    partial void OnSelectedClipboardModeChanged(ClipboardOption? value)
+    {
+        if (_suppressPush || value is null) return;
+        _settings.Update(s => s with { Capture = s.Capture with { ClipboardMode = value.Code } });
+        _logger.LogInformation("Clipboard mode set to {Mode}.", value.Code);
+    }
+
+    partial void OnOpenFolderAfterSaveChanged(bool value)
+    {
+        if (_suppressPush) return;
+        _settings.Update(s => s with { UI = s.UI with { OpenFolderAfterSave = value } });
+    }
+
+    private CountdownOption? FindCountdown(int seconds)
+    {
+        foreach (var c in SupportedCountdowns)
+        {
+            if (c.Seconds == seconds) return c;
+        }
+        return null;
+    }
+
+    private ClipboardOption? FindClipboardMode(string code)
+    {
+        foreach (var m in SupportedClipboardModes)
+        {
+            if (m.Code.Equals(code, StringComparison.OrdinalIgnoreCase)) return m;
+        }
+        return null;
+    }
+
+    private void RebuildCountdownOptions()
+    {
+        var keepSeconds = SelectedCountdown?.Seconds;
+        SupportedCountdowns.Clear();
+        SupportedCountdowns.Add(new CountdownOption(0,  Localization["Settings_CountdownOff"]));
+        SupportedCountdowns.Add(new CountdownOption(3,  Localization["Settings_Countdown3s"]));
+        SupportedCountdowns.Add(new CountdownOption(5,  Localization["Settings_Countdown5s"]));
+        SupportedCountdowns.Add(new CountdownOption(10, Localization["Settings_Countdown10s"]));
+
+        if (keepSeconds is int s)
+        {
+            _suppressPush = true;
+            try { SelectedCountdown = FindCountdown(s) ?? SupportedCountdowns[0]; }
+            finally { _suppressPush = false; }
+        }
+    }
+
+    private void RebuildClipboardOptions()
+    {
+        var keepCode = SelectedClipboardMode?.Code;
+        SupportedClipboardModes.Clear();
+        SupportedClipboardModes.Add(new ClipboardOption("None",        Localization["Settings_ClipboardNone"]));
+        SupportedClipboardModes.Add(new ClipboardOption("Copy",        Localization["Settings_ClipboardCopy"]));
+        SupportedClipboardModes.Add(new ClipboardOption("CopyAndSave", Localization["Settings_ClipboardCopySave"]));
+
+        if (keepCode is not null)
+        {
+            _suppressPush = true;
+            try { SelectedClipboardMode = FindClipboardMode(keepCode) ?? SupportedClipboardModes[0]; }
+            finally { _suppressPush = false; }
+        }
     }
 
     partial void OnSelectedLogLevelChanged(string value)

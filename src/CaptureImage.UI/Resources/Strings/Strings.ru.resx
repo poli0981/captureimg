@@ -161,4 +161,18 @@
   <data name="Tray_OpenFolder" xml:space="preserve"><value>Открыть папку снимков</value></data>
   <data name="Tray_Exit" xml:space="preserve"><value>Выход</value></data>
 
+  <!-- v1.5 quick wins -->
+  <data name="Settings_Countdown" xml:space="preserve"><value>Обратный отсчёт перед захватом</value></data>
+  <data name="Settings_CountdownOff" xml:space="preserve"><value>Выключено (без задержки)</value></data>
+  <data name="Settings_Countdown3s" xml:space="preserve"><value>3 секунды</value></data>
+  <data name="Settings_Countdown5s" xml:space="preserve"><value>5 секунд</value></data>
+  <data name="Settings_Countdown10s" xml:space="preserve"><value>10 секунд</value></data>
+  <data name="Settings_Clipboard" xml:space="preserve"><value>Режим буфера обмена</value></data>
+  <data name="Settings_ClipboardNone" xml:space="preserve"><value>Выключено (только файл)</value></data>
+  <data name="Settings_ClipboardCopy" xml:space="preserve"><value>Только копирование (без файла)</value></data>
+  <data name="Settings_ClipboardCopySave" xml:space="preserve"><value>Копирование + сохранение файла</value></data>
+  <data name="Settings_OpenFolderAfterSave" xml:space="preserve"><value>Открывать папку вывода после сохранения</value></data>
+  <data name="Toast_Countdown" xml:space="preserve"><value>Захват через {0}…</value></data>
+  <data name="Toast_ClipboardCopied" xml:space="preserve"><value>Скопировано в буфер обмена</value></data>
+
 </root>

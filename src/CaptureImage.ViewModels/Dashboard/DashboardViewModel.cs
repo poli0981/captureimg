@@ -28,6 +28,7 @@ public sealed partial class DashboardViewModel : ViewModelBase, IDisposable
     private readonly IPreviewPresenter _previewPresenter;
     private readonly ISettingsStore _settings;
     private readonly IToastService _toasts;
+    private readonly IClipboardService _clipboard;
     private readonly IUIThreadDispatcher _dispatcher;
     private readonly ILogger<DashboardViewModel> _logger;
     private readonly CaptureStateMachine _stateMachine;
@@ -83,6 +84,7 @@ public sealed partial class DashboardViewModel : ViewModelBase, IDisposable
         IPreviewPresenter previewPresenter,
         ISettingsStore settings,
         IToastService toasts,
+        IClipboardService clipboard,
         IUIThreadDispatcher dispatcher,
         ILocalizationService localization,
         ILogger<DashboardViewModel> logger)
@@ -97,6 +99,7 @@ public sealed partial class DashboardViewModel : ViewModelBase, IDisposable
         _previewPresenter = previewPresenter;
         _settings = settings;
         _toasts = toasts;
+        _clipboard = clipboard;
         _dispatcher = dispatcher;
         Localization = localization;
         _logger = logger;
@@ -332,6 +335,25 @@ public sealed partial class DashboardViewModel : ViewModelBase, IDisposable
 
         var target = SelectedTarget.Target;
         var settings = _settings.Current;
+
+        // Countdown gate — done BEFORE firing HotkeyPressed so the state machine still
+        // shows Armed during the wait. Only fires when the user opted in (>0 seconds).
+        var countdown = NormalizeCountdown(settings.Capture.CountdownSeconds);
+        if (countdown > 0)
+        {
+            for (var remaining = countdown; remaining > 0; remaining--)
+            {
+                if (_disposed) return;
+                StatusMessage = string.Format(
+                    Localization["Toast_Countdown"], remaining);
+                try
+                {
+                    await Task.Delay(TimeSpan.FromSeconds(1)).ConfigureAwait(true);
+                }
+                catch (TaskCanceledException) { return; }
+            }
+        }
+
         _stateMachine.Fire(CaptureTrigger.HotkeyPressed);
 
         CapturedFrame? frame;
@@ -361,33 +383,79 @@ public sealed partial class DashboardViewModel : ViewModelBase, IDisposable
             _stateMachine.Fire(CaptureTrigger.PreviewAccepted);
         }
 
+        var clipboardMode = settings.Capture.ClipboardMode;
+        var copyToClipboard = string.Equals(clipboardMode, "Copy", StringComparison.OrdinalIgnoreCase)
+            || string.Equals(clipboardMode, "CopyAndSave", StringComparison.OrdinalIgnoreCase);
+        var saveToFile = !string.Equals(clipboardMode, "Copy", StringComparison.OrdinalIgnoreCase);
+
         // Saving ------------------------------------------------------------
         try
         {
-            var result = await SaveAsync(frame, target, settings).ConfigureAwait(true);
-            switch (result)
+            CaptureResult.Success? successResult = null;
+            CaptureResult.Failure? failureResult = null;
+
+            if (saveToFile)
             {
-                case CaptureResult.Success ok:
-                    LastCapturePath = ok.FilePath;
-                    _stateMachine.Fire(CaptureTrigger.Saved);
-                    StatusMessage = string.Format(
-                        Localization["Dashboard_StatusSaved"],
-                        Path.GetFileName(ok.FilePath),
-                        ok.Width, ok.Height, (int)ok.Duration.TotalMilliseconds);
-                    _toasts.ShowSuccess(
-                        Localization["Toast_CaptureSaved"],
-                        Path.GetFileName(ok.FilePath));
-                    PlayCaptureSoundIfEnabled();
-                    break;
-                case CaptureResult.Failure fail:
-                    _stateMachine.Fire(CaptureTrigger.ErrorOccurred);
-                    StatusMessage = string.Format(
-                        Localization["Dashboard_StatusFailed"],
-                        fail.ErrorCode, fail.DeveloperMessage);
-                    _toasts.ShowError(
-                        Localization["Toast_CaptureFailed"],
-                        fail.DeveloperMessage);
-                    break;
+                var result = await SaveAsync(frame, target, settings).ConfigureAwait(true);
+                switch (result)
+                {
+                    case CaptureResult.Success ok:
+                        successResult = ok;
+                        LastCapturePath = ok.FilePath;
+                        StatusMessage = string.Format(
+                            Localization["Dashboard_StatusSaved"],
+                            Path.GetFileName(ok.FilePath),
+                            ok.Width, ok.Height, (int)ok.Duration.TotalMilliseconds);
+                        _toasts.ShowSuccess(
+                            Localization["Toast_CaptureSaved"],
+                            Path.GetFileName(ok.FilePath));
+                        break;
+                    case CaptureResult.Failure fail:
+                        failureResult = fail;
+                        break;
+                }
+            }
+
+            if (copyToClipboard && failureResult is null)
+            {
+                var pngBytes = await EncodePngBytesAsync(frame).ConfigureAwait(true);
+                if (pngBytes is not null)
+                {
+                    var copied = await _clipboard.CopyImageAsync(pngBytes).ConfigureAwait(true);
+                    if (copied)
+                    {
+                        _toasts.ShowInfo(
+                            Localization["Toast_ClipboardCopied"],
+                            string.Empty);
+                        if (!saveToFile)
+                        {
+                            // Copy-only mode — synthesise a status update mirroring StatusSaved
+                            // so the dashboard tells the user something happened.
+                            StatusMessage = Localization["Toast_ClipboardCopied"];
+                        }
+                    }
+                }
+            }
+
+            if (failureResult is not null)
+            {
+                _stateMachine.Fire(CaptureTrigger.ErrorOccurred);
+                StatusMessage = string.Format(
+                    Localization["Dashboard_StatusFailed"],
+                    failureResult.ErrorCode, failureResult.DeveloperMessage);
+                _toasts.ShowError(
+                    Localization["Toast_CaptureFailed"],
+                    failureResult.DeveloperMessage);
+            }
+            else
+            {
+                _stateMachine.Fire(CaptureTrigger.Saved);
+                PlayCaptureSoundIfEnabled();
+
+                if (settings.UI.OpenFolderAfterSave && successResult is not null)
+                {
+                    TryOpenContainingFolder(successResult.FilePath);
+                }
             }
         }
         catch (Exception ex)
@@ -395,6 +463,50 @@ public sealed partial class DashboardViewModel : ViewModelBase, IDisposable
             _logger.LogError(ex, "Picture capture failed while saving: {Reason}", ex.Message);
             _stateMachine.Fire(CaptureTrigger.ErrorOccurred);
             _toasts.ShowError(Localization["Toast_CaptureFailed"], ex.Message);
+        }
+    }
+
+    /// <summary>Snap the persisted countdown to one of the supported tiers (0/3/5/10).</summary>
+    private static int NormalizeCountdown(int raw) => raw switch
+    {
+        3 or 5 or 10 => raw,
+        _ => 0,
+    };
+
+    private async Task<byte[]?> EncodePngBytesAsync(CapturedFrame frame)
+    {
+        var encoder = ResolveEncoder(ImageFormat.Png);
+        if (encoder is null)
+        {
+            _logger.LogWarning("No PNG encoder registered; clipboard copy skipped.");
+            return null;
+        }
+        try
+        {
+            using var ms = new MemoryStream();
+            await encoder.EncodeAsync(frame, ImageFormat.Png, jpegQuality: 100, webpQuality: 100, ms)
+                .ConfigureAwait(true);
+            return ms.ToArray();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning(ex, "Failed to encode capture as PNG for clipboard.");
+            return null;
+        }
+    }
+
+    private void TryOpenContainingFolder(string filePath)
+    {
+        try
+        {
+            var folder = Path.GetDirectoryName(filePath);
+            if (string.IsNullOrWhiteSpace(folder)) return;
+            System.Diagnostics.Process.Start(
+                new System.Diagnostics.ProcessStartInfo(folder) { UseShellExecute = true });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogDebug(ex, "Failed to open output folder after save.");
         }
     }
 

@@ -161,4 +161,18 @@
   <data name="Tray_OpenFolder" xml:space="preserve"><value>Mở thư mục ảnh</value></data>
   <data name="Tray_Exit" xml:space="preserve"><value>Thoát</value></data>
 
+  <!-- v1.5 quick wins -->
+  <data name="Settings_Countdown" xml:space="preserve"><value>Đếm ngược trước khi chụp</value></data>
+  <data name="Settings_CountdownOff" xml:space="preserve"><value>Tắt (không trễ)</value></data>
+  <data name="Settings_Countdown3s" xml:space="preserve"><value>3 giây</value></data>
+  <data name="Settings_Countdown5s" xml:space="preserve"><value>5 giây</value></data>
+  <data name="Settings_Countdown10s" xml:space="preserve"><value>10 giây</value></data>
+  <data name="Settings_Clipboard" xml:space="preserve"><value>Chế độ clipboard</value></data>
+  <data name="Settings_ClipboardNone" xml:space="preserve"><value>Tắt (chỉ lưu file)</value></data>
+  <data name="Settings_ClipboardCopy" xml:space="preserve"><value>Chỉ copy (không lưu file)</value></data>
+  <data name="Settings_ClipboardCopySave" xml:space="preserve"><value>Copy + lưu file</value></data>
+  <data name="Settings_OpenFolderAfterSave" xml:space="preserve"><value>Mở thư mục đầu ra sau khi lưu</value></data>
+  <data name="Toast_Countdown" xml:space="preserve"><value>Chụp sau {0}…</value></data>
+  <data name="Toast_ClipboardCopied" xml:space="preserve"><value>Đã copy vào clipboard</value></data>
+
 </root>

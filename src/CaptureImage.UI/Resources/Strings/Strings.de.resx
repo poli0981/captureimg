@@ -161,4 +161,18 @@
   <data name="Tray_OpenFolder" xml:space="preserve"><value>Aufnahmeordner öffnen</value></data>
   <data name="Tray_Exit" xml:space="preserve"><value>Beenden</value></data>
 
+  <!-- v1.5 quick wins -->
+  <data name="Settings_Countdown" xml:space="preserve"><value>Aufnahme-Countdown</value></data>
+  <data name="Settings_CountdownOff" xml:space="preserve"><value>Aus (keine Verzögerung)</value></data>
+  <data name="Settings_Countdown3s" xml:space="preserve"><value>3 Sekunden</value></data>
+  <data name="Settings_Countdown5s" xml:space="preserve"><value>5 Sekunden</value></data>
+  <data name="Settings_Countdown10s" xml:space="preserve"><value>10 Sekunden</value></data>
+  <data name="Settings_Clipboard" xml:space="preserve"><value>Zwischenablage-Modus</value></data>
+  <data name="Settings_ClipboardNone" xml:space="preserve"><value>Aus (nur Datei)</value></data>
+  <data name="Settings_ClipboardCopy" xml:space="preserve"><value>Nur kopieren (keine Datei)</value></data>
+  <data name="Settings_ClipboardCopySave" xml:space="preserve"><value>Kopieren + Datei speichern</value></data>
+  <data name="Settings_OpenFolderAfterSave" xml:space="preserve"><value>Ausgabeordner nach dem Speichern öffnen</value></data>
+  <data name="Toast_Countdown" xml:space="preserve"><value>Aufnahme in {0}…</value></data>
+  <data name="Toast_ClipboardCopied" xml:space="preserve"><value>In Zwischenablage kopiert</value></data>
+
 </root>

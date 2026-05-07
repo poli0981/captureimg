@@ -161,4 +161,18 @@
   <data name="Tray_OpenFolder" xml:space="preserve"><value>キャプチャフォルダーを開く</value></data>
   <data name="Tray_Exit" xml:space="preserve"><value>終了</value></data>
 
+  <!-- v1.5 quick wins -->
+  <data name="Settings_Countdown" xml:space="preserve"><value>キャプチャのカウントダウン</value></data>
+  <data name="Settings_CountdownOff" xml:space="preserve"><value>オフ(遅延なし)</value></data>
+  <data name="Settings_Countdown3s" xml:space="preserve"><value>3 秒</value></data>
+  <data name="Settings_Countdown5s" xml:space="preserve"><value>5 秒</value></data>
+  <data name="Settings_Countdown10s" xml:space="preserve"><value>10 秒</value></data>
+  <data name="Settings_Clipboard" xml:space="preserve"><value>クリップボードモード</value></data>
+  <data name="Settings_ClipboardNone" xml:space="preserve"><value>オフ(ファイルのみ)</value></data>
+  <data name="Settings_ClipboardCopy" xml:space="preserve"><value>コピーのみ(ファイル無し)</value></data>
+  <data name="Settings_ClipboardCopySave" xml:space="preserve"><value>コピー + ファイル保存</value></data>
+  <data name="Settings_OpenFolderAfterSave" xml:space="preserve"><value>保存後に出力フォルダーを開く</value></data>
+  <data name="Toast_Countdown" xml:space="preserve"><value>{0} 秒後にキャプチャ…</value></data>
+  <data name="Toast_ClipboardCopied" xml:space="preserve"><value>クリップボードにコピーしました</value></data>
+
 </root>
