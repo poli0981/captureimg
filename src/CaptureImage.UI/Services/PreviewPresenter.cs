@@ -21,11 +21,16 @@ public sealed class PreviewPresenter : IPreviewPresenter
 {
     private readonly IUIThreadDispatcher _dispatcher;
     private readonly ILocalizationService _localization;
+    private readonly ISettingsStore _settings;
 
-    public PreviewPresenter(IUIThreadDispatcher dispatcher, ILocalizationService localization)
+    public PreviewPresenter(
+        IUIThreadDispatcher dispatcher,
+        ILocalizationService localization,
+        ISettingsStore settings)
     {
         _dispatcher = dispatcher;
         _localization = localization;
+        _settings = settings;
     }
 
     public async Task<bool> ShowAsync(
@@ -48,6 +53,10 @@ public sealed class PreviewPresenter : IPreviewPresenter
 
                 var window = new PreviewWindow();
                 window.SetViewModel(vm);
+                // Bind to the settings store BEFORE Activate so the very first paint
+                // already has the correct theme — avoids a Light→Dark flash for users
+                // running Dark mode.
+                window.AttachThemeStore(_settings);
                 window.Activate();
 
                 _ = WaitForResultAsync(window, vm, tcs);

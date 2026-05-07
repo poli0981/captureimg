@@ -1,3 +1,5 @@
+using CaptureImage.Core.Abstractions;
+using CaptureImage.UI.Theming;
 using CaptureImage.ViewModels.Preview;
 using Microsoft.UI;
 using Microsoft.UI.Composition.SystemBackdrops;
@@ -20,6 +22,8 @@ public sealed partial class PreviewWindow : Window
 
     private readonly TaskCompletionSource<bool> _result =
         new(TaskCreationOptions.RunContinuationsAsynchronously);
+
+    private ISettingsStore? _settings;
 
     public PreviewWindow()
     {
@@ -45,6 +49,25 @@ public sealed partial class PreviewWindow : Window
         Root.DataContext = vm;
     }
 
+    /// <summary>
+    /// Bind this preview window to the app's <see cref="ISettingsStore"/> so its theme
+    /// matches MainWindow at open time AND tracks live changes (user toggles theme in
+    /// Settings while the preview is open). The <c>Closed</c> handler unsubscribes so
+    /// each preview doesn't leak a handler into the singleton store.
+    /// </summary>
+    public void AttachThemeStore(ISettingsStore settings)
+    {
+        _settings = settings;
+        ThemeApplicator.Apply(Content as FrameworkElement, settings.Current.Theme);
+        settings.Changed += OnSettingsChanged;
+    }
+
+    private void OnSettingsChanged(object? sender, EventArgs e)
+    {
+        if (_settings is null) return;
+        ThemeApplicator.Apply(Content as FrameworkElement, _settings.Current.Theme);
+    }
+
     private void OnSaveClick(object sender, RoutedEventArgs e)
     {
         _result.TrySetResult(true);
@@ -59,6 +82,11 @@ public sealed partial class PreviewWindow : Window
 
     private void OnClosed(object sender, WindowEventArgs args)
     {
+        if (_settings is not null)
+        {
+            _settings.Changed -= OnSettingsChanged;
+            _settings = null;
+        }
         // Closing via the X button counts as discard.
         _result.TrySetResult(false);
     }
