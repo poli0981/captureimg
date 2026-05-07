@@ -186,4 +186,11 @@
   <data name="Toast_OcrEmpty" xml:space="preserve"><value>Nenhum texto encontrado na imagem</value></data>
   <data name="Toast_OcrUnavailable" xml:space="preserve"><value>Mecanismo OCR indisponível para este idioma</value></data>
 
+  <!-- v1.5 region capture -->
+  <data name="Settings_CaptureMode" xml:space="preserve"><value>Modo de captura</value></data>
+  <data name="Settings_CaptureModeWindow" xml:space="preserve"><value>Janela única</value></data>
+  <data name="Settings_CaptureModeRegion" xml:space="preserve"><value>Região (arraste para selecionar)</value></data>
+  <data name="Region_TargetName" xml:space="preserve"><value>Região</value></data>
+  <data name="Region_DragHint" xml:space="preserve"><value>Arraste um retângulo. Pressione Esc para cancelar.</value></data>
+
 </root>

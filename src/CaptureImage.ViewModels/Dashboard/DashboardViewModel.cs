@@ -30,6 +30,7 @@ public sealed partial class DashboardViewModel : ViewModelBase, IDisposable
     private readonly IToastService _toasts;
     private readonly IClipboardService _clipboard;
     private readonly IPinnedThumbnailHost _pinnedThumbnail;
+    private readonly IRegionCaptureService _regionCapture;
     private readonly IUIThreadDispatcher _dispatcher;
     private readonly ILogger<DashboardViewModel> _logger;
     private readonly CaptureStateMachine _stateMachine;
@@ -87,6 +88,7 @@ public sealed partial class DashboardViewModel : ViewModelBase, IDisposable
         IToastService toasts,
         IClipboardService clipboard,
         IPinnedThumbnailHost pinnedThumbnail,
+        IRegionCaptureService regionCapture,
         IUIThreadDispatcher dispatcher,
         ILocalizationService localization,
         ILogger<DashboardViewModel> logger)
@@ -103,6 +105,7 @@ public sealed partial class DashboardViewModel : ViewModelBase, IDisposable
         _toasts = toasts;
         _clipboard = clipboard;
         _pinnedThumbnail = pinnedThumbnail;
+        _regionCapture = regionCapture;
         _dispatcher = dispatcher;
         Localization = localization;
         _logger = logger;
@@ -333,11 +336,24 @@ public sealed partial class DashboardViewModel : ViewModelBase, IDisposable
 
     private async Task CaptureOnceAsync()
     {
-        if (_disposed || SelectedTarget is null) return;
+        if (_disposed) return;
         if (_stateMachine.CurrentState != CaptureState.Armed) return;
 
-        var target = SelectedTarget.Target;
         var settings = _settings.Current;
+        var isRegionMode = string.Equals(settings.Capture.Mode, "Region", StringComparison.OrdinalIgnoreCase);
+
+        // Window mode needs a selected target; Region mode does not.
+        if (!isRegionMode && SelectedTarget is null) return;
+        var target = isRegionMode
+            ? new GameTarget(
+                ProcessId: 0u,
+                WindowHandle: nint.Zero,
+                ProcessName: "Region",
+                WindowTitle: Localization["Region_TargetName"],
+                ExecutablePath: string.Empty,
+                IconBytes: null,
+                SteamInfo: null)
+            : SelectedTarget!.Target;
 
         // Countdown gate — done BEFORE firing HotkeyPressed so the state machine still
         // shows Armed during the wait. Only fires when the user opted in (>0 seconds).
@@ -362,7 +378,21 @@ public sealed partial class DashboardViewModel : ViewModelBase, IDisposable
         CapturedFrame? frame;
         try
         {
-            frame = await _captureEngine.CaptureAsync(target).ConfigureAwait(true);
+            if (isRegionMode)
+            {
+                frame = await _regionCapture.SelectAndCaptureAsync().ConfigureAwait(true);
+                if (frame is null)
+                {
+                    // User cancelled the region selection (Esc / micro-drag) — return to
+                    // Armed state without firing FrameCaptured.
+                    _stateMachine.Fire(CaptureTrigger.PreviewRejected);
+                    return;
+                }
+            }
+            else
+            {
+                frame = await _captureEngine.CaptureAsync(target).ConfigureAwait(true);
+            }
         }
         catch (Exception ex)
         {

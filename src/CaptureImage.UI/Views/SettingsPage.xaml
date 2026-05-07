@@ -133,6 +133,22 @@
                          FontFamily="Consolas, Courier New" />
             </StackPanel>
 
+            <!-- Capture mode (Window / Region) -->
+            <StackPanel Spacing="4">
+                <TextBlock Text="{Binding CaptureModeLabel}"
+                           Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                           FontSize="{StaticResource FontSizeSmall}" />
+                <ComboBox ItemsSource="{Binding SupportedCaptureModes}"
+                          SelectedItem="{Binding SelectedCaptureMode, Mode=TwoWay}"
+                          HorizontalAlignment="Stretch">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding DisplayLabel}" />
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+            </StackPanel>
+
             <!-- Capture countdown -->
             <StackPanel Spacing="4">
                 <TextBlock Text="{Binding CountdownLabel}"

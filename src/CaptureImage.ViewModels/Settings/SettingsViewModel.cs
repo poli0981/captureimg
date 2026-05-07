@@ -80,6 +80,9 @@ public sealed partial class SettingsViewModel : ViewModelBase, IDisposable
     private bool _soundEnabled;
 
     [ObservableProperty]
+    private CaptureModeOption? _selectedCaptureMode;
+
+    [ObservableProperty]
     private CountdownOption? _selectedCountdown;
 
     [ObservableProperty]
@@ -97,6 +100,8 @@ public sealed partial class SettingsViewModel : ViewModelBase, IDisposable
     public ObservableCollection<CountdownOption> SupportedCountdowns { get; } = new();
 
     public ObservableCollection<ClipboardOption> SupportedClipboardModes { get; } = new();
+
+    public ObservableCollection<CaptureModeOption> SupportedCaptureModes { get; } = new();
 
     public string SettingsFilePath => _settings.SettingsFilePath;
 
@@ -132,6 +137,7 @@ public sealed partial class SettingsViewModel : ViewModelBase, IDisposable
     public string ClipboardLabel => Localization["Settings_Clipboard"];
     public string OpenFolderAfterSaveLabel => Localization["Settings_OpenFolderAfterSave"];
     public string AutoPinAfterCaptureLabel => Localization["Settings_AutoPinAfterCapture"];
+    public string CaptureModeLabel => Localization["Settings_CaptureMode"];
     public string ImportLabel => Localization["Settings_Import"];
     public string ExportLabel => Localization["Settings_Export"];
     public string OpenFileLabel => Localization["Settings_OpenFile"];
@@ -160,6 +166,7 @@ public sealed partial class SettingsViewModel : ViewModelBase, IDisposable
         RebuildThemeOptions();
         RebuildCountdownOptions();
         RebuildClipboardOptions();
+        RebuildCaptureModeOptions();
 
         Hydrate();
         _settings.Changed += OnSettingsStoreChanged;
@@ -210,8 +217,10 @@ public sealed partial class SettingsViewModel : ViewModelBase, IDisposable
             OnPropertyChanged(nameof(ClipboardLabel));
             OnPropertyChanged(nameof(OpenFolderAfterSaveLabel));
             OnPropertyChanged(nameof(AutoPinAfterCaptureLabel));
+            OnPropertyChanged(nameof(CaptureModeLabel));
             RebuildCountdownOptions();
             RebuildClipboardOptions();
+            RebuildCaptureModeOptions();
             OnPropertyChanged(nameof(ImportLabel));
             OnPropertyChanged(nameof(ExportLabel));
             OnPropertyChanged(nameof(OpenFileLabel));
@@ -262,6 +271,7 @@ public sealed partial class SettingsViewModel : ViewModelBase, IDisposable
             AutoPinAfterCapture = current.UI.AutoPinAfterCapture;
             SelectedCountdown = FindCountdown(current.Capture.CountdownSeconds) ?? SupportedCountdowns[0];
             SelectedClipboardMode = FindClipboardMode(current.Capture.ClipboardMode) ?? SupportedClipboardModes[0];
+            SelectedCaptureMode = FindCaptureMode(current.Capture.Mode) ?? SupportedCaptureModes[0];
             // Fall back to the first supported value if the persisted string doesn't match —
             // that can happen after a hand-edit or a downgrade from a future schema.
             SelectedLogLevel = SupportedLogLevels.Contains(current.LogLevel)
@@ -387,6 +397,37 @@ public sealed partial class SettingsViewModel : ViewModelBase, IDisposable
         if (_suppressPush || value is null) return;
         _settings.Update(s => s with { Capture = s.Capture with { ClipboardMode = value.Code } });
         _logger.LogInformation("Clipboard mode set to {Mode}.", value.Code);
+    }
+
+    partial void OnSelectedCaptureModeChanged(CaptureModeOption? value)
+    {
+        if (_suppressPush || value is null) return;
+        _settings.Update(s => s with { Capture = s.Capture with { Mode = value.Code } });
+        _logger.LogInformation("Capture mode set to {Mode}.", value.Code);
+    }
+
+    private CaptureModeOption? FindCaptureMode(string code)
+    {
+        foreach (var m in SupportedCaptureModes)
+        {
+            if (m.Code.Equals(code, StringComparison.OrdinalIgnoreCase)) return m;
+        }
+        return null;
+    }
+
+    private void RebuildCaptureModeOptions()
+    {
+        var keepCode = SelectedCaptureMode?.Code;
+        SupportedCaptureModes.Clear();
+        SupportedCaptureModes.Add(new CaptureModeOption("Window", Localization["Settings_CaptureModeWindow"]));
+        SupportedCaptureModes.Add(new CaptureModeOption("Region", Localization["Settings_CaptureModeRegion"]));
+
+        if (keepCode is not null)
+        {
+            _suppressPush = true;
+            try { SelectedCaptureMode = FindCaptureMode(keepCode) ?? SupportedCaptureModes[0]; }
+            finally { _suppressPush = false; }
+        }
     }
 
     partial void OnOpenFolderAfterSaveChanged(bool value)

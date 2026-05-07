@@ -95,6 +95,14 @@ public sealed record CaptureSettings
     /// <c>CopyAndSave</c> = both. Anything else falls back to <c>None</c>.
     /// </summary>
     public string ClipboardMode { get; init; } = "None";
+
+    /// <summary>
+    /// Capture mode. <c>Window</c> (default) captures the dashboard's selected target via
+    /// Windows.Graphics.Capture; <c>Region</c> opens a full-screen overlay so the user
+    /// drags a rectangle. v1.5 supports the primary monitor only — multi-monitor lands
+    /// in v1.6.
+    /// </summary>
+    public string Mode { get; init; } = "Window";
 }
 
 /// <summary>UI / behaviour preferences not tied to a specific tab.</summary>

@@ -186,4 +186,11 @@
   <data name="Toast_OcrEmpty" xml:space="preserve"><value>Không tìm thấy văn bản trong ảnh</value></data>
   <data name="Toast_OcrUnavailable" xml:space="preserve"><value>Bộ máy OCR không khả dụng cho ngôn ngữ này</value></data>
 
+  <!-- v1.5 region capture -->
+  <data name="Settings_CaptureMode" xml:space="preserve"><value>Chế độ chụp</value></data>
+  <data name="Settings_CaptureModeWindow" xml:space="preserve"><value>Một cửa sổ</value></data>
+  <data name="Settings_CaptureModeRegion" xml:space="preserve"><value>Vùng (kéo để chọn)</value></data>
+  <data name="Region_TargetName" xml:space="preserve"><value>Vùng</value></data>
+  <data name="Region_DragHint" xml:space="preserve"><value>Kéo để chọn vùng. Nhấn Esc để huỷ.</value></data>
+
 </root>

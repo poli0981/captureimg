@@ -186,4 +186,11 @@
   <data name="Toast_OcrEmpty" xml:space="preserve"><value>画像内にテキストが見つかりません</value></data>
   <data name="Toast_OcrUnavailable" xml:space="preserve"><value>この言語の OCR エンジンが利用できません</value></data>
 
+  <!-- v1.5 region capture -->
+  <data name="Settings_CaptureMode" xml:space="preserve"><value>キャプチャモード</value></data>
+  <data name="Settings_CaptureModeWindow" xml:space="preserve"><value>ウィンドウ単体</value></data>
+  <data name="Settings_CaptureModeRegion" xml:space="preserve"><value>範囲(ドラッグで選択)</value></data>
+  <data name="Region_TargetName" xml:space="preserve"><value>範囲</value></data>
+  <data name="Region_DragHint" xml:space="preserve"><value>四角形をドラッグしてください。Esc でキャンセル。</value></data>
+
 </root>

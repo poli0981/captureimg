@@ -186,4 +186,11 @@
   <data name="Toast_OcrEmpty" xml:space="preserve"><value>이미지에서 텍스트를 찾을 수 없음</value></data>
   <data name="Toast_OcrUnavailable" xml:space="preserve"><value>이 언어용 OCR 엔진을 사용할 수 없음</value></data>
 
+  <!-- v1.5 region capture -->
+  <data name="Settings_CaptureMode" xml:space="preserve"><value>캡처 모드</value></data>
+  <data name="Settings_CaptureModeWindow" xml:space="preserve"><value>단일 창</value></data>
+  <data name="Settings_CaptureModeRegion" xml:space="preserve"><value>영역(드래그하여 선택)</value></data>
+  <data name="Region_TargetName" xml:space="preserve"><value>영역</value></data>
+  <data name="Region_DragHint" xml:space="preserve"><value>사각형을 드래그하세요. Esc로 취소.</value></data>
+
 </root>

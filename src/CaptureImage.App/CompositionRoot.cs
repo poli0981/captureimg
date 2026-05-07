@@ -102,6 +102,7 @@ internal static class CompositionRoot
         services.AddSingleton<IClipboardService, WinAppSDKClipboardService>();
         services.AddSingleton<IPinnedThumbnailHost, PinnedThumbnailHost>();
         services.AddSingleton<IOcrService, WindowsOcrService>();
+        services.AddSingleton<IRegionCaptureService, WindowsRegionCaptureService>();
 
         // --- Navigation --------------------------------------------------------
         services.AddSingleton<INavigationService, NavigationService>();
