@@ -7,6 +7,113 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.5.0] - 2026-05-07
+
+Bug-fix + feature cycle. Tackles a long-standing process-leak bug,
+adds four feature toggles requested by users, four new language
+packs, and ships a region-capture mode.
+
+### Fixed
+
+- **Process leak on every launch.** `DashboardViewModel.Dispose`
+  was missing a `_watcher.Stop()` call for the WMI watcher, and
+  `Program.Main` never disposed the DI container — together those
+  two gaps left a non-background WMI subscription thread alive
+  past app exit, so the CLR couldn't tear down and Task Manager
+  accumulated one zombie `CaptureImage.exe` per launch. Both holes
+  are now closed; a fresh dispose-chain regression test guards
+  against future regressions.
+- **PreviewWindow theme drift.** The capture-preview modal used to
+  ignore the persisted theme and always inherit the OS default,
+  so Dark-mode users saw a Light flash on every preview. The new
+  `ThemeApplicator` helper is shared between MainWindow and
+  PreviewWindow and re-applies on every `ISettingsStore.Changed`,
+  so toggling theme while a preview is open updates it live.
+
+### Added
+
+- **Single-instance guard with restore-on-relaunch.** A second
+  launch of the app no longer spawns a duplicate process — instead
+  it pings the existing instance over a named pipe and the
+  original window pops to the foreground (Spotify/Slack pattern).
+  The named mutex is per-OS-user, and an abandoned mutex from a
+  crashed prior run is treated as acquired so the app can never
+  lock itself out.
+- **Capture countdown** (Off / 3s / 5s / 10s) — useful for
+  capturing tooltips and menu animations that vanish when you
+  Alt-Tab back to the target.
+- **Clipboard mode** (None / Copy only / Copy + Save) — captures
+  optionally land in the clipboard as a bitmap, with or without
+  also writing a file. Pastes correctly into Paint, Word, Slack.
+- **Open output folder after save** — opt-in toggle that fires
+  Explorer at the saved file's directory.
+- **Pinned floating thumbnail window.** Optional opt-in: every
+  capture spawns a small always-on-top window with a thumbnail of
+  the shot, handy for comparing successive captures or keeping a
+  reference visible while playing/working in another app. Each
+  capture spawns a fresh window so users can pile up several pins.
+- **Built-in offline OCR** via `Windows.Media.Ocr`. The Preview
+  window grew an "Extract text (OCR)" button that runs the
+  OS-supplied recognizer on the captured frame and copies the
+  recognised text to the clipboard. All processing is on-device —
+  nothing leaves the machine. Falls back gracefully when the
+  user's installed OCR language packs don't cover the requested
+  language.
+- **Region capture mode.** New Settings → Capture mode dropdown
+  switches between Window mode (default; existing
+  `Windows.Graphics.Capture` flow) and Region mode, which opens a
+  full-screen overlay where the user drags a rectangle. The
+  selection feeds into the existing Preview / Save / Clipboard /
+  Pinned-thumbnail pipeline unchanged. v1.5 supports the primary
+  monitor only — multi-monitor + per-monitor DPI lands in v1.6.
+- **Four new language packs**: French (fr-FR), German (de-DE),
+  Brazilian Portuguese (pt-BR), Russian (ru-RU). Brings shipped
+  locales to 11. The About → Translations disclaimer lists every
+  machine-assisted pack and invites native-speaker proofreading
+  PRs against `src/CaptureImage.UI/Resources/Strings/`.
+
+### Changed
+
+- The `string`→`ElementTheme` switch lives in the new
+  `ThemeApplicator` helper instead of being duplicated between
+  windows. `MainWindow.ApplyTheme` now delegates to it.
+- `IClipboardService` grew a `CopyText` overload (used by OCR);
+  the existing `CopyImageAsync` path is unchanged.
+- Localization completeness tests now span all 11 cultures, and
+  both culture test classes share a serialised xUnit collection
+  so they can't race on the process-wide
+  `CultureInfo.DefaultThreadCurrent*` statics.
+
+### Smoke checklist
+
+When validating a v1.5 build manually:
+
+1. Open and close the app five times in a row → Task Manager
+   Background processes shows zero `CaptureImage.exe` after each
+   close.
+2. Double-click the shortcut twice in succession → only one
+   instance runs; the second launch flashes the existing window
+   to the foreground.
+3. Settings → Theme → toggle Light/Dark while a Preview window
+   is open → the preview retints in lock-step.
+4. Switch language to fr-FR / de-DE / pt-BR / ru-RU → no
+   `[Settings_Foo]` bracket fallbacks anywhere in the UI; tray
+   menu refreshes.
+5. Settings → Capture countdown → 5s, then trigger the hotkey →
+   countdown ticks 5/4/3/2/1 in the dashboard status before the
+   shot fires.
+6. Settings → Clipboard mode → Copy + Save, capture, paste into
+   Paint → image matches the saved file.
+7. Settings → Open output folder after save → on, capture →
+   Explorer pops with the file directory.
+8. Settings → Pin a floating thumbnail after each capture → on,
+   capture → small always-on-top window appears with the shot.
+9. Preview window → Extract text (OCR) on a capture with text →
+   word-count toast, paste into Notepad confirms text.
+10. Settings → Capture mode → Region, trigger hotkey → full-screen
+    dim overlay; drag a rectangle → Preview opens with the cropped
+    region. Esc on the overlay cancels cleanly.
+
 ## [1.4.0] - 2026-04-27
 
 UX polish + accessibility cycle. No breaking changes; settings.json
