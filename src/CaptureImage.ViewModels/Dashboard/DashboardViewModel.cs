@@ -599,6 +599,11 @@ public sealed partial class DashboardViewModel : ViewModelBase, IDisposable
         _settings.Changed -= OnSettingsChanged;
         _foregroundWatcher.ForegroundChanged -= OnForegroundChanged;
         _foregroundWatcher.Stop();
+        // The WMI watcher's ManagementEventWatcher subscriptions run on non-background
+        // threads. If these aren't stopped, the CLR can't tear down on app exit and the
+        // process becomes a zombie — every subsequent launch then accumulates a duplicate
+        // CaptureImage.exe in Task Manager. Symmetric with the Start() call in the ctor.
+        _watcher.Stop();
         _stateMachine.StateChanged -= OnStateChanged;
         Localization.PropertyChanged -= OnLocalizationChanged;
         _pendingRefresh?.Cancel();

@@ -119,6 +119,19 @@ internal static class Program
             {
                 Log.Warning(ex, "Failed to flush settings on shutdown.");
             }
+            // Dispose the DI container so every IDisposable singleton runs its cleanup —
+            // most importantly WmiProcessWatcher (WMI subscriptions on non-background
+            // threads), Win32ForegroundWindowWatcher (WinEventHook), and TrayIconHost.
+            // Without this, the process can't fully exit and Task Manager accumulates one
+            // zombie CaptureImage.exe per launch.
+            try
+            {
+                (App.Services as IDisposable)?.Dispose();
+            }
+            catch (Exception ex)
+            {
+                Log.Warning(ex, "Failed to dispose service provider on shutdown.");
+            }
             Log.Information("CaptureImage shutting down. Reason={Reason}", shutdownReason);
             Log.CloseAndFlush();
         }
