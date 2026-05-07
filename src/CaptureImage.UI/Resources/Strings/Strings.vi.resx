@@ -180,4 +180,10 @@
   <data name="PinnedWindow_Open" xml:space="preserve"><value>Hiện trong Explorer</value></data>
   <data name="PinnedWindow_Close" xml:space="preserve"><value>Đóng</value></data>
 
+  <!-- v1.5 OCR -->
+  <data name="Preview_ExtractText" xml:space="preserve"><value>Trích xuất văn bản (OCR)</value></data>
+  <data name="Toast_OcrSuccess" xml:space="preserve"><value>Đã copy {0} từ</value></data>
+  <data name="Toast_OcrEmpty" xml:space="preserve"><value>Không tìm thấy văn bản trong ảnh</value></data>
+  <data name="Toast_OcrUnavailable" xml:space="preserve"><value>Bộ máy OCR không khả dụng cho ngôn ngữ này</value></data>
+
 </root>

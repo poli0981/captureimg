@@ -43,24 +43,38 @@
                    Margin="8" />
         </Border>
 
-        <!-- Accept / discard -->
-        <StackPanel Grid.Row="2"
-                    Orientation="Horizontal"
-                    HorizontalAlignment="Right"
-                    Spacing="8"
-                    Margin="0,12,0,0">
-            <TextBlock Text="{Binding Localization[Preview_Prompt]}"
-                       VerticalAlignment="Center"
-                       Margin="0,0,12,0" />
-            <Button x:Name="DiscardButton"
-                    Content="{Binding Localization[Preview_Discard]}"
-                    Click="OnDiscardClick"
-                    MinWidth="100" />
-            <Button x:Name="SaveButton"
-                    Content="{Binding Localization[Preview_Save]}"
-                    Style="{StaticResource AccentButtonStyle}"
-                    Click="OnSaveClick"
-                    MinWidth="100" />
-        </StackPanel>
+        <!-- Accept / discard / OCR -->
+        <Grid Grid.Row="2" Margin="0,12,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <!-- Extract text (OCR) button on the leading edge — calls into the VM. -->
+            <Button Grid.Column="0"
+                    x:Name="ExtractTextButton"
+                    Content="{Binding Localization[Preview_ExtractText]}"
+                    Command="{Binding ExtractTextCommand}"
+                    MinWidth="140" />
+
+            <StackPanel Grid.Column="2"
+                        Orientation="Horizontal"
+                        HorizontalAlignment="Right"
+                        Spacing="8">
+                <TextBlock Text="{Binding Localization[Preview_Prompt]}"
+                           VerticalAlignment="Center"
+                           Margin="0,0,12,0" />
+                <Button x:Name="DiscardButton"
+                        Content="{Binding Localization[Preview_Discard]}"
+                        Click="OnDiscardClick"
+                        MinWidth="100" />
+                <Button x:Name="SaveButton"
+                        Content="{Binding Localization[Preview_Save]}"
+                        Style="{StaticResource AccentButtonStyle}"
+                        Click="OnSaveClick"
+                        MinWidth="100" />
+            </StackPanel>
+        </Grid>
     </Grid>
 </Window>

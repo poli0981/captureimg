@@ -22,15 +22,24 @@ public sealed class PreviewPresenter : IPreviewPresenter
     private readonly IUIThreadDispatcher _dispatcher;
     private readonly ILocalizationService _localization;
     private readonly ISettingsStore _settings;
+    private readonly IOcrService _ocr;
+    private readonly IClipboardService _clipboard;
+    private readonly IToastService _toasts;
 
     public PreviewPresenter(
         IUIThreadDispatcher dispatcher,
         ILocalizationService localization,
-        ISettingsStore settings)
+        ISettingsStore settings,
+        IOcrService ocr,
+        IClipboardService clipboard,
+        IToastService toasts)
     {
         _dispatcher = dispatcher;
         _localization = localization;
         _settings = settings;
+        _ocr = ocr;
+        _clipboard = clipboard;
+        _toasts = toasts;
     }
 
     public async Task<bool> ShowAsync(
@@ -48,7 +57,7 @@ public sealed class PreviewPresenter : IPreviewPresenter
         {
             try
             {
-                var vm = new PreviewViewModel(_localization);
+                var vm = new PreviewViewModel(_localization, _ocr, _clipboard, _toasts);
                 vm.SetFrame(frame, target, pngBytes);
 
                 var window = new PreviewWindow();

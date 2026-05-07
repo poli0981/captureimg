@@ -49,4 +49,22 @@ public sealed class WinAppSDKClipboardService : IClipboardService
             return false;
         }
     }
+
+    public bool CopyText(string text)
+    {
+        if (text is null) return false;
+        try
+        {
+            var package = new DataPackage();
+            package.SetText(text);
+            Clipboard.SetContent(package);
+            Clipboard.Flush();
+            return true;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning(ex, "Failed to copy text to clipboard.");
+            return false;
+        }
+    }
 }

@@ -180,4 +180,10 @@
   <data name="PinnedWindow_Open" xml:space="preserve"><value>탐색기에서 표시</value></data>
   <data name="PinnedWindow_Close" xml:space="preserve"><value>닫기</value></data>
 
+  <!-- v1.5 OCR -->
+  <data name="Preview_ExtractText" xml:space="preserve"><value>텍스트 추출 (OCR)</value></data>
+  <data name="Toast_OcrSuccess" xml:space="preserve"><value>{0}개 단어 복사됨</value></data>
+  <data name="Toast_OcrEmpty" xml:space="preserve"><value>이미지에서 텍스트를 찾을 수 없음</value></data>
+  <data name="Toast_OcrUnavailable" xml:space="preserve"><value>이 언어용 OCR 엔진을 사용할 수 없음</value></data>
+
 </root>

@@ -1,6 +1,8 @@
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Globalization;
 using CaptureImage.Core.Abstractions;
+using CaptureImage.Core.Models;
 using CaptureImage.ViewModels.Preview;
 using FluentAssertions;
 using Xunit;
@@ -19,7 +21,7 @@ public class PreviewViewModelTests
     public void ItemIndexerChange_RaisesLocalizationPropertyChanged()
     {
         var localization = new FakeLocalizationService();
-        using var vm = new PreviewViewModel(localization);
+        using var vm = new PreviewViewModel(localization, new FakeOcr(), new FakeClipboard(), new FakeToasts());
         var raised = new List<string?>();
         vm.PropertyChanged += (_, e) => raised.Add(e.PropertyName);
 
@@ -32,7 +34,7 @@ public class PreviewViewModelTests
     public void CurrentCultureChange_RaisesLocalizationPropertyChanged()
     {
         var localization = new FakeLocalizationService();
-        using var vm = new PreviewViewModel(localization);
+        using var vm = new PreviewViewModel(localization, new FakeOcr(), new FakeClipboard(), new FakeToasts());
         var raised = new List<string?>();
         vm.PropertyChanged += (_, e) => raised.Add(e.PropertyName);
 
@@ -45,7 +47,7 @@ public class PreviewViewModelTests
     public void UnrelatedPropertyChange_DoesNotRaiseLocalization()
     {
         var localization = new FakeLocalizationService();
-        using var vm = new PreviewViewModel(localization);
+        using var vm = new PreviewViewModel(localization, new FakeOcr(), new FakeClipboard(), new FakeToasts());
         var raised = new List<string?>();
         vm.PropertyChanged += (_, e) => raised.Add(e.PropertyName);
 
@@ -58,7 +60,7 @@ public class PreviewViewModelTests
     public void Dispose_DetachesLocalizationHandler()
     {
         var localization = new FakeLocalizationService();
-        var vm = new PreviewViewModel(localization);
+        var vm = new PreviewViewModel(localization, new FakeOcr(), new FakeClipboard(), new FakeToasts());
         var raised = 0;
         vm.PropertyChanged += (_, _) => raised++;
 
@@ -93,5 +95,30 @@ public class PreviewViewModelTests
 
         public void RaiseOther(string propertyName) =>
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
+
+    private sealed class FakeOcr : IOcrService
+    {
+        public Task<OcrResult> RecognizeAsync(byte[] pngBytes, string? languageTag, CancellationToken cancellationToken = default) =>
+            Task.FromResult(new OcrResult(string.Empty, 0.0, EngineAvailable: false));
+    }
+
+    private sealed class FakeClipboard : IClipboardService
+    {
+        public Task<bool> CopyImageAsync(byte[] pngBytes, CancellationToken cancellationToken = default) =>
+            Task.FromResult(false);
+
+        public bool CopyText(string text) => false;
+    }
+
+    private sealed class FakeToasts : IToastService
+    {
+        public ObservableCollection<ToastItem> Visible { get; } = new();
+        public void Show(ToastItem item) { }
+        public void Dismiss(Guid id) { }
+        public void ShowSuccess(string title, string message) { }
+        public void ShowError(string title, string message) { }
+        public void ShowInfo(string title, string message) { }
+        public void ShowWarning(string title, string message) { }
     }
 }

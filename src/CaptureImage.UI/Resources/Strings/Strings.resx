@@ -180,4 +180,10 @@
   <data name="PinnedWindow_Open" xml:space="preserve"><value>Show in Explorer</value></data>
   <data name="PinnedWindow_Close" xml:space="preserve"><value>Close</value></data>
 
+  <!-- v1.5 OCR -->
+  <data name="Preview_ExtractText" xml:space="preserve"><value>Extract text (OCR)</value></data>
+  <data name="Toast_OcrSuccess" xml:space="preserve"><value>{0} words copied</value></data>
+  <data name="Toast_OcrEmpty" xml:space="preserve"><value>No text found in image</value></data>
+  <data name="Toast_OcrUnavailable" xml:space="preserve"><value>OCR engine unavailable for this language</value></data>
+
 </root>

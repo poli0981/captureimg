@@ -13,4 +13,10 @@ public interface IClipboardService
     /// can't be set (the caller may surface a toast but should not crash).
     /// </summary>
     Task<bool> CopyImageAsync(byte[] pngBytes, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Copy plain text to the clipboard. Used by the OCR pipeline to deliver extracted
+    /// text. Returns <c>false</c> on clipboard contention.
+    /// </summary>
+    bool CopyText(string text);
 }
