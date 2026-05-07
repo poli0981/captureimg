@@ -175,4 +175,9 @@
   <data name="Toast_Countdown" xml:space="preserve"><value>{0} 秒后拍摄…</value></data>
   <data name="Toast_ClipboardCopied" xml:space="preserve"><value>已复制到剪贴板</value></data>
 
+  <!-- v1.5 pinned thumbnail -->
+  <data name="Settings_AutoPinAfterCapture" xml:space="preserve"><value>每次拍摄后固定一个浮动缩略图</value></data>
+  <data name="PinnedWindow_Open" xml:space="preserve"><value>在资源管理器中显示</value></data>
+  <data name="PinnedWindow_Close" xml:space="preserve"><value>关闭</value></data>
+
 </root>

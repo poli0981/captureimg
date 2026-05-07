@@ -175,4 +175,9 @@
   <data name="Toast_Countdown" xml:space="preserve"><value>{0}초 후 캡처…</value></data>
   <data name="Toast_ClipboardCopied" xml:space="preserve"><value>클립보드에 복사됨</value></data>
 
+  <!-- v1.5 pinned thumbnail -->
+  <data name="Settings_AutoPinAfterCapture" xml:space="preserve"><value>캡처마다 떠 있는 썸네일 핀 고정</value></data>
+  <data name="PinnedWindow_Open" xml:space="preserve"><value>탐색기에서 표시</value></data>
+  <data name="PinnedWindow_Close" xml:space="preserve"><value>닫기</value></data>
+
 </root>

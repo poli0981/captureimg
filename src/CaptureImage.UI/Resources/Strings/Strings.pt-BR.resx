@@ -175,4 +175,9 @@
   <data name="Toast_Countdown" xml:space="preserve"><value>Capturando em {0}…</value></data>
   <data name="Toast_ClipboardCopied" xml:space="preserve"><value>Copiado para a área de transferência</value></data>
 
+  <!-- v1.5 pinned thumbnail -->
+  <data name="Settings_AutoPinAfterCapture" xml:space="preserve"><value>Fixar uma miniatura flutuante após cada captura</value></data>
+  <data name="PinnedWindow_Open" xml:space="preserve"><value>Mostrar no Explorador</value></data>
+  <data name="PinnedWindow_Close" xml:space="preserve"><value>Fechar</value></data>
+
 </root>

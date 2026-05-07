@@ -184,6 +184,8 @@
                           IsChecked="{Binding SoundEnabled, Mode=TwoWay}" />
                 <CheckBox Content="{Binding OpenFolderAfterSaveLabel}"
                           IsChecked="{Binding OpenFolderAfterSave, Mode=TwoWay}" />
+                <CheckBox Content="{Binding AutoPinAfterCaptureLabel}"
+                          IsChecked="{Binding AutoPinAfterCapture, Mode=TwoWay}" />
             </StackPanel>
 
             <!-- Logging -->

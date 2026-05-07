@@ -175,4 +175,9 @@
   <data name="Toast_Countdown" xml:space="preserve"><value>الالتقاط خلال {0}…</value></data>
   <data name="Toast_ClipboardCopied" xml:space="preserve"><value>تم النسخ إلى الحافظة</value></data>
 
+  <!-- v1.5 pinned thumbnail -->
+  <data name="Settings_AutoPinAfterCapture" xml:space="preserve"><value>تثبيت صورة مصغرة عائمة بعد كل لقطة</value></data>
+  <data name="PinnedWindow_Open" xml:space="preserve"><value>إظهار في المستكشف</value></data>
+  <data name="PinnedWindow_Close" xml:space="preserve"><value>إغلاق</value></data>
+
 </root>

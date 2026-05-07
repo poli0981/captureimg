@@ -175,4 +175,9 @@
   <data name="Toast_Countdown" xml:space="preserve"><value>Aufnahme in {0}…</value></data>
   <data name="Toast_ClipboardCopied" xml:space="preserve"><value>In Zwischenablage kopiert</value></data>
 
+  <!-- v1.5 pinned thumbnail -->
+  <data name="Settings_AutoPinAfterCapture" xml:space="preserve"><value>Nach jeder Aufnahme ein schwebendes Vorschaubild anpinnen</value></data>
+  <data name="PinnedWindow_Open" xml:space="preserve"><value>Im Explorer anzeigen</value></data>
+  <data name="PinnedWindow_Close" xml:space="preserve"><value>Schließen</value></data>
+
 </root>

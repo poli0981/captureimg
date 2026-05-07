@@ -113,4 +113,11 @@ public sealed record UiSettings
     /// most users prefer not to be interrupted while gaming.
     /// </summary>
     public bool OpenFolderAfterSave { get; init; } = false;
+
+    /// <summary>
+    /// Automatically spawn a pinned floating thumbnail window after each capture so the
+    /// user can keep recent shots on top while continuing to work in other apps. Off by
+    /// default — only the explicit Pin button on the preview window opens one otherwise.
+    /// </summary>
+    public bool AutoPinAfterCapture { get; init; } = false;
 }

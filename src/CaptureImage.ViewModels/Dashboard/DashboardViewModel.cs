@@ -29,6 +29,7 @@ public sealed partial class DashboardViewModel : ViewModelBase, IDisposable
     private readonly ISettingsStore _settings;
     private readonly IToastService _toasts;
     private readonly IClipboardService _clipboard;
+    private readonly IPinnedThumbnailHost _pinnedThumbnail;
     private readonly IUIThreadDispatcher _dispatcher;
     private readonly ILogger<DashboardViewModel> _logger;
     private readonly CaptureStateMachine _stateMachine;
@@ -85,6 +86,7 @@ public sealed partial class DashboardViewModel : ViewModelBase, IDisposable
         ISettingsStore settings,
         IToastService toasts,
         IClipboardService clipboard,
+        IPinnedThumbnailHost pinnedThumbnail,
         IUIThreadDispatcher dispatcher,
         ILocalizationService localization,
         ILogger<DashboardViewModel> logger)
@@ -100,6 +102,7 @@ public sealed partial class DashboardViewModel : ViewModelBase, IDisposable
         _settings = settings;
         _toasts = toasts;
         _clipboard = clipboard;
+        _pinnedThumbnail = pinnedThumbnail;
         _dispatcher = dispatcher;
         Localization = localization;
         _logger = logger;
@@ -387,6 +390,12 @@ public sealed partial class DashboardViewModel : ViewModelBase, IDisposable
         var copyToClipboard = string.Equals(clipboardMode, "Copy", StringComparison.OrdinalIgnoreCase)
             || string.Equals(clipboardMode, "CopyAndSave", StringComparison.OrdinalIgnoreCase);
         var saveToFile = !string.Equals(clipboardMode, "Copy", StringComparison.OrdinalIgnoreCase);
+        var autoPin = settings.UI.AutoPinAfterCapture;
+        // PNG bytes are needed if either clipboard or auto-pin is on. Encode lazily to
+        // avoid re-encoding when the user wants neither.
+        byte[]? cachedPngBytes = null;
+        async Task<byte[]?> EnsurePngAsync()
+            => cachedPngBytes ??= await EncodePngBytesAsync(frame).ConfigureAwait(true);
 
         // Saving ------------------------------------------------------------
         try
@@ -418,7 +427,7 @@ public sealed partial class DashboardViewModel : ViewModelBase, IDisposable
 
             if (copyToClipboard && failureResult is null)
             {
-                var pngBytes = await EncodePngBytesAsync(frame).ConfigureAwait(true);
+                var pngBytes = await EnsurePngAsync().ConfigureAwait(true);
                 if (pngBytes is not null)
                 {
                     var copied = await _clipboard.CopyImageAsync(pngBytes).ConfigureAwait(true);
@@ -455,6 +464,15 @@ public sealed partial class DashboardViewModel : ViewModelBase, IDisposable
                 if (settings.UI.OpenFolderAfterSave && successResult is not null)
                 {
                     TryOpenContainingFolder(successResult.FilePath);
+                }
+
+                if (autoPin)
+                {
+                    var pngBytes = await EnsurePngAsync().ConfigureAwait(true);
+                    if (pngBytes is not null)
+                    {
+                        _pinnedThumbnail.Show(pngBytes, successResult?.FilePath, target.DisplayName);
+                    }
                 }
             }
         }

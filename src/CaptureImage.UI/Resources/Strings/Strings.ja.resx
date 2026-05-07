@@ -175,4 +175,9 @@
   <data name="Toast_Countdown" xml:space="preserve"><value>{0} 秒後にキャプチャ…</value></data>
   <data name="Toast_ClipboardCopied" xml:space="preserve"><value>クリップボードにコピーしました</value></data>
 
+  <!-- v1.5 pinned thumbnail -->
+  <data name="Settings_AutoPinAfterCapture" xml:space="preserve"><value>キャプチャごとにフローティングサムネイルをピン留めする</value></data>
+  <data name="PinnedWindow_Open" xml:space="preserve"><value>エクスプローラーで表示</value></data>
+  <data name="PinnedWindow_Close" xml:space="preserve"><value>閉じる</value></data>
+
 </root>

@@ -89,6 +89,9 @@ public sealed partial class SettingsViewModel : ViewModelBase, IDisposable
     private bool _openFolderAfterSave;
 
     [ObservableProperty]
+    private bool _autoPinAfterCapture;
+
+    [ObservableProperty]
     private string _selectedLogLevel = "Information";
 
     public ObservableCollection<CountdownOption> SupportedCountdowns { get; } = new();
@@ -128,6 +131,7 @@ public sealed partial class SettingsViewModel : ViewModelBase, IDisposable
     public string CountdownLabel => Localization["Settings_Countdown"];
     public string ClipboardLabel => Localization["Settings_Clipboard"];
     public string OpenFolderAfterSaveLabel => Localization["Settings_OpenFolderAfterSave"];
+    public string AutoPinAfterCaptureLabel => Localization["Settings_AutoPinAfterCapture"];
     public string ImportLabel => Localization["Settings_Import"];
     public string ExportLabel => Localization["Settings_Export"];
     public string OpenFileLabel => Localization["Settings_OpenFile"];
@@ -205,6 +209,7 @@ public sealed partial class SettingsViewModel : ViewModelBase, IDisposable
             OnPropertyChanged(nameof(CountdownLabel));
             OnPropertyChanged(nameof(ClipboardLabel));
             OnPropertyChanged(nameof(OpenFolderAfterSaveLabel));
+            OnPropertyChanged(nameof(AutoPinAfterCaptureLabel));
             RebuildCountdownOptions();
             RebuildClipboardOptions();
             OnPropertyChanged(nameof(ImportLabel));
@@ -254,6 +259,7 @@ public sealed partial class SettingsViewModel : ViewModelBase, IDisposable
             MinimizeToTray = current.UI.MinimizeToTray;
             SoundEnabled = current.UI.SoundEnabled;
             OpenFolderAfterSave = current.UI.OpenFolderAfterSave;
+            AutoPinAfterCapture = current.UI.AutoPinAfterCapture;
             SelectedCountdown = FindCountdown(current.Capture.CountdownSeconds) ?? SupportedCountdowns[0];
             SelectedClipboardMode = FindClipboardMode(current.Capture.ClipboardMode) ?? SupportedClipboardModes[0];
             // Fall back to the first supported value if the persisted string doesn't match —
@@ -387,6 +393,12 @@ public sealed partial class SettingsViewModel : ViewModelBase, IDisposable
     {
         if (_suppressPush) return;
         _settings.Update(s => s with { UI = s.UI with { OpenFolderAfterSave = value } });
+    }
+
+    partial void OnAutoPinAfterCaptureChanged(bool value)
+    {
+        if (_suppressPush) return;
+        _settings.Update(s => s with { UI = s.UI with { AutoPinAfterCapture = value } });
     }
 
     private CountdownOption? FindCountdown(int seconds)
