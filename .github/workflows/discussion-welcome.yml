@@ -1,0 +1,68 @@
+name: Welcome new discussions
+
+# Auto-post a brief bilingual greeting (Vietnamese + English) the first time
+# a non-maintainer opens a Discussion thread. The goal is to lower triage
+# burden by directing posters at the right venue up front:
+#   - Bugs           -> the in-app "About -> Report a bug" button or the
+#                       bug-report issue template (requires Windows build,
+#                       GPU, log snippet — the data the solo maintainer
+#                       actually needs to act on a report).
+#   - Security holes -> GitHub Security Advisories, NOT a public discussion.
+#   - Q&A / ideas    -> stay here, you're in the right place.
+
+on:
+  discussion:
+    types: [created]
+
+# `discussions: write` is the only scope required to add a discussion comment
+# via the GraphQL `addDiscussionComment` mutation. Default everything else to
+# read so a compromised step can't push code or open releases.
+permissions:
+  contents: read
+  discussions: write
+
+jobs:
+  welcome:
+    runs-on: ubuntu-latest
+    # Skip greetings for OWNER / COLLABORATOR / MEMBER — the maintainer and
+    # any future collaborators don't need a venue cheat-sheet on their own
+    # threads.
+    if: >-
+      github.event.discussion.author_association != 'OWNER'
+      && github.event.discussion.author_association != 'COLLABORATOR'
+      && github.event.discussion.author_association != 'MEMBER'
+
+    steps:
+      - name: Add welcome comment
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const body = [
+              "Cảm ơn bạn đã mở thread tại **CaptureImage Discussions** — thanks for opening a discussion!",
+              "",
+              "**Tiếng Việt**",
+              "",
+              "- Báo lỗi (crash, capture lỗi, OCR sai, hotkey không hoạt động): dùng nút **About → Report a bug** ngay trong app, hoặc mở [bug-report template](https://github.com/poli0981/captureimg/issues/new?template=bug_report.yml). Issue tracker yêu cầu các field (Windows build, GPU, log snippet) cần để debug nhanh.",
+              "- Lỗi bảo mật (security vulnerability): **không** post công khai — báo riêng qua [GitHub Security Advisories](https://github.com/poli0981/captureimg/security/advisories/new).",
+              "- Câu hỏi sử dụng, ý tưởng, show & tell: bạn đang ở đúng chỗ rồi.",
+              "",
+              "**English**",
+              "",
+              "- Bug reports (crash, broken capture, OCR mistakes, hotkey not firing): use the **About → Report a bug** button in-app, or open the [bug-report template](https://github.com/poli0981/captureimg/issues/new?template=bug_report.yml). The issue tracker requires the fields (Windows build, GPU, log snippet) needed to debug.",
+              "- Security vulnerabilities: please **don't** post publicly — file privately via [GitHub Security Advisories](https://github.com/poli0981/captureimg/security/advisories/new).",
+              "- Usage questions, ideas, show & tell: you're in the right place.",
+              "",
+              "_posted automatically by [.github/workflows/discussion-welcome.yml](https://github.com/poli0981/captureimg/blob/main/.github/workflows/discussion-welcome.yml)_"
+            ].join("\n");
+
+            await github.graphql(
+              `mutation($discussionId: ID!, $body: String!) {
+                 addDiscussionComment(input: { discussionId: $discussionId, body: $body }) {
+                   comment { id }
+                 }
+               }`,
+              {
+                discussionId: context.payload.discussion.node_id,
+                body
+              }
+            );
