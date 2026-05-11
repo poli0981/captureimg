@@ -58,6 +58,20 @@ public sealed partial class AboutViewModel : ViewModelBase
             new("Stateless",                  "Apache-2.0", "https://github.com/dotnet-state-machine/stateless"),
             new("Velopack",                   "MIT",        "https://github.com/velopack/velopack"),
         };
+
+        // Public-handle scope only — see v1.5.1 hotfix plan. Personal email and
+        // PayPal real-name link are intentionally not surfaced here.
+        SocialLinks = new ObservableCollection<SocialLink>
+        {
+            new("X (Twitter) · @SkullMute0011",                  new Uri("https://x.com/SkullMute0011")),
+            new("YouTube · @SkullMute",                          new Uri("https://youtube.com/@SkullMute")),
+            new("Discord (repo) · #general",                     new Uri("https://discord.gg/2aNR3aVt")),
+            new("Discord (game) · #general",                     new Uri("https://discord.gg/kDM9GMu5vm")),
+            new("Steam · profile",                               new Uri("https://steamcommunity.com/profiles/76561199544666292/")),
+            new("Bluesky · @skullmute0011.bsky.social",          new Uri("https://bsky.app/profile/skullmute0011.bsky.social")),
+            new("Mastodon · @skullmute1122@mastodon.social",     new Uri("https://mastodon.social/@skullmute1122")),
+            new("Telegram · @SkullMute0011",                     new Uri("https://t.me/SkullMute0011")),
+        };
     }
 
     private void OnLocalizationChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -101,6 +115,8 @@ public sealed partial class AboutViewModel : ViewModelBase
 
     public ObservableCollection<ThirdPartyItem> ThirdPartyItems { get; }
 
+    public ObservableCollection<SocialLink> SocialLinks { get; }
+
     // -- legal document open commands ---------------------------------------
 
     [RelayCommand]
@@ -123,6 +139,25 @@ public sealed partial class AboutViewModel : ViewModelBase
 
     [RelayCommand]
     private void OpenRepository() => OpenUrl(RepositoryUrl);
+
+    // -- donate / report commands -------------------------------------------
+    // URLs hardcoded here to match the existing Developer / RepositoryUrl
+    // pattern (line ~80). Mirror of .github/FUNDING.yml — keep in sync.
+
+    [RelayCommand]
+    private void OpenGitHubSponsors() => OpenUrl("https://github.com/sponsors/poli0981");
+
+    [RelayCommand]
+    private void OpenKoFi() => OpenUrl("https://ko-fi.com/skullmute");
+
+    [RelayCommand]
+    private void OpenBuyMeACoffee() => OpenUrl("https://buymeacoffee.com/skullmute");
+
+    [RelayCommand]
+    private void OpenPatreon() => OpenUrl("https://patreon.com/skullmute");
+
+    [RelayCommand]
+    private void OpenBugReport() => OpenUrl("https://github.com/poli0981/captureimg/issues/new?template=bug_report.yml");
 
     /// <summary>
     /// Resolve a doc path relative to the app's base directory and open it with the OS

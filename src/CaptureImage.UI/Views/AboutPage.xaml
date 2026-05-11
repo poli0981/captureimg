@@ -67,6 +67,48 @@
                 </Grid>
             </Border>
 
+            <!-- Social Dev — vertical stack of HyperlinkButtons. NavigateUri
+                 opens the URL via Windows.System.Launcher (same shell-execute
+                 behaviour as the existing OpenUrl helper). -->
+            <StackPanel Spacing="6">
+                <TextBlock Text="{Binding Localization[About_SocialSection]}" FontWeight="SemiBold" />
+                <ItemsControl ItemsSource="{Binding SocialLinks}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <HyperlinkButton NavigateUri="{Binding NavigateUri}"
+                                             Content="{Binding Label}"
+                                             Padding="0"
+                                             HorizontalAlignment="Left" />
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </StackPanel>
+
+            <!-- Donate -->
+            <StackPanel Spacing="6">
+                <TextBlock Text="{Binding Localization[About_DonateSection]}" FontWeight="SemiBold" />
+                <TextBlock Text="{Binding Localization[About_DonateBody]}"
+                           TextWrapping="Wrap"
+                           Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                           FontSize="{StaticResource FontSizeSmall}" />
+                <StackPanel Orientation="Horizontal" Spacing="6">
+                    <Button Content="{Binding Localization[About_OpenGitHubSponsors]}"
+                            Command="{Binding OpenGitHubSponsorsCommand}"
+                            Style="{StaticResource AccentButtonStyle}" />
+                    <Button Content="{Binding Localization[About_OpenKoFi]}"           Command="{Binding OpenKoFiCommand}" />
+                    <Button Content="{Binding Localization[About_OpenBuyMeACoffee]}"   Command="{Binding OpenBuyMeACoffeeCommand}" />
+                    <Button Content="{Binding Localization[About_OpenPatreon]}"        Command="{Binding OpenPatreonCommand}" />
+                </StackPanel>
+            </StackPanel>
+
+            <!-- Report Bug — single low-friction action targeting the GitHub
+                 bug-report issue template (`.github/ISSUE_TEMPLATE/bug_report.yml`). -->
+            <StackPanel Spacing="4">
+                <Button Content="{Binding Localization[About_OpenBugReport]}"
+                        Command="{Binding OpenBugReportCommand}"
+                        ToolTipService.ToolTip="{Binding Localization[About_OpenBugReportHint]}" />
+            </StackPanel>
+
             <!-- AI assistance disclosure -->
             <StackPanel Spacing="4">
                 <TextBlock Text="{Binding Localization[About_AiSection]}" FontWeight="SemiBold" />
