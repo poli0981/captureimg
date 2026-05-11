@@ -11,5 +11,6 @@ permissions:
 
 jobs:
   notify:
-    uses: poli0981/.github/.github/workflows/notify-release-pipeline.yml@main
+    # Pinned to commit SHA — see comment in announce-release.yml.
+    uses: poli0981/.github/.github/workflows/notify-release-pipeline.yml@e973e2f15725356653ef07539016670ad2733f83
     secrets: inherit
