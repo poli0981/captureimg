@@ -1,0 +1,10 @@
+# Wires the "Sponsor" button on the repo header to the maintainer's
+# funding destinations. GitHub renders one button per non-empty entry.
+#
+# Email + PayPal intentionally omitted — see commit log for v1.5.1 and
+# the v1.5.1 hotfix plan: public handles only, no personal identifiers.
+
+github: [poli0981]
+ko_fi: skullmute
+buy_me_a_coffee: skullmute
+patreon: skullmute

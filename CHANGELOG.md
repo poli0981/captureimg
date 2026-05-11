@@ -7,6 +7,88 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.5.1] - 2026-05-11
+
+Hotfix cycle. CI hardening, supply-chain pinning of reusable
+workflows, and a small public-attribution surface in About + repo
+root.
+
+### Fixed
+
+- **CI workflow missing permissions block.** Code Scanning flagged
+  `.github/workflows/ci.yml` as not declaring an explicit
+  `permissions:` block. Now declares `contents: read` — the
+  minimum required to checkout the repo and run `dotnet build` /
+  `dotnet test`. No package writes, no release uploads, no PR
+  comments.
+
+### Changed
+
+- **Reusable workflow refs pinned to commit SHA.** `announce-release`,
+  `notify-ci-failure`, and `notify-release-pipeline` callers now
+  reference `poli0981/.github` via full commit SHA instead of `@main`.
+  Dependabot bumps the SHA weekly via the existing `github-actions`
+  ecosystem rule in `.github/dependabot.yml`. Avoids the supply-chain
+  failure mode where a malicious or accidental push to ops-repo
+  `main` would land in our release pipeline silently.
+- **Notify workflows no longer spam the Actions tab.**
+  `notify-ci-failure` previously listened to `workflows: ["*"]` and
+  fired on every workflow completion in the repo; now narrowed to
+  the single workflow it monitors (`"CI"`) with a job-level
+  conclusion gate so successful CI runs short-circuit before
+  pulling in the reusable. `notify-release-pipeline` narrowed to
+  `["Release"]` for the same reason. Roughly 50% fewer skipped
+  notify-* runs in the Actions history; the remaining runs all
+  correspond to events worth observing.
+
+### Added
+
+- **About → Connect with the developer** — 8 public-profile links
+  (X, YouTube, Discord repo + game, Steam, Bluesky, Mastodon,
+  Telegram) rendered as a vertical stack of `HyperlinkButton`s. Each
+  uses `NavigateUri` so click opens the URL via the system shell.
+  Email and PayPal are intentionally not surfaced here.
+- **About → Support the project** — short prose + 4 donate buttons
+  (GitHub Sponsors accent-styled, Ko-fi, Buy Me a Coffee, Patreon).
+  URLs are hardcoded in `AboutViewModel` and mirror
+  `.github/FUNDING.yml`.
+- **About → Report a bug** — single low-friction button targeting
+  the GitHub bug-report issue template
+  (`.github/ISSUE_TEMPLATE/bug_report.yml`).
+- **`.github/FUNDING.yml`** — wires GitHub Sponsors, Ko-fi, Buy Me a
+  Coffee, and Patreon into the repo's "Sponsor" button.
+- **`docs/pc_spec.md`** + **`docs/dev_env.md`** — public dev
+  reference covering primary hardware, mobile test fleet, toolchain
+  versions, IDE setup, Windows SDK, build/test/run commands, release
+  tooling. Vietnamese mirrors at `docs/i18n/vi/`.
+- **README "Support the project" section** — preceding the License
+  section, mirroring the four donate destinations and pointing at
+  the in-app Report-a-bug button.
+- **`discussion-welcome.yml` workflow** — auto-posts a brief
+  bilingual (Vietnamese + English) greeting the first time a
+  non-maintainer opens a Discussion thread. The greeting points
+  the poster at the right venue: bug reports → in-app
+  Report-a-bug button or the bug-report issue template, security
+  vulnerabilities → GitHub Security Advisories (not a public
+  discussion), Q&A / ideas → the discussion they just opened. Skips
+  OWNER / COLLABORATOR / MEMBER posts to avoid greeting the
+  maintainer's own threads.
+
+### Smoke checklist
+
+1. Launch v1.5.0 → Update → install v1.5.1 → app restarts and
+   shows "1.5.1" in the nav header.
+2. About → click each of the 8 social links → opens in the default
+   browser.
+3. About → click each of the 4 donate buttons → opens the correct
+   destination.
+4. About → Report a bug → GitHub opens with the bug-report template
+   pre-filled.
+5. Switch language en → vi → ar (RTL) → the 3 new section headers
+   (Connect, Support, Report) retranslate in place.
+6. Repo home → the "Sponsor" button appears at top right (near
+   Watch / Fork).
+
 ## [1.5.0] - 2026-05-07
 
 Bug-fix + feature cycle. Tackles a long-standing process-leak bug,

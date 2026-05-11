@@ -133,6 +133,17 @@
   <data name="About_OpenThirdParty" xml:space="preserve"><value>サードパーティ通知</value></data>
   <data name="About_OpenContributors" xml:space="preserve"><value>貢献者</value></data>
 
+  <!-- About — Social Dev / Donate / Report Bug (v1.5.1) -->
+  <data name="About_SocialSection" xml:space="preserve"><value>開発者とつながる</value></data>
+  <data name="About_DonateSection" xml:space="preserve"><value>プロジェクトを支援する</value></data>
+  <data name="About_DonateBody" xml:space="preserve"><value>CaptureImage は無料のオープンソースソフトウェアです。お役に立てたなら、以下のいずれかで開発をサポートしていただけると幸いです：</value></data>
+  <data name="About_OpenGitHubSponsors" xml:space="preserve"><value>GitHub Sponsors</value></data>
+  <data name="About_OpenKoFi" xml:space="preserve"><value>Ko-fi</value></data>
+  <data name="About_OpenBuyMeACoffee" xml:space="preserve"><value>Buy Me a Coffee</value></data>
+  <data name="About_OpenPatreon" xml:space="preserve"><value>Patreon</value></data>
+  <data name="About_OpenBugReport" xml:space="preserve"><value>バグを報告</value></data>
+  <data name="About_OpenBugReportHint" xml:space="preserve"><value>GitHub の issue トラッカーをバグレポートテンプレート入りで開きます。</value></data>
+
   <!-- Log viewer -->
   <data name="Log_Title" xml:space="preserve"><value>リアルタイムログ</value></data>
   <data name="Log_Pause" xml:space="preserve"><value>一時停止</value></data>

@@ -1,8 +1,14 @@
 name: Notify CI Failures
 
+# Previously listened to `workflows: ["*"]`, which fired this caller on every
+# workflow completion in the repo — every release run, every announce run,
+# every notify run itself — and the Actions tab filled with skipped entries.
+# Narrowed to the single workflow this is supposed to monitor: ci.yml (name
+# "CI"). The job-level `if` further skips successful CI runs so the reusable
+# isn't pulled in on green builds.
 on:
   workflow_run:
-    workflows: ["*"]
+    workflows: ["CI"]
     types: [completed]
 
 # REQUIRED: declare permissions matching the reusable workflow's needs.
@@ -13,5 +19,7 @@ permissions:
 
 jobs:
   notify:
-    uses: poli0981/.github/.github/workflows/notify-ci-failure.yml@main
+    if: ${{ github.event.workflow_run.conclusion == 'failure' }}
+    # Pinned to commit SHA — see comment in announce-release.yml.
+    uses: poli0981/.github/.github/workflows/notify-ci-failure.yml@e973e2f15725356653ef07539016670ad2733f83
     secrets: inherit

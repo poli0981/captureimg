@@ -5,6 +5,11 @@ name: CI
 # net9.0-windows10.0.22621.0 and the WGC integration tests require a real
 # desktop session with Windows 11 22H2 SDK.
 
+# Minimum permissions required to checkout the repo and run dotnet
+# build/test. No package writes, no release uploads, no PR comments.
+permissions:
+  contents: read
+
 on:
   push:
     branches: [ main ]

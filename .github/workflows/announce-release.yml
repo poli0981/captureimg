@@ -17,7 +17,11 @@ permissions:
 
 jobs:
   announce:
-    uses: poli0981/.github/.github/workflows/announce-release.yml@main
+    # Pinned to commit SHA instead of @main — guards against a malicious or
+    # accidental push to poli0981/.github landing in our release pipeline
+    # silently. Dependabot bumps this weekly via the github-actions ecosystem
+    # rule in .github/dependabot.yml.
+    uses: poli0981/.github/.github/workflows/announce-release.yml@e973e2f15725356653ef07539016670ad2733f83
     with:
       tag_override: ${{ inputs.tag || '' }}
     secrets: inherit
