@@ -31,6 +31,15 @@ root.
   ecosystem rule in `.github/dependabot.yml`. Avoids the supply-chain
   failure mode where a malicious or accidental push to ops-repo
   `main` would land in our release pipeline silently.
+- **Notify workflows no longer spam the Actions tab.**
+  `notify-ci-failure` previously listened to `workflows: ["*"]` and
+  fired on every workflow completion in the repo; now narrowed to
+  the single workflow it monitors (`"CI"`) with a job-level
+  conclusion gate so successful CI runs short-circuit before
+  pulling in the reusable. `notify-release-pipeline` narrowed to
+  `["Release"]` for the same reason. Roughly 50% fewer skipped
+  notify-* runs in the Actions history; the remaining runs all
+  correspond to events worth observing.
 
 ### Added
 
@@ -55,6 +64,15 @@ root.
 - **README "Support the project" section** — preceding the License
   section, mirroring the four donate destinations and pointing at
   the in-app Report-a-bug button.
+- **`discussion-welcome.yml` workflow** — auto-posts a brief
+  bilingual (Vietnamese + English) greeting the first time a
+  non-maintainer opens a Discussion thread. The greeting points
+  the poster at the right venue: bug reports → in-app
+  Report-a-bug button or the bug-report issue template, security
+  vulnerabilities → GitHub Security Advisories (not a public
+  discussion), Q&A / ideas → the discussion they just opened. Skips
+  OWNER / COLLABORATOR / MEMBER posts to avoid greeting the
+  maintainer's own threads.
 
 ### Smoke checklist
 
