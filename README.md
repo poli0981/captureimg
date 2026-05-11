@@ -200,6 +200,22 @@ meaningful AI authorship carry a `Co-Authored-By` trailer naming the
 model. Full details in [`docs/CONTRIBUTORS.md`](docs/CONTRIBUTORS.md)
 and [`docs/legal/DISCLAIMER.md §3`](docs/legal/DISCLAIMER.md).
 
+## Support the project
+
+CaptureImage is free, open source, and developed solo. If it helps
+you, consider supporting development:
+
+- [GitHub Sponsors](https://github.com/sponsors/poli0981)
+- [Ko-fi](https://ko-fi.com/skullmute)
+- [Buy Me a Coffee](https://buymeacoffee.com/skullmute)
+- [Patreon](https://patreon.com/skullmute)
+
+The same destinations are wired into the repo's "Sponsor" button via
+[`.github/FUNDING.yml`](.github/FUNDING.yml).
+
+Bug reports go through the in-app **About → Report a bug** button or
+[directly on GitHub](https://github.com/poli0981/captureimg/issues/new?template=bug_report.yml).
+
 ## License
 
 CaptureImage is distributed under the **GNU General Public License
