@@ -1,8 +1,13 @@
 name: Notify Release Pipeline
 
+# Previously listened to `workflows: ["*"]`. Narrowed to the actual release
+# build workflow ("Release" — release.yml) so the Actions tab no longer fills
+# with skipped runs after every CI / notify completion. announce-release.yml
+# is intentionally NOT included here — it already posts to Discord on its own,
+# routing it through this notifier too would double-post.
 on:
   workflow_run:
-    workflows: ["*"]
+    workflows: ["Release"]
     types: [completed]
 
 permissions:
