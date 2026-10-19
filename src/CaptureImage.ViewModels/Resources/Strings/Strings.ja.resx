@@ -35,7 +35,7 @@
   <data name="About_AiNotice" xml:space="preserve"><value>CaptureImage は、コード・テスト・ドキュメントの作成に AI コーディングアシスタント（Anthropic の Claude、Claude Code 経由）の大きな助けを借りて開発されています。すべての変更はリリース前にメンテナーがレビューし、テストしています。</value></data>
   <data name="About_AiSection" xml:space="preserve"><value>AI 支援開発</value></data>
   <data name="About_CaptureDisclaimer" xml:space="preserve"><value>キャプチャ対応</value></data>
-  <data name="About_CaptureLimitationDisclaimerBody" xml:space="preserve"><value>CaptureImage は Windows.Graphics.Capture により多くのウィンドウ・ボーダーレスゲームをキャプチャできますが、すべてのタイトルで動作するわけではありません。DRM 保護されたサーフェス、排他的フルスクリーンの Direct3D 9 ゲーム、アンチチートフックを持つタイトルは、黒フレームを返したりキャプチャを拒否することがあります。レガシーアプリには GDI PrintWindow フォールバックを試みます。完全な一覧は docs/legal/DISCLAIMER.md §2 を参照してください。</value></data>
+  <data name="About_CaptureLimitationDisclaimerBody" xml:space="preserve"><value>CaptureImage は Windows.Graphics.Capture により多くのウィンドウ・ボーダーレスゲームをキャプチャできますが、すべてのタイトルで動作するわけではありません。DRM 保護されたサーフェス、排他的フルスクリーンの Direct3D 9 ゲーム、アンチチートフックを持つタイトルは、黒フレームを返したりキャプチャを拒否することがあります。完全な一覧は docs/legal/DISCLAIMER.md §2 を参照してください。</value></data>
   <data name="About_ContactSection" xml:space="preserve"><value>開発者とつながる</value></data>
   <data name="About_DeveloperLabel" xml:space="preserve"><value>開発者</value></data>
   <data name="About_DisclaimersSection" xml:space="preserve"><value>免責事項</value></data>
@@ -65,7 +65,7 @@
   <data name="About_Tagline" xml:space="preserve"><value>スクリーンショット機能のないゲーム向けの軽量 Windows 画面キャプチャツール。</value></data>
   <data name="About_ThirdPartySection" xml:space="preserve"><value>サードパーティコンポーネント</value></data>
   <data name="About_TranslationDisclaimer" xml:space="preserve"><value>翻訳について</value></data>
-  <data name="About_TranslationDisclaimerBody" xml:space="preserve"><value>ベトナム語、アラビア語、日本語、中国語(簡体)、韓国語、スペイン語、フランス語、ドイツ語、ポルトガル語(ブラジル)、ロシア語の言語パックは機械支援で翻訳されています。用語が母語の慣習と一致しない場合があり、一部の技術用語(hotkey、toast、frame など)はあえて英語のままにしています。校正に協力してくださるネイティブスピーカーの方は、src/CaptureImage.UI/Resources/Strings/ の .resx ファイルへの Pull Request を歓迎します。</value></data>
+  <data name="About_TranslationDisclaimerBody" xml:space="preserve"><value>ベトナム語、アラビア語、日本語、中国語(簡体)、韓国語、スペイン語、フランス語、ドイツ語、ポルトガル語(ブラジル)、ロシア語の言語パックは機械支援で翻訳されています。用語が母語の慣習と一致しない場合があり、一部の技術用語(hotkey、toast、frame など)はあえて英語のままにしています。校正に協力してくださるネイティブスピーカーの方は、src/CaptureImage.ViewModels/Resources/Strings/ の .resx ファイルへの Pull Request を歓迎します。</value></data>
   <data name="About_VersionLabel" xml:space="preserve"><value>バージョン</value></data>
 
   <data name="Common_Browse" xml:space="preserve"><value>参照…</value></data>
@@ -96,6 +96,7 @@
   <data name="Dashboard_Windows" xml:space="preserve"><value>開いているウィンドウ</value></data>
 
   <data name="Error_Cancelled" xml:space="preserve"><value>キャプチャをキャンセルしました。</value></data>
+  <data name="Error_ClipboardFailure" xml:space="preserve"><value>画像をクリップボードにコピーできませんでした。別のアプリが使用中の可能性があります。もう一度お試しください。</value></data>
   <data name="Error_EncodingFailure" xml:space="preserve"><value>画像をエンコードできませんでした。</value></data>
   <data name="Error_FileWriteFailure" xml:space="preserve"><value>ファイルを保存できませんでした。出力フォルダーとディスクの空き容量を確認してください。</value></data>
   <data name="Error_GraphicsDeviceFailure" xml:space="preserve"><value>グラフィックドライバーが応答しなくなりました。しばらくしてからもう一度お試しください。</value></data>

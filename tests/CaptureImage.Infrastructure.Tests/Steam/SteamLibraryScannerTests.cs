@@ -9,6 +9,7 @@ using CaptureImage.Core.Models;
 using CaptureImage.Infrastructure.Steam;
 using CaptureImage.Infrastructure.Tests.TestSupport;
 using Microsoft.Extensions.Logging.Abstractions;
+using Microsoft.Extensions.Time.Testing;
 using Xunit;
 
 namespace CaptureImage.Infrastructure.Tests.Steam;
@@ -209,6 +210,27 @@ public sealed class SteamLibraryScannerTests : IDisposable
         // Installed after the scan: not seen until the next start.
         var later = InstallApp(_steamRoot, CounterStrike);
         scanner.TryGetAppInfo(later).Should().BeNull();
+    }
+
+    [Fact]
+    public void TryGetAppInfo_AfterAFailedScan_RetriesAMinuteLater()
+    {
+        WriteLibraryFolders(_steamRoot);
+        var exe = InstallApp(_steamRoot, Dota);
+        var time = new FakeTimeProvider(DateTimeOffset.UnixEpoch);
+        var failing = true;
+        var scanner = new SteamLibraryScanner(
+            () => failing ? throw new InvalidOperationException("registry hiccup") : _steamRoot,
+            NullLogger<SteamLibraryScanner>.Instance,
+            time);
+
+        scanner.TryGetAppInfo(exe).Should().BeNull("the scan failed");
+
+        failing = false;
+        scanner.TryGetAppInfo(exe).Should().BeNull("a failed scan waits before trying again");
+
+        time.Advance(TimeSpan.FromMinutes(1));
+        scanner.TryGetAppInfo(exe).Should().Be(Dota, "the scan is retried instead of failing every lookup");
     }
 
     // ---- Fake Steam installation -------------------------------------------------------

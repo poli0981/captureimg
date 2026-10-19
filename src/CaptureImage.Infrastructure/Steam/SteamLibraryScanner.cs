@@ -10,13 +10,19 @@ namespace CaptureImage.Infrastructure.Steam;
 
 /// <summary>
 /// Maps executables to installed Steam apps by reading <c>libraryfolders.vdf</c> and the
-/// <c>appmanifest_*.acf</c> files of every library. Scanned once, lazily, thread-safe.
+/// <c>appmanifest_*.acf</c> files of every library. Scanned once, lazily, thread-safe; a scan that
+/// fails is retried a minute later rather than failing every lookup from then on.
 /// </summary>
 public sealed partial class SteamLibraryScanner : ISteamDetector
 {
+    private static readonly TimeSpan RetryDelay = TimeSpan.FromMinutes(1);
+
     private readonly Func<string?> _steamRoot;
     private readonly ILogger<SteamLibraryScanner> _logger;
-    private readonly Lazy<IReadOnlyList<SteamLibrary>> _libraries;
+    private readonly TimeProvider _time;
+    private readonly Lock _gate = new();
+    private IReadOnlyList<SteamLibrary>? _libraries;
+    private DateTimeOffset _retryAt = DateTimeOffset.MinValue;
 
     /// <summary>Production constructor: Steam's install folder comes from the registry.</summary>
     public SteamLibraryScanner(ILogger<SteamLibraryScanner> logger)
@@ -26,11 +32,45 @@ public sealed partial class SteamLibraryScanner : ISteamDetector
 
     /// <param name="steamRoot">Returns Steam's install folder, or <c>null</c> when Steam isn't installed.</param>
     /// <param name="logger">Logger.</param>
-    public SteamLibraryScanner(Func<string?> steamRoot, ILogger<SteamLibraryScanner> logger)
+    /// <param name="timeProvider">Clock for the retry delay (tests); the system clock by default.</param>
+    public SteamLibraryScanner(Func<string?> steamRoot, ILogger<SteamLibraryScanner> logger, TimeProvider? timeProvider = null)
     {
         _steamRoot = steamRoot;
         _logger = logger;
-        _libraries = new Lazy<IReadOnlyList<SteamLibrary>>(LoadLibraries, LazyThreadSafetyMode.ExecutionAndPublication);
+        _time = timeProvider ?? TimeProvider.System;
+    }
+
+    /// <summary>The scanned libraries, or none while a failed scan waits for its retry.</summary>
+    private IReadOnlyList<SteamLibrary> Libraries
+    {
+        get
+        {
+            lock (_gate)
+            {
+                if (_libraries is not null)
+                {
+                    return _libraries;
+                }
+
+                var now = _time.GetUtcNow();
+                if (now < _retryAt)
+                {
+                    return [];
+                }
+
+                try
+                {
+                    return _libraries = LoadLibraries();
+                }
+                catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or System.Security.SecurityException
+                    or ArgumentException or NotSupportedException or InvalidOperationException)
+                {
+                    LogScanFailed(ex);
+                    _retryAt = now + RetryDelay;
+                    return [];
+                }
+            }
+        }
     }
 
     public SteamAppInfo? TryGetAppInfo(string executablePath)
@@ -50,7 +90,7 @@ public sealed partial class SteamLibraryScanner : ISteamDetector
             return null;
         }
 
-        foreach (var library in _libraries.Value)
+        foreach (var library in Libraries)
         {
             var common = Normalize(Path.Combine(library.Path, "steamapps", "common")) + Path.DirectorySeparatorChar;
             if (!normalized.StartsWith(common, StringComparison.OrdinalIgnoreCase))
@@ -127,7 +167,19 @@ public sealed partial class SteamLibraryScanner : ISteamDetector
             return apps;
         }
 
-        foreach (var manifest in Directory.EnumerateFiles(steamapps, "appmanifest_*.acf"))
+        List<string> manifests;
+        try
+        {
+            manifests = [.. Directory.EnumerateFiles(steamapps, "appmanifest_*.acf")];
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or System.Security.SecurityException)
+        {
+            // One unreadable library (offline drive, no permission) must not hide the others.
+            LogLibraryUnreadable(ex, libraryPath);
+            return apps;
+        }
+
+        foreach (var manifest in manifests)
         {
             try
             {
@@ -162,4 +214,10 @@ public sealed partial class SteamLibraryScanner : ISteamDetector
 
     [LoggerMessage(Level = LogLevel.Information, Message = "Steam scan: {LibraryCount} libraries, {AppCount} installed apps.")]
     private partial void LogScanned(int libraryCount, int appCount);
+
+    [LoggerMessage(Level = LogLevel.Warning, Message = "Could not read Steam library {LibraryPath}; skipping it.")]
+    private partial void LogLibraryUnreadable(Exception exception, string libraryPath);
+
+    [LoggerMessage(Level = LogLevel.Warning, Message = "Steam scan failed; trying again in a minute.")]
+    private partial void LogScanFailed(Exception exception);
 }

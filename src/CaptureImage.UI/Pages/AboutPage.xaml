@@ -9,6 +9,7 @@
     xmlns:vm="clr-namespace:CaptureImage.ViewModels.About;assembly=CaptureImage.ViewModels"
     Title="{loc:Tr Nav_About}"
     d:DataContext="{d:DesignInstance Type=vm:AboutViewModel}"
+    Foreground="{DynamicResource TextFillColorPrimaryBrush}"
     ScrollViewer.CanContentScroll="False"
     AutomationProperties.AutomationId="AboutPage"
     mc:Ignorable="d">

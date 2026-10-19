@@ -35,7 +35,7 @@
   <data name="About_AiNotice" xml:space="preserve"><value>CaptureImage est développé avec l'aide importante d'un assistant de programmation IA (Claude d'Anthropic, via Claude Code) pour le code, les tests et la documentation. Le mainteneur relit et teste chaque modification avant sa publication.</value></data>
   <data name="About_AiSection" xml:space="preserve"><value>Développement assisté par IA</value></data>
   <data name="About_CaptureDisclaimer" xml:space="preserve"><value>Prise en charge de la capture</value></data>
-  <data name="About_CaptureLimitationDisclaimerBody" xml:space="preserve"><value>CaptureImage peut capturer la plupart des jeux fenêtrés et sans bordure via Windows.Graphics.Capture, mais pas tous. Les surfaces protégées par DRM, les jeux Direct3D 9 en plein écran exclusif et les titres avec hooks anti-triche peuvent renvoyer des images noires ou refuser la capture. Un repli GDI PrintWindow est tenté pour les applications héritées. Voir docs/legal/DISCLAIMER.md §2 pour la liste complète.</value></data>
+  <data name="About_CaptureLimitationDisclaimerBody" xml:space="preserve"><value>CaptureImage peut capturer la plupart des jeux fenêtrés et sans bordure via Windows.Graphics.Capture, mais pas tous. Les surfaces protégées par DRM, les jeux Direct3D 9 en plein écran exclusif et les titres avec hooks anti-triche peuvent renvoyer des images noires ou refuser la capture. Voir docs/legal/DISCLAIMER.md §2 pour la liste complète.</value></data>
   <data name="About_ContactSection" xml:space="preserve"><value>Contactez le développeur</value></data>
   <data name="About_DeveloperLabel" xml:space="preserve"><value>Développeur</value></data>
   <data name="About_DisclaimersSection" xml:space="preserve"><value>Avertissements</value></data>
@@ -65,7 +65,7 @@
   <data name="About_Tagline" xml:space="preserve"><value>Capture d'écran Windows légère pour les jeux sans touche de capture intégrée.</value></data>
   <data name="About_ThirdPartySection" xml:space="preserve"><value>Composants tiers</value></data>
   <data name="About_TranslationDisclaimer" xml:space="preserve"><value>Traductions</value></data>
-  <data name="About_TranslationDisclaimerBody" xml:space="preserve"><value>Les packs de langue vietnamien, arabe, japonais, chinois simplifié, coréen, espagnol, français, allemand, portugais (Brésil) et russe sont assistés par machine. La terminologie peut ne pas correspondre aux conventions natives, et certains termes techniques (hotkey, toast, frame, etc.) sont volontairement conservés en anglais. Les locuteurs natifs prêts à relire sont chaleureusement invités à soumettre des pull requests sur les fichiers .resx dans src/CaptureImage.UI/Resources/Strings/.</value></data>
+  <data name="About_TranslationDisclaimerBody" xml:space="preserve"><value>Les packs de langue vietnamien, arabe, japonais, chinois simplifié, coréen, espagnol, français, allemand, portugais (Brésil) et russe sont assistés par machine. La terminologie peut ne pas correspondre aux conventions natives, et certains termes techniques (hotkey, toast, frame, etc.) sont volontairement conservés en anglais. Les locuteurs natifs prêts à relire sont chaleureusement invités à soumettre des pull requests sur les fichiers .resx dans src/CaptureImage.ViewModels/Resources/Strings/.</value></data>
   <data name="About_VersionLabel" xml:space="preserve"><value>Version</value></data>
 
   <data name="Common_Browse" xml:space="preserve"><value>Parcourir…</value></data>
@@ -96,6 +96,7 @@
   <data name="Dashboard_Windows" xml:space="preserve"><value>Fenêtres ouvertes</value></data>
 
   <data name="Error_Cancelled" xml:space="preserve"><value>Capture annulée.</value></data>
+  <data name="Error_ClipboardFailure" xml:space="preserve"><value>Impossible de copier l'image dans le presse-papiers. Une autre application l'utilise peut-être ; réessayez.</value></data>
   <data name="Error_EncodingFailure" xml:space="preserve"><value>Impossible d'encoder l'image.</value></data>
   <data name="Error_FileWriteFailure" xml:space="preserve"><value>Impossible d'enregistrer le fichier. Vérifiez le dossier de sortie et l'espace disque disponible.</value></data>
   <data name="Error_GraphicsDeviceFailure" xml:space="preserve"><value>Le pilote graphique ne répond plus. Réessayez dans un instant.</value></data>

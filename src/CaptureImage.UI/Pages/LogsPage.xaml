@@ -10,6 +10,7 @@
     xmlns:vm="clr-namespace:CaptureImage.ViewModels.Logs;assembly=CaptureImage.ViewModels"
     Title="{loc:Tr Nav_Logs}"
     d:DataContext="{d:DesignInstance Type=vm:LogViewerViewModel}"
+    Foreground="{DynamicResource TextFillColorPrimaryBrush}"
     ScrollViewer.CanContentScroll="False"
     AutomationProperties.AutomationId="LogsPage"
     mc:Ignorable="d">

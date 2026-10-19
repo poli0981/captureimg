@@ -39,4 +39,7 @@ public enum CaptureError
 
     /// <summary>Windows.Graphics.Capture is unavailable on this system.</summary>
     NotSupported = 12,
+
+    /// <summary>A clipboard-only capture could not be copied (another app may hold the clipboard).</summary>
+    ClipboardFailure = 13,
 }

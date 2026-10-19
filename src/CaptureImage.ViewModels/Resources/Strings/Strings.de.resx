@@ -35,7 +35,7 @@
   <data name="About_AiNotice" xml:space="preserve"><value>CaptureImage wird mit erheblicher Unterstützung eines KI-Programmierassistenten (Claude von Anthropic, über Claude Code) für Code, Tests und Dokumentation entwickelt. Der Maintainer prüft und testet jede Änderung vor der Veröffentlichung.</value></data>
   <data name="About_AiSection" xml:space="preserve"><value>KI-unterstützte Entwicklung</value></data>
   <data name="About_CaptureDisclaimer" xml:space="preserve"><value>Aufnahmeunterstützung</value></data>
-  <data name="About_CaptureLimitationDisclaimerBody" xml:space="preserve"><value>CaptureImage kann die meisten Spiele im Fenster- oder randlosen Modus über Windows.Graphics.Capture aufnehmen, jedoch nicht jeden Titel. DRM-geschützte Oberflächen, exklusive Vollbild-Direct3D-9-Spiele und Titel mit Anti-Cheat-Hooks können schwarze Frames liefern oder die Aufnahme verweigern. Für Legacy-Apps wird ein GDI-PrintWindow-Fallback versucht. Vollständige Liste in docs/legal/DISCLAIMER.md §2.</value></data>
+  <data name="About_CaptureLimitationDisclaimerBody" xml:space="preserve"><value>CaptureImage kann die meisten Spiele im Fenster- oder randlosen Modus über Windows.Graphics.Capture aufnehmen, jedoch nicht jeden Titel. DRM-geschützte Oberflächen, exklusive Vollbild-Direct3D-9-Spiele und Titel mit Anti-Cheat-Hooks können schwarze Frames liefern oder die Aufnahme verweigern. Vollständige Liste in docs/legal/DISCLAIMER.md §2.</value></data>
   <data name="About_ContactSection" xml:space="preserve"><value>Mit dem Entwickler verbinden</value></data>
   <data name="About_DeveloperLabel" xml:space="preserve"><value>Entwickler</value></data>
   <data name="About_DisclaimersSection" xml:space="preserve"><value>Hinweise</value></data>
@@ -65,7 +65,7 @@
   <data name="About_Tagline" xml:space="preserve"><value>Schlanke Windows-Bildschirmaufnahme für Spiele ohne integrierte Screenshot-Taste.</value></data>
   <data name="About_ThirdPartySection" xml:space="preserve"><value>Drittanbieterkomponenten</value></data>
   <data name="About_TranslationDisclaimer" xml:space="preserve"><value>Übersetzungen</value></data>
-  <data name="About_TranslationDisclaimerBody" xml:space="preserve"><value>Die Sprachpakete Vietnamesisch, Arabisch, Japanisch, vereinfachtes Chinesisch, Koreanisch, Spanisch, Französisch, Deutsch, brasilianisches Portugiesisch und Russisch wurden maschinell unterstützt. Die Terminologie entspricht möglicherweise nicht den muttersprachlichen Konventionen, und einige Fachbegriffe (hotkey, toast, frame usw.) bleiben absichtlich auf Englisch. Muttersprachler, die Korrektur lesen möchten, sind herzlich eingeladen, Pull Requests gegen die .resx-Dateien in src/CaptureImage.UI/Resources/Strings/ einzureichen.</value></data>
+  <data name="About_TranslationDisclaimerBody" xml:space="preserve"><value>Die Sprachpakete Vietnamesisch, Arabisch, Japanisch, vereinfachtes Chinesisch, Koreanisch, Spanisch, Französisch, Deutsch, brasilianisches Portugiesisch und Russisch wurden maschinell unterstützt. Die Terminologie entspricht möglicherweise nicht den muttersprachlichen Konventionen, und einige Fachbegriffe (hotkey, toast, frame usw.) bleiben absichtlich auf Englisch. Muttersprachler, die Korrektur lesen möchten, sind herzlich eingeladen, Pull Requests gegen die .resx-Dateien in src/CaptureImage.ViewModels/Resources/Strings/ einzureichen.</value></data>
   <data name="About_VersionLabel" xml:space="preserve"><value>Version</value></data>
 
   <data name="Common_Browse" xml:space="preserve"><value>Durchsuchen…</value></data>
@@ -96,6 +96,7 @@
   <data name="Dashboard_Windows" xml:space="preserve"><value>Geöffnete Fenster</value></data>
 
   <data name="Error_Cancelled" xml:space="preserve"><value>Aufnahme abgebrochen.</value></data>
+  <data name="Error_ClipboardFailure" xml:space="preserve"><value>Das Bild konnte nicht in die Zwischenablage kopiert werden. Möglicherweise wird sie von einer anderen App verwendet; erneut versuchen.</value></data>
   <data name="Error_EncodingFailure" xml:space="preserve"><value>Das Bild konnte nicht kodiert werden.</value></data>
   <data name="Error_FileWriteFailure" xml:space="preserve"><value>Die Datei konnte nicht gespeichert werden. Ausgabeordner und freien Speicherplatz prüfen.</value></data>
   <data name="Error_GraphicsDeviceFailure" xml:space="preserve"><value>Der Grafiktreiber reagiert nicht mehr. Gleich noch einmal versuchen.</value></data>

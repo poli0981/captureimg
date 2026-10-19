@@ -9,6 +9,7 @@
     xmlns:vm="clr-namespace:CaptureImage.ViewModels.Dashboard;assembly=CaptureImage.ViewModels"
     Title="{loc:Tr Nav_Dashboard}"
     d:DataContext="{d:DesignInstance Type=vm:DashboardViewModel}"
+    Foreground="{DynamicResource TextFillColorPrimaryBrush}"
     ScrollViewer.CanContentScroll="False"
     AutomationProperties.AutomationId="DashboardPage"
     mc:Ignorable="d">

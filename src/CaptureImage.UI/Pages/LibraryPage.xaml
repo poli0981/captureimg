@@ -9,6 +9,7 @@
     xmlns:vm="clr-namespace:CaptureImage.ViewModels.Library;assembly=CaptureImage.ViewModels"
     Title="{loc:Tr Nav_Library}"
     d:DataContext="{d:DesignInstance Type=vm:LibraryViewModel}"
+    Foreground="{DynamicResource TextFillColorPrimaryBrush}"
     ScrollViewer.CanContentScroll="False"
     AutomationProperties.AutomationId="LibraryPage"
     mc:Ignorable="d">
@@ -82,7 +83,7 @@
                     VirtualizingPanel.VirtualizationMode="Recycling">
                     <ListBox.ItemsPanel>
                         <ItemsPanelTemplate>
-                            <ui:VirtualizingWrapPanel ItemSize="232,190" SpacingMode="Uniform" />
+                            <ui:VirtualizingWrapPanel ItemSize="232,190" SpacingMode="None" />
                         </ItemsPanelTemplate>
                     </ListBox.ItemsPanel>
                     <ListBox.ItemTemplate>

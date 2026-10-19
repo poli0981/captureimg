@@ -7,6 +7,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.0.1] - 2026-10-19
+
+### Fixed
+
+- With **Clipboard mode: copy only**, a capture that couldn't be copied (for example while another
+  app was holding the clipboard) was reported as a success although nothing was saved or copied.
+  It now shows an error.
+- On HDR displays, pixels a game reported as infinitely bright came out black instead of white, and
+  an invalid colour value stopped the highlights next to it from rolling off smoothly.
+- A Steam library folder that couldn't be read (for example on a disconnected drive) broke Steam
+  detection for every window until the app was restarted. That library is now skipped, and a failed
+  scan is tried again a minute later.
+- Text without a style of its own — such as the component names and the disclaimer headings on the
+  About page — was drawn in a dim grey instead of the theme's text colour, which was hard to read in
+  the dark theme.
+- The capture library lays its thumbnails out from the left edge instead of spreading wide gaps
+  around them.
+- About: the capture notice no longer mentions the GDI fallback that 2.0.0 removed, and the
+  translation notice points to the folder where the language files now live.
+
 ## [2.0.0] - 2026-10-19
 
 CaptureImage 2.0 is a rewrite of the app around the same idea: arm the hotkeys, press one in

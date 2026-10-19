@@ -775,6 +775,34 @@ public sealed class CaptureCoordinatorCaptureTests : IDisposable
     }
 
     [Fact]
+    public async Task ClipboardCopy_ThatFails_IsReportedAsAFailure()
+    {
+        _h.UpdateCapture(c => c with { ClipboardMode = "Copy" });
+        _h.Clipboard.CopyImageAsync(Arg.Any<CapturedFrame>(), Arg.Any<CancellationToken>()).Returns(false);
+
+        var outcome = await Coordinator.CaptureAsync(CaptureMode.Window, Ct);
+
+        outcome.Kind.Should().Be(CaptureOutcomeKind.Failed);
+        outcome.Error.Should().Be(CaptureError.ClipboardFailure);
+        _h.Output.RelativeFiles().Should().BeEmpty();
+        _h.Sound.DidNotReceive().PlayCaptureSound();
+        _h.Toasts.Received(1).Show(ToastKind.Error, "L:Toast_CaptureFailed", "L:Error_ClipboardFailure", null);
+    }
+
+    [Fact]
+    public async Task ClipboardCopyAndSave_ThatFailsToCopy_StillSavesTheFile()
+    {
+        _h.UpdateCapture(c => c with { ClipboardMode = "CopyAndSave" });
+        _h.Clipboard.CopyImageAsync(Arg.Any<CapturedFrame>(), Arg.Any<CancellationToken>()).Returns(false);
+
+        var outcome = await Coordinator.CaptureAsync(CaptureMode.Window, Ct);
+
+        outcome.Kind.Should().Be(CaptureOutcomeKind.Saved);
+        File.Exists(GameFile()).Should().BeTrue();
+        _h.Toasts.Received(1).Show(ToastKind.Success, "L:Toast_CaptureSaved", CoordinatorHarness.GameStem + ".png", null);
+    }
+
+    [Fact]
     public async Task ClipboardCopyAndSave_DoesBoth()
     {
         _h.UpdateCapture(c => c with { ClipboardMode = "CopyAndSave" });

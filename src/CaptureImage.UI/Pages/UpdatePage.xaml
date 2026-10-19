@@ -9,6 +9,7 @@
     xmlns:vm="clr-namespace:CaptureImage.ViewModels.Update;assembly=CaptureImage.ViewModels"
     Title="{loc:Tr Nav_Update}"
     d:DataContext="{d:DesignInstance Type=vm:UpdateViewModel}"
+    Foreground="{DynamicResource TextFillColorPrimaryBrush}"
     ScrollViewer.CanContentScroll="False"
     AutomationProperties.AutomationId="UpdatePage"
     mc:Ignorable="d">

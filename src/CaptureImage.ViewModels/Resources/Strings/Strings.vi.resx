@@ -35,7 +35,7 @@
   <data name="About_AiNotice" xml:space="preserve"><value>CaptureImage được phát triển với sự hỗ trợ đáng kể từ trợ lý lập trình AI (Claude của Anthropic, qua Claude Code) cho mã nguồn, kiểm thử và tài liệu. Người duy trì xem xét và kiểm thử mọi thay đổi trước khi phát hành.</value></data>
   <data name="About_AiSection" xml:space="preserve"><value>Phát triển có hỗ trợ AI</value></data>
   <data name="About_CaptureDisclaimer" xml:space="preserve"><value>Khả năng chụp</value></data>
-  <data name="About_CaptureLimitationDisclaimerBody" xml:space="preserve"><value>CaptureImage có thể chụp hầu hết game cửa sổ và borderless qua Windows.Graphics.Capture, nhưng không phải game nào cũng hoạt động. Bề mặt có DRM, game Direct3D 9 exclusive-fullscreen, và game có hook anti-cheat có thể trả khung đen hoặc từ chối chụp. Cơ chế dự phòng GDI PrintWindow được thử cho ứng dụng cũ. Xem docs/legal/DISCLAIMER.md §2 để biết danh sách đầy đủ.</value></data>
+  <data name="About_CaptureLimitationDisclaimerBody" xml:space="preserve"><value>CaptureImage có thể chụp hầu hết game cửa sổ và borderless qua Windows.Graphics.Capture, nhưng không phải game nào cũng hoạt động. Bề mặt có DRM, game Direct3D 9 exclusive-fullscreen, và game có hook anti-cheat có thể trả khung đen hoặc từ chối chụp. Xem docs/legal/DISCLAIMER.md §2 để biết danh sách đầy đủ.</value></data>
   <data name="About_ContactSection" xml:space="preserve"><value>Kết nối với nhà phát triển</value></data>
   <data name="About_DeveloperLabel" xml:space="preserve"><value>Nhà phát triển</value></data>
   <data name="About_DisclaimersSection" xml:space="preserve"><value>Tuyên bố miễn trừ</value></data>
@@ -65,7 +65,7 @@
   <data name="About_Tagline" xml:space="preserve"><value>Công cụ chụp màn hình Windows gọn nhẹ cho các game không có phím chụp có sẵn.</value></data>
   <data name="About_ThirdPartySection" xml:space="preserve"><value>Thành phần third-party</value></data>
   <data name="About_TranslationDisclaimer" xml:space="preserve"><value>Bản dịch</value></data>
-  <data name="About_TranslationDisclaimerBody" xml:space="preserve"><value>Các gói ngôn ngữ tiếng Việt, tiếng Ả Rập, tiếng Nhật, tiếng Trung giản thể, tiếng Hàn, tiếng Tây Ban Nha, tiếng Pháp, tiếng Đức, tiếng Bồ Đào Nha (Brazil) và tiếng Nga đang dùng bản dịch máy. Thuật ngữ có thể không khớp với quy ước bản ngữ, và một số từ kỹ thuật (hotkey, toast, frame, v.v.) được giữ tiếng Anh có chủ đích. Người bản ngữ sẵn lòng hiệu đính xin gửi pull request vào các tệp .resx trong src/CaptureImage.UI/Resources/Strings/.</value></data>
+  <data name="About_TranslationDisclaimerBody" xml:space="preserve"><value>Các gói ngôn ngữ tiếng Việt, tiếng Ả Rập, tiếng Nhật, tiếng Trung giản thể, tiếng Hàn, tiếng Tây Ban Nha, tiếng Pháp, tiếng Đức, tiếng Bồ Đào Nha (Brazil) và tiếng Nga đang dùng bản dịch máy. Thuật ngữ có thể không khớp với quy ước bản ngữ, và một số từ kỹ thuật (hotkey, toast, frame, v.v.) được giữ tiếng Anh có chủ đích. Người bản ngữ sẵn lòng hiệu đính xin gửi pull request vào các tệp .resx trong src/CaptureImage.ViewModels/Resources/Strings/.</value></data>
   <data name="About_VersionLabel" xml:space="preserve"><value>Phiên bản</value></data>
 
   <data name="Common_Browse" xml:space="preserve"><value>Duyệt…</value></data>
@@ -96,6 +96,7 @@
   <data name="Dashboard_Windows" xml:space="preserve"><value>Các cửa sổ đang mở</value></data>
 
   <data name="Error_Cancelled" xml:space="preserve"><value>Đã huỷ chụp.</value></data>
+  <data name="Error_ClipboardFailure" xml:space="preserve"><value>Không thể sao chép ảnh vào bộ nhớ tạm. Có thể một ứng dụng khác đang dùng bộ nhớ tạm; hãy thử lại.</value></data>
   <data name="Error_EncodingFailure" xml:space="preserve"><value>Không thể mã hoá hình ảnh.</value></data>
   <data name="Error_FileWriteFailure" xml:space="preserve"><value>Không thể lưu tệp. Hãy kiểm tra thư mục lưu và dung lượng ổ đĩa còn trống.</value></data>
   <data name="Error_GraphicsDeviceFailure" xml:space="preserve"><value>Driver đồ hoạ ngừng phản hồi. Hãy thử lại sau giây lát.</value></data>

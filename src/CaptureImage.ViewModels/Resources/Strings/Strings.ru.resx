@@ -35,7 +35,7 @@
   <data name="About_AiNotice" xml:space="preserve"><value>CaptureImage разрабатывается при значительной помощи ИИ-ассистента для программирования (Claude от Anthropic через Claude Code) — для кода, тестов и документации. Сопровождающий проверяет и тестирует каждое изменение перед выпуском.</value></data>
   <data name="About_AiSection" xml:space="preserve"><value>Разработка с помощью ИИ</value></data>
   <data name="About_CaptureDisclaimer" xml:space="preserve"><value>Поддержка захвата</value></data>
-  <data name="About_CaptureLimitationDisclaimerBody" xml:space="preserve"><value>CaptureImage может захватывать большинство оконных и безрамочных игр через Windows.Graphics.Capture, но не каждый тайтл. Поверхности с DRM, эксклюзивный полноэкранный Direct3D 9 и игры с анти-чит хуками могут возвращать чёрные кадры или отказывать в захвате. Для устаревших приложений используется резервный механизм GDI PrintWindow. Полный список — docs/legal/DISCLAIMER.md §2.</value></data>
+  <data name="About_CaptureLimitationDisclaimerBody" xml:space="preserve"><value>CaptureImage может захватывать большинство оконных и безрамочных игр через Windows.Graphics.Capture, но не каждый тайтл. Поверхности с DRM, эксклюзивный полноэкранный Direct3D 9 и игры с анти-чит хуками могут возвращать чёрные кадры или отказывать в захвате. Полный список — docs/legal/DISCLAIMER.md §2.</value></data>
   <data name="About_ContactSection" xml:space="preserve"><value>Связаться с разработчиком</value></data>
   <data name="About_DeveloperLabel" xml:space="preserve"><value>Разработчик</value></data>
   <data name="About_DisclaimersSection" xml:space="preserve"><value>Примечания</value></data>
@@ -65,7 +65,7 @@
   <data name="About_Tagline" xml:space="preserve"><value>Лёгкая утилита захвата экрана Windows для игр без встроенной клавиши скриншота.</value></data>
   <data name="About_ThirdPartySection" xml:space="preserve"><value>Сторонние компоненты</value></data>
   <data name="About_TranslationDisclaimer" xml:space="preserve"><value>Переводы</value></data>
-  <data name="About_TranslationDisclaimerBody" xml:space="preserve"><value>Языковые пакеты вьетнамский, арабский, японский, упрощённый китайский, корейский, испанский, французский, немецкий, бразильский португальский и русский подготовлены при помощи машинного перевода. Терминология может отличаться от привычной носителям, а некоторые технические слова (hotkey, toast, frame и т.п.) намеренно оставлены на английском. Носители языка, готовые проверить переводы, приглашаются открыть pull request к файлам .resx в src/CaptureImage.UI/Resources/Strings/.</value></data>
+  <data name="About_TranslationDisclaimerBody" xml:space="preserve"><value>Языковые пакеты вьетнамский, арабский, японский, упрощённый китайский, корейский, испанский, французский, немецкий, бразильский португальский и русский подготовлены при помощи машинного перевода. Терминология может отличаться от привычной носителям, а некоторые технические слова (hotkey, toast, frame и т.п.) намеренно оставлены на английском. Носители языка, готовые проверить переводы, приглашаются открыть pull request к файлам .resx в src/CaptureImage.ViewModels/Resources/Strings/.</value></data>
   <data name="About_VersionLabel" xml:space="preserve"><value>Версия</value></data>
 
   <data name="Common_Browse" xml:space="preserve"><value>Обзор…</value></data>
@@ -96,6 +96,7 @@
   <data name="Dashboard_Windows" xml:space="preserve"><value>Открытые окна</value></data>
 
   <data name="Error_Cancelled" xml:space="preserve"><value>Снимок отменён.</value></data>
+  <data name="Error_ClipboardFailure" xml:space="preserve"><value>Не удалось скопировать изображение в буфер обмена. Возможно, его использует другое приложение; повторите попытку.</value></data>
   <data name="Error_EncodingFailure" xml:space="preserve"><value>Не удалось закодировать изображение.</value></data>
   <data name="Error_FileWriteFailure" xml:space="preserve"><value>Не удалось сохранить файл. Проверьте папку вывода и свободное место на диске.</value></data>
   <data name="Error_GraphicsDeviceFailure" xml:space="preserve"><value>Графический драйвер перестал отвечать. Повторите попытку чуть позже.</value></data>
