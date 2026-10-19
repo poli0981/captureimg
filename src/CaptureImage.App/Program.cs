@@ -117,7 +117,7 @@ public static class Program
             .WriteTo.Async(sink => sink.File(
                 Path.Combine(paths.LogsDirectory, "captureimage-.log"),
                 formatProvider: CultureInfo.InvariantCulture,
-                outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] {SourceContext}: {Message:lj}{NewLine}{Exception}",
+                outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] {SourceContext}: {Message:l}{NewLine}{Exception}",
                 fileSizeLimitBytes: 10L * 1024 * 1024,
                 rollingInterval: RollingInterval.Day,
                 rollOnFileSizeLimit: true,
