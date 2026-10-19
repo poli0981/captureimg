@@ -7,6 +7,89 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+CaptureImage 2.0 is a rewrite of the app around the same idea: arm the hotkeys, press one in
+your game, get a clean screenshot. Settings from 1.x are carried over automatically.
+
+### Highlights
+
+- **New interface** built with WPF and [WPF UI](https://github.com/lepoco/wpfui): Fluent design,
+  Mica, light / dark / high-contrast themes that follow Windows, resizable window that remembers
+  its position.
+- **Three capture modes, each with its own hotkey** — Window (`Ctrl+Shift+F12`), Region
+  (`Ctrl+Shift+F11`) and Screen (`Ctrl+Shift+F10`). Region freezes every monitor and lets you drag
+  an area (a click takes the whole screen); Screen captures the monitor under the mouse pointer.
+  Works across monitors with different scaling.
+- **HDR screenshots** — on HDR displays the full HDR frame is captured and tone-mapped to a normal
+  image; the original can be kept next to it as JPEG XR (`.jxr`).
+- **Capture library** — browse every capture with thumbnails, filter by game or HDR, open, show in
+  folder, copy the image or its path, extract text (OCR), pin it on screen or move it to the
+  Recycle Bin.
+- **Game profiles** — per-game output folder, format, file name template and HDR setting, matched
+  by executable path, executable name or Steam AppId. A profile can arm the hotkeys (and lock the
+  game window) as soon as the game comes to the front. Create one from the Dashboard in one click.
+- **Start with Windows**, start minimized to the tray, arm on startup, export diagnostics,
+  import / export / reset settings.
+- **11 languages** with every string translated, following the Windows display language on first
+  run; Arabic is laid out right to left.
+
+### Changed
+
+- Runs on **.NET 10 (LTS)**. The app is now framework-dependent: Setup (and the in-app updater)
+  installs the .NET 10 Desktop Runtime when it is missing, so the first update from 1.x may ask for
+  permission once. The installer shrank from about 100 MB to about 28 MB.
+- **Hotkeys use the Windows `RegisterHotKey` API** and are registered only while armed. There is no
+  global keyboard or mouse hook any more, and while disarmed your key combinations reach other
+  apps untouched. Conflicts with other apps are detected and shown.
+- The window list follows Windows events instead of polling WMI every two seconds.
+- Settings, logs, the library index and thumbnails live in
+  `%LocalAppData%\poli0981\CaptureImage`, outside the installer's folder, so reinstalling never
+  wipes them. The 1.x `settings.json` is copied (the old file is left as it was) and migrated to
+  the new format.
+- Notifications appear inside the window when it is in front, otherwise as a small pop-up that
+  never takes focus from a game and never shows up in screenshots.
+- The tray icon shows a red dot while the hotkeys are armed; its menu can capture in every mode.
+- The version is shown the same way everywhere, e.g. `2.0.0 (abc1234)`.
+- Logs hide your user-profile path; window titles are logged only at the Debug level.
+
+### Fixed
+
+- Pressing Esc while selecting a region reported "Capture failed"; pressing the hotkey again during
+  a countdown could crash the app; an error during preview could leave it stuck.
+- Captures could come out partly transparent, a new capture could overwrite an existing file, and
+  encoding ran on the UI thread (the window froze while saving 4K images).
+- Region selection worked only on the primary monitor and was offset at scaling other than 100%.
+- After a graphics-driver reset, captures failed until the app was restarted; a few native objects
+  leaked with every capture.
+- Settings were not written atomically; a damaged file or one from a newer version was replaced by
+  defaults without a backup; unknown fields were dropped; importing skipped validation and accepted
+  network (UNC) paths.
+- Notifications were invisible while the app was in the tray; the Import / Export buttons did
+  nothing; "Start minimized" was ignored; the app had no icon.
+- A second Windows user running the app filled the log with warnings; the foreground-window
+  watcher could crash on exit.
+- "Install update" ended the process without saving settings or removing the tray icon, and
+  release notes never reached the Update page.
+- File names now avoid reserved device names (`CON`, `NUL`, …), invisible bidirectional and
+  zero-width characters, and names that are too long.
+
+### Removed
+
+- WinUI 3 / Windows App SDK, SharpHook, WMI, Stateless, ImageSharp and System.IO.Abstractions.
+- "Auto-switch target on Alt+Tab": the Window hotkey captures the window in front unless you lock
+  one on the Dashboard.
+- The list of social profiles in About; other channels are listed at <https://poli0981.dev/links>.
+
+### Project
+
+- Required pull-request checks: build and tests (with coverage), formatting, dead code, vulnerable
+  and incompatibly licensed dependencies, a smoke test of the published app, PR title, dependency
+  review, workflow lint and documentation links. CodeQL (extended queries), OpenSSF Scorecard and
+  SonarCloud also review every change.
+- Releases ship a CycloneDX SBOM, SHA-256 checksums and GitHub build-provenance attestations, and are
+  published as drafts first.
+- About and the documentation list the project contacts: `contact@poli0981.dev` and
+  <https://poli0981.dev/links>.
+
 ## [1.5.1] - 2026-05-11
 
 Hotfix cycle. CI hardening, supply-chain pinning of reusable
