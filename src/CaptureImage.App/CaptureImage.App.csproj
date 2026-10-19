@@ -16,6 +16,9 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <!-- Only ship satellite assemblies for the UI languages we translate. -->
     <SatelliteResourceLanguages>en;vi;ar;ja;zh-Hans;ko;es;fr;de;pt-BR;ru</SatelliteResourceLanguages>
+    <!-- XML docs are for the IDE, not the installed app. -->
+    <PublishDocumentationFiles>false</PublishDocumentationFiles>
+    <PublishReferencesDocumentationFiles>false</PublishReferencesDocumentationFiles>
   </PropertyGroup>
 
   <ItemGroup>
@@ -45,6 +48,14 @@
     <Content Include="..\..\LICENSE" Link="LICENSE" CopyToOutputDirectory="PreserveNewest" />
     <Content Include="..\..\NOTICE" Link="NOTICE" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
+
+  <!-- Packages' debug symbols stay out of the installer (SkiaSharp alone adds a 90 MB native .pdb);
+       our own .pdb files ship so crash logs have line numbers. -->
+  <Target Name="DropPackageSymbolsFromPublish" AfterTargets="ComputeResolvedFilesToPublishList">
+    <ItemGroup>
+      <ResolvedFileToPublish Remove="@(ResolvedFileToPublish)" Condition="'%(Extension)' == '.pdb' And '%(ResolvedFileToPublish.NuGetPackageId)' != ''" />
+    </ItemGroup>
+  </Target>
 
   <!-- Record the commit (SourceLink fills SourceRevisionId) so About and diagnostics show "2.0.0 (abc1234)". -->
   <Target Name="EmbedSourceRevision" BeforeTargets="GetAssemblyAttributes" DependsOnTargets="InitializeSourceControlInformation">

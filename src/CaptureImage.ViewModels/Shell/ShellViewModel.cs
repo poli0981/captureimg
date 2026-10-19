@@ -89,13 +89,13 @@ public sealed partial class ShellViewModel : ViewModelBase, IDisposable
     }
 
     [RelayCommand]
-    private Task CaptureWindowAsync() => _coordinator.CaptureAsync(CaptureMode.Window);
+    private async Task CaptureWindowAsync() => await _coordinator.CaptureAsync(CaptureMode.Window).ConfigureAwait(true);
 
     [RelayCommand]
-    private Task CaptureRegionAsync() => _coordinator.CaptureAsync(CaptureMode.Region);
+    private async Task CaptureRegionAsync() => await _coordinator.CaptureAsync(CaptureMode.Region).ConfigureAwait(true);
 
     [RelayCommand]
-    private Task CaptureMonitorAsync() => _coordinator.CaptureAsync(CaptureMode.Monitor);
+    private async Task CaptureMonitorAsync() => await _coordinator.CaptureAsync(CaptureMode.Monitor).ConfigureAwait(true);
 
     [RelayCommand]
     private void OpenOutputFolder()

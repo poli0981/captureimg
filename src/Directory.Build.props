@@ -1,0 +1,10 @@
+<Project>
+
+  <!-- Shared settings come from the repository root. -->
+  <Import Project="$([MSBuild]::GetPathOfFileAbove('Directory.Build.props', '$(MSBuildThisFileDirectory)../'))" />
+
+  <PropertyGroup Label="Shipped code gets the recommended .NET analyzers (as errors, like every warning)">
+    <AnalysisMode>Recommended</AnalysisMode>
+  </PropertyGroup>
+
+</Project>

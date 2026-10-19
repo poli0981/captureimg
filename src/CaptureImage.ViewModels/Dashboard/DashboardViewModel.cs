@@ -170,10 +170,10 @@ public sealed partial class DashboardViewModel : ViewModelBase, IDisposable
     }
 
     [RelayCommand]
-    private Task CaptureRegionAsync() => _coordinator.CaptureAsync(CaptureMode.Region);
+    private async Task CaptureRegionAsync() => await _coordinator.CaptureAsync(CaptureMode.Region).ConfigureAwait(true);
 
     [RelayCommand]
-    private Task CaptureMonitorAsync() => _coordinator.CaptureAsync(CaptureMode.Monitor);
+    private async Task CaptureMonitorAsync() => await _coordinator.CaptureAsync(CaptureMode.Monitor).ConfigureAwait(true);
 
     [RelayCommand(CanExecute = nameof(HasSelection))]
     private void LockSelected()

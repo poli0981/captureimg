@@ -207,7 +207,7 @@ public sealed partial class Win32HotkeyService : IHotkeyService
         });
     }
 
-    private HotkeyRegistrationStatus Register_OnLoop(int id, HotkeyBinding binding)
+    private static HotkeyRegistrationStatus Register_OnLoop(int id, HotkeyBinding binding)
     {
         if (binding.IsUnbound)
         {

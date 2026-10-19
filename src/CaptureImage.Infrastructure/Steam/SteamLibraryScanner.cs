@@ -76,7 +76,7 @@ public sealed partial class SteamLibraryScanner : ISteamDetector
         return candidates.FirstOrDefault(path => !string.IsNullOrWhiteSpace(path) && Directory.Exists(path));
     }
 
-    private IReadOnlyList<SteamLibrary> LoadLibraries()
+    private List<SteamLibrary> LoadLibraries()
     {
         string? root;
         try

@@ -43,6 +43,8 @@ env:
   PACK_TITLE: CaptureImage
   MAIN_EXE: CaptureImage.App.exe
   CHANNEL: win
+  # Installed by Setup / the updater when missing (the app is framework-dependent).
+  RUNTIME: net10-x64-desktop
 
 jobs:
   build:
@@ -100,15 +102,24 @@ jobs:
           dotnet test --solution CaptureImage.sln -c Release --no-build
           dotnet tool restore
 
+      # Framework-dependent: Setup installs the .NET Desktop Runtime when it is missing.
       - name: Publish app
-        # WinUI's targets add RIDs during a Platform=x64 publish restore, which locked
-        # mode rejects; the solution-wide restores in the other jobs stay locked.
         run: >
           dotnet publish src/CaptureImage.App/CaptureImage.App.csproj
-          -c Release -r win-x64 --self-contained
-          /p:Platform=x64 /p:WindowsPackageType=None
-          /p:RestoreLockedMode=false
+          -c Release -r win-x64 --self-contained false
           -o publish
+
+      - name: Smoke test the published app
+        shell: pwsh
+        run: |
+          $data = Join-Path $env:RUNNER_TEMP 'smoke-data'
+          $app = Start-Process -FilePath publish/CaptureImage.App.exe -PassThru `
+            -ArgumentList @('--smoke-test', '--data-dir', $data, '--instance-id', 'release')
+          if (-not $app.WaitForExit(180000)) { $app.Kill(); throw 'The app did not exit within 3 minutes.' }
+          if ($app.ExitCode -ne 0) {
+            Get-ChildItem (Join-Path $data 'logs') -Filter *.log | Get-Content
+            throw "Smoke test exited with $($app.ExitCode)."
+          }
 
       - name: Release notes from CHANGELOG
         shell: pwsh
@@ -132,6 +143,7 @@ jobs:
           dotnet vpk pack --packId $env:PACK_ID --packVersion $env:VERSION --packTitle $env:PACK_TITLE `
             --packAuthors "poli0981 and contributors" --packDir publish --mainExe $env:MAIN_EXE `
             --channel $env:CHANNEL --shortcuts "Desktop,StartMenuRoot" --delta None `
+            --framework $env:RUNTIME --icon src/CaptureImage.UI/Assets/CaptureImage.ico `
             --releaseNotes release-notes.md --outputDir releases
 
       - name: Collect assets, SBOM and checksums
@@ -161,8 +173,8 @@ jobs:
             "## CaptureImage v$env:VERSION", '',
             (Get-Content release-notes.md -Raw), '',
             '### Downloads',
-            '- **`CaptureImage-win-Setup.exe`** — installer (per-user, no admin prompt). Windows 11 22H2 or later.',
-            '- **`CaptureImage-win-Portable.zip`** — extract-and-run build without installer.',
+            '- **`CaptureImage-win-Setup.exe`** — installer (per-user). Windows 11 22H2 or later; installs the .NET 10 Desktop Runtime if it is missing.',
+            '- **`CaptureImage-win-Portable.zip`** — extract-and-run build without installer (needs the [.NET 10 Desktop Runtime](https://dotnet.microsoft.com/download/dotnet/10.0)).',
             '- **`*-full.nupkg`**, **`releases.win.json`** — update feed used by the in-app updater.',
             '- **`SHA256SUMS.txt`**, **`*-sbom.cdx.json`** — checksums and CycloneDX SBOM.', '',
             '### Verify the download',

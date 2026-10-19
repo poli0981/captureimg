@@ -288,7 +288,7 @@ public sealed partial class LibraryViewModel : ViewModelBase, IDisposable
         var selected = SelectedGame;
         Games.Clear();
         Games.Add(Localization["Library_AllGames"]);
-        foreach (var game in _all.Select(i => i.Game).Where(g => g.Length > 0).Distinct(StringComparer.CurrentCultureIgnoreCase).Order(StringComparer.CurrentCultureIgnoreCase))
+        foreach (var game in _all.Select(i => i.Game).Where(g => g.Length > 0).Distinct(StringComparer.OrdinalIgnoreCase).Order(StringComparer.CurrentCultureIgnoreCase))
         {
             Games.Add(game);
         }
@@ -302,7 +302,7 @@ public sealed partial class LibraryViewModel : ViewModelBase, IDisposable
         Items.Clear();
         foreach (var item in _all)
         {
-            if ((game is null || string.Equals(item.Game, game, StringComparison.CurrentCultureIgnoreCase))
+            if ((game is null || string.Equals(item.Game, game, StringComparison.OrdinalIgnoreCase))
                 && (!HdrOnly || item.HasHdr)
                 && (query.Length == 0
                     || item.FileName.Contains(query, StringComparison.CurrentCultureIgnoreCase)

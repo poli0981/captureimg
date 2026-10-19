@@ -82,7 +82,7 @@ public sealed partial class DisplayService : IDisplayService, IDisposable
         }
     }
 
-    private static unsafe MonitorInfo? Describe(HMONITOR handle, IReadOnlyDictionary<nint, (bool IsHdr, float MaxNits)> hdrByMonitor)
+    private static unsafe MonitorInfo? Describe(HMONITOR handle, Dictionary<nint, (bool IsHdr, float MaxNits)> hdrByMonitor)
     {
         var info = new MONITORINFOEXW();
         info.monitorInfo.cbSize = (uint)sizeof(MONITORINFOEXW);
