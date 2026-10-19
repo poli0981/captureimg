@@ -95,12 +95,18 @@ jobs:
         with:
           global-json-file: global.json
 
-      - name: Restore, build, test
-        run: |
-          dotnet restore CaptureImage.sln --locked-mode
-          dotnet build CaptureImage.sln -c Release --no-restore
-          dotnet test --solution CaptureImage.sln -c Release --no-build
-          dotnet tool restore
+      # One command per step: a pwsh step only fails when its last native command does.
+      - name: Restore
+        run: dotnet restore CaptureImage.sln --locked-mode
+
+      - name: Build
+        run: dotnet build CaptureImage.sln -c Release --no-restore
+
+      - name: Test
+        run: dotnet test --solution CaptureImage.sln -c Release --no-build
+
+      - name: Restore tools
+        run: dotnet tool restore
 
       # Framework-dependent: Setup installs the .NET Desktop Runtime when it is missing.
       - name: Publish app
