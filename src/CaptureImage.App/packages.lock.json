@@ -356,7 +356,7 @@
       "captureimage.infrastructure": {
         "type": "Project",
         "dependencies": {
-          "CaptureImage.Core": "[1.5.1, )",
+          "CaptureImage.Core": "[2.0.1, )",
           "Microsoft.Extensions.Logging.Abstractions": "[10.0.13, )",
           "Serilog": "[4.4.0, )",
           "SkiaSharp": "[4.153.1, )",
@@ -369,8 +369,8 @@
       "captureimage.ui": {
         "type": "Project",
         "dependencies": {
-          "CaptureImage.Core": "[1.5.1, )",
-          "CaptureImage.ViewModels": "[1.5.1, )",
+          "CaptureImage.Core": "[2.0.1, )",
+          "CaptureImage.ViewModels": "[2.0.1, )",
           "CommunityToolkit.Mvvm": "[8.4.2, )",
           "H.NotifyIcon.Wpf": "[2.4.1, )",
           "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.13, )",
@@ -381,7 +381,7 @@
       "captureimage.viewmodels": {
         "type": "Project",
         "dependencies": {
-          "CaptureImage.Core": "[1.5.1, )",
+          "CaptureImage.Core": "[2.0.1, )",
           "CommunityToolkit.Mvvm": "[8.4.2, )",
           "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.13, )",
           "Microsoft.Extensions.Logging.Abstractions": "[10.0.13, )"
