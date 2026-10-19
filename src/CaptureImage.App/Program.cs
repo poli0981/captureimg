@@ -47,22 +47,23 @@ public static class Program
         var levelSwitch = new LoggingLevelSwitch(LogEventLevel.Information);
         var logBuffer = new InMemorySink();
         Log.Logger = CreateLogger(paths, levelSwitch, logBuffer);
+        var log = Log.ForContext(typeof(Program));
         AppDomain.CurrentDomain.UnhandledException += (_, e) =>
-            Log.Fatal(e.ExceptionObject as Exception, "Unhandled exception; CaptureImage is terminating.");
+            log.Fatal(e.ExceptionObject as Exception, "Unhandled exception; CaptureImage is terminating.");
         TaskScheduler.UnobservedTaskException += (_, e) =>
         {
-            Log.Error(e.Exception, "Unobserved task exception.");
+            log.Error(e.Exception, "Unobserved task exception.");
             e.SetObserved();
         };
 
         try
         {
-            Log.Information("CaptureImage {Version} starting (data: {DataDir}).", AppVersion(), paths.DataDirectory);
+            log.Information("CaptureImage {Version} starting (data: {DataDir}).", AppVersion(), paths.DataDirectory);
             return Run(args, options, paths, levelSwitch, logBuffer, instance);
         }
         finally
         {
-            Log.Information("CaptureImage exited.");
+            log.Information("CaptureImage exited.");
             Log.CloseAndFlush();
         }
     }
