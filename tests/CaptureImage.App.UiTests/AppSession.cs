@@ -114,23 +114,16 @@ internal sealed class AppSession : IDisposable
         return File.Exists(exe) ? exe : throw new FileNotFoundException("Build CaptureImage.App first.", exe);
     }
 
+    /// <summary>Best effort: a log file can still be closing; the temp folder is cleaned up eventually.</summary>
     private static void TryDelete(string directory)
     {
-        for (var attempt = 0; attempt < 5; attempt++)
+        try
         {
-            try
-            {
-                Directory.Delete(directory, recursive: true);
-                return;
-            }
-            catch (IOException)
-            {
-                Thread.Sleep(200); // log files are released when the process exits
-            }
-            catch (UnauthorizedAccessException)
-            {
-                Thread.Sleep(200);
-            }
+            Directory.Delete(directory, recursive: true);
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+        {
+            // Left for the OS temp cleanup.
         }
     }
 }
