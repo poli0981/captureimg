@@ -4,9 +4,12 @@
 using System.Globalization;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Nodes;
+using System.Text.Json.Serialization.Metadata;
 using CaptureImage.Core.Abstractions;
 using CaptureImage.Core.Models;
 using CaptureImage.Core.Paths;
+using CaptureImage.Core.Profiles;
 using CaptureImage.Core.Settings;
 using Microsoft.Extensions.Logging;
 
@@ -31,6 +34,9 @@ public sealed partial class JsonSettingsStore : ISettingsStore, IDisposable
     private const long MaxFileBytes = 4 * 1024 * 1024;
     private static readonly TimeSpan WriteDebounce = TimeSpan.FromMilliseconds(300);
     private static readonly UTF8Encoding Utf8NoBom = new(encoderShouldEmitUTF8Identifier: false);
+
+    // Same leniency as SettingsJsonContext, so a hand-edited settings.json still loads.
+    private static readonly JsonDocumentOptions DocumentOptions = new() { CommentHandling = JsonCommentHandling.Skip, AllowTrailingCommas = true };
 
     private readonly AppPaths _paths;
     private readonly string? _legacySettingsFile;
@@ -331,8 +337,72 @@ public sealed partial class JsonSettingsStore : ISettingsStore, IDisposable
     private static string Serialize(AppSettings settings) =>
         JsonSerializer.Serialize(settings, SettingsJsonContext.Default.AppSettings);
 
-    private static AppSettings? Deserialize(string json) =>
-        JsonSerializer.Deserialize(json, SettingsJsonContext.Default.AppSettings);
+    private static AppSettings? Deserialize(string json)
+    {
+        // The merged nodes still read from the document, so it must outlive the deserialization.
+        using var document = JsonDocument.Parse(json, DocumentOptions);
+        var root = document.RootElement;
+        return root.ValueKind == JsonValueKind.Object
+            ? WithDefaults(root).Deserialize(SettingsJsonContext.Default.AppSettings)
+            : root.Deserialize(SettingsJsonContext.Default.AppSettings);
+    }
+
+    /// <summary>
+    /// The source generator creates the settings records through their init-only properties and
+    /// gives every property missing from the file its CLR default (false, 0, null) instead of the
+    /// initializer's value — a v1.5.1 file would turn notifications and the HDR sidecar off. So the
+    /// file is laid over a serialized default document: sections merge key by key, a section
+    /// written as <c>null</c> keeps its defaults, and each game profile gets the profile defaults.
+    /// The file is walked as <see cref="JsonElement"/>s, so a repeated key still means "last one wins".
+    /// </summary>
+    private static JsonObject WithDefaults(JsonElement settings)
+    {
+        var merged = DefaultsOf(new AppSettings(), SettingsJsonContext.Default.AppSettings);
+        foreach (var property in settings.EnumerateObject())
+        {
+            var value = property.Value;
+            if (merged[property.Name] is JsonObject section && value.ValueKind is JsonValueKind.Object or JsonValueKind.Null)
+            {
+                Overlay(section, value);
+            }
+            else if (property.NameEquals("profiles") && value.ValueKind == JsonValueKind.Array)
+            {
+                merged[property.Name] = new JsonArray([.. value.EnumerateArray()
+                    .Where(profile => profile.ValueKind != JsonValueKind.Null) // a null entry describes no game
+                    .Select(profile => profile.ValueKind == JsonValueKind.Object
+                        ? Overlay(DefaultsOf(new GameProfile(), SettingsJsonContext.Default.GameProfile), profile)
+                        : ToNode(profile))]);
+            }
+            else
+            {
+                merged[property.Name] = ToNode(value);
+            }
+        }
+        return merged;
+    }
+
+    private static JsonObject Overlay(JsonObject target, JsonElement values)
+    {
+        if (values.ValueKind == JsonValueKind.Object)
+        {
+            foreach (var property in values.EnumerateObject())
+            {
+                target[property.Name] = ToNode(property.Value);
+            }
+        }
+        return target;
+    }
+
+    private static JsonObject DefaultsOf<T>(T value, JsonTypeInfo<T> typeInfo) =>
+        JsonSerializer.SerializeToNode(value, typeInfo)!.AsObject();
+
+    private static JsonNode? ToNode(JsonElement element) => element.ValueKind switch
+    {
+        JsonValueKind.Object => JsonObject.Create(element),
+        JsonValueKind.Array => JsonArray.Create(element),
+        JsonValueKind.Null => null,
+        _ => JsonValue.Create(element),
+    };
 
     [LoggerMessage(Level = LogLevel.Information, Message = "Settings loaded (schema v{Version}, {ProfileCount} game profiles).")]
     private partial void LogLoaded(int version, int profileCount);

@@ -1,176 +1,186 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 // Copyright (c) CaptureImage Contributors
 
-using System.Diagnostics;
+using System.Buffers.Binary;
 using AwesomeAssertions;
-using CaptureImage.Core.Abstractions;
+using CaptureImage.Core.Capture;
 using CaptureImage.Core.Errors;
+using CaptureImage.Core.Imaging;
 using CaptureImage.Core.Models;
-using CaptureImage.Core.Pipeline;
 using CaptureImage.Infrastructure.Capture;
-using CaptureImage.Infrastructure.Imaging;
+using CaptureImage.Infrastructure.Tests.TestSupport;
+using CaptureImage.Infrastructure.Windowing;
 using Microsoft.Extensions.Logging.Abstractions;
+using Windows.Graphics.Capture;
 using Xunit;
 
 namespace CaptureImage.Infrastructure.Tests.Capture;
 
 /// <summary>
-/// Windows-only integration tests for the WGC pipeline. Spawns a real Notepad window,
-/// drives the full engine + orchestrator + SkiaImageEncoder path, and asserts the saved
-/// file exists with plausible content (non-black, correct extension, size > 0).
+/// <see cref="WgcCaptureEngine"/> and <see cref="D3D11DeviceManager"/> on the real GPU (or WARP):
+/// a one-shot capture of the primary monitor must come back as an opaque frame of plausible
+/// size. Skipped where Windows.Graphics.Capture is unavailable or no monitor is attached.
+/// The captured pixels stay in memory; nothing is written to disk.
 /// </summary>
-/// <remarks>
-/// These tests require:
-/// <list type="bullet">
-///   <item>A desktop session (not headless CI without a GUI).</item>
-///   <item>Windows 10.0.19041 or later for WGC.</item>
-///   <item>notepad.exe available on PATH.</item>
-/// </list>
-/// They are tagged <c>Category=Windows</c> so CI can opt out if needed.
-/// </remarks>
 [Trait("Category", "Windows")]
-public class WgcIntegrationTests
+public sealed class WgcIntegrationTests : IDisposable
 {
-    [Fact]
-    public async Task Orchestrator_CapturesWinverToPng_SuccessAndNonEmptyFile()
+    private readonly D3D11DeviceManager _devices = new(NullLogger<D3D11DeviceManager>.Instance);
+    private readonly WgcCaptureEngine _engine;
+    private readonly DisplayService _displays = new(NullLogger<DisplayService>.Instance);
+
+    public WgcIntegrationTests()
     {
-        // Arrange — spawn winver.exe. It's still a classic Win32 app on Win11 (unlike
-        // notepad.exe / calc.exe which are Store launchers that hand back a shim process
-        // with MainWindowHandle = 0).
-        using var winver = Process.Start(new ProcessStartInfo("winver.exe")
-        {
-            WindowStyle = ProcessWindowStyle.Normal,
-            UseShellExecute = true,
-        }) ?? throw new InvalidOperationException("Failed to start winver.exe");
+        _engine = new WgcCaptureEngine(_devices, NullLogger<WgcCaptureEngine>.Instance);
+    }
 
-        try
-        {
-            winver.WaitForInputIdle(10_000);
-            await WaitForMainWindowAsync(winver, TimeSpan.FromSeconds(10));
+    private static CancellationToken Ct => TestContext.Current.CancellationToken;
 
-            var hwnd = winver.MainWindowHandle;
-            hwnd.Should().NotBe(IntPtr.Zero, "winver must have a top-level window");
-
-            var target = new GameTarget(
-                ProcessId: (uint)winver.Id,
-                WindowHandle: hwnd,
-                ProcessName: "winver",
-                WindowTitle: winver.MainWindowTitle,
-                ExecutablePath: winver.MainModule?.FileName ?? string.Empty,
-                IconBytes: null,
-                SteamInfo: null);
-
-            var tempDir = Path.Combine(Path.GetTempPath(), "CaptureImageTests_" + Guid.NewGuid().ToString("N"));
-            Directory.CreateDirectory(tempDir);
-
-            try
-            {
-                var orchestrator = BuildOrchestrator();
-
-                var request = new CaptureRequest(
-                    Target: target,
-                    Format: ImageFormat.Png,
-                    OutputDirectory: tempDir,
-                    FileNameTemplate: "winver_{yyyy}-{MM}-{dd}_{HH}-{mm}-{ss}",
-                    JpegQuality: 90,
-                    WebpQuality: 85);
-
-                // Act
-                var result = await orchestrator.ExecuteAsync(request, TestContext.Current.CancellationToken);
-
-                // Assert — include failure detail in the error message so we can see why.
-                if (result is CaptureResult.Failure f)
-                {
-                    throw new Xunit.Sdk.XunitException(
-                        $"Capture failed: {f.ErrorCode} — {f.DeveloperMessage}\n{f.Exception}");
-                }
-                result.Should().BeOfType<CaptureResult.Success>();
-                var success = (CaptureResult.Success)result;
-
-                File.Exists(success.FilePath).Should().BeTrue("the output file must be on disk");
-                new FileInfo(success.FilePath).Length.Should().BeGreaterThan(1024,
-                    "a real capture should be at least 1 KB of PNG data");
-                success.Width.Should().BeGreaterThan(0);
-                success.Height.Should().BeGreaterThan(0);
-                Path.GetExtension(success.FilePath).Should().Be(".png");
-
-                // Verify PNG magic bytes (89 50 4E 47 0D 0A 1A 0A).
-                var header = new byte[8];
-                using (var fs = File.OpenRead(success.FilePath))
-                {
-                    var read = fs.Read(header, 0, 8);
-                    read.Should().Be(8);
-                }
-                header[0].Should().Be(0x89);
-                header[1].Should().Be(0x50);
-                header[2].Should().Be(0x4E);
-                header[3].Should().Be(0x47);
-            }
-            finally
-            {
-                try { Directory.Delete(tempDir, recursive: true); } catch { /* best-effort */ }
-            }
-        }
-        finally
-        {
-            try { winver.Kill(); } catch { /* ignore */ }
-        }
+    public void Dispose()
+    {
+        _engine.Dispose();
+        _devices.Dispose();
+        _displays.Dispose();
     }
 
     [Fact]
-    public async Task Engine_InvalidHwnd_ThrowsCaptureException()
+    public async Task CaptureAsync_PrimaryMonitor_ReturnsAnOpaqueBgraFrame()
     {
-        var orchestrator = BuildOrchestrator();
+        var monitor = PrimaryMonitorOrSkip();
 
-        var target = new GameTarget(
-            ProcessId: 99999,
-            WindowHandle: 0,
-            ProcessName: "missing",
-            WindowTitle: "missing",
-            ExecutablePath: "",
-            IconBytes: null,
-            SteamInfo: null);
+        var frame = await _engine.CaptureAsync(new MonitorCaptureSource(monitor.Handle), CaptureOptions.Default, Ct);
 
-        var request = new CaptureRequest(
-            Target: target,
-            Format: ImageFormat.Png,
-            OutputDirectory: Path.GetTempPath(),
-            FileNameTemplate: "missing_{ss}");
+        frame.Format.Should().Be(FramePixelFormat.Bgra8);
+        frame.Width.Should().BePositive();
+        frame.Height.Should().BePositive();
+        frame.RowStride.Should().Be(frame.Width * 4);
+        frame.Pixels.Should().HaveCount(frame.RowStride * frame.Height);
+        TestFrames.IsOpaque(frame).Should().BeTrue("captured frames are forced opaque so saved images are never see-through");
 
-        var result = await orchestrator.ExecuteAsync(request, TestContext.Current.CancellationToken);
-
-        result.Should().BeOfType<CaptureResult.Failure>();
-        var fail = (CaptureResult.Failure)result;
-        fail.ErrorCode.Should().Be(CaptureError.TargetGone);
+        // Monitor bounds may be DPI-virtualized for this process, but the shape is the same and
+        // the capture is never smaller than the logical size.
+        frame.Width.Should().BeGreaterThanOrEqualTo(monitor.Bounds.Width);
+        ((double)frame.Width / frame.Height).Should().BeApproximately((double)monitor.Bounds.Width / monitor.Bounds.Height, 0.02);
     }
 
-    // --- helpers ------------------------------------------------------------
-
-    private static CaptureOrchestrator BuildOrchestrator()
+    [Fact]
+    public async Task CaptureAsync_PreferHdr_ReturnsAnOpaqueHalfFloatFrame_ThatToneMapsToEightBit()
     {
-        var deviceManager = new D3D11DeviceManager(NullLogger<D3D11DeviceManager>.Instance);
-        var engine = new WindowsGraphicsCaptureEngine(
-            deviceManager, NullLogger<WindowsGraphicsCaptureEngine>.Instance);
-        var fileNameStrategy = new FileNameStrategy(File.Exists);
-        var encoders = new List<IImageEncoder> { new SkiaImageEncoder(), new WicTiffEncoder() };
-        return new CaptureOrchestrator(
-            engine,
-            encoders,
-            fileNameStrategy,
-            NullLogger<CaptureOrchestrator>.Instance);
-    }
+        var monitor = PrimaryMonitorOrSkip();
 
-    private static async Task WaitForMainWindowAsync(Process process, TimeSpan timeout)
-    {
-        var start = DateTime.UtcNow;
-        while (DateTime.UtcNow - start < timeout)
+        var frame = await _engine.CaptureAsync(new MonitorCaptureSource(monitor.Handle), new CaptureOptions(PreferHdr: true), Ct);
+
+        // The coordinator only asks for HDR on HDR displays, but WGC delivers scRGB for any output.
+        frame.Format.Should().Be(FramePixelFormat.RgbaHalf);
+        frame.RowStride.Should().Be(frame.Width * 8);
+        for (var i = 6; i < frame.Pixels.Length; i += 8 * 97)
         {
-            process.Refresh();
-            if (process.MainWindowHandle != IntPtr.Zero)
-            {
-                return;
-            }
-            await Task.Delay(50);
+            BinaryPrimitives.ReadHalfLittleEndian(frame.Pixels.AsSpan(i, 2)).Should().Be(Half.One, "alpha is forced to 1.0");
         }
+
+        var sdr = HdrToneMapper.ToSdr(frame);
+        sdr.Format.Should().Be(FramePixelFormat.Bgra8);
+        (sdr.Width, sdr.Height).Should().Be((frame.Width, frame.Height));
+        TestFrames.IsOpaque(sdr).Should().BeTrue();
+    }
+
+    [Fact]
+    public async Task CaptureAsync_ConsecutiveCaptures_ReuseTheDevice()
+    {
+        var monitor = PrimaryMonitorOrSkip();
+        var source = new MonitorCaptureSource(monitor.Handle);
+
+        var first = await _engine.CaptureAsync(source, CaptureOptions.Default, Ct);
+        var device = _devices.Acquire();
+        var second = await _engine.CaptureAsync(source, CaptureOptions.Default, Ct);
+
+        _devices.Acquire().Should().BeSameAs(device);
+        (second.Width, second.Height).Should().Be((first.Width, first.Height));
+    }
+
+    [Fact]
+    public async Task CaptureAsync_AfterTheDeviceWasInvalidated_RecreatesIt()
+    {
+        var monitor = PrimaryMonitorOrSkip();
+        var before = _devices.Acquire();
+
+        _devices.Invalidate();
+        var frame = await _engine.CaptureAsync(new MonitorCaptureSource(monitor.Handle), CaptureOptions.Default, Ct);
+
+        frame.Width.Should().BePositive();
+        _devices.Acquire().Should().NotBeSameAs(before);
+    }
+
+    [Theory]
+    [InlineData(0L)]
+    [InlineData(0x7FFF_FFFF_FFF0L)]
+    public async Task CaptureAsync_WindowThatDoesNotExist_FailsWithTargetGone(long handle)
+    {
+        SkipUnlessCaptureIsSupported();
+
+        var act = () => _engine.CaptureAsync(new WindowCaptureSource((nint)handle), CaptureOptions.Default, Ct);
+
+        (await act.Should().ThrowAsync<CaptureException>()).Which.ErrorCode.Should().Be(CaptureError.TargetGone);
+    }
+
+    [Fact]
+    public async Task CaptureAsync_NoMonitorHandle_FailsWithTargetGone()
+    {
+        SkipUnlessCaptureIsSupported();
+
+        var act = () => _engine.CaptureAsync(new MonitorCaptureSource(0), CaptureOptions.Default, Ct);
+
+        (await act.Should().ThrowAsync<CaptureException>()).Which.ErrorCode.Should().Be(CaptureError.TargetGone);
+    }
+
+    [Fact]
+    public async Task CaptureAsync_CancelledToken_Throws()
+    {
+        var monitor = PrimaryMonitorOrSkip();
+        using var cts = new CancellationTokenSource();
+        await cts.CancelAsync();
+
+        var act = () => _engine.CaptureAsync(new MonitorCaptureSource(monitor.Handle), CaptureOptions.Default, cts.Token);
+
+        await act.Should().ThrowAsync<OperationCanceledException>();
+    }
+
+    [Fact]
+    public async Task CaptureAsync_NullArguments_Throw()
+    {
+        await FluentActions.Awaiting(() => _engine.CaptureAsync(null!, CaptureOptions.Default, Ct)).Should().ThrowAsync<ArgumentNullException>();
+        await FluentActions.Awaiting(() => _engine.CaptureAsync(new MonitorCaptureSource(1), null!, Ct)).Should().ThrowAsync<ArgumentNullException>();
+    }
+
+    [Fact]
+    public void DeviceManager_AfterDispose_RefusesToHandOutADevice()
+    {
+        var devices = new D3D11DeviceManager(NullLogger<D3D11DeviceManager>.Instance);
+        devices.Acquire().Device.Should().NotBeNull();
+
+        devices.Dispose();
+        devices.Dispose();
+
+        devices.Invoking(d => d.Acquire()).Should().Throw<ObjectDisposedException>();
+    }
+
+    private static void SkipUnlessCaptureIsSupported()
+    {
+        if (!GraphicsCaptureSession.IsSupported())
+        {
+            Assert.Skip("Windows.Graphics.Capture is not supported on this machine.");
+        }
+    }
+
+    private MonitorInfo PrimaryMonitorOrSkip()
+    {
+        SkipUnlessCaptureIsSupported();
+        var monitors = _displays.GetMonitors();
+        var monitor = monitors.FirstOrDefault(m => m.IsPrimary) ?? monitors.FirstOrDefault();
+        if (monitor is null)
+        {
+            Assert.Skip("No monitor is attached to this session.");
+        }
+        return monitor;
     }
 }

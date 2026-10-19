@@ -45,6 +45,7 @@ public sealed partial class DiagnosticsExporter : IDiagnosticsExporter
         return Task.Run(() =>
         {
             var temp = destinationPath + ".tmp";
+            File.Delete(temp); // left over by an interrupted export; ZipArchiveMode.Create refuses to overwrite it
             using (var zip = ZipFile.Open(temp, ZipArchiveMode.Create))
             {
                 AddText(zip, "system.txt", DescribeSystem());
