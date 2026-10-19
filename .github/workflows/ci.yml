@@ -128,11 +128,15 @@ jobs:
           cache: true
           cache-dependency-path: "**/packages.lock.json"
 
-      - name: Restore + build
-        run: |
-          dotnet restore CaptureImage.sln --locked-mode
-          dotnet build CaptureImage.sln -c Release --no-restore
-          dotnet tool restore
+      # One command per step: a pwsh step only fails when its last native command does.
+      - name: Restore
+        run: dotnet restore CaptureImage.sln --locked-mode
+
+      - name: Build
+        run: dotnet build CaptureImage.sln -c Release --no-restore
+
+      - name: Restore tools
+        run: dotnet tool restore
 
       # Quoted: PowerShell splits a dash-prefixed native argument at its first period.
       - name: JetBrains InspectCode
@@ -295,7 +299,7 @@ jobs:
           retention-days: 14
           if-no-files-found: ignore
 
-  # End-to-end UI tests (FlaUI) against the real app. Not a required check yet.
+  # End-to-end UI tests (FlaUI) against the real app.
   ui-tests:
     name: ui-tests
     runs-on: windows-latest
