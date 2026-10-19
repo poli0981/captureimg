@@ -1,107 +1,82 @@
 # Terms of Use
 
-_Last updated: 2026-04-15_
+_Last updated: 2026-10-19 (CaptureImage 2.0)_
 
-These terms describe the relationship between the CaptureImage project and
-the people who download, run, and redistribute the software. They are
-written in plain English for readability. The authoritative legal text is
-the **GNU General Public License v3.0 or later**; these terms do not add
-obligations beyond it.
+These terms describe the relationship between the CaptureImage project and the people who download,
+run and redistribute the software. They are written in plain language; the authoritative legal text
+is the **GNU General Public License v3.0 or later**, and these terms add no obligations beyond it.
 
 ## 1. The software is free software
 
-CaptureImage is free software as defined by the Free Software Foundation.
-You have the four essential freedoms:
+CaptureImage is free software as defined by the Free Software Foundation. You have the four
+essential freedoms:
 
-1. The freedom to **run** the program, for any purpose.
-2. The freedom to **study** how the program works, and **adapt** it to
-   your needs. Access to the source code is a precondition for this.
-3. The freedom to **redistribute** copies so you can help others.
-4. The freedom to **distribute modified versions** to others. By doing
-   this you can give the whole community a chance to benefit from your
-   changes. Access to the source code is a precondition for this.
+1. to **run** the program, for any purpose;
+2. to **study** how it works and **adapt** it to your needs;
+3. to **redistribute** copies;
+4. to **distribute modified versions**.
 
-These freedoms come with the obligations described in the
-[GPL-3.0-or-later license text](../../LICENSE). The most important
-obligation for downstream users and distributors is: **if you distribute
-the software, whether modified or not, you must make the complete
-corresponding source code available under the same license.**
+These freedoms come with the obligations in the [GPL-3.0-or-later license text](../../LICENSE). The
+most important one for distributors: **if you distribute the software, modified or not, you must
+make the complete corresponding source code available under the same license.**
 
 ## 2. By running CaptureImage, you agree that
 
-- You have read and understood the [DISCLAIMER](DISCLAIMER.md) and the
-  [PRIVACY POLICY](PRIVACY.md).
-- You will **not** use the software to violate the Terms of Service of any
-  third-party game, application, platform, or service. In particular:
-  - You will not use it to produce content that violates another party's
-    copyright, trademark, or other intellectual property rights.
-  - You will not use it as a component of a cheat, exploit, or similar
-    tool that breaks anti-cheat rules on an online service.
-  - You will not capture or distribute images of other people without
-    their consent where such consent is required by the laws of your
-    jurisdiction.
-- You understand that the software is provided **"AS IS"** under the
-  GPL-3.0, without warranty of any kind, and that the authors and
-  contributors are not liable for damages resulting from its use.
-- You will not hold the project, its contributors, or the AI systems that
-  assisted in its development responsible for outcomes caused by your own
-  use of the software.
+- You have read the [Disclaimer](DISCLAIMER.md) and the [Privacy Policy](PRIVACY.md).
+- You will **not** use the software to break the terms of service of any game, application,
+  platform or service — in particular you will not:
+  - produce or distribute content that infringes someone else's copyright, trademark or other
+    rights;
+  - use it as part of a cheat, exploit or tool that circumvents anti-cheat rules;
+  - capture or share images of other people without the consent your local law requires.
+- The software is provided **"AS IS"** under the GPL-3.0, without warranty of any kind, and the
+  authors and contributors are not liable for damages resulting from its use.
+- You will not hold the project, its contributors or the AI systems that assisted its development
+  responsible for the outcomes of your own use of the software.
 
-If you do not agree with any of the above, please do not install or run
-the software.
+If you do not agree, please do not install or run the software.
 
 ## 3. Trademarks
 
-"CaptureImage" is used as the project's internal name. No trademark
-registration is claimed. You may fork the project and rename your fork
-freely, subject to the GPL's attribution requirements.
+"CaptureImage" is the project's name; no trademark registration is claimed. You may fork the project
+and rename your fork, subject to the GPL's attribution requirements.
 
-Third-party trademarks that appear in the source code, documentation,
-user interface, or release notes (including but not limited to Microsoft,
-Windows, DirectX, WinUI, Windows App SDK, Steam, Valve, Velopack,
-SkiaSharp, ImageSharp, Serilog, SharpHook, GitHub) are property of their
-respective owners. They
-are referenced for identification and interoperability only. No
+Third-party names that appear in the source code, documentation, user interface or release notes
+(including Microsoft, Windows, DirectX, .NET, Steam, Valve, GitHub, WPF UI, Velopack, SkiaSharp and
+Serilog) belong to their owners and are used only for identification and interoperability. No
 endorsement is implied.
 
 ## 4. No support obligation
 
-CaptureImage is maintained by volunteers. Nothing in these terms obliges
-any contributor to respond to issues, fix bugs, answer questions, merge
-pull requests, or ship updates on any particular schedule. Paid support,
-commercial licensing, or service-level agreements are **not** offered.
+CaptureImage is maintained by volunteers. Nothing in these terms obliges any contributor to answer
+questions, fix bugs, merge pull requests or ship updates on any schedule. Paid support, commercial
+licensing and service-level agreements are not offered.
 
 ## 5. Contributions
 
-Contributions submitted via pull requests are accepted under the same
-license as the project itself. By submitting a contribution you represent
-that:
+Contributions are accepted under the project's license. By submitting one you confirm that:
 
-1. You have the right to license your contribution under GPL-3.0-or-later.
-2. Your contribution does not knowingly infringe on any third party's
-   intellectual property rights.
-3. You are comfortable with your contribution being listed in
-   [`CONTRIBUTORS.md`](../CONTRIBUTORS.md) and in git history.
+1. you have the right to license it under GPL-3.0-or-later;
+2. it does not knowingly infringe anyone's intellectual property; and
+3. you are fine with being credited in [`CONTRIBUTORS.md`](../CONTRIBUTORS.md) and the git history.
 
-If your contribution was generated with AI assistance, please say so in
-the pull request description so it can be reviewed with that context in
-mind.
+If AI tools helped you write a contribution, please say so in the pull request. See
+[`CONTRIBUTING.md`](../../CONTRIBUTING.md).
 
 ## 6. Termination
 
-Your rights under the GPL-3.0 license terminate automatically if you fail
-to comply with the license (see GPL-3.0 Section 8). These terms do not
-add additional termination conditions.
+Your rights under the GPL-3.0 end automatically if you do not comply with it (GPL-3.0 section 8).
+These terms add no other termination conditions.
 
 ## 7. Governing law
 
-These terms, the GPL-3.0 license, and any dispute arising from them are
-interpreted under the law of the jurisdiction of the downstream user —
-there is no central governing jurisdiction imposed by the project because
-the project does not sell, transfer, or control distribution.
+The project does not sell or control distribution and imposes no governing jurisdiction; these
+terms and the license are interpreted under the law that applies to you.
 
 ## 8. Contact
 
-The project's primary contact point is its GitHub repository's issue
-tracker. Security-sensitive reports that should not be disclosed publicly
-may be sent by opening a private security advisory on GitHub.
+- Legal questions about these terms: `legal@poli0981.dev`
+- Copyright and DMCA notices: `copyright@poli0981.dev` · `dmca@poli0981.dev`
+- Takedown requests for content in this repository: `takedown@poli0981.dev`
+- Security issues: see [`SECURITY.md`](../../SECURITY.md)
+- Anything else: `contact@poli0981.dev` · <https://poli0981.dev/links>

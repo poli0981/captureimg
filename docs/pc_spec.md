@@ -12,14 +12,14 @@ A Vietnamese mirror of this document lives at
 
 | Component   | Details                                                           |
 |-------------|-------------------------------------------------------------------|
-| **OS**      | Windows 11 Pro 25H2 Insider Preview (Dev Channel), build 26300.8376 |
+| **OS**      | Windows 11 Pro Insider Preview, build 29648 |
 | **CPU**     | Intel Core i7-14700KF                                             |
 | **GPU**     | NVIDIA GeForce RTX 5080 (16 GB VRAM)                              |
 | **RAM**     | 32 GB DDR5                                                        |
 | **Storage** | 1 TB SSD                                                          |
 | **IDE**     | JetBrains 2026.x paid lineup (Rider for this repo; PyCharm / WebStorm / RustRover for sibling projects) + Visual Studio Code |
 
-The Windows Insider Dev Channel build is intentional — CaptureImage
+The Windows Insider build is intentional — CaptureImage
 exercises the latest `Windows.Graphics.Capture` surface area and
 benefits from running on builds ahead of stable so regressions on
 upcoming public releases are caught early.
@@ -35,14 +35,14 @@ work lands, mobile browser testing is performed on:
 Browsers under test on iOS: **Chrome**, **Brave**.
 
 > **Note.** CaptureImage itself is a Windows 11 desktop application
-> (WinUI 3 / Windows App SDK) and has no iOS / web build. The mobile
+> (WPF on .NET 10) and has no iOS / web build. The mobile
 > devices above are listed for transparency about the maintainer's
 > overall test fleet; they are not used to validate CaptureImage.
 
 ## Related documents
 
-- [`docs/dev_env.md`](dev_env.md) — toolchain versions (Python, Node,
-  Rust, Git) and IDE configuration.
+- [`docs/dev_env.md`](dev_env.md) — toolchain versions (.NET SDK, Git,
+  GPG, Node.js) and IDE configuration.
 - [`README.md` § Requirements](../README.md#requirements) — end-user
   runtime requirements (Windows 11 22H2+, no specific GPU needed).
 - [`docs/ARCHITECTURE.md`](ARCHITECTURE.md) — software architecture.

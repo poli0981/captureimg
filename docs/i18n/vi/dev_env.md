@@ -1,77 +1,54 @@
 # Môi trường phát triển
 
-Tài liệu này liệt kê các phiên bản toolchain dùng để build, test
-và release CaptureImage. Tham chiếu phần cứng:
-[`pc_spec.md`](pc_spec.md). Bản tiếng Anh:
-[`docs/dev_env.md`](../../dev_env.md).
+Bộ công cụ dùng để build, test và phát hành CaptureImage. Tham chiếu phần cứng:
+[`pc_spec.md`](pc_spec.md). Bản tiếng Anh: [`dev_env.md`](../../dev_env.md).
 
-## Toolchain
+## Công cụ
 
-| Toolchain   | Version                                | Purpose                                       |
-|-------------|----------------------------------------|-----------------------------------------------|
-| **.NET SDK**| 9.0 (pin chính xác trong [`global.json`](../../../global.json)) | Build + test runtime chính |
-| **Python**  | 3.12                                   | Release scripting, Discord notification helper (`.github/scripts/discord_notify.py`) |
-| **Node.js** | ≥ 22 LTS                               | Docs site / web companion tooling tương lai   |
-| **Rust**    | stable, qua `rustup`                   | Dự phòng cho native helper tương lai (chưa có trong v1.5.x) |
-| **Git**     | mới (≥ 2.40)                           | Source control                                 |
-| **GPG**     | bất kỳ phiên bản nào hỗ trợ Ed25519    | Ký commit + tag — `commit.gpgsign=true` được bật repo-wide; tag signing là bắt buộc theo [`docs/RELEASING.md`](../../RELEASING.md) |
+| Công cụ | Phiên bản | Mục đích |
+|---|---|---|
+| **.NET SDK** | 10.0 (feature band cụ thể được pin trong [`global.json`](../../../global.json)) | Build, test, chạy |
+| **Windows** | 11 22H2 trở lên | Bắt buộc cho app WPF và `Windows.Graphics.Capture` |
+| **Git** | 2.40 trở lên | Quản lý mã nguồn |
+| **GPG** | có hỗ trợ Ed25519 | Ký commit và tag (bắt buộc trên `main` và cho tag phát hành) |
+| **GitHub CLI** (`gh`) | bản mới | Pull request, phát hành, kiểm tra attestation |
+| **Node.js** | 22 LTS trở lên | `markdownlint-cli2` cho bước kiểm tra docs (không bắt buộc khi làm local) |
 
-CI runner dùng `actions/setup-dotnet@v5` với `global-json-file:
-global.json`, nên phiên bản .NET local và CI đảm bảo khớp nhau —
-xem [`.github/workflows/ci.yml`](../../../.github/workflows/ci.yml).
+Các projection của Windows SDK được lấy từ NuGet theo target framework
+(`net10.0-windows10.0.22621.0`); không cần cài Windows SDK riêng. CI dùng `actions/setup-dotnet` với
+`global-json-file: global.json`, nên SDK ở máy local và CI luôn khớp nhau.
 
-## Cấu hình IDE
+Các .NET tool mà CI dùng được pin trong
+[`.config/dotnet-tools.json`](../../../.config/dotnet-tools.json) và cài bằng `dotnet tool restore`:
+`vpk` (Velopack), JetBrains InspectCode, `nuget-license`, ReportGenerator và CycloneDX.
 
-Chính: **JetBrains Rider 2026.x** (paid lineup). Plugin Rider khuyến
-nghị:
+## Trình soạn thảo
 
-- *.NET Core User Secrets* (có sẵn)
-- *Markdown* (có sẵn)
-- *Resource Bundle Editor* — tiện khi edit 11 file `.resx` locale
-  cùng lúc
-  ([`src/CaptureImage.UI/Resources/Strings/`](../../../src/CaptureImage.UI/Resources/Strings/))
+- **JetBrains Rider** (chính) — các inspection của ReSharper khớp với bước kiểm tra `deadcode`
+  trên CI.
+- **Visual Studio 2026** hoặc **Visual Studio Code** với C# Dev Kit cũng dùng được.
 
-JetBrains IDE anh em dùng trên các project lân cận: **PyCharm**,
-**WebStorm**, **RustRover**.
-
-Phụ: **Visual Studio Code** với extension C# Dev Kit cho các edit
-nhanh.
-
-## Windows SDK
-
-WinUI 3 + projection của `Windows.Graphics.Capture` yêu cầu
-**Windows 11 22H2 SDK** (10.0.22621). Cài qua Visual Studio
-Installer ("Windows 11 SDK (10.0.22621.x)") hoặc trực tiếp từ
-<https://developer.microsoft.com/en-us/windows/downloads/windows-sdk/>.
-
-## Build / test / run
+## Build, test, chạy
 
 ```powershell
 git clone https://github.com/poli0981/captureimg.git
 cd captureimg
-dotnet restore
 dotnet build CaptureImage.sln -c Release
-dotnet test  CaptureImage.sln -c Release
-dotnet run --project src/CaptureImage.App -c Release
+dotnet test --solution CaptureImage.sln -c Release
+dotnet run --project src/CaptureImage.App -c Release -- --data-dir .\.devdata --instance-id dev
 ```
 
-Lệnh trên CI là mirror chính xác của các lệnh trên, có thêm
-`/p:TreatWarningsAsErrors=true /p:WarningsAsErrors=nullable` —
-chạy y hệt ở local trước khi mở PR.
+Warning được coi là lỗi và `src/` bật bộ analyzer khuyến nghị của .NET, nên build sạch ở local nghĩa
+là bước build trên CI cũng biên dịch được. Xem [`CONTRIBUTING.md`](../../../CONTRIBUTING.md) để biết
+các lệnh format và toàn bộ danh sách check bắt buộc.
 
-## Release tooling
+## Công cụ phát hành
 
-- **Velopack** (`vpk` CLI) — packaging + delta update.
-- **`gh`** (GitHub CLI) — tạo Release, upload artifact, fetch SHA
-  (lookup SHA của reusable-workflow pin trong
-  [`docs/RELEASING.md`](../../RELEASING.md)).
-- Xem [`docs/RELEASING.md`](../../RELEASING.md) cho chu trình end-to-end.
+Bản phát hành được GitHub Actions tạo từ tag đã ký — xem [`RELEASING.md`](../../RELEASING.md).
 
 ## Tài liệu liên quan
 
-- [`pc_spec.md`](pc_spec.md) — tham chiếu phần cứng (bản VI).
-- [`docs/ARCHITECTURE.md`](../../ARCHITECTURE.md) — kiến trúc phần
-  mềm (EN, chưa có bản VI).
-- [`docs/CONTRIBUTORS.md`](../../CONTRIBUTORS.md) — chính sách đóng
-  góp (EN, chưa có bản VI).
-- [`README.md`](../../../README.md) — tổng quan project.
+- [`pc_spec.md`](pc_spec.md) — cấu hình phần cứng.
+- [`ARCHITECTURE.md`](../../ARCHITECTURE.md) — kiến trúc của app.
+- [`CONTRIBUTORS.md`](../../CONTRIBUTORS.md) — người đóng góp và chính sách hỗ trợ AI.
+- [`README.md`](../../../README.md) — tổng quan dự án.

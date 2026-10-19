@@ -6,16 +6,19 @@ body:
   - type: markdown
     attributes:
       value: |
-        Thanks for taking the time to report a bug. Please fill in every
-        field — bug reports missing environment or repro details usually
-        cannot be acted on.
+        Thanks for taking the time to report a bug. Reports with the version, Windows build and
+        steps to reproduce are the ones that get fixed.
+
+        **Tip:** in the app, set **Settings → Advanced → Minimum log level** to **Debug**,
+        reproduce the problem, then use **Export diagnostics** and attach the zip below (user
+        paths are removed automatically).
 
   - type: textarea
     id: summary
     attributes:
       label: Summary
-      description: One-sentence description of what's wrong.
-      placeholder: "Capturing Elden Ring produces an all-black PNG."
+      description: One sentence describing what's wrong.
+      placeholder: "Region captures of my second monitor are shifted to the left."
     validations:
       required: true
 
@@ -23,12 +26,12 @@ body:
     id: repro
     attributes:
       label: Steps to reproduce
-      description: Numbered steps from a clean launch of CaptureImage.
+      description: Numbered steps, starting from opening CaptureImage.
       placeholder: |
-        1. Start Elden Ring in borderless windowed mode.
-        2. Open CaptureImage and select "Elden Ring" from the Dashboard.
-        3. Click Arm, focus Elden Ring, press Ctrl+Shift+F12.
-        4. Observe the resulting PNG in Pictures\CaptureImage.
+        1. Start the game in borderless windowed mode on my second monitor (150% scaling).
+        2. Click Arm on the Dashboard.
+        3. Press Ctrl+Shift+F11 and drag an area.
+        4. Open the saved PNG.
     validations:
       required: true
 
@@ -36,7 +39,6 @@ body:
     id: expected
     attributes:
       label: Expected behavior
-      placeholder: "The PNG should contain the game frame."
     validations:
       required: true
 
@@ -44,7 +46,18 @@ body:
     id: actual
     attributes:
       label: Actual behavior
-      placeholder: "The PNG is 1920x1080 but every pixel is (0,0,0,255)."
+    validations:
+      required: true
+
+  - type: dropdown
+    id: mode
+    attributes:
+      label: Capture mode
+      options:
+        - "Window (Ctrl+Shift+F12 by default)"
+        - "Region (Ctrl+Shift+F11 by default)"
+        - "Screen (Ctrl+Shift+F10 by default)"
+        - "Not about capturing (UI, settings, library, update…)"
     validations:
       required: true
 
@@ -52,8 +65,8 @@ body:
     id: version
     attributes:
       label: CaptureImage version
-      description: "See About tab. Example: `1.0.0`"
-      placeholder: "1.0.0"
+      description: "Shown in the title bar and on the About page, e.g. `2.0.0 (abc1234)`."
+      placeholder: "2.0.0 (abc1234)"
     validations:
       required: true
 
@@ -61,45 +74,40 @@ body:
     id: windows
     attributes:
       label: Windows version
-      description: "Run `winver` — example: `Windows 11 Pro 24H2 (26100.2454)`"
+      description: "Run `winver`, e.g. `Windows 11 Pro 24H2 (26100.2454)`."
     validations:
       required: true
 
   - type: input
-    id: gpu
+    id: displays
     attributes:
-      label: GPU + driver version
-      description: "Example: `RTX 4070 / NVIDIA 566.14`"
+      label: Displays and graphics
+      description: "Number of monitors, their scaling, whether HDR is on, GPU and driver."
+      placeholder: "2 monitors (100% + 150%), HDR on the first, RTX 4070 / 566.14"
 
-  - type: dropdown
-    id: capture-api
+  - type: input
+    id: game
     attributes:
-      label: Which capture engine produced the bug?
-      options:
-        - "Windows.Graphics.Capture (primary)"
-        - "PrintWindow fallback"
-        - "Both"
-        - "Not sure"
-    validations:
-      required: true
+      label: Game or application
+      description: "Name, and whether it runs windowed, borderless or exclusive full screen."
 
   - type: textarea
     id: logs
     attributes:
-      label: Relevant log snippet
+      label: Diagnostics or log excerpt
       description: |
-        Paste the relevant window from `%LocalAppData%\CaptureImage\logs\captureimg-<date>.log`.
-        Please redact anything sensitive (window titles of other apps, file paths in your home).
+        Attach the zip from **Export diagnostics**, or paste the relevant lines from
+        `%LocalAppData%\poli0981\CaptureImage\logs\captureimage-<date>.log`.
       render: text
 
   - type: checkboxes
     id: preflight
     attributes:
-      label: Pre-flight checks
+      label: Before submitting
       options:
-        - label: I have searched existing issues for a duplicate.
+        - label: I searched existing issues for a duplicate.
           required: true
-        - label: I have read `docs/legal/DISCLAIMER.md §2` (capture limitations) and the bug is not an expected limitation.
+        - label: I read the capture limitations in `docs/legal/DISCLAIMER.md` (section 2) and this isn't one of them.
           required: true
-        - label: This is NOT a security vulnerability (those go through Security Advisories, not issues).
+        - label: This is not a security vulnerability (those go to `security@poli0981.dev` or a private advisory).
           required: true

@@ -4,48 +4,70 @@ Copyright (c) CaptureImage Contributors
 This product is licensed under the GNU General Public License v3.0 or later (GPL-3.0-or-later).
 See LICENSE for the full license text.
 
+Contact: contact@poli0981.dev (copyright: copyright@poli0981.dev, legal: legal@poli0981.dev)
+
 ================================================================================
 Third-party components
 ================================================================================
 
-This product includes software developed by third parties. The following table
-lists every runtime dependency together with its upstream license. All listed
-licenses are compatible with distribution under GPL-3.0-or-later.
+This product includes the following third-party packages. All of them are licensed under terms
+compatible with GPL-3.0-or-later. Details and project links: docs/legal/THIRD_PARTY_NOTICES.md.
 
-Package                                    SPDX license
----------------------------------------    -----------------
-Avalonia                                   MIT
-Avalonia.Desktop                           MIT
-Avalonia.Themes.Fluent                     MIT
-Avalonia.Fonts.Inter                       MIT
-Avalonia.Diagnostics                       MIT
-CommunityToolkit.Mvvm                      MIT
-Microsoft.Extensions.DependencyInjection   MIT
-Microsoft.Extensions.Hosting               MIT
-Microsoft.Extensions.Localization          MIT
-Microsoft.Extensions.Logging               MIT
-Microsoft.Extensions.Options               MIT
-H.NotifyIcon                               MIT
-SharpHook                                  MIT
-Stateless                                  Apache-2.0
-Serilog                                    Apache-2.0
-Serilog.Extensions.Hosting                 Apache-2.0
-Serilog.Extensions.Logging                 Apache-2.0
-Serilog.Sinks.Console                      Apache-2.0
-Serilog.Sinks.File                         Apache-2.0
-Serilog.Sinks.Async                        Apache-2.0
-Microsoft.Windows.CsWinRT                  MIT
-Vortice.Direct3D11                         MIT
-Vortice.DXGI                               MIT
-System.Management                          MIT
-SixLabors.ImageSharp  (>= 3.1)             Apache-2.0
-Velopack                                   MIT
-SkiaSharp (transitive via Avalonia)        MIT
-Inter font (transitive via Avalonia)       OFL-1.1
+Package                                                    SPDX license
+-------------------------------------------------------    ------------
+CommunityToolkit.Mvvm                                      MIT
+H.GeneratedIcons.System.Drawing                            MIT
+H.NotifyIcon                                               MIT
+H.NotifyIcon.Wpf                                           MIT
+Microsoft.Extensions.Configuration                         MIT
+Microsoft.Extensions.Configuration.Abstractions            MIT
+Microsoft.Extensions.Configuration.Binder                  MIT
+Microsoft.Extensions.Configuration.CommandLine             MIT
+Microsoft.Extensions.Configuration.EnvironmentVariables    MIT
+Microsoft.Extensions.Configuration.FileExtensions          MIT
+Microsoft.Extensions.Configuration.Json                    MIT
+Microsoft.Extensions.Configuration.UserSecrets             MIT
+Microsoft.Extensions.DependencyInjection                   MIT
+Microsoft.Extensions.DependencyInjection.Abstractions      MIT
+Microsoft.Extensions.Diagnostics                           MIT
+Microsoft.Extensions.Diagnostics.Abstractions              MIT
+Microsoft.Extensions.FileProviders.Abstractions            MIT
+Microsoft.Extensions.FileProviders.Physical                MIT
+Microsoft.Extensions.FileSystemGlobbing                    MIT
+Microsoft.Extensions.Hosting                               MIT
+Microsoft.Extensions.Hosting.Abstractions                  MIT
+Microsoft.Extensions.Logging                               MIT
+Microsoft.Extensions.Logging.Abstractions                  MIT
+Microsoft.Extensions.Logging.Configuration                 MIT
+Microsoft.Extensions.Logging.Console                       MIT
+Microsoft.Extensions.Logging.Debug                         MIT
+Microsoft.Extensions.Logging.EventLog                      MIT
+Microsoft.Extensions.Logging.EventSource                   MIT
+Microsoft.Extensions.Options                               MIT
+Microsoft.Extensions.Options.ConfigurationExtensions       MIT
+Microsoft.Extensions.Primitives                            MIT
+Serilog                                                    Apache-2.0
+Serilog.Extensions.Logging                                 Apache-2.0
+Serilog.Sinks.Async                                        Apache-2.0
+Serilog.Sinks.File                                         Apache-2.0
+SharpGen.Runtime                                           MIT
+SharpGen.Runtime.COM                                       MIT
+SkiaSharp                                                  MIT
+SkiaSharp.NativeAssets.Win32                               MIT
+Velopack                                                   MIT
+Vortice.Direct2D1                                          MIT
+Vortice.Direct3D11                                         MIT
+Vortice.DirectX                                            MIT
+Vortice.DXGI                                               MIT
+Vortice.Mathematics                                        MIT
+WPF-UI                                                     MIT
+WPF-UI.Abstractions                                        MIT
 
-Test-only dependencies are not redistributed with the binary and are omitted.
+Also used at runtime: the .NET 10 Desktop Runtime (MIT), the Windows SDK projection for .NET
+(MIT) and the Fluent System Icons font embedded in WPF UI (MIT).
 
-Full license texts for Apache-2.0, MIT, and OFL-1.1 can be retrieved from:
-  - https://www.apache.org/licenses/LICENSE-2.0.txt
-  - https://opensource.org/licenses/MIT
-  - https://openfontlicense.org/open-font-license-official-text/
+Build and test tools are not redistributed with the binary and are omitted.
+
+License texts:
+  - https://opensource.org/license/mit
+  - https://www.apache.org/licenses/LICENSE-2.0

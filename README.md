@@ -1,225 +1,194 @@
 # CaptureImage
 
 [![CI](https://github.com/poli0981/captureimg/actions/workflows/ci.yml/badge.svg)](https://github.com/poli0981/captureimg/actions/workflows/ci.yml)
-[![Latest release](https://img.shields.io/github/v/release/poli0981/captureimg?include_prereleases&sort=semver)](https://github.com/poli0981/captureimg/releases)
+[![Latest release](https://img.shields.io/github/v/release/poli0981/captureimg?sort=semver)](https://github.com/poli0981/captureimg/releases)
 [![License: GPL-3.0](https://img.shields.io/badge/License-GPL--3.0--or--later-blue.svg)](LICENSE)
-[![.NET 9](https://img.shields.io/badge/.NET-9.0-512BD4.svg)](https://dotnet.microsoft.com/en-us/download/dotnet/9.0)
+[![.NET 10](https://img.shields.io/badge/.NET-10.0-512BD4.svg)](https://dotnet.microsoft.com/download/dotnet/10.0)
+[![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/poli0981/captureimg/badge)](https://securityscorecards.dev/viewer/?uri=github.com/poli0981/captureimg)
 
-A lightweight Windows screen-capture tool for games that don't ship a
-built-in screenshot feature. Tray-resident, hotkey-driven, fast, and
-gentle on resources.
+A lightweight Windows screenshot tool for games that don't have their own screenshot key.
+It sits in the tray, stays out of the way, and takes a clean capture when you press a hotkey.
 
-> **One-line pitch:** pick a target window from a list, press
-> `Ctrl+Shift+F12`, and your PNG lands in `Pictures\CaptureImage\`. That's it.
+> **In one line:** click **Arm**, press `Ctrl+Shift+F12` in your game, and the PNG is in
+> `Pictures\CaptureImage`.
 
 ## Why
 
-Many games — especially older ones, smaller indie titles, emulators,
-and anything outside Steam — don't bundle a screenshot key. The Windows
-built-in options (Snipping Tool, Xbox Game Bar, `Print Screen`) either
-don't work on fullscreen DirectX surfaces or require interrupting your
-session. The heavy alternatives (OBS, ShareX) are overkill when all you
-want is _one frame of a specific window, now, into a file_.
+Many games — older titles, small indie games, emulators, anything outside Steam — have no
+screenshot key. Print Screen, the Snipping Tool and the Xbox Game Bar either miss full-screen
+DirectX surfaces or pull you out of the game, and OBS or ShareX are a lot of machinery when all you
+want is _one frame of one window, now, in a file_.
 
-CaptureImage fills that gap. It uses the same `Windows.Graphics.Capture`
-API that OBS Studio uses for its Game Capture source, ships as a small
-tray app, and stays out of your way until you press the hotkey.
+CaptureImage uses `Windows.Graphics.Capture` — the API behind OBS Studio's window capture — from a
+small tray app that does nothing until you press a hotkey.
 
 ## Features
 
-- **Windows.Graphics.Capture** engine — hardware-accelerated, works with
-  DX11/DX12/Vulkan windowed and borderless titles, same API OBS uses.
-- **PrintWindow fallback** for legacy windowed apps that WGC refuses.
-- **Live Dashboard** — every visible top-level window with an icon and
-  title, refreshed in real time via WMI process events.
-- **Steam warning badge** — if a capture target lives under a Steam
-  library, a small badge reminds you that F12 screenshots are available
-  via the Steam Overlay, and that some anti-cheat titles may block
-  external capture.
-- **Arm + global hotkey** — default `Ctrl+Shift+F12`, rebind in Settings
-  (full hotkey editor is M6+).
-- **Preview gate** — optional; show each capture, click Save or Discard.
-- **4 output formats** — PNG, JPEG, WebP, TIFF, with per-format quality.
-- **Local, private by default** — no telemetry, no cloud, no account.
-  Update check is the only network call, and only when you click the
-  button. See [`docs/legal/PRIVACY.md`](docs/legal/PRIVACY.md).
-- **Tray icon + minimize-to-tray**, runtime-generated so no binary
-  asset to ship yet.
-- **Toasts, preview dialog, real-time log drawer** in the UI.
-- **Localized** — English, Vietnamese, Arabic (with live RTL mirroring).
-  Translations are machine-assisted — see
-  [`docs/legal/DISCLAIMER.md §4`](docs/legal/DISCLAIMER.md).
-- **Velopack auto-update** from GitHub Releases. Security policy below.
+- **Three capture modes, three hotkeys**
+  - **Window** (`Ctrl+Shift+F12`) — the window in front, or the one you locked on the Dashboard.
+  - **Region** (`Ctrl+Shift+F11`) — freezes every screen and lets you drag an area; a click takes
+    the whole screen.
+  - **Screen** (`Ctrl+Shift+F10`) — the monitor under the mouse pointer.
+- **Works on every monitor**, at any scaling, including mixed-DPI setups.
+- **HDR** — on HDR displays the full HDR frame is captured and tone-mapped to a normal image; the
+  original can be kept as a JPEG XR (`.jxr`) file next to it.
+- **Library** — every capture with thumbnails; filter by game or HDR; open, show in folder, copy
+  the image or path, extract text (OCR), pin on screen, move to the Recycle Bin.
+- **Game profiles** — per-game folder, format, file name and HDR settings, matched by executable
+  path, executable name or Steam AppId. A profile can arm the hotkeys and lock the game window as
+  soon as the game comes to the front.
+- **PNG, JPEG, WebP or TIFF**, with quality / compression settings and a file-name template
+  (`{Game}`, `{Process}`, `{Mode}`, date and time, `{counter}`).
+- **Optional preview** before saving, countdown (3 / 5 / 10 s), copy to the clipboard, open the
+  folder after saving, pin a floating thumbnail.
+- **Stays out of your game** — hotkeys are registered only while armed (no keyboard or mouse hook),
+  notifications never take focus and never appear in your screenshots, and the app drops to
+  Windows' efficiency mode while it idles in the tray.
+- **Steam badge** on windows of Steam games (some anti-cheat titles block external capture; Steam's
+  own F12 screenshot works there).
+- **11 languages** — English, Tiếng Việt, العربية (right to left), 日本語, 简体中文, 한국어, Español,
+  Français, Deutsch, Português (Brasil), Русский. Translations are machine-assisted — see
+  [`docs/legal/DISCLAIMER.md`](docs/legal/DISCLAIMER.md).
+- **Light, dark and high-contrast themes**, following Windows by default.
+- **Start with Windows**, start minimized, arm on startup.
+- **Private by default** — no telemetry, no account, no cloud. The only network request is the
+  update check. See [`docs/legal/PRIVACY.md`](docs/legal/PRIVACY.md).
+- **In-app updates** from GitHub Releases (Velopack).
 
 ## Screenshots
 
-Captured with CaptureImage itself — yes, we eat our own dog food.
-
-| Dashboard | Settings | About |
+| Dashboard | Library | Settings |
 |:-:|:-:|:-:|
-| ![Dashboard — target list with Steam badge](docs/screenshots/dashboard.png) | ![Settings — hotkey recorder + format + language](docs/screenshots/settings.png) | ![About — version, licenses, legal docs](docs/screenshots/about.png) |
+| ![Dashboard — armed status, per-mode hotkeys and the window list](docs/screenshots/dashboard.png) | ![Library — captures with thumbnails and actions](docs/screenshots/library.png) | ![Settings — hotkeys per capture mode](docs/screenshots/settings.png) |
 
-| Update | Log viewer | RTL (Arabic) |
+| Game profiles | About | Arabic (right to left) |
 |:-:|:-:|:-:|
-| ![Update — Velopack check / download / install with live log](docs/screenshots/update.png) | ![Log viewer — live Serilog ring buffer](docs/screenshots/logviewer.png) | ![RTL — dashboard mirrored for Arabic culture](docs/screenshots/rtl-dashboard.png) |
+| ![Profiles — per-game overrides and auto-arm](docs/screenshots/profiles.png) | ![About — version, contact, legal documents](docs/screenshots/about.png) | ![Settings in Arabic, mirrored right to left](docs/screenshots/rtl-settings.png) |
 
 ## Requirements
 
-- **Windows 11 22H2 or later** (build 10.0.22621+). Required by the
-  `Windows.Graphics.Capture` API. Older Windows 10 builds will not run.
-- For the Steam badge to appear: Steam installed with at least one
-  library. Otherwise the badge is simply absent.
+- **Windows 11 22H2 or later** (build 22621+), 64-bit.
+- **.NET 10 Desktop Runtime** — installed automatically by Setup and by the in-app updater when it
+  is missing. The portable zip needs it installed
+  ([download](https://dotnet.microsoft.com/download/dotnet/10.0)).
 
 ## Install
 
-Download `Setup.exe` from the
-[latest GitHub Release](https://github.com/poli0981/captureimg/releases).
-Velopack installs the app into `%LocalAppData%\CaptureImage\` — no admin
-prompt, no registry spam, no background service.
+Download **`CaptureImage-win-Setup.exe`** from the
+[latest release](https://github.com/poli0981/captureimg/releases/latest). It installs per user into
+`%LocalAppData%\CaptureImage` — no administrator rights, no service. Prefer no installer? Use
+**`CaptureImage-win-Portable.zip`**.
 
-### Unsigned installer — SmartScreen warning
+Updating from 1.x? Use **Update** inside the app (or run the new Setup). Your settings are copied to
+the new data folder and migrated; the old file is left untouched.
 
-**Heads-up:** CaptureImage is not yet code-signed (see
-[`docs/legal/DISCLAIMER.md §7`](docs/legal/DISCLAIMER.md)). On first run
-Windows SmartScreen will show:
+### Unsigned installer — SmartScreen
 
-> Windows protected your PC · Unknown publisher · Don't run
-
-To proceed, click **More info** → **Run anyway**. If you want to verify
-the download is unmodified, the release page includes `SHA256SUMS.txt`:
+CaptureImage is not code-signed yet, so Windows SmartScreen may say _"Windows protected your PC ·
+Unknown publisher"_. Click **More info → Run anyway**. To check the download first, compare its
+SHA-256 with `SHA256SUMS.txt` on the release page, or verify the build provenance:
 
 ```powershell
-Get-FileHash -Algorithm SHA256 .\Setup.exe
-# Compare the output with the entry in SHA256SUMS.txt on the release page.
+Get-FileHash -Algorithm SHA256 .\CaptureImage-win-Setup.exe
+gh attestation verify .\CaptureImage-win-Setup.exe --repo poli0981/captureimg
 ```
 
 ## Usage
 
-1. Launch CaptureImage — a 960×600 window opens.
-2. The **Dashboard** shows every visible top-level window on your desktop
-   with its icon, title, and — for Steam games — a warning badge.
-3. Click the target you want to capture.
-4. Click **Arm**. The global hotkey listener starts.
-5. Alt-Tab to the target, press **`Ctrl+Shift+F12`**.
-6. If preview is enabled (Settings → Preview before save), a dialog
-   shows the captured frame. Click Save or Discard.
-7. The PNG (or JPEG/WebP/TIFF, your choice) lands in
-   `%USERPROFILE%\Pictures\CaptureImage\` with a time-stamped filename.
-8. A toast appears bottom-right confirming the save.
+1. Start CaptureImage. The **Dashboard** shows the hotkeys and every window you can capture.
+2. Click **Arm**. While armed the three hotkeys belong to CaptureImage; click **Disarm** (or use the
+   tray menu) to give them back. Turn on **Arm when CaptureImage starts** in Settings to skip this
+   step.
+3. In your game press **`Ctrl+Shift+F12`** (window), **`Ctrl+Shift+F11`** (region) or
+   **`Ctrl+Shift+F10`** (screen). Change them in **Settings → Hotkeys**.
+4. The image is saved to `Pictures\CaptureImage` (change it in Settings, or per game with a
+   profile) and shows up in the **Library**.
 
-Close-to-tray is on by default — click the X, the window hides, the
-tray icon stays. Quit via the tray menu's Exit item.
+Tips:
+
+- **Lock a window** on the Dashboard to capture it even when something else is in front — or let a
+  game profile lock it for you.
+- **Create profile** on the Dashboard turns the selected game into a profile in one click.
+- Closing the window keeps CaptureImage in the tray; quit from the tray menu.
+- A game that swallows registered hotkeys (rare) can still be captured with **Capture region** or
+  **Capture screen** from the tray menu, optionally with a countdown.
+- Settings, logs and the library index are kept in `%LocalAppData%\poli0981\CaptureImage`.
+  **Settings → Advanced → Export diagnostics** creates a zip for bug reports (user paths removed).
 
 ## Build from source
+
+You need the **.NET 10 SDK** (the exact version is pinned in [`global.json`](global.json)) on
+Windows 11.
 
 ```bash
 git clone https://github.com/poli0981/captureimg.git
 cd captureimg
-dotnet restore
 dotnet build CaptureImage.sln -c Release
-dotnet test CaptureImage.sln -c Release
-dotnet run --project src/CaptureImage.App -c Release
+dotnet test --solution CaptureImage.sln -c Release
+dotnet run --project src/CaptureImage.App -c Release -- --data-dir ./.devdata --instance-id dev
 ```
 
-The build needs:
-
-- **.NET 9 SDK** — the repo's `global.json` pins the exact version.
-- **Windows 10.0.22621 SDK** (or newer) for the WinRT projections the
-  capture engine uses. Install via the Visual Studio Installer
-  ("Windows 11 SDK (10.0.22621.x)") or directly from
-  <https://developer.microsoft.com/en-us/windows/downloads/windows-sdk/>.
+`--data-dir` and `--instance-id` keep a development copy away from your real settings and from a
+copy you have installed. `--smoke-test` opens every page and exits; `--screenshots <dir>` also saves
+a PNG of each page.
 
 ## Repository layout
 
 ```text
 src/
-  CaptureImage.Core            Pure domain (models, abstractions, state machine,
-                               pipeline). Portable net9.0, no Windows ties.
-  CaptureImage.Infrastructure  Windows implementations: capture engine, process
-                               watcher, Steam detector, hotkeys, settings, logging,
-                               Velopack updater. net9.0-windows10.0.22621.0.
-  CaptureImage.ViewModels      MVVM layer — reusable across UI frameworks, no
-                               WinUI 3 references.
-  CaptureImage.UI              WinUI 3 Pages + UserControls (HotkeyRecorder,
-                               ToastHost, LogViewerView, PreviewWindow),
-                               converters, resx localization, tray host.
-  CaptureImage.App             Entry point, DI composition root, Serilog setup,
-                               Velopack startup hook.
+  CaptureImage.Core            Capture model, settings and migration, profiles, file naming,
+                               HDR tone mapping, the capture coordinator. net10.0, no Windows APIs.
+  CaptureImage.Infrastructure  Windows implementations: Windows.Graphics.Capture + Direct3D 11,
+                               RegisterHotKey, WinEvent window watcher, displays and HDR, WIC and
+                               SkiaSharp encoders, library, settings store, OCR, Velopack, Serilog.
+  CaptureImage.ViewModels      View models and the 11-language string resources (no UI framework).
+  CaptureImage.UI              WPF + WPF UI: windows, pages, region overlays, toasts, tray icon.
+  CaptureImage.App             Entry point: Velopack hooks, single instance, logging, composition.
 tests/
-  CaptureImage.Core.Tests           xUnit — 31 tests (state machine, file name
-                                    strategy, image format).
-  CaptureImage.Infrastructure.Tests xUnit — 37 tests (VDF parser, Steam scanner,
-                                    settings store, WGC integration).
-  CaptureImage.ViewModels.Tests     Placeholder project for future VM tests.
-docs/
-  CONTRIBUTORS.md              Contributor list + AI-assistance policy.
-  RELEASING.md                 How to cut a release.
-  legal/
-    DISCLAIMER.md              No-warranty, capture limits, AI-dev, translations.
-    PRIVACY.md                 What's read, what's written, what's on the network.
-    TERMS.md                   Plain-language restatement of GPL-3.0 obligations.
-    THIRD_PARTY_NOTICES.md     Full dependency list + licenses.
+  CaptureImage.Core.Tests            Domain logic, migration, coordinator (with fakes).
+  CaptureImage.Infrastructure.Tests  Settings store, encoders, Steam, hotkeys, capture on real hardware.
+  CaptureImage.ViewModels.Tests      View models and translation completeness.
+  CaptureImage.App.UiTests           End-to-end UI tests (FlaUI), run in CI.
+docs/                          Architecture, releasing, legal documents, screenshots.
 ```
 
-## Architecture
-
-See [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) for a one-page-per-layer
-tour — layer rules, state-machine diagram, WGC capture pipeline sequence,
-DI composition sketch, i18n + RTL flow, and Velopack update flow (all with
-Mermaid diagrams rendered inline on GitHub).
+See [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) for the design, with diagrams.
 
 ## Contributing
 
-See [`docs/CONTRIBUTORS.md`](docs/CONTRIBUTORS.md) for the full
-contribution flow. The short version:
-
-1. Open an issue first for anything non-trivial.
-2. Follow conventional-commits style (`feat(...)`, `fix(...)`, `docs(...)`).
-3. Run `dotnet build` and `dotnet test` locally before opening the PR.
-4. Disclose AI-assisted changes in the PR description (not required, but
-   helpful for reviewers).
-
-**Translation help wanted.** The Vietnamese and Arabic language packs
-are machine-assisted — native speakers who can proofread the `.resx`
-files are warmly welcomed.
+Bug reports, translations and pull requests are welcome — see [`CONTRIBUTING.md`](CONTRIBUTING.md).
+Native speakers who can proofread a language file are especially appreciated.
 
 ## Security
 
-Report vulnerabilities privately via
-[GitHub Security Advisories](https://github.com/poli0981/captureimg/security/advisories/new).
-See [`SECURITY.md`](SECURITY.md) for the full policy, scope, and
-response-time expectations.
+Please report vulnerabilities privately through
+[GitHub Security Advisories](https://github.com/poli0981/captureimg/security/advisories/new) or
+`security@poli0981.dev`. See [`SECURITY.md`](SECURITY.md).
+
+## Contact
+
+- General: `contact@poli0981.dev`
+- Other channels: <https://poli0981.dev/links>
+- Collaboration: `collab@poli0981.dev` · Press: `press@poli0981.dev`
+- Help and questions: [`SUPPORT.md`](SUPPORT.md)
 
 ## AI assistance
 
-CaptureImage was developed with significant assistance from the
-**Claude Opus 4.6** large language model, used through Claude Code,
-during the 2026 development cycle. Every change was reviewed, accepted,
-and tested by the human maintainer before landing. Commits with
-meaningful AI authorship carry a `Co-Authored-By` trailer naming the
-model. Full details in [`docs/CONTRIBUTORS.md`](docs/CONTRIBUTORS.md)
-and [`docs/legal/DISCLAIMER.md §3`](docs/legal/DISCLAIMER.md).
+CaptureImage is developed with substantial help from an AI coding assistant — Claude (Anthropic),
+used through Claude Code — for code, tests and documentation. The maintainer reviews and tests every
+change before it ships; commits with meaningful AI authorship carry a `Co-Authored-By` trailer.
+Details in [`docs/CONTRIBUTORS.md`](docs/CONTRIBUTORS.md).
 
 ## Support the project
 
-CaptureImage is free, open source, and developed solo. If it helps
-you, consider supporting development:
-
-- [GitHub Sponsors](https://github.com/sponsors/poli0981)
-- [Ko-fi](https://ko-fi.com/skullmute)
-- [Buy Me a Coffee](https://buymeacoffee.com/skullmute)
-- [Patreon](https://patreon.com/skullmute)
-
-The same destinations are wired into the repo's "Sponsor" button via
-[`.github/FUNDING.yml`](.github/FUNDING.yml).
-
-Bug reports go through the in-app **About → Report a bug** button or
-[directly on GitHub](https://github.com/poli0981/captureimg/issues/new?template=bug_report.yml).
+CaptureImage is free and developed by one person. If it helps you:
+[GitHub Sponsors](https://github.com/sponsors/poli0981) ·
+[Ko-fi](https://ko-fi.com/skullmute) ·
+[Buy Me a Coffee](https://buymeacoffee.com/skullmute) ·
+[Patreon](https://patreon.com/skullmute). For sponsorship enquiries: `sponsor@poli0981.dev`.
 
 ## License
 
-CaptureImage is distributed under the **GNU General Public License
-v3.0 or later** (SPDX: `GPL-3.0-or-later`). See
-[`LICENSE`](LICENSE) for the full text and
-[`docs/legal/THIRD_PARTY_NOTICES.md`](docs/legal/THIRD_PARTY_NOTICES.md)
-for attributions.
+[GNU General Public License v3.0 or later](LICENSE) (SPDX: `GPL-3.0-or-later`). Third-party
+components and their licenses are listed in
+[`docs/legal/THIRD_PARTY_NOTICES.md`](docs/legal/THIRD_PARTY_NOTICES.md).

@@ -1,182 +1,89 @@
 # Releasing CaptureImage
 
-_Last updated: 2026-04-15_
+_Last updated: 2026-10-19 (CaptureImage 2.0)_
 
-This document describes how to cut a new release of CaptureImage end to
-end: tagging, CI/CD, verifying the installer, and what to tell users
-about the unsigned-binary warning.
+Releases are built by [`.github/workflows/release.yml`](../.github/workflows/release.yml) from a
+signed tag and published as a **draft** first. Nothing reaches users until a maintainer publishes
+the draft.
 
-## 1. Prerequisites
+## 1. Prepare the release pull request
 
-You need:
+1. Make sure `main` is green.
+2. On a branch (e.g. `chore/release-2.1.0`):
+   - set `<Version>` in [`Directory.Build.props`](../Directory.Build.props) — the single source of
+     the version; the release workflow refuses a tag that doesn't match it;
+   - rename `## [Unreleased]` in [`CHANGELOG.md`](../CHANGELOG.md) to `## [2.1.0] - YYYY-MM-DD` and
+     add a new empty `## [Unreleased]` above it. The workflow uses this section as the release notes
+     shown in the app and on GitHub.
+3. Open the pull request, let the required checks pass, squash-merge.
 
-- Push access to <https://github.com/poli0981/captureimg>.
-- The working tree on `main` is clean and all tests pass locally:
+## 2. Tag
 
-  ```powershell
-  dotnet build CaptureImage.sln -c Release /p:TreatWarningsAsErrors=true
-  dotnet test CaptureImage.sln -c Release
-  ```
+Tags must be signed (the `main` branch and `v*` tags are protected by rulesets; tags can't be moved
+or deleted once pushed).
 
-- `CHANGELOG.md` has an entry for the release under `[Unreleased]`.
-  Move the entries into a new `## [1.0.0] - 2026-MM-DD` section before
-  tagging — the CI release workflow does not rewrite the file.
-
-## 2. Cutting a release
-
-Releases are cut by pushing a tag. The tag triggers
-[`.github/workflows/release.yml`](../.github/workflows/release.yml) which
-builds, tests, publishes a single-file self-contained Win64 build, wraps
-it with Velopack, computes SHA256 checksums, and uploads everything as a
-GitHub Release.
-
-```powershell
-# Update the version number in the source metadata.
-# (Directory.Build.props already sets <Version> to the target release.)
-# Commit the CHANGELOG bump.
-git add CHANGELOG.md
-git commit -m "chore(release): CaptureImage v1.0.0"
-
-# Create and push the tag. Use an annotated tag with a release message.
-git tag -a v1.0.0 -m "CaptureImage v1.0.0"
-git push origin main
-git push origin v1.0.0
+```bash
+git switch main
+git pull --ff-only
+git tag -s v2.1.0 -m "CaptureImage v2.1.0"
+git push origin v2.1.0
 ```
 
-Within a minute or two, GitHub Actions should show a `Release` workflow
-running. Total build time is about 8–12 minutes on a `windows-latest`
-runner.
+The workflow then:
 
-When the workflow finishes:
+1. checks the tag is SemVer and equals `<Version>`;
+2. restores with lock files, builds, runs all tests;
+3. publishes the app (framework-dependent, `win-x64`) and runs it with `--smoke-test`;
+4. packs it with Velopack (`vpk`, same version as the library): package id `CaptureImage`, main
+   executable `CaptureImage.App.exe`, channel `win`, shortcuts on the desktop and Start menu, the
+   .NET 10 Desktop Runtime as a prerequisite, full packages only;
+5. adds a CycloneDX SBOM and `SHA256SUMS.txt`, attests build provenance, and creates or updates a
+   **draft** release with all assets.
 
-- A new GitHub Release appears under
-  <https://github.com/poli0981/captureimg/releases>.
-- It contains `Setup.exe`, the Velopack `.nupkg`, the `RELEASES`
-  manifest, and `SHA256SUMS.txt`.
-- A workflow artifact bundle is also uploaded as a backup.
+> Never change the package id, executable name, channel or shortcut set — installed copies would
+> stop updating or end up with duplicate shortcuts.
 
-## 3. If the workflow fails mid-run
+## 3. Verify the draft
 
-Do NOT manually create a release with the broken artifacts. Instead:
+- [ ] Assets: `CaptureImage-win-Setup.exe`, `CaptureImage-win-Portable.zip`,
+      `CaptureImage-<version>-full.nupkg`, `releases.win.json`, `assets.win.json`, `RELEASES`,
+      `SHA256SUMS.txt`, `CaptureImage-<version>-sbom.cdx.json`.
+- [ ] `gh attestation verify CaptureImage-win-Setup.exe --repo poli0981/captureimg` succeeds.
+- [ ] On a clean machine or Windows Sandbox: Setup installs (and installs the .NET runtime if
+      missing), the app starts, About shows the new version.
+- [ ] Update path: install the previous release, then apply the new package
+      (`Update.exe apply --package <full.nupkg>` in the install folder, or the in-app updater once
+      published) — settings are kept and migrated.
+- [ ] The portable zip starts with `--smoke-test --data-dir <temp>` and exits 0.
 
-1. Investigate the failure in the Actions tab.
-2. Delete the broken tag both locally and on GitHub:
+## 4. Publish
 
-   ```powershell
-   git tag -d v1.0.0
-   git push --delete origin v1.0.0
-   ```
-
-3. Fix the underlying problem on `main`.
-4. Re-tag and re-push.
-
-This keeps the GitHub Releases page as a trustworthy source of truth —
-every release there was produced by a clean, green workflow run.
-
-## 4. Post-release checklist
-
-After the release publishes, verify by hand:
-
-- [ ] `Setup.exe` downloads from the Release page.
-- [ ] `Setup.exe` installs to `%LocalAppData%\CaptureImage\app-<version>\`
-  (Velopack default).
-- [ ] First launch opens the main window without crashing.
-- [ ] `About` tab shows the new version number.
-- [ ] The `Update` tab can hit GitHub and reports the installed version
-  matches the latest release.
-- [ ] `%LocalAppData%\CaptureImage\logs\captureimg-<today>.log` contains
-  `"Velopack update service initialized: installed=True"`.
-
-Also update `docs/CONTRIBUTORS.md` if new contributors landed during the
-cycle, and post a short release note in GitHub Discussions if the user
-community wants one.
-
-## 5. Unsigned installer — Windows SmartScreen
-
-**CaptureImage is currently NOT code-signed.** The project applied to
-<https://signpath.io>'s free OSS program and was declined in the first
-round. Until a signing certificate is available, every download will
-trigger Windows SmartScreen:
-
-> Windows protected your PC
-> Microsoft Defender SmartScreen prevented an unrecognized app from
-> starting. Running this app might put your PC at risk.
-
-Users can proceed via **More info** → **Run anyway**, but many will
-reasonably refuse. To mitigate:
-
-1. The GitHub Release description links to the `SHA256SUMS.txt` file
-   and explains how to verify the download:
-
-   ```powershell
-   Get-FileHash -Algorithm SHA256 Setup.exe
-   # Compare the output with the hash listed in SHA256SUMS.txt
-   ```
-
-2. [`docs/legal/DISCLAIMER.md §7`](legal/DISCLAIMER.md) explicitly
-   documents the unsigned state and the SmartScreen warning so users
-   know it is expected, not a compromise.
-3. When SmartScreen "Unknown publisher" warnings decrease over time
-   (SmartScreen learns reputation from download volume + age), we
-   re-evaluate whether manual signing is worth the cost.
-
-### When signing becomes available
-
-- [ ] Re-apply to SignPath.io with a more polished project description,
-      public download count, and signed commits history.
-- [ ] Alternatively, purchase an Azure Trusted Signing subscription
-      (~$10/month) or a cheap EV cert from a CA that issues to individuals.
-- [ ] Add a `SIGN_EXE` step to `.github/workflows/release.yml` after
-      `vpk pack` that calls `signtool sign` on `Setup.exe` and every
-      intermediate `.nupkg` contents.
-- [ ] Re-run `vpk pack` with the signed binaries so the installer embeds
-      the signed files.
-- [ ] Update `docs/legal/DISCLAIMER.md §7` to remove the unsigned note.
-- [ ] Update this file's §5 to describe the signing step.
-
-## 6. Manual release (emergency only)
-
-If CI is down and you must cut a release by hand, run locally:
-
-```powershell
-dotnet publish src/CaptureImage.App/CaptureImage.App.csproj `
-  -c Release -r win-x64 --self-contained `
-  /p:PublishSingleFile=true `
-  /p:IncludeNativeLibrariesForSelfExtract=true `
-  /p:EnableCompressionInSingleFile=true `
-  /p:Version=1.0.0 `
-  -o .\publish
-
-dotnet tool install --global vpk
-vpk pack `
-  --packId CaptureImage `
-  --packVersion 1.0.0 `
-  --packDir .\publish `
-  --mainExe CaptureImage.App.exe `
-  --outputDir .\releases
-
-Get-ChildItem .\releases -File | ForEach-Object {
-    (Get-FileHash $_ -Algorithm SHA256).Hash.ToLower() + "  " + $_.Name
-} | Out-File .\releases\SHA256SUMS.txt -Encoding utf8
-
-# Create the Release manually via the GitHub web UI and attach every
-# file from .\releases\ including SHA256SUMS.txt.
+```bash
+gh release edit v2.1.0 --draft=false
 ```
 
-Prefer CI over manual releases — every manual release is one more
-build environment to audit.
+Publishing with your own token triggers `release: published`, which runs the announcement workflow.
+Installed copies see the update on their next check.
 
-## 7. Version policy
+## 5. When something goes wrong
 
-CaptureImage uses [Semantic Versioning](https://semver.org) with one
-practical twist: as long as the app is pre-1.0 internally (i.e. the
-user community is tiny), breaking changes between 1.x.y releases are
-still avoided, and API changes in the plugin surface (once that exists)
-are flagged in `CHANGELOG.md` as **BREAKING**.
+- **The workflow failed** — fix the problem on `main`, then re-run it for the same tag with
+  **Actions → Release → Run workflow** (`tag: v2.1.0`, `dry_run: false`). It checks out the tag with
+  the workflow from `main`, so a broken tag doesn't need to be moved. Use `dry_run: true` to build
+  and pack without touching the release.
+- **A bad release was published** — publish a fixed patch release; don't delete the old one (users
+  may be mid-update). Mark the bad one as pre-release or edit its notes if needed.
 
-- `MAJOR` bumps when the capture engine gains or loses a backend.
-- `MINOR` bumps for new user-visible features.
-- `PATCH` bumps for bug fixes and security updates.
+## 6. Code signing
 
-Velopack deltas are generated automatically by `vpk pack` — users on an
-older version will get a diff download instead of the full installer.
+The installer isn't Authenticode-signed yet (the SignPath application was declined), so SmartScreen
+warns about an unknown publisher. Users can verify downloads with `SHA256SUMS.txt` or the
+build-provenance attestation — see [`legal/DISCLAIMER.md`](legal/DISCLAIMER.md), section 7. When a
+certificate becomes available (SignPath, Azure Artifact Signing or a CA), sign with `vpk pack
+--signTemplate` / `--azureTrustedSignFile` and update the disclaimer.
+
+## 7. Versioning
+
+[Semantic Versioning](https://semver.org): **major** for breaking changes to behavior, settings or
+supported systems; **minor** for new features; **patch** for fixes. Pre-releases use a suffix
+(`v2.1.0-beta.1`) and are marked as pre-releases automatically; the in-app updater ignores them.
