@@ -15,7 +15,7 @@ public static class LocalizationSource
     public static ILocalizationService? Service { get; set; }
 
     /// <summary>The flow direction of the current UI language.</summary>
-    public static FlowDirection FlowDirection =>
+    public static FlowDirection CurrentFlowDirection =>
         Service?.CurrentFlowDirection == TextFlowDirection.RightToLeft ? FlowDirection.RightToLeft : FlowDirection.LeftToRight;
 
     /// <summary>A one-way binding to a translated string (for menus built in code).</summary>
@@ -45,7 +45,7 @@ public static class LocalizationSource
         ArgumentNullException.ThrowIfNull(element);
         if (Service is { } service)
         {
-            element.FlowDirection = FlowDirection;
+            element.FlowDirection = CurrentFlowDirection;
             element.Language = XmlLanguage.GetLanguage(service.CurrentCulture.IetfLanguageTag);
             // Versions, hotkeys, sizes and file names read better with 0-9 in every language
             // (Arabic would otherwise mix Arabic-Indic digits into "8fde965").

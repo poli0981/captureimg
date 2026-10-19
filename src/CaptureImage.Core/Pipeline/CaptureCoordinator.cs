@@ -639,7 +639,8 @@ public sealed partial class CaptureCoordinator : IDisposable
 
     private void RaiseStateChanged() => StateChanged?.Invoke(this, EventArgs.Empty);
 
-    private void OnHotkeyTriggered(object? sender, CaptureMode mode) => _ = CaptureAsync(mode);
+    // A hotkey capture has no caller to cancel it; CancelCurrent() still stops it.
+    private void OnHotkeyTriggered(object? sender, CaptureMode mode) => _ = CaptureAsync(mode, CancellationToken.None);
 
     private void OnForegroundChanged(object? sender, nint windowHandle) => _ = AutoArmAsync(windowHandle);
 
@@ -654,7 +655,7 @@ public sealed partial class CaptureCoordinator : IDisposable
                 return;
             }
 
-            var target = await _targets.GetTargetAsync(windowHandle).ConfigureAwait(false);
+            var target = await _targets.GetTargetAsync(windowHandle, CancellationToken.None).ConfigureAwait(false);
             var profile = ProfileResolver.Resolve(profiles, target);
             if (target is null || profile is not { AutoArm: true })
             {
