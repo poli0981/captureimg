@@ -163,9 +163,12 @@ jobs:
             --filename "CaptureImage-$env:VERSION-sbom.cdx.json" --output-format Json `
             --set-name CaptureImage --set-version $env:VERSION --exclude-test-projects
           Push-Location dist
-          Get-ChildItem -File | Sort-Object Name | ForEach-Object {
+          # Hash first, then write: Out-File creates SHA256SUMS.txt as soon as the pipeline
+          # starts, so it would otherwise list (and fail to read) its own output file.
+          $sums = Get-ChildItem -File | Where-Object Name -ne 'SHA256SUMS.txt' | Sort-Object Name | ForEach-Object {
             "$((Get-FileHash $_.Name -Algorithm SHA256).Hash.ToLowerInvariant())  $($_.Name)"
-          } | Out-File SHA256SUMS.txt -Encoding utf8
+          }
+          $sums | Out-File SHA256SUMS.txt -Encoding utf8
           Get-Content SHA256SUMS.txt
           Pop-Location
 
