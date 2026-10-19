@@ -36,5 +36,5 @@ jobs:
           deny-licenses: >-
             SSPL-1.0, BUSL-1.1, Elastic-2.0, CC-BY-NC-1.0, CC-BY-NC-2.0, CC-BY-NC-2.5,
             CC-BY-NC-3.0, CC-BY-NC-4.0, CC-BY-NC-SA-4.0, CC-BY-NC-ND-4.0,
-            Commons-Clause, JSON, CPOL-1.02
+            JSON, CPOL-1.02
           comment-summary-in-pr: on-failure

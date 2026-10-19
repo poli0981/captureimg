@@ -18,7 +18,7 @@ updates:
       time: "07:00"
       timezone: Asia/Ho_Chi_Minh
     cooldown:
-      default-days: 3
+      default-days: 7
     open-pull-requests-limit: 0
     commit-message:
       prefix: "chore(deps)"
@@ -72,7 +72,7 @@ updates:
       time: "07:00"
       timezone: Asia/Ho_Chi_Minh
     cooldown:
-      default-days: 3
+      default-days: 7
     open-pull-requests-limit: 0
     commit-message:
       prefix: "chore(ci)"

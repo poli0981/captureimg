@@ -9,7 +9,9 @@
     // Keep a Changelog repeats "### Added/Fixed/Changed" under every release.
     "MD024": { "siblings_only": true },
     // Bold lead-ins ("**Heads-up:** …") are intentional, not headings.
-    "MD036": false
+    "MD036": false,
+    // Pipe alignment inside tables is cosmetic and churns on every edit.
+    "MD060": false
   },
   "ignores": ["LICENSE", "**/bin/**", "**/obj/**", "artifacts/**", "TestResults/**", "node_modules/**"]
 }
