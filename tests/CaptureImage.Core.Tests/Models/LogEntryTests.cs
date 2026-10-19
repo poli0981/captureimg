@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 // Copyright (c) CaptureImage Contributors
 
+using System.Globalization;
 using AwesomeAssertions;
 using CaptureImage.Core.Models;
 using Xunit;
@@ -9,49 +10,69 @@ namespace CaptureImage.Core.Tests.Models;
 
 public class LogEntryTests
 {
-    private static LogEntry MakeEntry(string? file = null, int? line = null) =>
+    private static LogEntry MakeEntry(
+        LogEntryLevel level = LogEntryLevel.Information,
+        string source = "CaptureImage.Core.Pipeline.CaptureCoordinator",
+        string message = "hello") =>
         new(
-            Timestamp: new DateTimeOffset(2026, 4, 26, 14, 30, 5, 123, TimeSpan.Zero),
-            Level: LogLevel.Information,
-            SourceContext: "Test",
-            Message: "hello",
-            Exception: null)
-        {
-            File = file,
-            Line = line,
-        };
+            Timestamp: new DateTimeOffset(2026, 4, 26, 14, 30, 5, 123, TimeSpan.FromHours(7)),
+            Level: level,
+            SourceContext: source,
+            Message: message,
+            Exception: null);
 
     [Fact]
-    public void TimestampText_FormatsAsHHmmssfff()
+    public void TimestampText_IsTheEventsWallClockWithMilliseconds()
     {
-        // Added in v1.3-M5 because WinUI 3 {Binding} doesn't support StringFormat.
-        // The format must be culture-invariant so vi-VN / ar-SA users get the same
-        // timestamps as en-US (the log viewer is technical content, not localized).
         MakeEntry().TimestampText.Should().Be("14:30:05.123");
     }
 
-    [Fact]
-    public void FileLineText_BothPresent_RendersFileColonLine()
+    [Theory]
+    [InlineData("fi-FI")]
+    [InlineData("ar-SA")]
+    [InlineData("vi-VN")]
+    public void TimestampText_IsCultureInvariant(string cultureName)
     {
-        MakeEntry(file: "Foo.cs", line: 42).FileLineText.Should().Be("Foo.cs:42");
+        // The log viewer is technical content: every UI language shows the same timestamps.
+        var original = CultureInfo.CurrentCulture;
+        try
+        {
+            CultureInfo.CurrentCulture = CultureInfo.GetCultureInfo(cultureName);
+
+            MakeEntry().TimestampText.Should().Be("14:30:05.123");
+        }
+        finally
+        {
+            CultureInfo.CurrentCulture = original;
+        }
+    }
+
+    [Theory]
+    [InlineData(LogEntryLevel.Verbose, "VRB")]
+    [InlineData(LogEntryLevel.Debug, "DBG")]
+    [InlineData(LogEntryLevel.Information, "INF")]
+    [InlineData(LogEntryLevel.Warning, "WRN")]
+    [InlineData(LogEntryLevel.Error, "ERR")]
+    [InlineData(LogEntryLevel.Fatal, "FTL")]
+    [InlineData((LogEntryLevel)42, "FTL")]
+    public void LevelText_IsTheThreeLetterCode(LogEntryLevel level, string expected)
+    {
+        MakeEntry(level).LevelText.Should().Be(expected);
+    }
+
+    [Theory]
+    [InlineData("CaptureImage.Core.Pipeline.CaptureCoordinator", "CaptureCoordinator")]
+    [InlineData("Program", "Program")]
+    [InlineData("", "")]
+    [InlineData("Trailing.", "")]
+    public void ShortSource_DropsTheNamespace(string source, string expected)
+    {
+        MakeEntry(source: source).ShortSource.Should().Be(expected);
     }
 
     [Fact]
-    public void FileLineText_FileMissing_RendersEmpty()
+    public void ToString_IsLevelAndMessage_ForScreenReaders()
     {
-        MakeEntry(file: null, line: 42).FileLineText.Should().BeEmpty();
-    }
-
-    [Fact]
-    public void FileLineText_LineMissing_RendersEmpty()
-    {
-        MakeEntry(file: "Foo.cs", line: null).FileLineText.Should().BeEmpty();
-    }
-
-    [Fact]
-    public void FileLineText_LineZero_RendersEmpty()
-    {
-        // Line is uint? — 0 is a sentinel for "unknown" since real source lines are 1+.
-        MakeEntry(file: "Foo.cs", line: 0).FileLineText.Should().BeEmpty();
+        MakeEntry(LogEntryLevel.Warning, message: "disk almost full").ToString().Should().Be("Warning: disk almost full");
     }
 }

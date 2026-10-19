@@ -171,9 +171,10 @@ public sealed partial class CaptureFileWriter
                 .ConfigureAwait(false);
             return size < 0 ? null : sidecarPath;
         }
-        catch (Exception ex) when (ex is CaptureException or IOException or UnauthorizedAccessException)
+        catch (Exception ex) when (ex is not OperationCanceledException)
         {
-            // The SDR image is already saved; a failed sidecar must not fail the capture.
+            // The SDR image is already saved; a failed sidecar must not fail the capture
+            // (WIC reports encoder failures as COM exceptions, not CaptureException).
             LogSidecarFailed(ex, sidecarPath);
             return null;
         }

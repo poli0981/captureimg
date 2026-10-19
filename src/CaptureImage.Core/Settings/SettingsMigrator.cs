@@ -36,7 +36,10 @@ public static class SettingsMigrator
     private static AppSettings FromV2(AppSettings v2)
     {
         var legacyKey = v2.CaptureHotkey is { IsUnbound: false } key ? key : HotkeyBinding.Default;
-        var legacyMode = string.Equals(v2.Capture.Mode, "Region", StringComparison.OrdinalIgnoreCase)
+        // A hand-edited file can hold "capture": null or "ui": null.
+        var capture = v2.Capture ?? new CaptureSettings();
+        var ui = v2.UI ?? new UiSettings();
+        var legacyMode = string.Equals(capture.Mode, "Region", StringComparison.OrdinalIgnoreCase)
             ? CaptureMode.Region
             : CaptureMode.Window;
 
@@ -54,8 +57,8 @@ public static class SettingsMigrator
             Version = 3,
             Hotkeys = hotkeys,
             CaptureHotkey = null,
-            Capture = v2.Capture with { Mode = null, AutoSwitchOnAltTab = null },
-            UI = v2.UI with { ShowLogViewer = null },
+            Capture = capture with { Mode = null, AutoSwitchOnAltTab = null },
+            UI = ui with { ShowLogViewer = null },
         };
     }
 

@@ -104,11 +104,12 @@ public readonly record struct HotkeyBinding(HotkeyModifiers Modifiers, uint Virt
         if (IsModifierVk(VirtualKey))
             return HotkeyValidationResult.ModifierOnlyKey;
 
-        if (Modifiers == HotkeyModifiers.None && !IsFunctionKey(VirtualKey))
-            return HotkeyValidationResult.RequiresModifier;
-
+        // Before the modifier rule: bare PrtScn is reserved, not merely "needs a modifier".
         if (ReservedHotkeys.IsReserved(this))
             return HotkeyValidationResult.ReservedByWindows;
+
+        if (Modifiers == HotkeyModifiers.None && !IsFunctionKey(VirtualKey))
+            return HotkeyValidationResult.RequiresModifier;
 
         return HotkeyValidationResult.Ok;
     }
