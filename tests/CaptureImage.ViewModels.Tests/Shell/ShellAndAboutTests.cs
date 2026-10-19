@@ -148,7 +148,6 @@ public sealed class AboutViewModelTests
                 _ when id.StartsWith("Serilog", StringComparison.Ordinal) => "Serilog",
                 _ when id.StartsWith("Vortice.", StringComparison.Ordinal) => "Vortice.Windows",
                 _ when id.StartsWith("H.NotifyIcon", StringComparison.Ordinal) => "H.NotifyIcon",
-                "System.Drawing.Common" => ".NET",
                 _ => id,
             };
             credited.Should().Contain(family, "{0} ships with the app", id);
@@ -156,7 +155,7 @@ public sealed class AboutViewModelTests
     }
 
     private static bool IsBuildOrTestOnly(string id) =>
-        id is "Microsoft.Windows.CsWin32" or "xunit.v3" or "AwesomeAssertions" or "NSubstitute" or "Xunit.StaFact" or "FlaUI.UIA3"
+        id is "Microsoft.Windows.CsWin32" or "xunit.v3" or "AwesomeAssertions" or "NSubstitute" or "FlaUI.UIA3"
         || id.StartsWith("Microsoft.Testing.", StringComparison.Ordinal)
         || id.StartsWith("Microsoft.Extensions.TimeProvider.Testing", StringComparison.Ordinal);
 

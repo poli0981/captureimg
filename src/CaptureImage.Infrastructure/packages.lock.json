@@ -37,15 +37,6 @@
           "SkiaSharp.NativeAssets.Win32": "4.153.1"
         }
       },
-      "System.Drawing.Common": {
-        "type": "Direct",
-        "requested": "[10.0.13, )",
-        "resolved": "10.0.13",
-        "contentHash": "s8JRuC+ec1djwT471SbZRXWCBFXCKkNNGILWD/OCmIcdL0KP0w4arMjyEZzNUuKxolperKtlxHhS+34rA4N3XA==",
-        "dependencies": {
-          "Microsoft.Win32.SystemEvents": "10.0.13"
-        }
-      },
       "Velopack": {
         "type": "Direct",
         "requested": "[1.2.161, )",
@@ -81,11 +72,6 @@
           "SharpGen.Runtime": "2.4.2-beta",
           "Vortice.DirectX": "3.8.3"
         }
-      },
-      "Microsoft.Win32.SystemEvents": {
-        "type": "Transitive",
-        "resolved": "10.0.13",
-        "contentHash": "rtd1rRf5uiusn/r+hNsODiCjvA+nErw+1EQb2uCv0EedLi2GEYWgLK0V31SXzcZ2b0D7VeoOrHJ0WCQqfbO67Q=="
       },
       "Microsoft.Windows.SDK.Win32Docs": {
         "type": "Transitive",
@@ -152,11 +138,6 @@
       }
     },
     "net10.0-windows10.0.22621/win-x64": {
-      "Microsoft.Win32.SystemEvents": {
-        "type": "Transitive",
-        "resolved": "10.0.13",
-        "contentHash": "rtd1rRf5uiusn/r+hNsODiCjvA+nErw+1EQb2uCv0EedLi2GEYWgLK0V31SXzcZ2b0D7VeoOrHJ0WCQqfbO67Q=="
-      },
       "SkiaSharp.NativeAssets.Win32": {
         "type": "Transitive",
         "resolved": "4.153.1",

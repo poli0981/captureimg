@@ -29,7 +29,6 @@ updates:
       microsoft-extensions:
         patterns:
           - "Microsoft.Extensions.*"
-          - "System.Drawing.Common"
       serilog:
         patterns:
           - "Serilog*"

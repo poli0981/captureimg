@@ -1,25 +1,31 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 // Copyright (c) CaptureImage Contributors
 
-using System.Drawing;
-using System.Drawing.Imaging;
-using System.Runtime.InteropServices;
 using Microsoft.Extensions.Logging;
+using SharpGen.Runtime;
+using Vortice.WIC;
+using Windows.Win32;
+using Windows.Win32.Storage.FileSystem;
+using Windows.Win32.UI.Shell;
+using Windows.Win32.UI.WindowsAndMessaging;
 
 namespace CaptureImage.Infrastructure.Windowing;
 
 /// <summary>
-/// Extracts an executable's icon as PNG bytes. Results (including failures) are cached per
-/// path in a bounded least-recently-used cache, so long sessions don't grow without limit.
+/// Extracts an executable's icon as PNG bytes: its own 48 px icon, or the shell's icon for the
+/// file when it has none. Results (including failures) are cached per path in a bounded
+/// least-recently-used cache, so long sessions don't grow without limit.
 /// </summary>
-public sealed partial class IconExtractor
+public sealed partial class IconExtractor : IDisposable
 {
     private const int Capacity = 256;
+    private const uint IconSize = 48;
 
     private readonly ILogger<IconExtractor> _logger;
     private readonly Lock _gate = new();
     private readonly Dictionary<string, LinkedListNode<(string Path, byte[]? Png)>> _index = new(StringComparer.OrdinalIgnoreCase);
     private readonly LinkedList<(string Path, byte[]? Png)> _order = new();
+    private readonly Lazy<IWICImagingFactory> _factory = new(() => new IWICImagingFactory(), LazyThreadSafetyMode.ExecutionAndPublication);
 
     public IconExtractor(ILogger<IconExtractor> logger)
     {
@@ -59,31 +65,78 @@ public sealed partial class IconExtractor
         return png;
     }
 
+    public void Dispose()
+    {
+        if (_factory.IsValueCreated)
+        {
+            _factory.Value.Dispose();
+        }
+    }
+
     private byte[]? Extract(string executablePath)
     {
+        if (!File.Exists(executablePath))
+        {
+            return null;
+        }
+
+        var icon = LoadIcon(executablePath);
+        if (icon.IsNull)
+        {
+            return null;
+        }
+
         try
         {
-            if (!File.Exists(executablePath))
-            {
-                return null;
-            }
-
-            using var icon = Icon.ExtractAssociatedIcon(executablePath);
-            if (icon is null)
-            {
-                return null;
-            }
-
-            using var bitmap = icon.ToBitmap();
-            using var stream = new MemoryStream();
-            bitmap.Save(stream, ImageFormat.Png);
-            return stream.ToArray();
+            return EncodePng(icon);
         }
-        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or ArgumentException or ExternalException)
+        catch (SharpGenException ex)
         {
             LogExtractFailed(ex, Path.GetFileName(executablePath));
             return null;
         }
+        finally
+        {
+            PInvoke.DestroyIcon(icon);
+        }
+    }
+
+    private static unsafe HICON LoadIcon(string path)
+    {
+        HICON large = default;
+        fixed (char* file = path)
+        {
+            // S_FALSE (the file has no icons) leaves the handle null and falls through.
+            if (PInvoke.SHDefExtractIcon(file, 0, 0, &large, null, IconSize).Succeeded && !large.IsNull)
+            {
+                return large;
+            }
+        }
+
+        SHFILEINFOW info = default;
+        var found = PInvoke.SHGetFileInfo(path, FILE_FLAGS_AND_ATTRIBUTES.FILE_ATTRIBUTE_NORMAL, ref info, SHGFI_FLAGS.SHGFI_ICON | SHGFI_FLAGS.SHGFI_LARGEICON);
+        return found != 0 ? info.hIcon : default;
+    }
+
+    private byte[] EncodePng(HICON icon)
+    {
+        using var buffer = new MemoryStream();
+        lock (_factory)
+        {
+            var factory = _factory.Value;
+            using var bitmap = factory.CreateBitmapFromHICON(icon);
+            using var encoder = factory.CreateEncoder(ContainerFormat.Png, buffer, BitmapEncoderCacheOption.NoCache);
+            using var frame = encoder.CreateNewFrame(out var options);
+            using (options)
+            {
+                frame.Initialize(options);
+            }
+
+            frame.WriteSource(bitmap);
+            frame.Commit();
+            encoder.Commit();
+        }
+        return buffer.ToArray();
     }
 
     [LoggerMessage(Level = LogLevel.Debug, Message = "Icon extraction failed for {Executable}.")]
