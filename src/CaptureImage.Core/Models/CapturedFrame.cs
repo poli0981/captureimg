@@ -1,58 +1,63 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 // Copyright (c) CaptureImage Contributors
 
+using CaptureImage.Core.Capture;
+
 namespace CaptureImage.Core.Models;
 
+/// <summary>Pixel layout of a <see cref="CapturedFrame"/>.</summary>
+public enum FramePixelFormat
+{
+    /// <summary>8-bit B, G, R, A (alpha forced opaque by the capture engine).</summary>
+    Bgra8,
+
+    /// <summary>16-bit float R, G, B, A in linear scRGB (1.0 = 80 nits). HDR captures only.</summary>
+    RgbaHalf,
+}
+
 /// <summary>
-/// A raw captured frame in BGRA8 pre-multiplied format, ready to hand to an encoder.
+/// A captured image held in CPU memory. Rows may be padded (<see cref="RowStride"/> can be
+/// larger than <c>Width × BytesPerPixel</c>) because GPU readback keeps the driver's pitch.
 /// </summary>
-/// <remarks>
-/// <para>
-/// The pixel buffer is <b>owned</b> by this record — do not mutate it after construction and
-/// do not hold on to the underlying <see cref="byte"/> array after the frame has been encoded.
-/// The capture engine disposes D3D resources as soon as it hands the frame to the caller,
-/// so this is the authoritative copy.
-/// </para>
-/// <para>
-/// Rows may be padded: <see cref="RowStride"/> is the byte distance between the start of
-/// consecutive rows, and may be larger than <c>Width * 4</c>. Encoders must respect it.
-/// </para>
-/// </remarks>
-/// <param name="Width">Frame width in pixels.</param>
-/// <param name="Height">Frame height in pixels.</param>
-/// <param name="RowStride">Byte offset between consecutive rows. Always ≥ <c>Width * 4</c>.</param>
-/// <param name="BgraPixels">
-/// Raw pixel buffer. Length is always <c>RowStride * Height</c>. Pixel layout is BGRA
-/// pre-multiplied (little-endian: byte 0 = B, byte 1 = G, byte 2 = R, byte 3 = A).
-/// </param>
+/// <param name="Width">Width in pixels.</param>
+/// <param name="Height">Height in pixels.</param>
+/// <param name="RowStride">Bytes between the starts of two consecutive rows.</param>
+/// <param name="Pixels">Raw pixel bytes, <see cref="RowStride"/> × <see cref="Height"/> long.</param>
+/// <param name="Format">Pixel layout.</param>
 public sealed record CapturedFrame(
     int Width,
     int Height,
     int RowStride,
-    byte[] BgraPixels)
+    byte[] Pixels,
+    FramePixelFormat Format = FramePixelFormat.Bgra8)
 {
-    /// <summary>Total bytes in the pixel buffer.</summary>
-    public int SizeBytes => BgraPixels.Length;
+    /// <summary>Display HDR state the frame was captured under (set for HDR frames).</summary>
+    public HdrInfo? Hdr { get; init; }
 
-    /// <summary>True if the row pitch equals the tight width pitch.</summary>
-    public bool IsTightlyPacked => RowStride == Width * 4;
+    public int BytesPerPixel => Format == FramePixelFormat.Bgra8 ? 4 : 8;
+
+    public bool IsHdr => Format == FramePixelFormat.RgbaHalf;
+
+    /// <summary>Row length without padding.</summary>
+    public int TightStride => Width * BytesPerPixel;
+
+    public bool IsTightlyPacked => RowStride == TightStride;
 
     /// <summary>
-    /// Return a heap copy of the pixel buffer with any row padding removed.
-    /// Use when you need <c>Width*Height*4</c> bytes exactly — e.g. feeding WIC <c>BitmapEncoder.SetPixelData</c>.
+    /// The pixels without row padding. Returns <see cref="Pixels"/> itself when already tight,
+    /// otherwise a copy — use when an API needs exactly <c>Width × Height × BytesPerPixel</c> bytes.
     /// </summary>
     public byte[] ToTightlyPacked()
     {
-        if (IsTightlyPacked)
+        if (IsTightlyPacked && Pixels.Length == TightStride * Height)
         {
-            return BgraPixels;
+            return Pixels;
         }
 
-        var tight = new byte[Width * Height * 4];
-        var rowLen = Width * 4;
+        var tight = new byte[TightStride * Height];
         for (var y = 0; y < Height; y++)
         {
-            Buffer.BlockCopy(BgraPixels, y * RowStride, tight, y * rowLen, rowLen);
+            Buffer.BlockCopy(Pixels, y * RowStride, tight, y * TightStride, TightStride);
         }
         return tight;
     }

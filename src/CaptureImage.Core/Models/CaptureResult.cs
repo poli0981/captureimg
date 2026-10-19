@@ -1,27 +1,45 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 // Copyright (c) CaptureImage Contributors
 
+using CaptureImage.Core.Capture;
+using CaptureImage.Core.Errors;
+using CaptureImage.Core.Library;
+
 namespace CaptureImage.Core.Models;
 
-/// <summary>
-/// Outcome of a single capture request — either a successfully saved file or a failure reason.
-/// </summary>
-public abstract record CaptureResult
+/// <summary>How a capture request ended.</summary>
+public enum CaptureOutcomeKind
 {
-    /// <summary>Successful capture: file has been flushed to disk at <see cref="FilePath"/>.</summary>
-    public sealed record Success(
-        string FilePath,
-        int Width,
-        int Height,
-        long FileSizeBytes,
-        TimeSpan Duration) : CaptureResult;
+    /// <summary>Saved to disk (and possibly copied).</summary>
+    Saved,
 
-    /// <summary>
-    /// Failure outcome. <see cref="ErrorCode"/> is stable so the UI can localize messages;
-    /// <see cref="DeveloperMessage"/> carries the raw diagnostic for logs.
-    /// </summary>
-    public sealed record Failure(
-        Errors.CaptureError ErrorCode,
-        string DeveloperMessage,
-        Exception? Exception = null) : CaptureResult;
+    /// <summary>Copied to the clipboard only (clipboard mode "Copy").</summary>
+    Copied,
+
+    /// <summary>The user cancelled the countdown or the region selection.</summary>
+    Cancelled,
+
+    /// <summary>The user discarded the capture in the preview.</summary>
+    Discarded,
+
+    /// <summary>Another capture was still running; the request was ignored.</summary>
+    Busy,
+
+    /// <summary>The capture or the save failed.</summary>
+    Failed,
+}
+
+/// <summary>Result of <c>CaptureCoordinator.CaptureAsync</c>.</summary>
+public sealed record CaptureOutcome(CaptureOutcomeKind Kind, CaptureMode Mode)
+{
+    /// <summary>The saved capture (for <see cref="CaptureOutcomeKind.Saved"/>).</summary>
+    public CaptureRecord? Record { get; init; }
+
+    public CaptureError? Error { get; init; }
+
+    public string? ErrorMessage { get; init; }
+
+    public TimeSpan Duration { get; init; }
+
+    public bool IsSuccess => Kind is CaptureOutcomeKind.Saved or CaptureOutcomeKind.Copied;
 }

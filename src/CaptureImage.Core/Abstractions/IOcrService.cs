@@ -1,30 +1,33 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 // Copyright (c) CaptureImage Contributors
 
+using CaptureImage.Core.Models;
+
 namespace CaptureImage.Core.Abstractions;
 
-/// <summary>
-/// Result of an OCR pass over a captured image.
-/// </summary>
-/// <param name="Text">Extracted text in reading order. Empty if no glyphs were recognised.</param>
-/// <param name="AverageConfidence">0.0–1.0; 0 if no engine was available.</param>
-/// <param name="EngineAvailable">
-/// <c>false</c> when the OS has no recognizer pack installed for the requested language
-/// (and no usable fallback). UIs should disable the action and surface a hint.
-/// </param>
-public sealed record OcrResult(string Text, double AverageConfidence, bool EngineAvailable);
+public enum OcrStatus
+{
+    /// <summary>Text was recognized.</summary>
+    Success,
 
-/// <summary>
-/// Offline OCR. Wraps the OS-supplied <c>Windows.Media.Ocr</c> engine on the
-/// implementation side; abstracted here so the portable VM layer can stay free of
-/// WinRT references and test fakes can stub it.
-/// </summary>
+    /// <summary>The engine ran but found no text.</summary>
+    NoText,
+
+    /// <summary>No OCR language pack is installed for the requested or user languages.</summary>
+    EngineUnavailable,
+
+    /// <summary>Recognition failed.</summary>
+    Failed,
+}
+
+public sealed record OcrResult(OcrStatus Status, string Text)
+{
+    public static OcrResult Failed { get; } = new(OcrStatus.Failed, string.Empty);
+}
+
+/// <summary>Offline text recognition (Windows.Media.Ocr).</summary>
 public interface IOcrService
 {
-    /// <summary>
-    /// Recognise text from the given PNG-encoded image. <paramref name="languageTag"/>
-    /// is a BCP-47 hint (e.g. <c>en-US</c>); <c>null</c> defers to the user's profile
-    /// languages, falling back to en-US, then to <see cref="OcrResult.EngineAvailable"/>=false.
-    /// </summary>
-    Task<OcrResult> RecognizeAsync(byte[] pngBytes, string? languageTag, CancellationToken cancellationToken = default);
+    /// <summary>Recognize text in an 8-bit frame; large frames are downscaled to the engine's limit.</summary>
+    Task<OcrResult> RecognizeAsync(CapturedFrame frame, string? languageTag, CancellationToken cancellationToken = default);
 }

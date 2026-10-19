@@ -1,32 +1,37 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 // Copyright (c) CaptureImage Contributors
 
+using System.Globalization;
+using CaptureImage.Core.Capture;
 using CaptureImage.Core.Validation;
 
 namespace CaptureImage.Core.Models;
 
 /// <summary>
-/// Outcome of <see cref="HotkeyBinding.Validate"/>. UI inspects this to render the right
-/// error or warning string; persistence layer only persists bindings whose result is
-/// <see cref="Ok"/>.
+/// Outcome of <see cref="HotkeyBinding.Validate"/>. The UI renders an error for anything but
+/// <see cref="Ok"/>; only valid (or unbound) bindings are persisted.
 /// </summary>
 public enum HotkeyValidationResult
 {
     /// <summary>Binding is acceptable for use.</summary>
     Ok,
+
     /// <summary>No primary (non-modifier) key — e.g. only Ctrl pressed.</summary>
     NoPrimaryKey,
+
     /// <summary><see cref="HotkeyBinding.VirtualKey"/> is itself a modifier VK (Shift/Ctrl/Alt/Win).</summary>
     ModifierOnlyKey,
+
     /// <summary>Plain letter/digit without any modifier — too easy to trigger while typing.</summary>
     RequiresModifier,
+
     /// <summary>Combination is owned by the Windows shell (<see cref="ReservedHotkeys"/>).</summary>
     ReservedByWindows,
 }
 
 /// <summary>
-/// Modifier flags for a global hotkey. Values match the common Win32 MOD_* constants
-/// so Infrastructure can forward to <c>RegisterHotKey</c> without re-mapping.
+/// Modifier flags for a global hotkey. Values match the Win32 <c>MOD_*</c> constants so
+/// Infrastructure can forward them to <c>RegisterHotKey</c> unchanged.
 /// </summary>
 [Flags]
 public enum HotkeyModifiers
@@ -39,19 +44,45 @@ public enum HotkeyModifiers
 }
 
 /// <summary>
-/// Keyed on Win32 virtual-key code (<c>VK_*</c>). Stored as <c>uint</c> so persistence
-/// stays round-trippable across SharpHook's own keycode enum.
+/// A global hotkey: Win32 virtual-key code (<c>VK_*</c>) plus modifiers. A binding with
+/// <see cref="VirtualKey"/> 0 is <see cref="Unbound"/> (the mode has no hotkey).
 /// </summary>
 /// <param name="Modifiers">Required modifier state.</param>
 /// <param name="VirtualKey">Primary non-modifier key, Win32 VK code.</param>
 public readonly record struct HotkeyBinding(HotkeyModifiers Modifiers, uint VirtualKey)
 {
+    private const uint VkF10 = 0x79;
+    private const uint VkF11 = 0x7A;
+    private const uint VkF12 = 0x7B;
+
+    /// <summary>No hotkey.</summary>
+    public static HotkeyBinding Unbound => default;
+
+    /// <summary>The v1 default, kept for the Window mode: <c>Ctrl+Shift+F12</c>.</summary>
+    public static HotkeyBinding Default => new(HotkeyModifiers.Control | HotkeyModifiers.Shift, VkF12);
+
+    public bool IsUnbound => VirtualKey == 0;
+
+    /// <summary>Default binding for each capture mode.</summary>
+    public static HotkeyBinding DefaultFor(CaptureMode mode) => mode switch
+    {
+        CaptureMode.Window => Default,
+        CaptureMode.Region => new(HotkeyModifiers.Control | HotkeyModifiers.Shift, VkF11),
+        CaptureMode.Monitor => new(HotkeyModifiers.Control | HotkeyModifiers.Shift, VkF10),
+        _ => Unbound,
+    };
+
     /// <summary>
-    /// Human-readable form: <c>"Ctrl+Shift+F12"</c>. Used for settings display and logging.
-    /// Not a stable wire format — do not persist this string, persist the struct fields.
+    /// Human-readable form such as <c>Ctrl+Shift+F12</c> (empty for <see cref="Unbound"/>).
+    /// Display and logging only — persist the struct fields, not this string.
     /// </summary>
     public override string ToString()
     {
+        if (IsUnbound)
+        {
+            return string.Empty;
+        }
+
         var parts = new List<string>(5);
         if ((Modifiers & HotkeyModifiers.Control) != 0) parts.Add("Ctrl");
         if ((Modifiers & HotkeyModifiers.Alt) != 0) parts.Add("Alt");
@@ -61,13 +92,9 @@ public readonly record struct HotkeyBinding(HotkeyModifiers Modifiers, uint Virt
         return string.Join("+", parts);
     }
 
-    /// <summary>The default binding shipped to users on first run: <c>Ctrl+Shift+F12</c>.</summary>
-    public static HotkeyBinding Default =>
-        new(HotkeyModifiers.Control | HotkeyModifiers.Shift, 0x7B); // VK_F12 = 0x7B
-
     /// <summary>
-    /// Classify this binding for use in the UI rebinder. See <see cref="HotkeyValidationResult"/>
-    /// for possible outcomes. Pure function — does not touch Windows state.
+    /// Classify this binding for the hotkey recorder. Pure function — does not touch Windows
+    /// state; whether another program already owns the combination is checked separately.
     /// </summary>
     public HotkeyValidationResult Validate()
     {
@@ -77,7 +104,7 @@ public readonly record struct HotkeyBinding(HotkeyModifiers Modifiers, uint Virt
         if (IsModifierVk(VirtualKey))
             return HotkeyValidationResult.ModifierOnlyKey;
 
-        if (Modifiers == HotkeyModifiers.None && !IsFunctionOrSpecial(VirtualKey))
+        if (Modifiers == HotkeyModifiers.None && !IsFunctionKey(VirtualKey))
             return HotkeyValidationResult.RequiresModifier;
 
         if (ReservedHotkeys.IsReserved(this))
@@ -86,7 +113,6 @@ public readonly record struct HotkeyBinding(HotkeyModifiers Modifiers, uint Virt
         return HotkeyValidationResult.Ok;
     }
 
-    /// <summary>True when <see cref="Validate"/> returns <see cref="HotkeyValidationResult.Ok"/>.</summary>
     public bool IsValid() => Validate() == HotkeyValidationResult.Ok;
 
     private static bool IsModifierVk(uint vk) => vk is
@@ -96,23 +122,42 @@ public readonly record struct HotkeyBinding(HotkeyModifiers Modifiers, uint Virt
         0xA2 or 0xA3 or                    // VK_LCONTROL, VK_RCONTROL
         0xA4 or 0xA5;                      // VK_LMENU,   VK_RMENU
 
-    private static bool IsFunctionOrSpecial(uint vk) =>
-        (vk >= 0x70 && vk <= 0x87) ||      // F1..F24
-        vk == 0x2C;                        // VK_SNAPSHOT (PrintScreen)
+    private static bool IsFunctionKey(uint vk) => vk is >= 0x70 and <= 0x87; // F1..F24
 
-    /// <summary>
-    /// Short display name for a VK code. Only covers the keys we care about; unknown codes
-    /// fall back to a hex representation so nothing crashes.
-    /// </summary>
     private static string VirtualKeyName(uint vk) => vk switch
     {
-        >= 0x70 and <= 0x87 => "F" + (vk - 0x6F), // F1..F24
-        >= 0x30 and <= 0x39 => ((char)vk).ToString(), // 0..9
-        >= 0x41 and <= 0x5A => ((char)vk).ToString(), // A..Z
+        >= 0x70 and <= 0x87 => "F" + (vk - 0x6F).ToString(CultureInfo.InvariantCulture),
+        >= 0x30 and <= 0x39 => ((char)vk).ToString(),
+        >= 0x41 and <= 0x5A => ((char)vk).ToString(),
+        >= 0x60 and <= 0x69 => "Num" + (vk - 0x60).ToString(CultureInfo.InvariantCulture),
         0x20 => "Space",
         0x0D => "Enter",
         0x09 => "Tab",
         0x1B => "Esc",
+        0x2C => "PrtScn",
+        0x13 => "Pause",
+        0x91 => "ScrollLock",
+        0x2D => "Insert",
+        0x2E => "Delete",
+        0x24 => "Home",
+        0x23 => "End",
+        0x21 => "PgUp",
+        0x22 => "PgDn",
+        0x25 => "Left",
+        0x26 => "Up",
+        0x27 => "Right",
+        0x28 => "Down",
+        0xC0 => "`",
+        0xBD => "-",
+        0xBB => "=",
+        0xDB => "[",
+        0xDD => "]",
+        0xDC => "\\",
+        0xBA => ";",
+        0xDE => "'",
+        0xBC => ",",
+        0xBE => ".",
+        0xBF => "/",
         _ => $"VK_{vk:X2}",
     };
 }

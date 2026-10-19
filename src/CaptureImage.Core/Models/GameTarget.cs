@@ -15,11 +15,11 @@ namespace CaptureImage.Core.Models;
 /// <param name="WindowTitle">Current window title as reported by <c>GetWindowText</c>.</param>
 /// <param name="ExecutablePath">Absolute path to the executable, or empty if it could not be read.</param>
 /// <param name="IconBytes">
-/// PNG-encoded icon for the executable, or <c>null</c> if extraction failed.
-/// Stored as bytes so this record can cross the <c>CaptureImage.UI</c> boundary without
-/// pulling in Avalonia or System.Drawing types.
+/// PNG-encoded icon for the executable, or <c>null</c> if extraction failed. Plain bytes keep
+/// UI-framework image types out of Core.
 /// </param>
 /// <param name="SteamInfo">Non-null if the executable lives under a Steam library folder.</param>
+/// <param name="IsMinimized">The window is minimized and cannot be captured until restored.</param>
 public sealed record GameTarget(
     uint ProcessId,
     nint WindowHandle,
@@ -27,7 +27,8 @@ public sealed record GameTarget(
     string WindowTitle,
     string ExecutablePath,
     byte[]? IconBytes,
-    SteamAppInfo? SteamInfo)
+    SteamAppInfo? SteamInfo,
+    bool IsMinimized = false)
 {
     /// <summary>Display label: prefer the window title, fall back to the process name.</summary>
     public string DisplayName =>

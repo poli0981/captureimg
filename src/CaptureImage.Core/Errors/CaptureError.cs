@@ -3,42 +3,40 @@
 
 namespace CaptureImage.Core.Errors;
 
-/// <summary>
-/// Stable error codes for capture failures. The UI layer maps these to localized strings.
-/// Never renumber — persisted settings (e.g. "ignore last error") may reference these values.
-/// </summary>
+/// <summary>Why a capture failed. Each value maps to a localized user message.</summary>
 public enum CaptureError
 {
-    /// <summary>Generic/unknown — the engine threw something we didn't classify.</summary>
+    /// <summary>Unexpected failure; details are in the log.</summary>
     Unknown = 0,
 
-    /// <summary>Target window handle was zero or no longer valid by the time we tried to capture.</summary>
+    /// <summary>The window or monitor no longer exists.</summary>
     TargetGone = 1,
 
-    /// <summary>Target process died between selection and capture.</summary>
+    /// <summary>The target's process exited during the capture.</summary>
     ProcessExited = 2,
 
-    /// <summary>WGC refused to capture this surface (protected content, HDCP, DRM).</summary>
+    /// <summary>The content is protected (DRM / capture-excluded window).</summary>
     ProtectedContent = 3,
 
-    /// <summary>
-    /// The Windows.Graphics.Capture session never delivered a frame within the timeout.
-    /// Most likely the window was minimized or occluded at capture time.
-    /// </summary>
+    /// <summary>Windows.Graphics.Capture produced no frame in time.</summary>
     NoFrameArrived = 4,
 
-    /// <summary>D3D11 device creation or resource allocation failed.</summary>
+    /// <summary>The GPU device failed or was reset.</summary>
     GraphicsDeviceFailure = 5,
 
-    /// <summary>The encoder refused the pixel data (unsupported format, buffer too small, etc.).</summary>
     EncodingFailure = 6,
 
-    /// <summary>I/O failure while writing the final file to disk.</summary>
+    /// <summary>The image could not be written (permissions, disk full, invalid folder).</summary>
     FileWriteFailure = 7,
 
-    /// <summary>The caller cancelled the capture via a CancellationToken.</summary>
     Cancelled = 8,
 
-    /// <summary>Fallback path (PrintWindow) returned a fully black bitmap.</summary>
-    FallbackProducedBlackFrame = 9,
+    /// <summary>The window is minimized; Windows renders no frames for it.</summary>
+    TargetMinimized = 10,
+
+    /// <summary>No window was locked and nothing capturable is in the foreground.</summary>
+    NoTarget = 11,
+
+    /// <summary>Windows.Graphics.Capture is unavailable on this system.</summary>
+    NotSupported = 12,
 }

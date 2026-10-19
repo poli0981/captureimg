@@ -51,3 +51,13 @@ public interface ILocalizationService : INotifyPropertyChanged
     /// </summary>
     void SetCulture(CultureInfo culture);
 }
+
+public static class LocalizationServiceExtensions
+{
+    /// <summary>Format a localized template with the current UI culture's number/date rules.</summary>
+    public static string Format(this ILocalizationService localization, string key, params object?[] args)
+    {
+        ArgumentNullException.ThrowIfNull(localization);
+        return string.Format(localization.CurrentCulture, localization[key], args);
+    }
+}

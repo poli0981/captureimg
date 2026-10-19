@@ -21,7 +21,7 @@ namespace CaptureImage.Core.Models;
 /// </remarks>
 public sealed record LogEntry(
     DateTimeOffset Timestamp,
-    LogLevel Level,
+    LogEntryLevel Level,
     string SourceContext,
     string Message,
     string? Exception)
@@ -55,7 +55,7 @@ public sealed record LogEntry(
 }
 
 /// <summary>Levels the log viewer filters on. Mapped from Serilog's LogEventLevel.</summary>
-public enum LogLevel
+public enum LogEntryLevel
 {
     Verbose,
     Debug,
