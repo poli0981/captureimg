@@ -17,13 +17,14 @@ on:
 # `discussions: write` is the only scope required to add a discussion comment
 # via the GraphQL `addDiscussionComment` mutation. Default everything else to
 # read so a compromised step can't push code or open releases.
-permissions:
-  contents: read
-  discussions: write
+permissions: {}
 
 jobs:
   welcome:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      discussions: write
     # Skip greetings for OWNER / COLLABORATOR / MEMBER — the maintainer and
     # any future collaborators don't need a venue cheat-sheet on their own
     # threads.
@@ -34,7 +35,7 @@ jobs:
 
     steps:
       - name: Add welcome comment
-        uses: actions/github-script@v9
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
         with:
           script: |
             const body = [
@@ -43,14 +44,16 @@ jobs:
               "**Tiếng Việt**",
               "",
               "- Báo lỗi (crash, capture lỗi, OCR sai, hotkey không hoạt động): dùng nút **About → Report a bug** ngay trong app, hoặc mở [bug-report template](https://github.com/poli0981/captureimg/issues/new?template=bug_report.yml). Issue tracker yêu cầu các field (Windows build, GPU, log snippet) cần để debug nhanh.",
-              "- Lỗi bảo mật (security vulnerability): **không** post công khai — báo riêng qua [GitHub Security Advisories](https://github.com/poli0981/captureimg/security/advisories/new).",
+              "- Lỗi bảo mật (security vulnerability): **không** post công khai — báo riêng qua [GitHub Security Advisories](https://github.com/poli0981/captureimg/security/advisories/new) hoặc email **security@poli0981.dev**.",
               "- Câu hỏi sử dụng, ý tưởng, show & tell: bạn đang ở đúng chỗ rồi.",
               "",
               "**English**",
               "",
               "- Bug reports (crash, broken capture, OCR mistakes, hotkey not firing): use the **About → Report a bug** button in-app, or open the [bug-report template](https://github.com/poli0981/captureimg/issues/new?template=bug_report.yml). The issue tracker requires the fields (Windows build, GPU, log snippet) needed to debug.",
-              "- Security vulnerabilities: please **don't** post publicly — file privately via [GitHub Security Advisories](https://github.com/poli0981/captureimg/security/advisories/new).",
+              "- Security vulnerabilities: please **don't** post publicly — report privately via [GitHub Security Advisories](https://github.com/poli0981/captureimg/security/advisories/new) or email **security@poli0981.dev**.",
               "- Usage questions, ideas, show & tell: you're in the right place.",
+              "",
+              "Other ways to reach the maintainer: **contact@poli0981.dev** · https://poli0981.dev/links",
               "",
               "_posted automatically by [.github/workflows/discussion-welcome.yml](https://github.com/poli0981/captureimg/blob/main/.github/workflows/discussion-welcome.yml)_"
             ].join("\n");

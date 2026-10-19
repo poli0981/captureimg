@@ -114,7 +114,7 @@ public sealed class SharpHookHotkeyService : IHotkeyService
         if (binding is null) return;
 
         // libuiohook exposes the native VK on Windows in RawCode.
-        if ((uint)e.Data.RawCode != binding.Value.VirtualKey)
+        if (e.Data.RawCode != binding.Value.VirtualKey)
         {
             return;
         }

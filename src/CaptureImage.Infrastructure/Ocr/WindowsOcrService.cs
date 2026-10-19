@@ -68,15 +68,11 @@ public sealed class WindowsOcrService : IOcrService
             int count = 0;
             foreach (var line in result.Lines)
             {
-                foreach (var word in line.Words)
-                {
-                    // Word.Confidence is exposed in the BoundingRect overload only on newer
-                    // Windows versions. For broad compatibility we just count words and
-                    // report a coarse 0.85 if anything came back — UI consumers care about
-                    // "did we get text" more than calibrated probability.
-                    count++;
-                    sum += 0.85;
-                }
+                // Windows OCR does not report per-word confidence. We just count words and
+                // report a coarse 0.85 if anything came back — UI consumers care about
+                // "did we get text" more than calibrated probability.
+                count += line.Words.Count;
+                sum += 0.85 * line.Words.Count;
             }
             var confidence = count > 0 ? sum / count : 0.0;
 

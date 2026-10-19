@@ -112,7 +112,7 @@ public class SteamLibraryScannerTests
             $@"{SteamRoot}\steamapps\common\dota 2 beta\game\bin\win64\dota2.exe");
 
         info.Should().NotBeNull();
-        info!.AppId.Should().Be(570u);
+        info.AppId.Should().Be(570u);
         info.Name.Should().Be("Dota 2");
     }
 
@@ -126,7 +126,7 @@ public class SteamLibraryScannerTests
             $@"{SecondaryLibrary}\steamapps\common\Counter-Strike Global Offensive\game\bin\win64\cs2.exe");
 
         info.Should().NotBeNull();
-        info!.AppId.Should().Be(730u);
+        info.AppId.Should().Be(730u);
     }
 
     [Fact]
@@ -159,7 +159,7 @@ public class SteamLibraryScannerTests
             $@"{SteamRoot.ToUpperInvariant()}\STEAMAPPS\COMMON\DOTA 2 BETA\game\bin\win64\dota2.exe");
 
         info.Should().NotBeNull();
-        info!.AppId.Should().Be(570u);
+        info.AppId.Should().Be(570u);
     }
 
     [Fact]

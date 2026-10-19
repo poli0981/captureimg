@@ -46,7 +46,7 @@ public sealed class PrintWindowFallback
             throw new CaptureException(CaptureError.TargetGone, "PrintWindow: target window handle is zero.");
         }
 
-        var hwnd = (IntPtr)target.WindowHandle;
+        var hwnd = target.WindowHandle;
 
         if (!Gdi32.GetClientRect(hwnd, out var rect) || rect.Width <= 0 || rect.Height <= 0)
         {

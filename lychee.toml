@@ -1,0 +1,5 @@
+# lychee link-checker settings for the CI `docs` job.
+# Build output (bin/obj) contains copies of the legal docs whose relative links only
+# resolve in the repository layout.
+exclude_path = ["bin", "obj", "artifacts", "TestResults", "node_modules"]
+include_fragments = "full"

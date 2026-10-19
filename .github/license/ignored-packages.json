@@ -1,0 +1,5 @@
+[
+  "Microsoft.WindowsAppSDK*",
+  "Microsoft.Windows.SDK.BuildTools*",
+  "Microsoft.Web.WebView2"
+]

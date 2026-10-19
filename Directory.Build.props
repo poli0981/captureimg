@@ -21,6 +21,10 @@
          to evaluate there and every newer package version is reported "not compatible", so no
          update PR is ever opened. Harmless on Windows. -->
     <EnableWindowsTargeting>true</EnableWindowsTargeting>
+    <!-- The app ships for win-x64 only. Declaring the RID for every project keeps each
+         packages.lock.json identical between a plain `dotnet restore` and the
+         `dotnet publish -r win-x64` restore, so locked mode works for both. -->
+    <RuntimeIdentifiers>win-x64</RuntimeIdentifiers>
   </PropertyGroup>
 
   <PropertyGroup Label="Supply chain">

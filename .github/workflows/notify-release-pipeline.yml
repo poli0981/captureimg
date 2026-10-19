@@ -1,21 +1,21 @@
 name: Notify Release Pipeline
 
-# Previously listened to `workflows: ["*"]`. Narrowed to the actual release
-# build workflow ("Release" — release.yml) so the Actions tab no longer fills
-# with skipped runs after every CI / notify completion. announce-release.yml
-# is intentionally NOT included here — it already posts to Discord on its own,
-# routing it through this notifier too would double-post.
+# Reports the outcome of each Release workflow run to Discord. The public release
+# announcement itself comes from announce-release.yml when the draft is published.
 on:
-  workflow_run:
+  workflow_run: # zizmor: ignore[dangerous-triggers] — read-only; no checkout of the triggering ref
     workflows: ["Release"]
     types: [completed]
 
-permissions:
-  contents: read
-  actions: read
+permissions: {}
 
 jobs:
   notify:
-    # Pinned to commit SHA — see comment in announce-release.yml.
+    if: github.event.workflow_run.head_repository.full_name == github.repository
+    permissions:
+      contents: read
+      actions: read
+    # Reusable workflows are pinned to a commit of poli0981/.github.
     uses: poli0981/.github/.github/workflows/notify-release-pipeline.yml@e973e2f15725356653ef07539016670ad2733f83
-    secrets: inherit
+    secrets:
+      DISCORD_RELEASE_PIPELINE_WEBHOOK: ${{ secrets.DISCORD_RELEASE_PIPELINE_WEBHOOK }}

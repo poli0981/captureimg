@@ -50,7 +50,10 @@ public sealed partial class HotkeyConflictSniffer : IHotkeyConflictSniffer
 
         if (RegisterHotKey(IntPtr.Zero, id, mods, binding.VirtualKey))
         {
-            UnregisterHotKey(IntPtr.Zero, id);
+            if (!UnregisterHotKey(IntPtr.Zero, id))
+            {
+                _logger.LogDebug("UnregisterHotKey failed for probe id {Id}.", id);
+            }
             return false;
         }
 

@@ -1,8 +1,15 @@
 version: 2
 
+# NuGet updates only work because Directory.Build.props sets
+# EnableWindowsTargeting=true — Dependabot's updater runs on Linux and otherwise
+# reports every newer version as "not compatible" with the Windows TFMs.
+#
+# open-pull-requests-limit is 0 while the v2.0 rewrite is in flight (every merge
+# would force the large rewrite PR to rebase and re-run all required checks).
+# Security updates are not affected by the limit. Restore the limits after the
+# 2.0.0 release.
+
 updates:
-  # NuGet — the actual runtime + build dependencies. Weekly cadence; grouped
-  # minor/patch bumps so we don't get a PR per package when .NET rolls.
   - package-ecosystem: nuget
     directory: "/"
     schedule:
@@ -10,32 +17,53 @@ updates:
       day: monday
       time: "07:00"
       timezone: Asia/Ho_Chi_Minh
-    open-pull-requests-limit: 5
+    cooldown:
+      default-days: 3
+    open-pull-requests-limit: 0
     commit-message:
       prefix: "chore(deps)"
       include: scope
     labels:
       - dependencies
     groups:
-      avalonia:
-        patterns:
-          - "Avalonia*"
       microsoft-extensions:
         patterns:
           - "Microsoft.Extensions.*"
+          - "System.Management"
+          - "System.Drawing.Common"
       serilog:
         patterns:
           - "Serilog*"
+      skiasharp:
+        patterns:
+          - "SkiaSharp*"
+      vortice:
+        patterns:
+          - "Vortice.*"
+      velopack:
+        # The library and the `vpk` tool in .config/dotnet-tools.json must move together.
+        patterns:
+          - "Velopack"
+          - "vpk"
+      windows-app-sdk:
+        patterns:
+          - "Microsoft.WindowsAppSDK*"
+          - "Microsoft.Windows.SDK.BuildTools*"
+          - "Microsoft.Web.WebView2"
       test-tooling:
         patterns:
           - "xunit*"
-          - "FluentAssertions"
+          - "AwesomeAssertions"
           - "NSubstitute"
-          - "Microsoft.NET.Test.Sdk"
-          - "coverlet.*"
+          - "Microsoft.Testing.*"
+          - "System.IO.Abstractions*"
+      dev-tools:
+        patterns:
+          - "jetbrains.resharper.globaltools"
+          - "nuget-license"
+          - "dotnet-reportgenerator-globaltool"
+          - "cyclonedx"
 
-  # GitHub Actions workflow files themselves. Dependabot bumps action
-  # versions when upstream releases.
   - package-ecosystem: github-actions
     directory: "/"
     schedule:
@@ -43,9 +71,15 @@ updates:
       day: monday
       time: "07:00"
       timezone: Asia/Ho_Chi_Minh
-    open-pull-requests-limit: 3
+    cooldown:
+      default-days: 3
+    open-pull-requests-limit: 0
     commit-message:
       prefix: "chore(ci)"
     labels:
       - dependencies
       - ci
+    groups:
+      github-actions:
+        patterns:
+          - "*"
