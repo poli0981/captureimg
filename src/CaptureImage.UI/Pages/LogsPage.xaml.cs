@@ -2,6 +2,7 @@
 // Copyright (c) CaptureImage Contributors
 
 using System.Collections.Specialized;
+using System.Windows.Automation.Peers;
 using System.Windows.Controls;
 using System.Windows.Media;
 using CaptureImage.ViewModels.Logs;
@@ -55,4 +56,6 @@ public partial class LogsPage : Page, IActivatablePage
         }
         return null;
     }
+
+    protected override AutomationPeer OnCreateAutomationPeer() => new PageAutomationPeer(this);
 }

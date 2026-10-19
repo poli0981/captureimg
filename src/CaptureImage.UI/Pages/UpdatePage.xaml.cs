@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 // Copyright (c) CaptureImage Contributors
 
+using System.Windows.Automation.Peers;
 using System.Windows.Controls;
 using CaptureImage.ViewModels.Update;
 
@@ -18,4 +19,6 @@ public partial class UpdatePage : Page, IActivatablePage
     public UpdateViewModel ViewModel { get; }
 
     public void SetActive(bool active) => ViewModel.IsPageActive = active;
+
+    protected override AutomationPeer OnCreateAutomationPeer() => new PageAutomationPeer(this);
 }

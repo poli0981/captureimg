@@ -66,7 +66,10 @@ public sealed class AppTests
         Retry.WhileFalse(
             () => AppSession.Find(window, "Nav_Settings").Name.Contains("Cài đặt", StringComparison.Ordinal),
             TimeSpan.FromSeconds(5)).Success.Should().BeTrue();
-        File.ReadAllText(Path.Combine(session.DataDirectory, "settings.json")).Should().Contain("vi-VN");
+
+        // The store writes after a short debounce, so the file can lag the UI.
+        Retry.WhileFalse(() => ReadSettings(session).Contains("vi-VN", StringComparison.Ordinal), TimeSpan.FromSeconds(10))
+            .Success.Should().BeTrue("the new language is saved");
     }
 
     [Fact]

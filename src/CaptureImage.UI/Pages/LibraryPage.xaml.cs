@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 // Copyright (c) CaptureImage Contributors
 
+using System.Windows.Automation.Peers;
 using System.Windows.Controls;
 using System.Windows.Input;
 using CaptureImage.ViewModels.Library;
@@ -27,4 +28,6 @@ public partial class LibraryPage : Page, IActivatablePage
             ViewModel.OpenCommand.Execute(null);
         }
     }
+
+    protected override AutomationPeer OnCreateAutomationPeer() => new PageAutomationPeer(this);
 }
