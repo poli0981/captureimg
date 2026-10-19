@@ -1,0 +1,283 @@
+<Page
+    x:Class="CaptureImage.UI.Pages.ProfilesPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:loc="clr-namespace:CaptureImage.UI.Localization"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+    xmlns:vm="clr-namespace:CaptureImage.ViewModels.Profiles;assembly=CaptureImage.ViewModels"
+    Title="{loc:Tr Nav_Profiles}"
+    d:DataContext="{d:DesignInstance Type=vm:ProfilesViewModel}"
+    ScrollViewer.CanContentScroll="False"
+    AutomationProperties.AutomationId="ProfilesPage"
+    mc:Ignorable="d">
+    <Grid Margin="24,12,24,16">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0">
+            <TextBlock Style="{StaticResource PageTitle}" Text="{loc:Tr Profiles_Title}" />
+            <TextBlock Style="{StaticResource PageSubtitle}" Text="{loc:Tr Profiles_Subtitle}" />
+        </StackPanel>
+
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="280" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <!--  Profile list  -->
+            <DockPanel Grid.Column="0">
+                <StackPanel
+                    Margin="0,0,0,8"
+                    DockPanel.Dock="Top"
+                    Orientation="Horizontal">
+                    <ui:Button
+                        Margin="0,0,8,0"
+                        Appearance="Primary"
+                        AutomationProperties.AutomationId="Profiles_Add"
+                        Command="{Binding AddCommand}"
+                        Content="{loc:Tr Profiles_Add}"
+                        Icon="{ui:SymbolIcon Add24}" />
+                    <ui:Button
+                        AutomationProperties.AutomationId="Profiles_Delete"
+                        Command="{Binding DeleteCommand}"
+                        Content="{loc:Tr Profiles_Delete}"
+                        Icon="{ui:SymbolIcon Delete24}" />
+                </StackPanel>
+                <Grid>
+                    <ui:ListView
+                        AutomationProperties.AutomationId="Profiles_List"
+                        AutomationProperties.Name="{loc:Tr Profiles_Title}"
+                        ItemsSource="{Binding Profiles}"
+                        SelectedItem="{Binding SelectedProfile}"
+                        SelectionMode="Single">
+                        <ui:ListView.ItemTemplate>
+                            <DataTemplate DataType="{x:Type vm:ProfileItemViewModel}">
+                                <StackPanel Margin="4,6">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock
+                                            FontWeight="Medium"
+                                            Text="{Binding Name}"
+                                            TextTrimming="CharacterEllipsis" />
+                                        <Border
+                                            Margin="8,0,0,0"
+                                            Style="{StaticResource Badge}"
+                                            Visibility="{Binding AutoArm, Converter={StaticResource BoolToVisibility}}">
+                                            <TextBlock Style="{StaticResource BadgeText}" Text="{loc:Tr Profiles_AutoArmBadge}" />
+                                        </Border>
+                                        <Border
+                                            Margin="4,0,0,0"
+                                            Style="{StaticResource Badge}"
+                                            Visibility="{Binding Enabled, Converter={StaticResource InverseBoolToVisibility}}">
+                                            <TextBlock Style="{StaticResource BadgeText}" Text="{loc:Tr Profiles_DisabledBadge}" />
+                                        </Border>
+                                    </StackPanel>
+                                    <TextBlock
+                                        Style="{StaticResource CaptionText}"
+                                        Text="{Binding MatchSummary}"
+                                        TextTrimming="CharacterEllipsis"
+                                        TextWrapping="NoWrap" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </ui:ListView.ItemTemplate>
+                    </ui:ListView>
+                    <TextBlock
+                        Margin="8"
+                        VerticalAlignment="Top"
+                        Style="{StaticResource SecondaryText}"
+                        Text="{loc:Tr Profiles_Empty}"
+                        Visibility="{Binding HasProfiles, Converter={StaticResource InverseBoolToVisibility}}" />
+                </Grid>
+            </DockPanel>
+
+            <!--  Editor  -->
+            <ScrollViewer
+                Grid.Column="1"
+                Margin="16,0,0,0"
+                VerticalScrollBarVisibility="Auto"
+                Visibility="{Binding HasSelection, Converter={StaticResource BoolToVisibility}}">
+                <StackPanel Margin="0,0,8,0">
+                    <ui:CardControl Icon="{ui:SymbolIcon Rename24}" Margin="0,0,0,4">
+                        <ui:CardControl.Header>
+                            <TextBlock Text="{loc:Tr Profiles_Name}" />
+                        </ui:CardControl.Header>
+                        <ui:TextBox
+                            Width="280"
+                            AutomationProperties.AutomationId="Profiles_Name"
+                            AutomationProperties.Name="{loc:Tr Profiles_Name}"
+                            Text="{Binding Name, UpdateSourceTrigger=PropertyChanged, Delay=300}" />
+                    </ui:CardControl>
+                    <ui:CardControl Icon="{ui:SymbolIcon Power24}" Margin="0,0,0,4">
+                        <ui:CardControl.Header>
+                            <TextBlock Text="{loc:Tr Profiles_Enabled}" />
+                        </ui:CardControl.Header>
+                        <ui:ToggleSwitch
+                            AutomationProperties.AutomationId="Profiles_Enabled"
+                            AutomationProperties.Name="{loc:Tr Profiles_Enabled}"
+                            IsChecked="{Binding Enabled}" />
+                    </ui:CardControl>
+
+                    <TextBlock Style="{StaticResource SectionHeader}" Text="{loc:Tr Profiles_MatchSection}" />
+                    <ui:CardControl Icon="{ui:SymbolIcon Apps24}" Margin="0,0,0,4">
+                        <ui:CardControl.Header>
+                            <StackPanel>
+                                <TextBlock Text="{loc:Tr Profiles_ExecutablePath}" />
+                                <TextBlock Style="{StaticResource CaptionText}" Text="{loc:Tr Profiles_ExecutablePathHint}" />
+                            </StackPanel>
+                        </ui:CardControl.Header>
+                        <StackPanel Orientation="Horizontal">
+                            <ui:TextBox
+                                Width="280"
+                                AutomationProperties.AutomationId="Profiles_ExecutablePath"
+                                AutomationProperties.Name="{loc:Tr Profiles_ExecutablePath}"
+                                Text="{Binding ExecutablePath, UpdateSourceTrigger=PropertyChanged, Delay=300}" />
+                            <ui:Button
+                                Margin="8,0,0,0"
+                                AutomationProperties.AutomationId="Profiles_BrowseExecutable"
+                                Command="{Binding BrowseExecutableCommand}"
+                                Content="{loc:Tr Common_Browse}" />
+                        </StackPanel>
+                    </ui:CardControl>
+                    <ui:CardControl Icon="{ui:SymbolIcon Code24}" Margin="0,0,0,4">
+                        <ui:CardControl.Header>
+                            <StackPanel>
+                                <TextBlock Text="{loc:Tr Profiles_ExecutableName}" />
+                                <TextBlock Style="{StaticResource CaptionText}" Text="{loc:Tr Profiles_ExecutableNameHint}" />
+                            </StackPanel>
+                        </ui:CardControl.Header>
+                        <ui:TextBox
+                            Width="200"
+                            AutomationProperties.AutomationId="Profiles_ExecutableName"
+                            AutomationProperties.Name="{loc:Tr Profiles_ExecutableName}"
+                            PlaceholderText="game.exe"
+                            Text="{Binding ExecutableName, UpdateSourceTrigger=PropertyChanged, Delay=300}" />
+                    </ui:CardControl>
+                    <ui:CardControl Icon="{ui:SymbolIcon Games24}" Margin="0,0,0,4">
+                        <ui:CardControl.Header>
+                            <StackPanel>
+                                <TextBlock Text="{loc:Tr Profiles_SteamAppId}" />
+                                <TextBlock
+                                    Style="{StaticResource ErrorText}"
+                                    Text="{loc:Tr Profiles_SteamAppIdInvalid}"
+                                    Visibility="{Binding SteamAppIdInvalid, Converter={StaticResource BoolToVisibility}}" />
+                            </StackPanel>
+                        </ui:CardControl.Header>
+                        <ui:TextBox
+                            Width="160"
+                            AutomationProperties.AutomationId="Profiles_SteamAppId"
+                            AutomationProperties.Name="{loc:Tr Profiles_SteamAppId}"
+                            PlaceholderText="1245620"
+                            Text="{Binding SteamAppId, UpdateSourceTrigger=PropertyChanged, Delay=300}" />
+                    </ui:CardControl>
+                    <ui:InfoBar
+                        Title="{loc:Tr Profiles_MatchesNothingTitle}"
+                        Margin="0,4,0,0"
+                        IsClosable="False"
+                        IsOpen="{Binding MatchesNothing}"
+                        Message="{loc:Tr Profiles_MatchesNothing}"
+                        Severity="Warning" />
+
+                    <TextBlock Style="{StaticResource SectionHeader}" Text="{loc:Tr Profiles_OutputSection}" />
+                    <ui:CardControl Icon="{ui:SymbolIcon Folder24}" Margin="0,0,0,4">
+                        <ui:CardControl.Header>
+                            <StackPanel>
+                                <TextBlock Text="{loc:Tr Profiles_OutputFolder}" />
+                                <TextBlock
+                                    Style="{StaticResource CaptionText}"
+                                    Text="{Binding OutputDirectory}"
+                                    TextTrimming="CharacterEllipsis"
+                                    TextWrapping="NoWrap"
+                                    Visibility="{Binding OutputDirectory, Converter={StaticResource HasValueToVisibility}}" />
+                                <TextBlock
+                                    Style="{StaticResource CaptionText}"
+                                    Text="{loc:Tr Profiles_UseGlobal}"
+                                    Visibility="{Binding OutputDirectory, Converter={StaticResource NoValueToVisibility}}" />
+                            </StackPanel>
+                        </ui:CardControl.Header>
+                        <StackPanel Orientation="Horizontal">
+                            <ui:Button
+                                AutomationProperties.AutomationId="Profiles_BrowseOutput"
+                                Command="{Binding BrowseOutputFolderCommand}"
+                                Content="{loc:Tr Common_Browse}" />
+                            <ui:Button
+                                Margin="8,0,0,0"
+                                AutomationProperties.AutomationId="Profiles_ClearOutput"
+                                Command="{Binding ClearOutputFolderCommand}"
+                                Content="{loc:Tr Profiles_UseGlobalButton}" />
+                        </StackPanel>
+                    </ui:CardControl>
+                    <ui:CardControl Icon="{ui:SymbolIcon Image24}" Margin="0,0,0,4">
+                        <ui:CardControl.Header>
+                            <TextBlock Text="{loc:Tr Settings_Format}" />
+                        </ui:CardControl.Header>
+                        <ComboBox
+                            MinWidth="180"
+                            AutomationProperties.AutomationId="Profiles_Format"
+                            AutomationProperties.Name="{loc:Tr Settings_Format}"
+                            DisplayMemberPath="Label"
+                            ItemsSource="{Binding FormatOptions}"
+                            SelectedValue="{Binding Format}"
+                            SelectedValuePath="Value" />
+                    </ui:CardControl>
+                    <ui:CardControl Icon="{ui:SymbolIcon TextT24}" Margin="0,0,0,4">
+                        <ui:CardControl.Header>
+                            <TextBlock Text="{loc:Tr Settings_FileNameTemplate}" />
+                        </ui:CardControl.Header>
+                        <ui:TextBox
+                            Width="280"
+                            AutomationProperties.AutomationId="Profiles_Template"
+                            AutomationProperties.Name="{loc:Tr Settings_FileNameTemplate}"
+                            PlaceholderText="{loc:Tr Profiles_UseGlobal}"
+                            Text="{Binding FileNameTemplate, UpdateSourceTrigger=PropertyChanged, Delay=300}" />
+                    </ui:CardControl>
+                    <ui:CardControl Icon="{ui:SymbolIcon Hdr24}" Margin="0,0,0,4">
+                        <ui:CardControl.Header>
+                            <TextBlock Text="{loc:Tr Settings_HdrMode}" />
+                        </ui:CardControl.Header>
+                        <ComboBox
+                            MinWidth="180"
+                            AutomationProperties.AutomationId="Profiles_Hdr"
+                            AutomationProperties.Name="{loc:Tr Settings_HdrMode}"
+                            DisplayMemberPath="Label"
+                            ItemsSource="{Binding HdrOptions}"
+                            SelectedValue="{Binding HdrMode}"
+                            SelectedValuePath="Value" />
+                    </ui:CardControl>
+
+                    <TextBlock Style="{StaticResource SectionHeader}" Text="{loc:Tr Profiles_AutomationSection}" />
+                    <ui:CardControl Icon="{ui:SymbolIcon Keyboard24}" Margin="0,0,0,4">
+                        <ui:CardControl.Header>
+                            <StackPanel>
+                                <TextBlock Text="{loc:Tr Profiles_AutoArm}" />
+                                <TextBlock Style="{StaticResource CaptionText}" Text="{loc:Tr Profiles_AutoArmHint}" />
+                            </StackPanel>
+                        </ui:CardControl.Header>
+                        <ui:ToggleSwitch
+                            AutomationProperties.AutomationId="Profiles_AutoArm"
+                            AutomationProperties.Name="{loc:Tr Profiles_AutoArm}"
+                            IsChecked="{Binding AutoArm}" />
+                    </ui:CardControl>
+                    <ui:CardControl
+                        Icon="{ui:SymbolIcon LockClosed24}"
+                        IsEnabled="{Binding AutoArm}"
+                        Margin="0,0,0,4">
+                        <ui:CardControl.Header>
+                            <StackPanel>
+                                <TextBlock Text="{loc:Tr Profiles_LockTarget}" />
+                                <TextBlock Style="{StaticResource CaptionText}" Text="{loc:Tr Profiles_LockTargetHint}" />
+                            </StackPanel>
+                        </ui:CardControl.Header>
+                        <ui:ToggleSwitch
+                            AutomationProperties.AutomationId="Profiles_LockTarget"
+                            AutomationProperties.Name="{loc:Tr Profiles_LockTarget}"
+                            IsChecked="{Binding LockTarget}" />
+                    </ui:CardControl>
+                </StackPanel>
+            </ScrollViewer>
+        </Grid>
+    </Grid>
+</Page>

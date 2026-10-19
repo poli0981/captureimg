@@ -32,176 +32,329 @@
   <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
 
   <!-- Navigation -->
-  <data name="Nav_Dashboard" xml:space="preserve"><value>仪表板</value></data>
-  <data name="Nav_Update" xml:space="preserve"><value>更新</value></data>
-  <data name="Nav_Settings" xml:space="preserve"><value>设置</value></data>
-  <data name="Nav_About" xml:space="preserve"><value>关于</value></data>
-  <data name="Nav_LogViewer" xml:space="preserve"><value>日志</value></data>
-
-  <!-- Dashboard -->
-  <data name="Dashboard_Title" xml:space="preserve"><value>仪表板</value></data>
-  <data name="Dashboard_Subtitle" xml:space="preserve"><value>选择目标并启动 — 按热键即可截图。</value></data>
-  <data name="Dashboard_Refresh" xml:space="preserve"><value>刷新</value></data>
-  <data name="Dashboard_Arm" xml:space="preserve"><value>启动</value></data>
-  <data name="Dashboard_Disarm" xml:space="preserve"><value>停止</value></data>
-  <data name="Dashboard_StatusIdle" xml:space="preserve"><value>空闲 — 选择目标并启动后开始。</value></data>
-  <data name="Dashboard_StatusArmed" xml:space="preserve"><value>已启动:按 {0} 截取 {1}。</value></data>
-  <data name="Dashboard_StatusCapturing" xml:space="preserve"><value>正在截取 {0}…</value></data>
-  <data name="Dashboard_StatusDisarmed" xml:space="preserve"><value>已停止。</value></data>
-  <data name="Dashboard_StatusSaved" xml:space="preserve"><value>已保存:{0} ({1}x{2}, {3} ms)</value></data>
-  <data name="Dashboard_StatusFailed" xml:space="preserve"><value>截图失败 ({0}):{1}</value></data>
-  <data name="Dashboard_TargetsCount" xml:space="preserve"><value>显示 {0} 个目标</value></data>
-  <data name="Dashboard_Loading" xml:space="preserve"><value>正在加载…</value></data>
-  <data name="Dashboard_EmptyState" xml:space="preserve"><value>没有可截取的可见窗口 — 启动游戏或应用后单击"刷新"。</value></data>
-  <data name="Dashboard_LogToggle" xml:space="preserve"><value>切换实时日志面板</value></data>
-  <data name="Dashboard_SteamBadge" xml:space="preserve"><value>STEAM</value></data>
-  <data name="Dashboard_SteamBadgeTooltip" xml:space="preserve"><value>Steam 游戏:{0} (AppId {1})。可通过 Steam 叠加层使用 F12 截图。部分受反作弊保护的游戏可能会阻止外部截图。</value></data>
-
-  <!-- Settings -->
-  <data name="Settings_Title" xml:space="preserve"><value>设置</value></data>
-  <data name="Settings_Language" xml:space="preserve"><value>语言</value></data>
-  <data name="Settings_Theme" xml:space="preserve"><value>主题</value></data>
-  <data name="Settings_Theme_System" xml:space="preserve"><value>系统</value></data>
-  <data name="Settings_Theme_Light" xml:space="preserve"><value>浅色</value></data>
-  <data name="Settings_Theme_Dark" xml:space="preserve"><value>深色</value></data>
-  <data name="Settings_Hotkey" xml:space="preserve"><value>截图热键</value></data>
-  <data name="Settings_HotkeyHint" xml:space="preserve"><value>单击"录制"并按下组合键。Esc 取消。"重置"将恢复 Ctrl+Shift+F12。</value></data>
-  <data name="Settings_HotkeyRecord" xml:space="preserve"><value>录制…</value></data>
-  <data name="Settings_HotkeyCancel" xml:space="preserve"><value>取消</value></data>
-  <data name="Settings_HotkeyReset" xml:space="preserve"><value>重置</value></data>
-  <data name="Settings_HotkeyRecorderPrompt" xml:space="preserve"><value>请按下组合键(按 Esc 取消)…</value></data>
-  <data name="Settings_HotkeyErrorNoPrimary" xml:space="preserve"><value>请选择主键(例如字母键或 F 键)。</value></data>
-  <data name="Settings_HotkeyErrorModifierOnly" xml:space="preserve"><value>仅修饰键不够 — 请添加字母或 F 键。</value></data>
-  <data name="Settings_HotkeyErrorNeedsModifier" xml:space="preserve"><value>普通字母和数字至少需要一个修饰键(Ctrl/Alt/Shift/Win)。</value></data>
-  <data name="Settings_HotkeyErrorReserved" xml:space="preserve"><value>该组合键已被 Windows 保留,无法使用。</value></data>
-  <data name="Settings_HotkeyConflictWarning" xml:space="preserve"><value>另一个应用程序可能已经占用了该组合键 — 当该应用运行时可能不会触发。</value></data>
-  <data name="Settings_Format" xml:space="preserve"><value>默认格式</value></data>
-  <data name="Settings_JpegQuality" xml:space="preserve"><value>JPEG 质量</value></data>
-  <data name="Settings_WebpQuality" xml:space="preserve"><value>WebP 质量</value></data>
-  <data name="Settings_OutputFolder" xml:space="preserve"><value>输出文件夹</value></data>
-  <data name="Settings_OutputFolderDefault" xml:space="preserve"><value>(默认:Pictures\CaptureImage)</value></data>
-  <data name="Settings_Browse" xml:space="preserve"><value>浏览…</value></data>
-  <data name="Settings_BrowseTitle" xml:space="preserve"><value>选择输出文件夹</value></data>
-  <data name="Settings_BrowseTooltip" xml:space="preserve"><value>选择文件夹而不是手动输入路径。</value></data>
-  <data name="Settings_FileNameTemplate" xml:space="preserve"><value>文件名模板</value></data>
-  <data name="Settings_PreviewBeforeSave" xml:space="preserve"><value>保存前预览每张截图</value></data>
-  <data name="Settings_AutoSwitchOnAltTab" xml:space="preserve"><value>Alt-Tab 时自动切换目标</value></data>
-  <data name="Settings_AutoSwitchOnAltTabHint" xml:space="preserve"><value>所选目标将跟随前台窗口。不在目标列表中的应用将保留当前选择。</value></data>
-  <data name="Settings_MinimizeToTray" xml:space="preserve"><value>关闭按钮最小化到系统托盘</value></data>
-  <data name="Settings_SoundEnabled" xml:space="preserve"><value>播放截图音效</value></data>
-  <data name="Settings_Import" xml:space="preserve"><value>导入…</value></data>
-  <data name="Settings_Export" xml:space="preserve"><value>导出…</value></data>
-  <data name="Settings_ImportTitle" xml:space="preserve"><value>导入设置</value></data>
-  <data name="Settings_ExportTitle" xml:space="preserve"><value>导出设置</value></data>
-  <data name="Settings_OpenFile" xml:space="preserve"><value>打开设置文件</value></data>
-  <data name="Settings_Logging" xml:space="preserve"><value>日志</value></data>
-  <data name="Settings_LogLevel" xml:space="preserve"><value>最低日志级别</value></data>
-  <data name="Settings_LogLevelHint" xml:space="preserve"><value>过滤滚动日志文件和查看器。支持诊断时选 Debug,日常使用选 Information,如需安静可选 Warning 或 Error。</value></data>
-
-  <!-- Update -->
-  <data name="Update_Title" xml:space="preserve"><value>更新</value></data>
-  <data name="Update_Check" xml:space="preserve"><value>检查更新</value></data>
-  <data name="Update_Download" xml:space="preserve"><value>下载</value></data>
-  <data name="Update_Install" xml:space="preserve"><value>安装并重启</value></data>
-  <data name="Update_Status" xml:space="preserve"><value>状态</value></data>
-  <data name="Update_Log" xml:space="preserve"><value>日志</value></data>
-  <data name="Update_NewVersion" xml:space="preserve"><value>新版本:</value></data>
-
-  <!-- About -->
-  <data name="About_Title" xml:space="preserve"><value>关于 CaptureImage</value></data>
-  <data name="About_Tagline" xml:space="preserve"><value>面向无内置截图键游戏的轻量级 Windows 屏幕截图工具。</value></data>
-  <data name="About_AppLabel" xml:space="preserve"><value>应用</value></data>
-  <data name="About_VersionLabel" xml:space="preserve"><value>版本</value></data>
-  <data name="About_LicenseLabel" xml:space="preserve"><value>许可证</value></data>
-  <data name="About_DeveloperLabel" xml:space="preserve"><value>开发者</value></data>
-  <data name="About_RepositoryLabel" xml:space="preserve"><value>仓库</value></data>
+  <data name="About_AiNotice" xml:space="preserve"><value>CaptureImage 的代码、测试和文档在开发中大量借助了 AI 编程助手（Anthropic 的 Claude，通过 Claude Code）。每项更改在发布前都由维护者审查和测试。</value></data>
   <data name="About_AiSection" xml:space="preserve"><value>AI 辅助开发</value></data>
-  <data name="About_DisclaimersSection" xml:space="preserve"><value>免责声明</value></data>
-  <data name="About_TranslationDisclaimer" xml:space="preserve"><value>翻译</value></data>
-  <data name="About_TranslationDisclaimerBody" xml:space="preserve"><value>越南语、阿拉伯语、日语、简体中文、韩语、西班牙语、法语、德语、巴西葡萄牙语和俄语语言包采用机器辅助翻译。术语可能与母语习惯不一致,部分技术术语(hotkey、toast、frame 等)有意保留为英文。欢迎母语为相关语言的志愿者校对,可通过对 src/CaptureImage.UI/Resources/Strings/ 下的 .resx 文件提交 Pull Request。</value></data>
   <data name="About_CaptureDisclaimer" xml:space="preserve"><value>截图支持</value></data>
   <data name="About_CaptureLimitationDisclaimerBody" xml:space="preserve"><value>CaptureImage 通过 Windows.Graphics.Capture 可截取大多数窗口化和无边框游戏,但并非所有游戏都受支持。受 DRM 保护的画面、独占全屏 Direct3D 9 游戏以及带反作弊钩子的游戏可能会返回黑屏或拒绝截图。对于旧应用会尝试 GDI PrintWindow 回退。完整列表请参阅 docs/legal/DISCLAIMER.md §2。</value></data>
+  <data name="About_ContactSection" xml:space="preserve"><value>与开发者联系</value></data>
+  <data name="About_DeveloperLabel" xml:space="preserve"><value>开发者</value></data>
+  <data name="About_DisclaimersSection" xml:space="preserve"><value>免责声明</value></data>
+  <data name="About_Discussions" xml:space="preserve"><value>讨论区</value></data>
+  <data name="About_DonateBody" xml:space="preserve"><value>CaptureImage 是免费的开源软件。如果它对您有帮助，请通过以下任一方式支持开发：</value></data>
+  <data name="About_DonateSection" xml:space="preserve"><value>支持项目</value></data>
+  <data name="About_Email" xml:space="preserve"><value>电子邮件</value></data>
+  <data name="About_FeedbackSection" xml:space="preserve"><value>反馈</value></data>
+  <data name="About_LegalSection" xml:space="preserve"><value>法律文件</value></data>
   <data name="About_LiabilityDisclaimer" xml:space="preserve"><value>无担保</value></data>
   <data name="About_LiabilityDisclaimerBody" xml:space="preserve"><value>CaptureImage 按 GPL-3.0-or-later 协议"按原样"分发,不提供任何形式的担保。作者对截图丢失、游戏崩溃、反作弊处罚或数据丢失不承担责任。使用风险自负。完整文本请参阅 docs/legal/DISCLAIMER.md。</value></data>
-  <data name="About_LegalSection" xml:space="preserve"><value>法律文件</value></data>
-  <data name="About_ThirdPartySection" xml:space="preserve"><value>第三方组件</value></data>
-  <data name="About_ThirdPartyHint" xml:space="preserve"><value>单击上方"第三方声明"查看包含上游 URL 的完整列表。</value></data>
-  <data name="About_OpenDisclaimer" xml:space="preserve"><value>免责声明</value></data>
-  <data name="About_OpenPrivacy" xml:space="preserve"><value>隐私</value></data>
-  <data name="About_OpenTerms" xml:space="preserve"><value>条款</value></data>
-  <data name="About_OpenLicense" xml:space="preserve"><value>许可证 (GPL-3.0)</value></data>
-  <data name="About_OpenThirdParty" xml:space="preserve"><value>第三方声明</value></data>
-  <data name="About_OpenContributors" xml:space="preserve"><value>贡献者</value></data>
-
-  <!-- About — Social Dev / Donate / Report Bug (v1.5.1) -->
-  <data name="About_SocialSection" xml:space="preserve"><value>与开发者联系</value></data>
-  <data name="About_DonateSection" xml:space="preserve"><value>支持项目</value></data>
-  <data name="About_DonateBody" xml:space="preserve"><value>CaptureImage 是免费的开源软件。如果它对您有帮助，请通过以下任一方式支持开发：</value></data>
-  <data name="About_OpenGitHubSponsors" xml:space="preserve"><value>GitHub Sponsors</value></data>
-  <data name="About_OpenKoFi" xml:space="preserve"><value>Ko-fi</value></data>
-  <data name="About_OpenBuyMeACoffee" xml:space="preserve"><value>Buy Me a Coffee</value></data>
-  <data name="About_OpenPatreon" xml:space="preserve"><value>Patreon</value></data>
+  <data name="About_LicenseLabel" xml:space="preserve"><value>许可证</value></data>
   <data name="About_OpenBugReport" xml:space="preserve"><value>报告 Bug</value></data>
   <data name="About_OpenBugReportHint" xml:space="preserve"><value>打开 GitHub issue 跟踪器，预填 Bug 报告模板。</value></data>
+  <data name="About_OpenContributors" xml:space="preserve"><value>贡献者</value></data>
+  <data name="About_OpenDisclaimer" xml:space="preserve"><value>免责声明</value></data>
+  <data name="About_OpenLicense" xml:space="preserve"><value>许可证 (GPL-3.0)</value></data>
+  <data name="About_OpenNotice" xml:space="preserve"><value>版权声明</value></data>
+  <data name="About_OpenPrivacy" xml:space="preserve"><value>隐私</value></data>
+  <data name="About_OpenTerms" xml:space="preserve"><value>条款</value></data>
+  <data name="About_OpenThirdParty" xml:space="preserve"><value>第三方声明</value></data>
+  <data name="About_OtherChannels" xml:space="preserve"><value>其他渠道</value></data>
+  <data name="About_ReleaseNotes" xml:space="preserve"><value>发行说明</value></data>
+  <data name="About_RepositoryLabel" xml:space="preserve"><value>仓库</value></data>
+  <data name="About_RequestFeature" xml:space="preserve"><value>建议新功能</value></data>
+  <data name="About_SponsorEmail" xml:space="preserve"><value>赞助咨询</value></data>
+  <data name="About_Tagline" xml:space="preserve"><value>面向无内置截图键游戏的轻量级 Windows 屏幕截图工具。</value></data>
+  <data name="About_ThirdPartySection" xml:space="preserve"><value>第三方组件</value></data>
+  <data name="About_TranslationDisclaimer" xml:space="preserve"><value>翻译</value></data>
+  <data name="About_TranslationDisclaimerBody" xml:space="preserve"><value>越南语、阿拉伯语、日语、简体中文、韩语、西班牙语、法语、德语、巴西葡萄牙语和俄语语言包采用机器辅助翻译。术语可能与母语习惯不一致,部分技术术语(hotkey、toast、frame 等)有意保留为英文。欢迎母语为相关语言的志愿者校对,可通过对 src/CaptureImage.UI/Resources/Strings/ 下的 .resx 文件提交 Pull Request。</value></data>
+  <data name="About_VersionLabel" xml:space="preserve"><value>版本</value></data>
 
-  <!-- Log viewer -->
-  <data name="Log_Title" xml:space="preserve"><value>实时日志</value></data>
-  <data name="Log_Pause" xml:space="preserve"><value>暂停</value></data>
-  <data name="Log_Resume" xml:space="preserve"><value>继续</value></data>
+  <data name="Common_Browse" xml:space="preserve"><value>浏览…</value></data>
+  <data name="Common_Cancel" xml:space="preserve"><value>取消</value></data>
+  <data name="Common_Close" xml:space="preserve"><value>关闭</value></data>
+  <data name="Common_CopyImage" xml:space="preserve"><value>复制图像</value></data>
+
+  <data name="Dashboard_Arm" xml:space="preserve"><value>启动</value></data>
+  <data name="Dashboard_CaptureMonitor" xml:space="preserve"><value>截取屏幕</value></data>
+  <data name="Dashboard_CaptureRegion" xml:space="preserve"><value>截取区域</value></data>
+  <data name="Dashboard_CaptureSelected" xml:space="preserve"><value>截取窗口</value></data>
+  <data name="Dashboard_CreateProfile" xml:space="preserve"><value>创建配置文件</value></data>
+  <data name="Dashboard_Disarm" xml:space="preserve"><value>停止</value></data>
+  <data name="Dashboard_EmptyState" xml:space="preserve"><value>没有可截取的可见窗口 — 启动游戏或应用后单击"刷新"。</value></data>
+  <data name="Dashboard_Hotkeys" xml:space="preserve"><value>截图热键</value></data>
+  <data name="Dashboard_Locked" xml:space="preserve"><value>已锁定</value></data>
+  <data name="Dashboard_LockedLabel" xml:space="preserve"><value>窗口热键截取：</value></data>
+  <data name="Dashboard_LockSelected" xml:space="preserve"><value>锁定为目标</value></data>
+  <data name="Dashboard_Minimized" xml:space="preserve"><value>已最小化</value></data>
+  <data name="Dashboard_ProfileBadge" xml:space="preserve"><value>配置文件：{0}</value></data>
+  <data name="Dashboard_Refresh" xml:space="preserve"><value>刷新</value></data>
+  <data name="Dashboard_Search" xml:space="preserve"><value>搜索窗口</value></data>
+  <data name="Dashboard_SteamBadge" xml:space="preserve"><value>STEAM</value></data>
+  <data name="Dashboard_SteamBadgeTooltip" xml:space="preserve"><value>Steam 游戏:{0} (AppId {1})。可通过 Steam 叠加层使用 F12 截图。部分受反作弊保护的游戏可能会阻止外部截图。</value></data>
+  <data name="Dashboard_Subtitle" xml:space="preserve"><value>启动热键后，在游戏中按下即可截图。锁定一个窗口后将始终截取该窗口。</value></data>
+  <data name="Dashboard_Title" xml:space="preserve"><value>仪表板</value></data>
+  <data name="Dashboard_Unlock" xml:space="preserve"><value>解除锁定</value></data>
+  <data name="Dashboard_Windows" xml:space="preserve"><value>已打开的窗口</value></data>
+
+  <data name="Error_Cancelled" xml:space="preserve"><value>已取消截图。</value></data>
+  <data name="Error_EncodingFailure" xml:space="preserve"><value>无法编码图像。</value></data>
+  <data name="Error_FileWriteFailure" xml:space="preserve"><value>无法保存文件。请检查输出文件夹和可用磁盘空间。</value></data>
+  <data name="Error_GraphicsDeviceFailure" xml:space="preserve"><value>显卡驱动程序停止响应。请稍后重试。</value></data>
+  <data name="Error_NoFrameArrived" xml:space="preserve"><value>未从 Windows 收到图像。请确保窗口可见后重试。</value></data>
+  <data name="Error_NoTarget" xml:space="preserve"><value>没有可截取的窗口。请将游戏切换到前台，或在仪表板中锁定一个窗口。</value></data>
+  <data name="Error_NotSupported" xml:space="preserve"><value>此系统不支持屏幕截图。</value></data>
+  <data name="Error_ProcessExited" xml:space="preserve"><value>游戏或应用已退出。</value></data>
+  <data name="Error_ProtectedContent" xml:space="preserve"><value>此窗口禁止截图（受保护的内容）。</value></data>
+  <data name="Error_TargetGone" xml:space="preserve"><value>窗口已关闭。</value></data>
+  <data name="Error_TargetMinimized" xml:space="preserve"><value>窗口已最小化。请还原后重试。</value></data>
+  <data name="Error_Unknown" xml:space="preserve"><value>出现问题。详情请查看日志。</value></data>
+
+  <data name="Hotkey_None" xml:space="preserve"><value>未设置</value></data>
+  <data name="Hotkey_PressKeys" xml:space="preserve"><value>请按键…</value></data>
+  <data name="Hotkey_ProblemMessage" xml:space="preserve"><value>其他应用正在使用某个截图热键，或组合键无效。请在设置中选择其他组合键。</value></data>
+  <data name="Hotkey_ProblemTitle" xml:space="preserve"><value>有热键无法使用</value></data>
+  <data name="Hotkey_StatusActive" xml:space="preserve"><value>已启用</value></data>
+  <data name="Hotkey_StatusConflict" xml:space="preserve"><value>已被其他应用占用</value></data>
+  <data name="Hotkey_StatusInactive" xml:space="preserve"><value>启动前不生效</value></data>
+  <data name="Hotkey_StatusInvalid" xml:space="preserve"><value>组合键无效</value></data>
+  <data name="Hotkey_StatusUnbound" xml:space="preserve"><value>未设置</value></data>
+  <data name="Hotkey_TakenByOtherApp" xml:space="preserve"><value>此组合键已被其他应用使用。请选择其他组合键。</value></data>
+  <data name="Hotkey_UsedByMode" xml:space="preserve"><value>已用于{0}。</value></data>
+  <data name="Hotkey_Validation_ModifierOnlyKey" xml:space="preserve"><value>仅修饰键不够 — 请添加字母或 F 键。</value></data>
+  <data name="Hotkey_Validation_NoPrimaryKey" xml:space="preserve"><value>请选择主键(例如字母键或 F 键)。</value></data>
+  <data name="Hotkey_Validation_RequiresModifier" xml:space="preserve"><value>普通字母和数字至少需要一个修饰键(Ctrl/Alt/Shift/Win)。</value></data>
+  <data name="Hotkey_Validation_ReservedByWindows" xml:space="preserve"><value>该组合键已被 Windows 保留,无法使用。</value></data>
+
+  <data name="Library_AllGames" xml:space="preserve"><value>所有游戏</value></data>
+  <data name="Library_CopyFailed" xml:space="preserve"><value>无法读取图像。</value></data>
+  <data name="Library_CopyPath" xml:space="preserve"><value>复制路径</value></data>
+  <data name="Library_Delete" xml:space="preserve"><value>删除</value></data>
+  <data name="Library_Deleted" xml:space="preserve"><value>已移至回收站</value></data>
+  <data name="Library_DeleteFailed" xml:space="preserve"><value>无法将文件移至回收站。</value></data>
+  <data name="Library_DeleteMessage" xml:space="preserve"><value>要将 {0} 移至回收站吗？</value></data>
+  <data name="Library_DeleteTitle" xml:space="preserve"><value>删除截图</value></data>
+  <data name="Library_Empty" xml:space="preserve"><value>还没有截图。启动热键，截取你的第一张截图吧。</value></data>
+  <data name="Library_GameFilter" xml:space="preserve"><value>按游戏筛选</value></data>
+  <data name="Library_HdrOnly" xml:space="preserve"><value>仅 HDR</value></data>
+  <data name="Library_Open" xml:space="preserve"><value>打开</value></data>
+  <data name="Library_OpenHdr" xml:space="preserve"><value>打开 HDR 版本</value></data>
+  <data name="Library_Pin" xml:space="preserve"><value>钉在屏幕上</value></data>
+  <data name="Library_Reveal" xml:space="preserve"><value>在文件夹中显示</value></data>
+  <data name="Library_Search" xml:space="preserve"><value>搜索截图</value></data>
+  <data name="Library_SelectHint" xml:space="preserve"><value>选择一张截图以查看详细信息。</value></data>
+  <data name="Library_Summary" xml:space="preserve"><value>{0} / {1} 张截图</value></data>
+  <data name="Library_Title" xml:space="preserve"><value>截图库</value></data>
+
   <data name="Log_Clear" xml:space="preserve"><value>清除</value></data>
-  <data name="Log_EventsCount" xml:space="preserve"><value>{0} 条事件</value></data>
   <data name="Log_EmptyState" xml:space="preserve"><value>尚无日志事件。截图引擎的实时事件将显示在此处。</value></data>
-  <data name="Log_Filter" xml:space="preserve"><value>最低级别:</value></data>
+  <data name="Log_Pause" xml:space="preserve"><value>暂停</value></data>
   <data name="Log_RevealFolder" xml:space="preserve"><value>打开文件夹</value></data>
 
-  <!-- Preview -->
-  <data name="Preview_Title" xml:space="preserve"><value>预览</value></data>
+  <data name="Logs_CopyAll" xml:space="preserve"><value>全部复制</value></data>
+  <data name="Logs_CopySelected" xml:space="preserve"><value>复制所选行</value></data>
+  <data name="Logs_Level" xml:space="preserve"><value>最低级别</value></data>
+  <data name="Logs_LevelAll" xml:space="preserve"><value>所有级别</value></data>
+  <data name="Logs_Search" xml:space="preserve"><value>搜索日志</value></data>
+  <data name="Logs_Subtitle" xml:space="preserve"><value>本次会话的最新事件。报告问题时请使用“导出诊断信息”。</value></data>
+  <data name="Logs_Title" xml:space="preserve"><value>实时日志</value></data>
+
+  <data name="Mode_Monitor" xml:space="preserve"><value>屏幕</value></data>
+  <data name="Mode_Region" xml:space="preserve"><value>区域</value></data>
+  <data name="Mode_Window" xml:space="preserve"><value>窗口</value></data>
+
+  <data name="Nav_About" xml:space="preserve"><value>关于</value></data>
+  <data name="Nav_Dashboard" xml:space="preserve"><value>仪表板</value></data>
+  <data name="Nav_Library" xml:space="preserve"><value>图库</value></data>
+  <data name="Nav_Logs" xml:space="preserve"><value>日志</value></data>
+  <data name="Nav_Profiles" xml:space="preserve"><value>配置文件</value></data>
+  <data name="Nav_Settings" xml:space="preserve"><value>设置</value></data>
+  <data name="Nav_Update" xml:space="preserve"><value>更新</value></data>
+
+  <data name="PinnedWindow_Close" xml:space="preserve"><value>关闭</value></data>
+  <data name="PinnedWindow_Open" xml:space="preserve"><value>在资源管理器中显示</value></data>
+
+  <data name="Preview_Discard" xml:space="preserve"><value>放弃</value></data>
+  <data name="Preview_ExtractText" xml:space="preserve"><value>提取文字 (OCR)</value></data>
   <data name="Preview_Prompt" xml:space="preserve"><value>是否保存此截图?</value></data>
   <data name="Preview_Save" xml:space="preserve"><value>保存</value></data>
-  <data name="Preview_Discard" xml:space="preserve"><value>放弃</value></data>
+  <data name="Preview_Title" xml:space="preserve"><value>预览</value></data>
 
-  <!-- Toasts -->
-  <data name="Toast_CaptureSaved" xml:space="preserve"><value>截图已保存</value></data>
-  <data name="Toast_CaptureFailed" xml:space="preserve"><value>截图失败</value></data>
-  <data name="Toast_SettingsImported" xml:space="preserve"><value>设置已导入</value></data>
-  <data name="Toast_SettingsExported" xml:space="preserve"><value>设置已导出</value></data>
-  <data name="Toast_Error" xml:space="preserve"><value>错误</value></data>
+  <data name="Profiles_Add" xml:space="preserve"><value>添加配置文件</value></data>
+  <data name="Profiles_AutoArm" xml:space="preserve"><value>自动启动</value></data>
+  <data name="Profiles_AutoArmBadge" xml:space="preserve"><value>自动启动</value></data>
+  <data name="Profiles_AutoArmHint" xml:space="preserve"><value>当此游戏切换到前台时启动热键。</value></data>
+  <data name="Profiles_AutomationSection" xml:space="preserve"><value>自动化</value></data>
+  <data name="Profiles_Delete" xml:space="preserve"><value>删除</value></data>
+  <data name="Profiles_DeleteMessage" xml:space="preserve"><value>要删除配置文件“{0}”吗？已保存的截图将保留。</value></data>
+  <data name="Profiles_DeleteTitle" xml:space="preserve"><value>删除配置文件</value></data>
+  <data name="Profiles_DisabledBadge" xml:space="preserve"><value>已关闭</value></data>
+  <data name="Profiles_Empty" xml:space="preserve"><value>还没有配置文件。可在此添加，或在游戏运行时使用仪表板中的“创建配置文件”。</value></data>
+  <data name="Profiles_Enabled" xml:space="preserve"><value>启用配置文件</value></data>
+  <data name="Profiles_ExecutableName" xml:space="preserve"><value>可执行文件名</value></data>
+  <data name="Profiles_ExecutableNameHint" xml:space="preserve"><value>无论游戏安装在何处都能匹配。</value></data>
+  <data name="Profiles_ExecutablePath" xml:space="preserve"><value>可执行文件路径</value></data>
+  <data name="Profiles_ExecutablePathHint" xml:space="preserve"><value>最精确的匹配方式。</value></data>
+  <data name="Profiles_LockTarget" xml:space="preserve"><value>锁定游戏窗口</value></data>
+  <data name="Profiles_LockTargetHint" xml:space="preserve"><value>这样即使其他窗口在前台，窗口热键也会截取游戏。</value></data>
+  <data name="Profiles_MatchesNothing" xml:space="preserve"><value>请设置可执行文件路径、可执行文件名或 Steam AppId。</value></data>
+  <data name="Profiles_MatchesNothingTitle" xml:space="preserve"><value>此配置文件尚未匹配任何游戏</value></data>
+  <data name="Profiles_MatchSection" xml:space="preserve"><value>适用的游戏</value></data>
+  <data name="Profiles_Name" xml:space="preserve"><value>名称</value></data>
+  <data name="Profiles_NewProfile" xml:space="preserve"><value>新配置文件</value></data>
+  <data name="Profiles_OutputFolder" xml:space="preserve"><value>输出文件夹</value></data>
+  <data name="Profiles_OutputSection" xml:space="preserve"><value>输出</value></data>
+  <data name="Profiles_PickExecutable" xml:space="preserve"><value>选择游戏可执行文件</value></data>
+  <data name="Profiles_SteamAppId" xml:space="preserve"><value>Steam AppId</value></data>
+  <data name="Profiles_SteamAppIdInvalid" xml:space="preserve"><value>请输入数字，例如 1245620。</value></data>
+  <data name="Profiles_Subtitle" xml:space="preserve"><value>为每个游戏单独设置输出文件夹、格式和文件名。配置文件还可以在游戏启动时自动启动热键。</value></data>
+  <data name="Profiles_Title" xml:space="preserve"><value>游戏配置文件</value></data>
+  <data name="Profiles_UseGlobal" xml:space="preserve"><value>使用全局设置</value></data>
+  <data name="Profiles_UseGlobalButton" xml:space="preserve"><value>使用全局</value></data>
 
-  <!-- Tray menu -->
-  <data name="Tray_ShowWindow" xml:space="preserve"><value>显示 CaptureImage</value></data>
-  <data name="Tray_OpenFolder" xml:space="preserve"><value>打开截图文件夹</value></data>
-  <data name="Tray_Exit" xml:space="preserve"><value>退出</value></data>
+  <data name="Region_DragHint" xml:space="preserve"><value>拖动选择区域 · 单击截取整个屏幕 · Esc 取消</value></data>
 
-  <!-- v1.5 quick wins -->
+  <data name="Settings_AdvancedSection" xml:space="preserve"><value>高级</value></data>
+  <data name="Settings_AppearanceSection" xml:space="preserve"><value>外观</value></data>
+  <data name="Settings_ArmOnStartup" xml:space="preserve"><value>CaptureImage 启动时启动热键</value></data>
+  <data name="Settings_ArmOnStartupHint" xml:space="preserve"><value>启动期间，其他应用将无法收到这些组合键。</value></data>
+  <data name="Settings_AutoPinAfterCapture" xml:space="preserve"><value>每次拍摄后固定一个浮动缩略图</value></data>
+  <data name="Settings_BackupSettings" xml:space="preserve"><value>备份和恢复设置</value></data>
+  <data name="Settings_BehaviorSection" xml:space="preserve"><value>行为</value></data>
+  <data name="Settings_CaptureSection" xml:space="preserve"><value>截图</value></data>
+  <data name="Settings_Clipboard" xml:space="preserve"><value>剪贴板模式</value></data>
+  <data name="Settings_ClipboardCopy" xml:space="preserve"><value>仅复制(不保存文件)</value></data>
+  <data name="Settings_ClipboardCopyAndSave" xml:space="preserve"><value>复制 + 保存文件</value></data>
+  <data name="Settings_ClipboardNone" xml:space="preserve"><value>关闭(仅文件)</value></data>
   <data name="Settings_Countdown" xml:space="preserve"><value>拍摄倒计时</value></data>
-  <data name="Settings_CountdownOff" xml:space="preserve"><value>关闭(无延迟)</value></data>
+  <data name="Settings_Countdown10s" xml:space="preserve"><value>10 秒</value></data>
   <data name="Settings_Countdown3s" xml:space="preserve"><value>3 秒</value></data>
   <data name="Settings_Countdown5s" xml:space="preserve"><value>5 秒</value></data>
-  <data name="Settings_Countdown10s" xml:space="preserve"><value>10 秒</value></data>
-  <data name="Settings_Clipboard" xml:space="preserve"><value>剪贴板模式</value></data>
-  <data name="Settings_ClipboardNone" xml:space="preserve"><value>关闭(仅文件)</value></data>
-  <data name="Settings_ClipboardCopy" xml:space="preserve"><value>仅复制(不保存文件)</value></data>
-  <data name="Settings_ClipboardCopySave" xml:space="preserve"><value>复制 + 保存文件</value></data>
+  <data name="Settings_CountdownOff" xml:space="preserve"><value>关闭(无延迟)</value></data>
+  <data name="Settings_DataFolder" xml:space="preserve"><value>数据文件夹</value></data>
+  <data name="Settings_DiagnosticsExported" xml:space="preserve"><value>已导出诊断信息</value></data>
+  <data name="Settings_Export" xml:space="preserve"><value>导出…</value></data>
+  <data name="Settings_ExportDiagnostics" xml:space="preserve"><value>导出诊断信息</value></data>
+  <data name="Settings_ExportDiagnosticsButton" xml:space="preserve"><value>导出…</value></data>
+  <data name="Settings_ExportDiagnosticsHint" xml:space="preserve"><value>包含最近日志、设置和系统信息（已移除用户路径）的 zip 文件，可附在问题报告中。</value></data>
+  <data name="Settings_ExportFailed" xml:space="preserve"><value>导出失败。</value></data>
+  <data name="Settings_ExportSettings" xml:space="preserve"><value>导出设置</value></data>
+  <data name="Settings_FileNamePreview" xml:space="preserve"><value>示例：</value></data>
+  <data name="Settings_FileNameTemplate" xml:space="preserve"><value>文件名模板</value></data>
+  <data name="Settings_FileNameTokens" xml:space="preserve"><value>可用标记：{Game} {Process} {Mode} {yyyy} {MM} {dd} {HH} {mm} {ss} {counter}</value></data>
+  <data name="Settings_Format" xml:space="preserve"><value>默认格式</value></data>
+  <data name="Settings_HdrAuto" xml:space="preserve"><value>自动（HDR 显示器上使用 HDR）</value></data>
+  <data name="Settings_HdrMode" xml:space="preserve"><value>HDR 截图</value></data>
+  <data name="Settings_HdrModeHint" xml:space="preserve"><value>在 HDR 显示器上会截取完整的 HDR 画面，并色调映射为普通图像。</value></data>
+  <data name="Settings_HdrOff" xml:space="preserve"><value>关闭（始终 SDR）</value></data>
+  <data name="Settings_HdrSection" xml:space="preserve"><value>HDR</value></data>
+  <data name="Settings_HotkeyClear" xml:space="preserve"><value>清除</value></data>
+  <data name="Settings_HotkeyHint" xml:space="preserve"><value>单击某个热键，然后按下新的组合键。Esc 取消，Backspace 清除。热键仅在启动状态下生效。</value></data>
+  <data name="Settings_HotkeyMonitorDescription" xml:space="preserve"><value>截取鼠标指针所在的屏幕。</value></data>
+  <data name="Settings_HotkeyRecord" xml:space="preserve"><value>录制…</value></data>
+  <data name="Settings_HotkeyRegionDescription" xml:space="preserve"><value>冻结所有屏幕，让你拖动选择一个区域。</value></data>
+  <data name="Settings_HotkeyReset" xml:space="preserve"><value>重置</value></data>
+  <data name="Settings_HotkeysSection" xml:space="preserve"><value>热键</value></data>
+  <data name="Settings_HotkeyWindowDescription" xml:space="preserve"><value>截取已锁定的窗口，或前台窗口。</value></data>
+  <data name="Settings_Import" xml:space="preserve"><value>导入…</value></data>
+  <data name="Settings_ImportFailed" xml:space="preserve"><value>无法导入这些设置。</value></data>
+  <data name="Settings_ImportSettings" xml:space="preserve"><value>导入设置</value></data>
+  <data name="Settings_IncludeCursor" xml:space="preserve"><value>包含鼠标指针</value></data>
+  <data name="Settings_IncludeWindowFrame" xml:space="preserve"><value>包含窗口边框</value></data>
+  <data name="Settings_IncludeWindowFrameHint" xml:space="preserve"><value>截取窗口时保留标题栏和边框。</value></data>
+  <data name="Settings_JpegQuality" xml:space="preserve"><value>JPEG 质量</value></data>
+  <data name="Settings_Language" xml:space="preserve"><value>语言</value></data>
+  <data name="Settings_LanguageHint" xml:space="preserve"><value>更改会立即生效。</value></data>
+  <data name="Settings_LogLevel" xml:space="preserve"><value>最低日志级别</value></data>
+  <data name="Settings_LogLevelDebug" xml:space="preserve"><value>调试</value></data>
+  <data name="Settings_LogLevelError" xml:space="preserve"><value>仅错误</value></data>
+  <data name="Settings_LogLevelHint" xml:space="preserve"><value>过滤滚动日志文件和查看器。支持诊断时选 Debug,日常使用选 Information,如需安静可选 Warning 或 Error。</value></data>
+  <data name="Settings_LogLevelInformation" xml:space="preserve"><value>信息</value></data>
+  <data name="Settings_LogLevelWarning" xml:space="preserve"><value>警告</value></data>
+  <data name="Settings_MinimizeToTray" xml:space="preserve"><value>关闭按钮最小化到系统托盘</value></data>
+  <data name="Settings_OpenFolder" xml:space="preserve"><value>打开文件夹</value></data>
   <data name="Settings_OpenFolderAfterSave" xml:space="preserve"><value>保存后打开输出文件夹</value></data>
-  <data name="Toast_Countdown" xml:space="preserve"><value>{0} 秒后拍摄…</value></data>
+  <data name="Settings_OutputFolder" xml:space="preserve"><value>输出文件夹</value></data>
+  <data name="Settings_OutputFolderUnavailable" xml:space="preserve"><value>无法打开输出文件夹。</value></data>
+  <data name="Settings_OutputSection" xml:space="preserve"><value>输出</value></data>
+  <data name="Settings_PngBalanced" xml:space="preserve"><value>均衡</value></data>
+  <data name="Settings_PngCompression" xml:space="preserve"><value>PNG 压缩</value></data>
+  <data name="Settings_PngCompressionHint" xml:space="preserve"><value>文件越小，保存越慢。</value></data>
+  <data name="Settings_PngFast" xml:space="preserve"><value>快速（文件较大）</value></data>
+  <data name="Settings_PngSmallest" xml:space="preserve"><value>最小（较慢）</value></data>
+  <data name="Settings_PreviewBeforeSave" xml:space="preserve"><value>保存前预览每张截图</value></data>
+  <data name="Settings_Reset" xml:space="preserve"><value>重置</value></data>
+  <data name="Settings_ResetDone" xml:space="preserve"><value>已恢复默认设置</value></data>
+  <data name="Settings_ResetMessage" xml:space="preserve"><value>要将所有设置恢复为默认值吗？会先备份当前文件，并保留你的语言设置。</value></data>
+  <data name="Settings_ResetSettings" xml:space="preserve"><value>重置所有设置</value></data>
+  <data name="Settings_ResetSettingsHint" xml:space="preserve"><value>当前文件的备份会保存在数据文件夹中。</value></data>
+  <data name="Settings_ResetTitle" xml:space="preserve"><value>重置设置</value></data>
+  <data name="Settings_ResetToDefault" xml:space="preserve"><value>恢复默认</value></data>
+  <data name="Settings_SaveHdrSidecar" xml:space="preserve"><value>保留原始 HDR 图像</value></data>
+  <data name="Settings_SaveHdrSidecarHint" xml:space="preserve"><value>在每张 HDR 截图旁另存一个 JPEG XR (.jxr) 文件。</value></data>
+  <data name="Settings_ShowNotifications" xml:space="preserve"><value>显示通知</value></data>
+  <data name="Settings_SoundEnabled" xml:space="preserve"><value>播放截图音效</value></data>
+  <data name="Settings_StartMinimized" xml:space="preserve"><value>启动时最小化到系统托盘</value></data>
+  <data name="Settings_StartupSection" xml:space="preserve"><value>启动</value></data>
+  <data name="Settings_StartWithWindows" xml:space="preserve"><value>开机时启动</value></data>
+  <data name="Settings_StartWithWindowsFailed" xml:space="preserve"><value>无法更改开机启动设置。</value></data>
+  <data name="Settings_Subtitle" xml:space="preserve"><value>更改会自动保存。</value></data>
+  <data name="Settings_Theme" xml:space="preserve"><value>主题</value></data>
+  <data name="Settings_ThemeDark" xml:space="preserve"><value>深色</value></data>
+  <data name="Settings_ThemeHighContrast" xml:space="preserve"><value>高对比度</value></data>
+  <data name="Settings_ThemeLight" xml:space="preserve"><value>浅色</value></data>
+  <data name="Settings_ThemeSystem" xml:space="preserve"><value>系统</value></data>
+  <data name="Settings_Title" xml:space="preserve"><value>设置</value></data>
+  <data name="Settings_WebpQuality" xml:space="preserve"><value>WebP 质量</value></data>
+
+  <data name="Status_Armed" xml:space="preserve"><value>已启动 — 按截图热键即可截图。</value></data>
+  <data name="Status_ArmedLocked" xml:space="preserve"><value>已启动 — 窗口热键将截取 {0}。</value></data>
+  <data name="Status_Capturing" xml:space="preserve"><value>正在截图…</value></data>
+  <data name="Status_Idle" xml:space="preserve"><value>未启动 — 截图热键已关闭。</value></data>
+  <data name="Status_Saving" xml:space="preserve"><value>正在保存…</value></data>
+  <data name="Status_Selecting" xml:space="preserve"><value>拖动以选择区域（Esc 取消）。</value></data>
+
+  <data name="Toast_AutoArmed" xml:space="preserve"><value>已为此游戏启动热键</value></data>
+  <data name="Toast_CaptureFailed" xml:space="preserve"><value>截图失败</value></data>
+  <data name="Toast_CaptureSaved" xml:space="preserve"><value>截图已保存</value></data>
+  <data name="Toast_CaptureSavedCopied" xml:space="preserve"><value>{0}（也已复制到剪贴板）</value></data>
   <data name="Toast_ClipboardCopied" xml:space="preserve"><value>已复制到剪贴板</value></data>
-
-  <!-- v1.5 pinned thumbnail -->
-  <data name="Settings_AutoPinAfterCapture" xml:space="preserve"><value>每次拍摄后固定一个浮动缩略图</value></data>
-  <data name="PinnedWindow_Open" xml:space="preserve"><value>在资源管理器中显示</value></data>
-  <data name="PinnedWindow_Close" xml:space="preserve"><value>关闭</value></data>
-
-  <!-- v1.5 OCR -->
-  <data name="Preview_ExtractText" xml:space="preserve"><value>提取文字 (OCR)</value></data>
-  <data name="Toast_OcrSuccess" xml:space="preserve"><value>已复制 {0} 个词</value></data>
+  <data name="Toast_Countdown" xml:space="preserve"><value>{0} 秒后拍摄…</value></data>
+  <data name="Toast_CountdownTitle" xml:space="preserve"><value>截图倒计时</value></data>
+  <data name="Toast_Error" xml:space="preserve"><value>错误</value></data>
   <data name="Toast_OcrEmpty" xml:space="preserve"><value>图像中未发现文字</value></data>
+  <data name="Toast_OcrFailed" xml:space="preserve"><value>文字识别失败。</value></data>
+  <data name="Toast_OcrSuccess" xml:space="preserve"><value>已复制 {0} 个词</value></data>
   <data name="Toast_OcrUnavailable" xml:space="preserve"><value>该语言的 OCR 引擎不可用</value></data>
+  <data name="Toast_PathCopied" xml:space="preserve"><value>已复制路径</value></data>
+  <data name="Toast_SettingsExported" xml:space="preserve"><value>设置已导出</value></data>
+  <data name="Toast_SettingsImported" xml:space="preserve"><value>设置已导入</value></data>
 
-  <!-- v1.5 region capture -->
-  <data name="Settings_CaptureMode" xml:space="preserve"><value>拍摄模式</value></data>
-  <data name="Settings_CaptureModeWindow" xml:space="preserve"><value>单个窗口</value></data>
-  <data name="Settings_CaptureModeRegion" xml:space="preserve"><value>区域(拖动选择)</value></data>
-  <data name="Region_TargetName" xml:space="preserve"><value>区域</value></data>
-  <data name="Region_DragHint" xml:space="preserve"><value>拖动一个矩形。按 Esc 取消。</value></data>
+  <data name="Tray_Arm" xml:space="preserve"><value>启动热键</value></data>
+  <data name="Tray_CaptureMonitor" xml:space="preserve"><value>截取屏幕</value></data>
+  <data name="Tray_CaptureRegion" xml:space="preserve"><value>截取区域</value></data>
+  <data name="Tray_CaptureWindow" xml:space="preserve"><value>截取窗口</value></data>
+  <data name="Tray_Disarm" xml:space="preserve"><value>停止热键</value></data>
+  <data name="Tray_Exit" xml:space="preserve"><value>退出</value></data>
+  <data name="Tray_OpenFolder" xml:space="preserve"><value>打开截图文件夹</value></data>
+  <data name="Tray_ShowWindow" xml:space="preserve"><value>显示 CaptureImage</value></data>
+
+  <data name="Update_Check" xml:space="preserve"><value>检查更新</value></data>
+  <data name="Update_CurrentVersion" xml:space="preserve"><value>已安装版本：</value></data>
+  <data name="Update_Download" xml:space="preserve"><value>下载</value></data>
+  <data name="Update_Install" xml:space="preserve"><value>安装并重启</value></data>
+  <data name="Update_Log" xml:space="preserve"><value>日志</value></data>
+  <data name="Update_OpenReleases" xml:space="preserve"><value>发布页面</value></data>
+  <data name="Update_Progress" xml:space="preserve"><value>更新进度</value></data>
+  <data name="Update_ReleaseNotes" xml:space="preserve"><value>发行说明</value></data>
+  <data name="Update_Status_Checking" xml:space="preserve"><value>正在检查更新…</value></data>
+  <data name="Update_Status_Downloading" xml:space="preserve"><value>正在下载更新…</value></data>
+  <data name="Update_Status_Failed" xml:space="preserve"><value>出现问题。详情请查看下方日志。</value></data>
+  <data name="Update_Status_Idle" xml:space="preserve"><value>在 GitHub 上检查新版本。</value></data>
+  <data name="Update_Status_Installing" xml:space="preserve"><value>正在安装 — CaptureImage 即将重新启动…</value></data>
+  <data name="Update_Status_Ready" xml:space="preserve"><value>更新已就绪。重新启动即可安装。</value></data>
+  <data name="Update_Status_Unavailable" xml:space="preserve"><value>仅安装版支持更新（便携版 zip 或源码构建不支持）。</value></data>
+  <data name="Update_Status_UpdateAvailable" xml:space="preserve"><value>有新版本 {0} 可用。</value></data>
+  <data name="Update_Status_UpToDate" xml:space="preserve"><value>你使用的是最新版本。</value></data>
+  <data name="Update_Subtitle" xml:space="preserve"><value>更新来自 GitHub Releases，将在 CaptureImage 重新启动时安装。</value></data>
+  <data name="Update_Title" xml:space="preserve"><value>更新</value></data>
 
 </root>

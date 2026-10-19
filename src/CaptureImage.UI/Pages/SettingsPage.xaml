@@ -1,0 +1,512 @@
+<Page
+    x:Class="CaptureImage.UI.Pages.SettingsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:CaptureImage.UI.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:loc="clr-namespace:CaptureImage.UI.Localization"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+    xmlns:vm="clr-namespace:CaptureImage.ViewModels.Settings;assembly=CaptureImage.ViewModels"
+    Title="{loc:Tr Nav_Settings}"
+    d:DataContext="{d:DesignInstance Type=vm:SettingsViewModel}"
+    ScrollViewer.CanContentScroll="False"
+    AutomationProperties.AutomationId="SettingsPage"
+    mc:Ignorable="d">
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="24,12,32,24">
+            <TextBlock Style="{StaticResource PageTitle}" Text="{loc:Tr Settings_Title}" />
+            <TextBlock Style="{StaticResource PageSubtitle}" Text="{loc:Tr Settings_Subtitle}" />
+
+            <!--  Hotkeys  -->
+            <TextBlock Style="{StaticResource SectionHeader}" Text="{loc:Tr Settings_HotkeysSection}" />
+            <TextBlock
+                Margin="0,0,0,8"
+                Style="{StaticResource CaptionText}"
+                Text="{loc:Tr Settings_HotkeyHint}" />
+            <ItemsControl Focusable="False" ItemsSource="{Binding Hotkeys}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate DataType="{x:Type vm:HotkeyBindingViewModel}">
+                        <ui:CardControl Icon="{ui:SymbolIcon Keyboard24}" Margin="0,0,0,4">
+                            <ui:CardControl.Header>
+                                <StackPanel>
+                                    <TextBlock Text="{Binding ModeName}" />
+                                    <TextBlock Style="{StaticResource CaptionText}" Text="{Binding Description}" />
+                                    <TextBlock
+                                        Margin="0,2,0,0"
+                                        AutomationProperties.LiveSetting="Assertive"
+                                        Style="{StaticResource ErrorText}"
+                                        Text="{Binding Message}"
+                                        Visibility="{Binding HasError, Converter={StaticResource BoolToVisibility}}" />
+                                </StackPanel>
+                            </ui:CardControl.Header>
+                            <StackPanel Orientation="Horizontal">
+                                <ui:Button
+                                    MinWidth="170"
+                                    controls:HotkeyRecorder.IsEnabled="True"
+                                    Appearance="{Binding IsRecording, Converter={StaticResource RecordingAppearance}}"
+                                    AutomationProperties.AutomationId="{Binding Mode, StringFormat=Hotkey_{0}_Record}"
+                                    AutomationProperties.Name="{Binding ModeName}"
+                                    Command="{Binding StartRecordingCommand}"
+                                    Content="{Binding DisplayText}"
+                                    ToolTip="{loc:Tr Settings_HotkeyRecord}">
+                                </ui:Button>
+                                <ui:Button
+                                    Margin="8,0,0,0"
+                                    AutomationProperties.AutomationId="{Binding Mode, StringFormat=Hotkey_{0}_Clear}"
+                                    AutomationProperties.Name="{loc:Tr Settings_HotkeyClear}"
+                                    Command="{Binding ClearCommand}"
+                                    Icon="{ui:SymbolIcon Dismiss24}"
+                                    ToolTip="{loc:Tr Settings_HotkeyClear}" />
+                                <ui:Button
+                                    Margin="8,0,0,0"
+                                    AutomationProperties.AutomationId="{Binding Mode, StringFormat=Hotkey_{0}_Reset}"
+                                    AutomationProperties.Name="{loc:Tr Settings_HotkeyReset}"
+                                    Command="{Binding ResetToDefaultCommand}"
+                                    Icon="{ui:SymbolIcon ArrowReset24}"
+                                    ToolTip="{loc:Tr Settings_HotkeyReset}" />
+                            </StackPanel>
+                        </ui:CardControl>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+
+            <!--  Capture  -->
+            <TextBlock Style="{StaticResource SectionHeader}" Text="{loc:Tr Settings_CaptureSection}" />
+            <ui:CardControl Icon="{ui:SymbolIcon Image24}" Margin="0,0,0,4">
+                <ui:CardControl.Header>
+                    <TextBlock Text="{loc:Tr Settings_Format}" />
+                </ui:CardControl.Header>
+                <ComboBox
+                    MinWidth="180"
+                    AutomationProperties.AutomationId="Settings_Format"
+                    AutomationProperties.Name="{loc:Tr Settings_Format}"
+                    DisplayMemberPath="Label"
+                    ItemsSource="{Binding Formats}"
+                    SelectedValue="{Binding DefaultFormat}"
+                    SelectedValuePath="Value" />
+            </ui:CardControl>
+            <ui:CardControl
+                Icon="{ui:SymbolIcon DataHistogram24}"
+                Margin="0,0,0,4"
+                Visibility="{Binding IsJpeg, Converter={StaticResource BoolToVisibility}}">
+                <ui:CardControl.Header>
+                    <TextBlock Text="{loc:Tr Settings_JpegQuality}" />
+                </ui:CardControl.Header>
+                <StackPanel Orientation="Horizontal">
+                    <Slider
+                        Width="200"
+                        VerticalAlignment="Center"
+                        AutomationProperties.AutomationId="Settings_JpegQuality"
+                        AutomationProperties.Name="{loc:Tr Settings_JpegQuality}"
+                        IsSnapToTickEnabled="True"
+                        Maximum="100"
+                        Minimum="50"
+                        TickFrequency="1"
+                        Value="{Binding JpegQuality, Delay=250}" />
+                    <TextBlock
+                        Width="32"
+                        Margin="8,0,0,0"
+                        VerticalAlignment="Center"
+                        Text="{Binding JpegQuality}"
+                        TextAlignment="Right" />
+                </StackPanel>
+            </ui:CardControl>
+            <ui:CardControl
+                Icon="{ui:SymbolIcon DataHistogram24}"
+                Margin="0,0,0,4"
+                Visibility="{Binding IsWebp, Converter={StaticResource BoolToVisibility}}">
+                <ui:CardControl.Header>
+                    <TextBlock Text="{loc:Tr Settings_WebpQuality}" />
+                </ui:CardControl.Header>
+                <StackPanel Orientation="Horizontal">
+                    <Slider
+                        Width="200"
+                        VerticalAlignment="Center"
+                        AutomationProperties.AutomationId="Settings_WebpQuality"
+                        AutomationProperties.Name="{loc:Tr Settings_WebpQuality}"
+                        IsSnapToTickEnabled="True"
+                        Maximum="100"
+                        Minimum="50"
+                        TickFrequency="1"
+                        Value="{Binding WebpQuality, Delay=250}" />
+                    <TextBlock
+                        Width="32"
+                        Margin="8,0,0,0"
+                        VerticalAlignment="Center"
+                        Text="{Binding WebpQuality}"
+                        TextAlignment="Right" />
+                </StackPanel>
+            </ui:CardControl>
+            <ui:CardControl
+                Icon="{ui:SymbolIcon DataHistogram24}"
+                Margin="0,0,0,4"
+                Visibility="{Binding IsPng, Converter={StaticResource BoolToVisibility}}">
+                <ui:CardControl.Header>
+                    <StackPanel>
+                        <TextBlock Text="{loc:Tr Settings_PngCompression}" />
+                        <TextBlock Style="{StaticResource CaptionText}" Text="{loc:Tr Settings_PngCompressionHint}" />
+                    </StackPanel>
+                </ui:CardControl.Header>
+                <ComboBox
+                    MinWidth="180"
+                    AutomationProperties.AutomationId="Settings_PngCompression"
+                    AutomationProperties.Name="{loc:Tr Settings_PngCompression}"
+                    DisplayMemberPath="Label"
+                    ItemsSource="{Binding PngCompressionOptions}"
+                    SelectedValue="{Binding PngCompression}"
+                    SelectedValuePath="Value" />
+            </ui:CardControl>
+            <ui:CardControl Icon="{ui:SymbolIcon Timer24}" Margin="0,0,0,4">
+                <ui:CardControl.Header>
+                    <TextBlock Text="{loc:Tr Settings_Countdown}" />
+                </ui:CardControl.Header>
+                <ComboBox
+                    MinWidth="180"
+                    AutomationProperties.AutomationId="Settings_Countdown"
+                    AutomationProperties.Name="{loc:Tr Settings_Countdown}"
+                    DisplayMemberPath="Label"
+                    ItemsSource="{Binding CountdownOptions}"
+                    SelectedValue="{Binding CountdownSeconds}"
+                    SelectedValuePath="Value" />
+            </ui:CardControl>
+            <ui:CardControl Icon="{ui:SymbolIcon ClipboardPaste24}" Margin="0,0,0,4">
+                <ui:CardControl.Header>
+                    <TextBlock Text="{loc:Tr Settings_Clipboard}" />
+                </ui:CardControl.Header>
+                <ComboBox
+                    MinWidth="180"
+                    AutomationProperties.AutomationId="Settings_Clipboard"
+                    AutomationProperties.Name="{loc:Tr Settings_Clipboard}"
+                    DisplayMemberPath="Label"
+                    ItemsSource="{Binding ClipboardOptions}"
+                    SelectedValue="{Binding ClipboardMode}"
+                    SelectedValuePath="Value" />
+            </ui:CardControl>
+            <ui:CardControl Icon="{ui:SymbolIcon Eye24}" Margin="0,0,0,4">
+                <ui:CardControl.Header>
+                    <TextBlock Text="{loc:Tr Settings_PreviewBeforeSave}" />
+                </ui:CardControl.Header>
+                <ui:ToggleSwitch
+                    AutomationProperties.AutomationId="Settings_PreviewBeforeSave"
+                    AutomationProperties.Name="{loc:Tr Settings_PreviewBeforeSave}"
+                    IsChecked="{Binding PreviewBeforeSave}" />
+            </ui:CardControl>
+            <ui:CardControl Icon="{ui:SymbolIcon Cursor24}" Margin="0,0,0,4">
+                <ui:CardControl.Header>
+                    <TextBlock Text="{loc:Tr Settings_IncludeCursor}" />
+                </ui:CardControl.Header>
+                <ui:ToggleSwitch
+                    AutomationProperties.AutomationId="Settings_IncludeCursor"
+                    AutomationProperties.Name="{loc:Tr Settings_IncludeCursor}"
+                    IsChecked="{Binding IncludeCursor}" />
+            </ui:CardControl>
+            <ui:CardControl Icon="{ui:SymbolIcon Window24}" Margin="0,0,0,4">
+                <ui:CardControl.Header>
+                    <StackPanel>
+                        <TextBlock Text="{loc:Tr Settings_IncludeWindowFrame}" />
+                        <TextBlock Style="{StaticResource CaptionText}" Text="{loc:Tr Settings_IncludeWindowFrameHint}" />
+                    </StackPanel>
+                </ui:CardControl.Header>
+                <ui:ToggleSwitch
+                    AutomationProperties.AutomationId="Settings_IncludeWindowFrame"
+                    AutomationProperties.Name="{loc:Tr Settings_IncludeWindowFrame}"
+                    IsChecked="{Binding IncludeWindowFrame}" />
+            </ui:CardControl>
+
+            <!--  HDR  -->
+            <TextBlock Style="{StaticResource SectionHeader}" Text="{loc:Tr Settings_HdrSection}" />
+            <ui:CardControl Icon="{ui:SymbolIcon Hdr24}" Margin="0,0,0,4">
+                <ui:CardControl.Header>
+                    <StackPanel>
+                        <TextBlock Text="{loc:Tr Settings_HdrMode}" />
+                        <TextBlock Style="{StaticResource CaptionText}" Text="{loc:Tr Settings_HdrModeHint}" />
+                    </StackPanel>
+                </ui:CardControl.Header>
+                <ComboBox
+                    MinWidth="180"
+                    AutomationProperties.AutomationId="Settings_HdrMode"
+                    AutomationProperties.Name="{loc:Tr Settings_HdrMode}"
+                    DisplayMemberPath="Label"
+                    ItemsSource="{Binding HdrOptions}"
+                    SelectedValue="{Binding HdrMode}"
+                    SelectedValuePath="Value" />
+            </ui:CardControl>
+            <ui:CardControl Icon="{ui:SymbolIcon Save24}" Margin="0,0,0,4">
+                <ui:CardControl.Header>
+                    <StackPanel>
+                        <TextBlock Text="{loc:Tr Settings_SaveHdrSidecar}" />
+                        <TextBlock Style="{StaticResource CaptionText}" Text="{loc:Tr Settings_SaveHdrSidecarHint}" />
+                    </StackPanel>
+                </ui:CardControl.Header>
+                <ui:ToggleSwitch
+                    AutomationProperties.AutomationId="Settings_SaveHdrSidecar"
+                    AutomationProperties.Name="{loc:Tr Settings_SaveHdrSidecar}"
+                    IsChecked="{Binding SaveHdrSidecar}" />
+            </ui:CardControl>
+
+            <!--  Output  -->
+            <TextBlock Style="{StaticResource SectionHeader}" Text="{loc:Tr Settings_OutputSection}" />
+            <ui:CardControl Icon="{ui:SymbolIcon Folder24}" Margin="0,0,0,4">
+                <ui:CardControl.Header>
+                    <StackPanel>
+                        <TextBlock Text="{loc:Tr Settings_OutputFolder}" />
+                        <TextBlock
+                            AutomationProperties.AutomationId="Settings_OutputFolderPath"
+                            Style="{StaticResource CaptionText}"
+                            Text="{Binding EffectiveOutputDirectory}"
+                            TextTrimming="CharacterEllipsis"
+                            TextWrapping="NoWrap" />
+                    </StackPanel>
+                </ui:CardControl.Header>
+                <StackPanel Orientation="Horizontal">
+                    <ui:Button
+                        AutomationProperties.AutomationId="Settings_BrowseOutput"
+                        Command="{Binding BrowseOutputFolderCommand}"
+                        Content="{loc:Tr Common_Browse}" />
+                    <ui:Button
+                        Margin="8,0,0,0"
+                        AutomationProperties.AutomationId="Settings_OpenOutput"
+                        AutomationProperties.Name="{loc:Tr Settings_OpenFolder}"
+                        Command="{Binding OpenOutputFolderCommand}"
+                        Icon="{ui:SymbolIcon FolderOpen24}"
+                        ToolTip="{loc:Tr Settings_OpenFolder}" />
+                    <ui:Button
+                        Margin="8,0,0,0"
+                        AutomationProperties.AutomationId="Settings_ResetOutput"
+                        AutomationProperties.Name="{loc:Tr Settings_ResetToDefault}"
+                        Command="{Binding ResetOutputFolderCommand}"
+                        Icon="{ui:SymbolIcon ArrowReset24}"
+                        ToolTip="{loc:Tr Settings_ResetToDefault}"
+                        Visibility="{Binding HasCustomOutputDirectory, Converter={StaticResource BoolToVisibility}}" />
+                </StackPanel>
+            </ui:CardControl>
+            <ui:CardControl Icon="{ui:SymbolIcon TextT24}" Margin="0,0,0,4">
+                <ui:CardControl.Header>
+                    <StackPanel>
+                        <TextBlock Text="{loc:Tr Settings_FileNameTemplate}" />
+                        <TextBlock Style="{StaticResource CaptionText}" Text="{loc:Tr Settings_FileNameTokens}" />
+                        <StackPanel Margin="0,2,0,0" Orientation="Horizontal">
+                            <TextBlock Style="{StaticResource CaptionText}" Text="{loc:Tr Settings_FileNamePreview}" />
+                            <TextBlock
+                                Margin="4,0,0,0"
+                                AutomationProperties.AutomationId="Settings_FileNamePreview"
+                                FontWeight="SemiBold"
+                                Style="{StaticResource CaptionText}"
+                                Text="{Binding FileNamePreview}" />
+                        </StackPanel>
+                    </StackPanel>
+                </ui:CardControl.Header>
+                <StackPanel Orientation="Horizontal">
+                    <ui:TextBox
+                        Width="300"
+                        AutomationProperties.AutomationId="Settings_FileNameTemplate"
+                        AutomationProperties.Name="{loc:Tr Settings_FileNameTemplate}"
+                        Text="{Binding FileNameTemplate, UpdateSourceTrigger=PropertyChanged, Delay=300}" />
+                    <ui:Button
+                        Margin="8,0,0,0"
+                        AutomationProperties.AutomationId="Settings_ResetTemplate"
+                        AutomationProperties.Name="{loc:Tr Settings_ResetToDefault}"
+                        Command="{Binding ResetFileNameTemplateCommand}"
+                        Icon="{ui:SymbolIcon ArrowReset24}"
+                        ToolTip="{loc:Tr Settings_ResetToDefault}" />
+                </StackPanel>
+            </ui:CardControl>
+            <ui:CardControl Icon="{ui:SymbolIcon FolderOpen24}" Margin="0,0,0,4">
+                <ui:CardControl.Header>
+                    <TextBlock Text="{loc:Tr Settings_OpenFolderAfterSave}" />
+                </ui:CardControl.Header>
+                <ui:ToggleSwitch
+                    AutomationProperties.AutomationId="Settings_OpenFolderAfterSave"
+                    AutomationProperties.Name="{loc:Tr Settings_OpenFolderAfterSave}"
+                    IsChecked="{Binding OpenFolderAfterSave}" />
+            </ui:CardControl>
+            <ui:CardControl Icon="{ui:SymbolIcon Pin24}" Margin="0,0,0,4">
+                <ui:CardControl.Header>
+                    <TextBlock Text="{loc:Tr Settings_AutoPinAfterCapture}" />
+                </ui:CardControl.Header>
+                <ui:ToggleSwitch
+                    AutomationProperties.AutomationId="Settings_AutoPin"
+                    AutomationProperties.Name="{loc:Tr Settings_AutoPinAfterCapture}"
+                    IsChecked="{Binding AutoPinAfterCapture}" />
+            </ui:CardControl>
+
+            <!--  Behaviour  -->
+            <TextBlock Style="{StaticResource SectionHeader}" Text="{loc:Tr Settings_BehaviorSection}" />
+            <ui:CardControl Icon="{ui:SymbolIcon Alert24}" Margin="0,0,0,4">
+                <ui:CardControl.Header>
+                    <TextBlock Text="{loc:Tr Settings_ShowNotifications}" />
+                </ui:CardControl.Header>
+                <ui:ToggleSwitch
+                    AutomationProperties.AutomationId="Settings_ShowNotifications"
+                    AutomationProperties.Name="{loc:Tr Settings_ShowNotifications}"
+                    IsChecked="{Binding ShowNotifications}" />
+            </ui:CardControl>
+            <ui:CardControl Icon="{ui:SymbolIcon Speaker224}" Margin="0,0,0,4">
+                <ui:CardControl.Header>
+                    <TextBlock Text="{loc:Tr Settings_SoundEnabled}" />
+                </ui:CardControl.Header>
+                <ui:ToggleSwitch
+                    AutomationProperties.AutomationId="Settings_Sound"
+                    AutomationProperties.Name="{loc:Tr Settings_SoundEnabled}"
+                    IsChecked="{Binding SoundEnabled}" />
+            </ui:CardControl>
+            <ui:CardControl Icon="{ui:SymbolIcon WindowApps24}" Margin="0,0,0,4">
+                <ui:CardControl.Header>
+                    <TextBlock Text="{loc:Tr Settings_MinimizeToTray}" />
+                </ui:CardControl.Header>
+                <ui:ToggleSwitch
+                    AutomationProperties.AutomationId="Settings_MinimizeToTray"
+                    AutomationProperties.Name="{loc:Tr Settings_MinimizeToTray}"
+                    IsChecked="{Binding MinimizeToTray}" />
+            </ui:CardControl>
+            <ui:CardControl Icon="{ui:SymbolIcon Keyboard24}" Margin="0,0,0,4">
+                <ui:CardControl.Header>
+                    <StackPanel>
+                        <TextBlock Text="{loc:Tr Settings_ArmOnStartup}" />
+                        <TextBlock Style="{StaticResource CaptionText}" Text="{loc:Tr Settings_ArmOnStartupHint}" />
+                    </StackPanel>
+                </ui:CardControl.Header>
+                <ui:ToggleSwitch
+                    AutomationProperties.AutomationId="Settings_ArmOnStartup"
+                    AutomationProperties.Name="{loc:Tr Settings_ArmOnStartup}"
+                    IsChecked="{Binding ArmOnStartup}" />
+            </ui:CardControl>
+
+            <!--  Startup  -->
+            <TextBlock Style="{StaticResource SectionHeader}" Text="{loc:Tr Settings_StartupSection}" />
+            <ui:CardControl Icon="{ui:SymbolIcon Rocket24}" Margin="0,0,0,4">
+                <ui:CardControl.Header>
+                    <TextBlock Text="{loc:Tr Settings_StartWithWindows}" />
+                </ui:CardControl.Header>
+                <ui:ToggleSwitch
+                    AutomationProperties.AutomationId="Settings_StartWithWindows"
+                    AutomationProperties.Name="{loc:Tr Settings_StartWithWindows}"
+                    IsChecked="{Binding StartWithWindows}" />
+            </ui:CardControl>
+            <ui:CardControl Icon="{ui:SymbolIcon FullScreenMaximize24}" Margin="0,0,0,4">
+                <ui:CardControl.Header>
+                    <TextBlock Text="{loc:Tr Settings_StartMinimized}" />
+                </ui:CardControl.Header>
+                <ui:ToggleSwitch
+                    AutomationProperties.AutomationId="Settings_StartMinimized"
+                    AutomationProperties.Name="{loc:Tr Settings_StartMinimized}"
+                    IsChecked="{Binding StartMinimized}" />
+            </ui:CardControl>
+
+            <!--  Appearance  -->
+            <TextBlock Style="{StaticResource SectionHeader}" Text="{loc:Tr Settings_AppearanceSection}" />
+            <ui:CardControl Icon="{ui:SymbolIcon DarkTheme24}" Margin="0,0,0,4">
+                <ui:CardControl.Header>
+                    <TextBlock Text="{loc:Tr Settings_Theme}" />
+                </ui:CardControl.Header>
+                <ComboBox
+                    MinWidth="200"
+                    AutomationProperties.AutomationId="Settings_Theme"
+                    AutomationProperties.Name="{loc:Tr Settings_Theme}"
+                    DisplayMemberPath="Label"
+                    ItemsSource="{Binding ThemeOptions}"
+                    SelectedValue="{Binding Theme}"
+                    SelectedValuePath="Value" />
+            </ui:CardControl>
+            <ui:CardControl Icon="{ui:SymbolIcon Translate24}" Margin="0,0,0,4">
+                <ui:CardControl.Header>
+                    <StackPanel>
+                        <TextBlock Text="{loc:Tr Settings_Language}" />
+                        <TextBlock Style="{StaticResource CaptionText}" Text="{loc:Tr Settings_LanguageHint}" />
+                    </StackPanel>
+                </ui:CardControl.Header>
+                <ComboBox
+                    MinWidth="200"
+                    AutomationProperties.AutomationId="Settings_Language"
+                    AutomationProperties.Name="{loc:Tr Settings_Language}"
+                    DisplayMemberPath="Label"
+                    ItemsSource="{Binding Languages}"
+                    SelectedValue="{Binding Language}"
+                    SelectedValuePath="Value" />
+            </ui:CardControl>
+
+            <!--  Advanced  -->
+            <TextBlock Style="{StaticResource SectionHeader}" Text="{loc:Tr Settings_AdvancedSection}" />
+            <ui:CardControl Icon="{ui:SymbolIcon DocumentText24}" Margin="0,0,0,4">
+                <ui:CardControl.Header>
+                    <StackPanel>
+                        <TextBlock Text="{loc:Tr Settings_LogLevel}" />
+                        <TextBlock Style="{StaticResource CaptionText}" Text="{loc:Tr Settings_LogLevelHint}" />
+                    </StackPanel>
+                </ui:CardControl.Header>
+                <ComboBox
+                    MinWidth="180"
+                    AutomationProperties.AutomationId="Settings_LogLevel"
+                    AutomationProperties.Name="{loc:Tr Settings_LogLevel}"
+                    DisplayMemberPath="Label"
+                    ItemsSource="{Binding LogLevelOptions}"
+                    SelectedValue="{Binding LogLevel}"
+                    SelectedValuePath="Value" />
+            </ui:CardControl>
+            <ui:CardControl Icon="{ui:SymbolIcon Folder24}" Margin="0,0,0,4">
+                <ui:CardControl.Header>
+                    <StackPanel>
+                        <TextBlock Text="{loc:Tr Settings_DataFolder}" />
+                        <TextBlock
+                            Style="{StaticResource CaptionText}"
+                            Text="{Binding DataDirectory}"
+                            TextTrimming="CharacterEllipsis"
+                            TextWrapping="NoWrap" />
+                    </StackPanel>
+                </ui:CardControl.Header>
+                <ui:Button
+                    AutomationProperties.AutomationId="Settings_OpenDataFolder"
+                    Command="{Binding OpenDataFolderCommand}"
+                    Content="{loc:Tr Settings_OpenFolder}" />
+            </ui:CardControl>
+            <ui:CardControl Icon="{ui:SymbolIcon Bug24}" Margin="0,0,0,4">
+                <ui:CardControl.Header>
+                    <StackPanel>
+                        <TextBlock Text="{loc:Tr Settings_ExportDiagnostics}" />
+                        <TextBlock Style="{StaticResource CaptionText}" Text="{loc:Tr Settings_ExportDiagnosticsHint}" />
+                    </StackPanel>
+                </ui:CardControl.Header>
+                <ui:Button
+                    AutomationProperties.AutomationId="Settings_ExportDiagnostics"
+                    Command="{Binding ExportDiagnosticsCommand}"
+                    Content="{loc:Tr Settings_ExportDiagnosticsButton}" />
+            </ui:CardControl>
+            <ui:CardControl Icon="{ui:SymbolIcon ArrowExport24}" Margin="0,0,0,4">
+                <ui:CardControl.Header>
+                    <TextBlock Text="{loc:Tr Settings_BackupSettings}" />
+                </ui:CardControl.Header>
+                <StackPanel Orientation="Horizontal">
+                    <ui:Button
+                        AutomationProperties.AutomationId="Settings_Export"
+                        Command="{Binding ExportSettingsCommand}"
+                        Content="{loc:Tr Settings_Export}"
+                        Icon="{ui:SymbolIcon ArrowExport24}" />
+                    <ui:Button
+                        Margin="8,0,0,0"
+                        AutomationProperties.AutomationId="Settings_Import"
+                        Command="{Binding ImportSettingsCommand}"
+                        Content="{loc:Tr Settings_Import}"
+                        Icon="{ui:SymbolIcon ArrowImport24}" />
+                </StackPanel>
+            </ui:CardControl>
+            <ui:CardControl Icon="{ui:SymbolIcon ArrowReset24}" Margin="0,0,0,4">
+                <ui:CardControl.Header>
+                    <StackPanel>
+                        <TextBlock Text="{loc:Tr Settings_ResetSettings}" />
+                        <TextBlock Style="{StaticResource CaptionText}" Text="{loc:Tr Settings_ResetSettingsHint}" />
+                    </StackPanel>
+                </ui:CardControl.Header>
+                <ui:Button
+                    Appearance="Danger"
+                    AutomationProperties.AutomationId="Settings_Reset"
+                    Command="{Binding ResetSettingsCommand}"
+                    Content="{loc:Tr Settings_Reset}" />
+            </ui:CardControl>
+            <TextBlock
+                Margin="0,8,0,0"
+                Style="{StaticResource CaptionText}"
+                Text="{Binding SettingsFilePath}" />
+        </StackPanel>
+    </ScrollViewer>
+</Page>

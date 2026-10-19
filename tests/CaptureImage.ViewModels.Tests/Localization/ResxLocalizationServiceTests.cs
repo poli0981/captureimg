@@ -175,4 +175,28 @@ public class ResxLocalizationServiceTests : IDisposable
         names.Should().Contain("vi-VN");
         names.Should().Contain("ar-SA");
     }
+
+    [Theory]
+    [InlineData("vi-VN", "vi-VN")]
+    [InlineData("vi", "vi-VN")]
+    [InlineData("zh-CN", "zh-Hans")]
+    [InlineData("pt-PT", "pt-BR")]
+    [InlineData("fr-CA", "fr-FR")]
+    [InlineData("en-GB", "en-US")]
+    [InlineData("sw-KE", "en-US")]
+    public void MatchSupportedCulture_PrefersSameLanguage_ThenEnglish(string requested, string expected)
+    {
+        var svc = new ResxLocalizationService(NullLogger<ResxLocalizationService>.Instance);
+
+        svc.MatchSupportedCulture(CultureInfo.GetCultureInfo(requested)).Name.Should().Be(expected);
+    }
+
+    [Fact]
+    public void MatchSupportedCulture_Invariant_FallsBackToEnglish()
+    {
+        var svc = new ResxLocalizationService(NullLogger<ResxLocalizationService>.Instance);
+
+        svc.MatchSupportedCulture(CultureInfo.InvariantCulture).Name.Should().Be("en-US");
+        svc.MatchSupportedCulture(null).Name.Should().Be("en-US");
+    }
 }

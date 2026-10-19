@@ -20,6 +20,20 @@ public sealed record LogEntry(
 {
     public string TimestampText => Timestamp.ToString("HH:mm:ss.fff", CultureInfo.InvariantCulture);
 
+    /// <summary>Three-letter level code (<c>INF</c>, <c>WRN</c>…), as in the log file.</summary>
+    public string LevelText => Level switch
+    {
+        LogEntryLevel.Verbose => "VRB",
+        LogEntryLevel.Debug => "DBG",
+        LogEntryLevel.Information => "INF",
+        LogEntryLevel.Warning => "WRN",
+        LogEntryLevel.Error => "ERR",
+        _ => "FTL",
+    };
+
+    /// <summary>"Warning: message" — what screen readers announce for a log row.</summary>
+    public override string ToString() => $"{Level}: {Message}";
+
     /// <summary>Class name without the namespace, for compact display.</summary>
     public string ShortSource
     {

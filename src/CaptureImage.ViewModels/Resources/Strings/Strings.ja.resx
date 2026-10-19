@@ -32,176 +32,329 @@
   <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
 
   <!-- Navigation -->
-  <data name="Nav_Dashboard" xml:space="preserve"><value>ダッシュボード</value></data>
-  <data name="Nav_Update" xml:space="preserve"><value>アップデート</value></data>
-  <data name="Nav_Settings" xml:space="preserve"><value>設定</value></data>
-  <data name="Nav_About" xml:space="preserve"><value>情報</value></data>
-  <data name="Nav_LogViewer" xml:space="preserve"><value>ログ</value></data>
-
-  <!-- Dashboard -->
-  <data name="Dashboard_Title" xml:space="preserve"><value>ダッシュボード</value></data>
-  <data name="Dashboard_Subtitle" xml:space="preserve"><value>対象を選択して起動 — ホットキーでキャプチャします。</value></data>
-  <data name="Dashboard_Refresh" xml:space="preserve"><value>更新</value></data>
-  <data name="Dashboard_Arm" xml:space="preserve"><value>起動</value></data>
-  <data name="Dashboard_Disarm" xml:space="preserve"><value>停止</value></data>
-  <data name="Dashboard_StatusIdle" xml:space="preserve"><value>待機中 — 対象を選択して起動してください。</value></data>
-  <data name="Dashboard_StatusArmed" xml:space="preserve"><value>起動中: {0} を押すと {1} をキャプチャします。</value></data>
-  <data name="Dashboard_StatusCapturing" xml:space="preserve"><value>{0} をキャプチャ中…</value></data>
-  <data name="Dashboard_StatusDisarmed" xml:space="preserve"><value>停止しました。</value></data>
-  <data name="Dashboard_StatusSaved" xml:space="preserve"><value>保存: {0} ({1}x{2}, {3} ms)</value></data>
-  <data name="Dashboard_StatusFailed" xml:space="preserve"><value>キャプチャ失敗 ({0}): {1}</value></data>
-  <data name="Dashboard_TargetsCount" xml:space="preserve"><value>{0} 件の対象が表示されています</value></data>
-  <data name="Dashboard_Loading" xml:space="preserve"><value>読み込み中…</value></data>
-  <data name="Dashboard_EmptyState" xml:space="preserve"><value>キャプチャ可能なウィンドウがありません — ゲームやアプリを起動してから「更新」をクリックしてください。</value></data>
-  <data name="Dashboard_LogToggle" xml:space="preserve"><value>リアルタイムログを開閉</value></data>
-  <data name="Dashboard_SteamBadge" xml:space="preserve"><value>STEAM</value></data>
-  <data name="Dashboard_SteamBadgeTooltip" xml:space="preserve"><value>Steam ゲーム: {0} (AppId {1})。F12 のスクリーンショットは Steam オーバーレイで利用できます。アンチチート保護されたゲームでは外部キャプチャがブロックされる場合があります。</value></data>
-
-  <!-- Settings -->
-  <data name="Settings_Title" xml:space="preserve"><value>設定</value></data>
-  <data name="Settings_Language" xml:space="preserve"><value>言語</value></data>
-  <data name="Settings_Theme" xml:space="preserve"><value>テーマ</value></data>
-  <data name="Settings_Theme_System" xml:space="preserve"><value>システム</value></data>
-  <data name="Settings_Theme_Light" xml:space="preserve"><value>ライト</value></data>
-  <data name="Settings_Theme_Dark" xml:space="preserve"><value>ダーク</value></data>
-  <data name="Settings_Hotkey" xml:space="preserve"><value>キャプチャ用ホットキー</value></data>
-  <data name="Settings_HotkeyHint" xml:space="preserve"><value>「録音」をクリックしてキーの組み合わせを押します。Esc でキャンセル。「リセット」で Ctrl+Shift+F12 に戻します。</value></data>
-  <data name="Settings_HotkeyRecord" xml:space="preserve"><value>録音…</value></data>
-  <data name="Settings_HotkeyCancel" xml:space="preserve"><value>キャンセル</value></data>
-  <data name="Settings_HotkeyReset" xml:space="preserve"><value>リセット</value></data>
-  <data name="Settings_HotkeyRecorderPrompt" xml:space="preserve"><value>キーの組み合わせを押してください (Esc でキャンセル)…</value></data>
-  <data name="Settings_HotkeyErrorNoPrimary" xml:space="preserve"><value>主キーを選択してください (例: 文字キーまたは F キー)。</value></data>
-  <data name="Settings_HotkeyErrorModifierOnly" xml:space="preserve"><value>修飾キーだけでは登録できません — 文字キーまたは F キーを追加してください。</value></data>
-  <data name="Settings_HotkeyErrorNeedsModifier" xml:space="preserve"><value>文字や数字には少なくとも 1 つの修飾キー (Ctrl/Alt/Shift/Win) が必要です。</value></data>
-  <data name="Settings_HotkeyErrorReserved" xml:space="preserve"><value>この組み合わせは Windows により予約されており、使用できません。</value></data>
-  <data name="Settings_HotkeyConflictWarning" xml:space="preserve"><value>他のアプリがこの組み合わせを使用中の可能性があります — そのアプリの実行中は反応しないことがあります。</value></data>
-  <data name="Settings_Format" xml:space="preserve"><value>既定のフォーマット</value></data>
-  <data name="Settings_JpegQuality" xml:space="preserve"><value>JPEG 品質</value></data>
-  <data name="Settings_WebpQuality" xml:space="preserve"><value>WebP 品質</value></data>
-  <data name="Settings_OutputFolder" xml:space="preserve"><value>出力フォルダー</value></data>
-  <data name="Settings_OutputFolderDefault" xml:space="preserve"><value>(既定: Pictures\CaptureImage)</value></data>
-  <data name="Settings_Browse" xml:space="preserve"><value>参照…</value></data>
-  <data name="Settings_BrowseTitle" xml:space="preserve"><value>出力フォルダーを選択</value></data>
-  <data name="Settings_BrowseTooltip" xml:space="preserve"><value>パスを入力する代わりにフォルダーを選択します。</value></data>
-  <data name="Settings_FileNameTemplate" xml:space="preserve"><value>ファイル名テンプレート</value></data>
-  <data name="Settings_PreviewBeforeSave" xml:space="preserve"><value>保存前に各キャプチャをプレビュー</value></data>
-  <data name="Settings_AutoSwitchOnAltTab" xml:space="preserve"><value>Alt-Tab で対象を自動切り替え</value></data>
-  <data name="Settings_AutoSwitchOnAltTabHint" xml:space="preserve"><value>選択中の対象がフォアグラウンドウィンドウに追従します。対象一覧にないアプリでは現在の選択を維持します。</value></data>
-  <data name="Settings_MinimizeToTray" xml:space="preserve"><value>閉じるボタンでトレイに最小化</value></data>
-  <data name="Settings_SoundEnabled" xml:space="preserve"><value>キャプチャ音を再生</value></data>
-  <data name="Settings_Import" xml:space="preserve"><value>インポート…</value></data>
-  <data name="Settings_Export" xml:space="preserve"><value>エクスポート…</value></data>
-  <data name="Settings_ImportTitle" xml:space="preserve"><value>設定をインポート</value></data>
-  <data name="Settings_ExportTitle" xml:space="preserve"><value>設定をエクスポート</value></data>
-  <data name="Settings_OpenFile" xml:space="preserve"><value>設定ファイルを開く</value></data>
-  <data name="Settings_Logging" xml:space="preserve"><value>ログ</value></data>
-  <data name="Settings_LogLevel" xml:space="preserve"><value>最小ログレベル</value></data>
-  <data name="Settings_LogLevelHint" xml:space="preserve"><value>ローリングログファイルとビューアをフィルタします。サポート診断には Debug、日常使用には Information、Warning または Error を選ぶと出力を抑えられます。</value></data>
-
-  <!-- Update -->
-  <data name="Update_Title" xml:space="preserve"><value>アップデート</value></data>
-  <data name="Update_Check" xml:space="preserve"><value>更新を確認</value></data>
-  <data name="Update_Download" xml:space="preserve"><value>ダウンロード</value></data>
-  <data name="Update_Install" xml:space="preserve"><value>インストールして再起動</value></data>
-  <data name="Update_Status" xml:space="preserve"><value>状態</value></data>
-  <data name="Update_Log" xml:space="preserve"><value>ログ</value></data>
-  <data name="Update_NewVersion" xml:space="preserve"><value>新しいバージョン:</value></data>
-
-  <!-- About -->
-  <data name="About_Title" xml:space="preserve"><value>CaptureImage について</value></data>
-  <data name="About_Tagline" xml:space="preserve"><value>スクリーンショット機能のないゲーム向けの軽量 Windows 画面キャプチャツール。</value></data>
-  <data name="About_AppLabel" xml:space="preserve"><value>アプリ</value></data>
-  <data name="About_VersionLabel" xml:space="preserve"><value>バージョン</value></data>
-  <data name="About_LicenseLabel" xml:space="preserve"><value>ライセンス</value></data>
-  <data name="About_DeveloperLabel" xml:space="preserve"><value>開発者</value></data>
-  <data name="About_RepositoryLabel" xml:space="preserve"><value>リポジトリ</value></data>
+  <data name="About_AiNotice" xml:space="preserve"><value>CaptureImage は、コード・テスト・ドキュメントの作成に AI コーディングアシスタント（Anthropic の Claude、Claude Code 経由）の大きな助けを借りて開発されています。すべての変更はリリース前にメンテナーがレビューし、テストしています。</value></data>
   <data name="About_AiSection" xml:space="preserve"><value>AI 支援開発</value></data>
-  <data name="About_DisclaimersSection" xml:space="preserve"><value>免責事項</value></data>
-  <data name="About_TranslationDisclaimer" xml:space="preserve"><value>翻訳について</value></data>
-  <data name="About_TranslationDisclaimerBody" xml:space="preserve"><value>ベトナム語、アラビア語、日本語、中国語(簡体)、韓国語、スペイン語、フランス語、ドイツ語、ポルトガル語(ブラジル)、ロシア語の言語パックは機械支援で翻訳されています。用語が母語の慣習と一致しない場合があり、一部の技術用語(hotkey、toast、frame など)はあえて英語のままにしています。校正に協力してくださるネイティブスピーカーの方は、src/CaptureImage.UI/Resources/Strings/ の .resx ファイルへの Pull Request を歓迎します。</value></data>
   <data name="About_CaptureDisclaimer" xml:space="preserve"><value>キャプチャ対応</value></data>
   <data name="About_CaptureLimitationDisclaimerBody" xml:space="preserve"><value>CaptureImage は Windows.Graphics.Capture により多くのウィンドウ・ボーダーレスゲームをキャプチャできますが、すべてのタイトルで動作するわけではありません。DRM 保護されたサーフェス、排他的フルスクリーンの Direct3D 9 ゲーム、アンチチートフックを持つタイトルは、黒フレームを返したりキャプチャを拒否することがあります。レガシーアプリには GDI PrintWindow フォールバックを試みます。完全な一覧は docs/legal/DISCLAIMER.md §2 を参照してください。</value></data>
+  <data name="About_ContactSection" xml:space="preserve"><value>開発者とつながる</value></data>
+  <data name="About_DeveloperLabel" xml:space="preserve"><value>開発者</value></data>
+  <data name="About_DisclaimersSection" xml:space="preserve"><value>免責事項</value></data>
+  <data name="About_Discussions" xml:space="preserve"><value>ディスカッション</value></data>
+  <data name="About_DonateBody" xml:space="preserve"><value>CaptureImage は無料のオープンソースソフトウェアです。お役に立てたなら、以下のいずれかで開発をサポートしていただけると幸いです：</value></data>
+  <data name="About_DonateSection" xml:space="preserve"><value>プロジェクトを支援する</value></data>
+  <data name="About_Email" xml:space="preserve"><value>メール</value></data>
+  <data name="About_FeedbackSection" xml:space="preserve"><value>フィードバック</value></data>
+  <data name="About_LegalSection" xml:space="preserve"><value>法的文書</value></data>
   <data name="About_LiabilityDisclaimer" xml:space="preserve"><value>無保証</value></data>
   <data name="About_LiabilityDisclaimerBody" xml:space="preserve"><value>CaptureImage は GPL-3.0-or-later の下で「現状のまま」配布され、いかなる種類の保証もありません。作者はスクリーンショットの紛失、ゲームクラッシュ、アンチチート制裁、データ損失について責任を負いません。自己責任でご使用ください。完全な文章は docs/legal/DISCLAIMER.md を参照してください。</value></data>
-  <data name="About_LegalSection" xml:space="preserve"><value>法的文書</value></data>
-  <data name="About_ThirdPartySection" xml:space="preserve"><value>サードパーティコンポーネント</value></data>
-  <data name="About_ThirdPartyHint" xml:space="preserve"><value>上記の「サードパーティ通知」をクリックすると、上流 URL を含む完全な一覧が表示されます。</value></data>
-  <data name="About_OpenDisclaimer" xml:space="preserve"><value>免責事項</value></data>
-  <data name="About_OpenPrivacy" xml:space="preserve"><value>プライバシー</value></data>
-  <data name="About_OpenTerms" xml:space="preserve"><value>利用規約</value></data>
-  <data name="About_OpenLicense" xml:space="preserve"><value>ライセンス (GPL-3.0)</value></data>
-  <data name="About_OpenThirdParty" xml:space="preserve"><value>サードパーティ通知</value></data>
-  <data name="About_OpenContributors" xml:space="preserve"><value>貢献者</value></data>
-
-  <!-- About — Social Dev / Donate / Report Bug (v1.5.1) -->
-  <data name="About_SocialSection" xml:space="preserve"><value>開発者とつながる</value></data>
-  <data name="About_DonateSection" xml:space="preserve"><value>プロジェクトを支援する</value></data>
-  <data name="About_DonateBody" xml:space="preserve"><value>CaptureImage は無料のオープンソースソフトウェアです。お役に立てたなら、以下のいずれかで開発をサポートしていただけると幸いです：</value></data>
-  <data name="About_OpenGitHubSponsors" xml:space="preserve"><value>GitHub Sponsors</value></data>
-  <data name="About_OpenKoFi" xml:space="preserve"><value>Ko-fi</value></data>
-  <data name="About_OpenBuyMeACoffee" xml:space="preserve"><value>Buy Me a Coffee</value></data>
-  <data name="About_OpenPatreon" xml:space="preserve"><value>Patreon</value></data>
+  <data name="About_LicenseLabel" xml:space="preserve"><value>ライセンス</value></data>
   <data name="About_OpenBugReport" xml:space="preserve"><value>バグを報告</value></data>
   <data name="About_OpenBugReportHint" xml:space="preserve"><value>GitHub の issue トラッカーをバグレポートテンプレート入りで開きます。</value></data>
+  <data name="About_OpenContributors" xml:space="preserve"><value>貢献者</value></data>
+  <data name="About_OpenDisclaimer" xml:space="preserve"><value>免責事項</value></data>
+  <data name="About_OpenLicense" xml:space="preserve"><value>ライセンス (GPL-3.0)</value></data>
+  <data name="About_OpenNotice" xml:space="preserve"><value>著作権表示</value></data>
+  <data name="About_OpenPrivacy" xml:space="preserve"><value>プライバシー</value></data>
+  <data name="About_OpenTerms" xml:space="preserve"><value>利用規約</value></data>
+  <data name="About_OpenThirdParty" xml:space="preserve"><value>サードパーティ通知</value></data>
+  <data name="About_OtherChannels" xml:space="preserve"><value>その他の連絡先</value></data>
+  <data name="About_ReleaseNotes" xml:space="preserve"><value>リリースノート</value></data>
+  <data name="About_RepositoryLabel" xml:space="preserve"><value>リポジトリ</value></data>
+  <data name="About_RequestFeature" xml:space="preserve"><value>機能をリクエスト</value></data>
+  <data name="About_SponsorEmail" xml:space="preserve"><value>スポンサーに関するお問い合わせ</value></data>
+  <data name="About_Tagline" xml:space="preserve"><value>スクリーンショット機能のないゲーム向けの軽量 Windows 画面キャプチャツール。</value></data>
+  <data name="About_ThirdPartySection" xml:space="preserve"><value>サードパーティコンポーネント</value></data>
+  <data name="About_TranslationDisclaimer" xml:space="preserve"><value>翻訳について</value></data>
+  <data name="About_TranslationDisclaimerBody" xml:space="preserve"><value>ベトナム語、アラビア語、日本語、中国語(簡体)、韓国語、スペイン語、フランス語、ドイツ語、ポルトガル語(ブラジル)、ロシア語の言語パックは機械支援で翻訳されています。用語が母語の慣習と一致しない場合があり、一部の技術用語(hotkey、toast、frame など)はあえて英語のままにしています。校正に協力してくださるネイティブスピーカーの方は、src/CaptureImage.UI/Resources/Strings/ の .resx ファイルへの Pull Request を歓迎します。</value></data>
+  <data name="About_VersionLabel" xml:space="preserve"><value>バージョン</value></data>
 
-  <!-- Log viewer -->
-  <data name="Log_Title" xml:space="preserve"><value>リアルタイムログ</value></data>
-  <data name="Log_Pause" xml:space="preserve"><value>一時停止</value></data>
-  <data name="Log_Resume" xml:space="preserve"><value>再開</value></data>
+  <data name="Common_Browse" xml:space="preserve"><value>参照…</value></data>
+  <data name="Common_Cancel" xml:space="preserve"><value>キャンセル</value></data>
+  <data name="Common_Close" xml:space="preserve"><value>閉じる</value></data>
+  <data name="Common_CopyImage" xml:space="preserve"><value>画像をコピー</value></data>
+
+  <data name="Dashboard_Arm" xml:space="preserve"><value>起動</value></data>
+  <data name="Dashboard_CaptureMonitor" xml:space="preserve"><value>画面をキャプチャ</value></data>
+  <data name="Dashboard_CaptureRegion" xml:space="preserve"><value>範囲をキャプチャ</value></data>
+  <data name="Dashboard_CaptureSelected" xml:space="preserve"><value>ウィンドウをキャプチャ</value></data>
+  <data name="Dashboard_CreateProfile" xml:space="preserve"><value>プロファイルを作成</value></data>
+  <data name="Dashboard_Disarm" xml:space="preserve"><value>停止</value></data>
+  <data name="Dashboard_EmptyState" xml:space="preserve"><value>キャプチャ可能なウィンドウがありません — ゲームやアプリを起動してから「更新」をクリックしてください。</value></data>
+  <data name="Dashboard_Hotkeys" xml:space="preserve"><value>キャプチャのホットキー</value></data>
+  <data name="Dashboard_Locked" xml:space="preserve"><value>固定中</value></data>
+  <data name="Dashboard_LockedLabel" xml:space="preserve"><value>ウィンドウのホットキーの対象:</value></data>
+  <data name="Dashboard_LockSelected" xml:space="preserve"><value>ターゲットに固定</value></data>
+  <data name="Dashboard_Minimized" xml:space="preserve"><value>最小化</value></data>
+  <data name="Dashboard_ProfileBadge" xml:space="preserve"><value>プロファイル: {0}</value></data>
+  <data name="Dashboard_Refresh" xml:space="preserve"><value>更新</value></data>
+  <data name="Dashboard_Search" xml:space="preserve"><value>ウィンドウを検索</value></data>
+  <data name="Dashboard_SteamBadge" xml:space="preserve"><value>STEAM</value></data>
+  <data name="Dashboard_SteamBadgeTooltip" xml:space="preserve"><value>Steam ゲーム: {0} (AppId {1})。F12 のスクリーンショットは Steam オーバーレイで利用できます。アンチチート保護されたゲームでは外部キャプチャがブロックされる場合があります。</value></data>
+  <data name="Dashboard_Subtitle" xml:space="preserve"><value>ホットキーを起動してから、ゲーム中に押します。ウィンドウを固定すると、常にそのウィンドウをキャプチャします。</value></data>
+  <data name="Dashboard_Title" xml:space="preserve"><value>ダッシュボード</value></data>
+  <data name="Dashboard_Unlock" xml:space="preserve"><value>固定を解除</value></data>
+  <data name="Dashboard_Windows" xml:space="preserve"><value>開いているウィンドウ</value></data>
+
+  <data name="Error_Cancelled" xml:space="preserve"><value>キャプチャをキャンセルしました。</value></data>
+  <data name="Error_EncodingFailure" xml:space="preserve"><value>画像をエンコードできませんでした。</value></data>
+  <data name="Error_FileWriteFailure" xml:space="preserve"><value>ファイルを保存できませんでした。出力フォルダーとディスクの空き容量を確認してください。</value></data>
+  <data name="Error_GraphicsDeviceFailure" xml:space="preserve"><value>グラフィックドライバーが応答しなくなりました。しばらくしてからもう一度お試しください。</value></data>
+  <data name="Error_NoFrameArrived" xml:space="preserve"><value>Windows から画像が届きませんでした。ウィンドウが表示されていることを確認して、もう一度お試しください。</value></data>
+  <data name="Error_NoTarget" xml:space="preserve"><value>キャプチャするウィンドウがありません。ゲームを前面に表示するか、ダッシュボードでウィンドウを固定してください。</value></data>
+  <data name="Error_NotSupported" xml:space="preserve"><value>このシステムでは画面キャプチャがサポートされていません。</value></data>
+  <data name="Error_ProcessExited" xml:space="preserve"><value>ゲームまたはアプリが終了しました。</value></data>
+  <data name="Error_ProtectedContent" xml:space="preserve"><value>このウィンドウは画面キャプチャをブロックしています（保護されたコンテンツ）。</value></data>
+  <data name="Error_TargetGone" xml:space="preserve"><value>ウィンドウが閉じられました。</value></data>
+  <data name="Error_TargetMinimized" xml:space="preserve"><value>ウィンドウが最小化されています。元に戻してからもう一度お試しください。</value></data>
+  <data name="Error_Unknown" xml:space="preserve"><value>問題が発生しました。詳細はログを確認してください。</value></data>
+
+  <data name="Hotkey_None" xml:space="preserve"><value>未設定</value></data>
+  <data name="Hotkey_PressKeys" xml:space="preserve"><value>キーを押してください…</value></data>
+  <data name="Hotkey_ProblemMessage" xml:space="preserve"><value>別のアプリがキャプチャ用ホットキーを使用しているか、組み合わせが無効です。設定で別の組み合わせを選んでください。</value></data>
+  <data name="Hotkey_ProblemTitle" xml:space="preserve"><value>動作していないホットキーがあります</value></data>
+  <data name="Hotkey_StatusActive" xml:space="preserve"><value>有効</value></data>
+  <data name="Hotkey_StatusConflict" xml:space="preserve"><value>他のアプリが使用中</value></data>
+  <data name="Hotkey_StatusInactive" xml:space="preserve"><value>起動するまで無効</value></data>
+  <data name="Hotkey_StatusInvalid" xml:space="preserve"><value>無効な組み合わせ</value></data>
+  <data name="Hotkey_StatusUnbound" xml:space="preserve"><value>未設定</value></data>
+  <data name="Hotkey_TakenByOtherApp" xml:space="preserve"><value>この組み合わせは別のアプリで使用されています。別の組み合わせを選んでください。</value></data>
+  <data name="Hotkey_UsedByMode" xml:space="preserve"><value>{0} に既に使用されています。</value></data>
+  <data name="Hotkey_Validation_ModifierOnlyKey" xml:space="preserve"><value>修飾キーだけでは登録できません — 文字キーまたは F キーを追加してください。</value></data>
+  <data name="Hotkey_Validation_NoPrimaryKey" xml:space="preserve"><value>主キーを選択してください (例: 文字キーまたは F キー)。</value></data>
+  <data name="Hotkey_Validation_RequiresModifier" xml:space="preserve"><value>文字や数字には少なくとも 1 つの修飾キー (Ctrl/Alt/Shift/Win) が必要です。</value></data>
+  <data name="Hotkey_Validation_ReservedByWindows" xml:space="preserve"><value>この組み合わせは Windows により予約されており、使用できません。</value></data>
+
+  <data name="Library_AllGames" xml:space="preserve"><value>すべてのゲーム</value></data>
+  <data name="Library_CopyFailed" xml:space="preserve"><value>画像を読み込めませんでした。</value></data>
+  <data name="Library_CopyPath" xml:space="preserve"><value>パスをコピー</value></data>
+  <data name="Library_Delete" xml:space="preserve"><value>削除</value></data>
+  <data name="Library_Deleted" xml:space="preserve"><value>ごみ箱に移動しました</value></data>
+  <data name="Library_DeleteFailed" xml:space="preserve"><value>ファイルをごみ箱に移動できませんでした。</value></data>
+  <data name="Library_DeleteMessage" xml:space="preserve"><value>{0} をごみ箱に移動しますか?</value></data>
+  <data name="Library_DeleteTitle" xml:space="preserve"><value>キャプチャを削除</value></data>
+  <data name="Library_Empty" xml:space="preserve"><value>まだキャプチャがありません。ホットキーを起動して、最初のスクリーンショットを撮りましょう。</value></data>
+  <data name="Library_GameFilter" xml:space="preserve"><value>ゲームで絞り込む</value></data>
+  <data name="Library_HdrOnly" xml:space="preserve"><value>HDR のみ</value></data>
+  <data name="Library_Open" xml:space="preserve"><value>開く</value></data>
+  <data name="Library_OpenHdr" xml:space="preserve"><value>HDR 版を開く</value></data>
+  <data name="Library_Pin" xml:space="preserve"><value>ピン留め</value></data>
+  <data name="Library_Reveal" xml:space="preserve"><value>フォルダーで表示</value></data>
+  <data name="Library_Search" xml:space="preserve"><value>キャプチャを検索</value></data>
+  <data name="Library_SelectHint" xml:space="preserve"><value>キャプチャを選択すると詳細が表示されます。</value></data>
+  <data name="Library_Summary" xml:space="preserve"><value>{1} 件中 {0} 件のキャプチャ</value></data>
+  <data name="Library_Title" xml:space="preserve"><value>キャプチャライブラリ</value></data>
+
   <data name="Log_Clear" xml:space="preserve"><value>クリア</value></data>
-  <data name="Log_EventsCount" xml:space="preserve"><value>{0} 件のイベント</value></data>
   <data name="Log_EmptyState" xml:space="preserve"><value>まだログイベントがありません。キャプチャエンジンからのリアルタイムイベントがここに表示されます。</value></data>
-  <data name="Log_Filter" xml:space="preserve"><value>最小レベル:</value></data>
+  <data name="Log_Pause" xml:space="preserve"><value>一時停止</value></data>
   <data name="Log_RevealFolder" xml:space="preserve"><value>フォルダーを開く</value></data>
 
-  <!-- Preview -->
-  <data name="Preview_Title" xml:space="preserve"><value>プレビュー</value></data>
+  <data name="Logs_CopyAll" xml:space="preserve"><value>すべてコピー</value></data>
+  <data name="Logs_CopySelected" xml:space="preserve"><value>選択した行をコピー</value></data>
+  <data name="Logs_Level" xml:space="preserve"><value>最小レベル</value></data>
+  <data name="Logs_LevelAll" xml:space="preserve"><value>すべてのレベル</value></data>
+  <data name="Logs_Search" xml:space="preserve"><value>ログを検索</value></data>
+  <data name="Logs_Subtitle" xml:space="preserve"><value>このセッションの最近のイベントです。問題を報告するときは「診断情報をエクスポート」を使ってください。</value></data>
+  <data name="Logs_Title" xml:space="preserve"><value>リアルタイムログ</value></data>
+
+  <data name="Mode_Monitor" xml:space="preserve"><value>画面</value></data>
+  <data name="Mode_Region" xml:space="preserve"><value>範囲</value></data>
+  <data name="Mode_Window" xml:space="preserve"><value>ウィンドウ</value></data>
+
+  <data name="Nav_About" xml:space="preserve"><value>情報</value></data>
+  <data name="Nav_Dashboard" xml:space="preserve"><value>ダッシュボード</value></data>
+  <data name="Nav_Library" xml:space="preserve"><value>ライブラリ</value></data>
+  <data name="Nav_Logs" xml:space="preserve"><value>ログ</value></data>
+  <data name="Nav_Profiles" xml:space="preserve"><value>プロファイル</value></data>
+  <data name="Nav_Settings" xml:space="preserve"><value>設定</value></data>
+  <data name="Nav_Update" xml:space="preserve"><value>アップデート</value></data>
+
+  <data name="PinnedWindow_Close" xml:space="preserve"><value>閉じる</value></data>
+  <data name="PinnedWindow_Open" xml:space="preserve"><value>エクスプローラーで表示</value></data>
+
+  <data name="Preview_Discard" xml:space="preserve"><value>破棄</value></data>
+  <data name="Preview_ExtractText" xml:space="preserve"><value>テキストを抽出 (OCR)</value></data>
   <data name="Preview_Prompt" xml:space="preserve"><value>このキャプチャを保存しますか?</value></data>
   <data name="Preview_Save" xml:space="preserve"><value>保存</value></data>
-  <data name="Preview_Discard" xml:space="preserve"><value>破棄</value></data>
+  <data name="Preview_Title" xml:space="preserve"><value>プレビュー</value></data>
 
-  <!-- Toasts -->
-  <data name="Toast_CaptureSaved" xml:space="preserve"><value>キャプチャを保存しました</value></data>
-  <data name="Toast_CaptureFailed" xml:space="preserve"><value>キャプチャ失敗</value></data>
-  <data name="Toast_SettingsImported" xml:space="preserve"><value>設定をインポートしました</value></data>
-  <data name="Toast_SettingsExported" xml:space="preserve"><value>設定をエクスポートしました</value></data>
-  <data name="Toast_Error" xml:space="preserve"><value>エラー</value></data>
+  <data name="Profiles_Add" xml:space="preserve"><value>プロファイルを追加</value></data>
+  <data name="Profiles_AutoArm" xml:space="preserve"><value>自動で起動</value></data>
+  <data name="Profiles_AutoArmBadge" xml:space="preserve"><value>自動起動</value></data>
+  <data name="Profiles_AutoArmHint" xml:space="preserve"><value>このゲームが前面に来たときにホットキーを起動します。</value></data>
+  <data name="Profiles_AutomationSection" xml:space="preserve"><value>自動化</value></data>
+  <data name="Profiles_Delete" xml:space="preserve"><value>削除</value></data>
+  <data name="Profiles_DeleteMessage" xml:space="preserve"><value>プロファイル「{0}」を削除しますか? 保存済みのキャプチャは残ります。</value></data>
+  <data name="Profiles_DeleteTitle" xml:space="preserve"><value>プロファイルを削除</value></data>
+  <data name="Profiles_DisabledBadge" xml:space="preserve"><value>オフ</value></data>
+  <data name="Profiles_Empty" xml:space="preserve"><value>まだプロファイルがありません。ここで追加するか、ゲームの実行中にダッシュボードの「プロファイルを作成」を使ってください。</value></data>
+  <data name="Profiles_Enabled" xml:space="preserve"><value>プロファイルを有効にする</value></data>
+  <data name="Profiles_ExecutableName" xml:space="preserve"><value>実行ファイル名</value></data>
+  <data name="Profiles_ExecutableNameHint" xml:space="preserve"><value>インストール場所に関係なく一致します。</value></data>
+  <data name="Profiles_ExecutablePath" xml:space="preserve"><value>実行ファイルのパス</value></data>
+  <data name="Profiles_ExecutablePathHint" xml:space="preserve"><value>最も厳密な一致方法です。</value></data>
+  <data name="Profiles_LockTarget" xml:space="preserve"><value>ゲームウィンドウを固定</value></data>
+  <data name="Profiles_LockTargetHint" xml:space="preserve"><value>ほかのウィンドウが前面にあっても、ウィンドウのホットキーでゲームをキャプチャします。</value></data>
+  <data name="Profiles_MatchesNothing" xml:space="preserve"><value>実行ファイルのパス、実行ファイル名、または Steam AppId を設定してください。</value></data>
+  <data name="Profiles_MatchesNothingTitle" xml:space="preserve"><value>このプロファイルはまだどのゲームにも一致しません</value></data>
+  <data name="Profiles_MatchSection" xml:space="preserve"><value>対象のゲーム</value></data>
+  <data name="Profiles_Name" xml:space="preserve"><value>名前</value></data>
+  <data name="Profiles_NewProfile" xml:space="preserve"><value>新しいプロファイル</value></data>
+  <data name="Profiles_OutputFolder" xml:space="preserve"><value>出力フォルダー</value></data>
+  <data name="Profiles_OutputSection" xml:space="preserve"><value>出力</value></data>
+  <data name="Profiles_PickExecutable" xml:space="preserve"><value>ゲームの実行ファイルを選択</value></data>
+  <data name="Profiles_SteamAppId" xml:space="preserve"><value>Steam AppId</value></data>
+  <data name="Profiles_SteamAppIdInvalid" xml:space="preserve"><value>数値を入力してください（例: 1245620）。</value></data>
+  <data name="Profiles_Subtitle" xml:space="preserve"><value>ゲームごとの出力フォルダー、フォーマット、ファイル名を設定します。ゲームの起動時にホットキーを自動で起動することもできます。</value></data>
+  <data name="Profiles_Title" xml:space="preserve"><value>ゲームプロファイル</value></data>
+  <data name="Profiles_UseGlobal" xml:space="preserve"><value>全体の設定を使用</value></data>
+  <data name="Profiles_UseGlobalButton" xml:space="preserve"><value>全体設定に戻す</value></data>
 
-  <!-- Tray menu -->
-  <data name="Tray_ShowWindow" xml:space="preserve"><value>CaptureImage を表示</value></data>
-  <data name="Tray_OpenFolder" xml:space="preserve"><value>キャプチャフォルダーを開く</value></data>
-  <data name="Tray_Exit" xml:space="preserve"><value>終了</value></data>
+  <data name="Region_DragHint" xml:space="preserve"><value>ドラッグで範囲を選択 · クリックで画面全体 · Esc でキャンセル</value></data>
 
-  <!-- v1.5 quick wins -->
+  <data name="Settings_AdvancedSection" xml:space="preserve"><value>詳細設定</value></data>
+  <data name="Settings_AppearanceSection" xml:space="preserve"><value>外観</value></data>
+  <data name="Settings_ArmOnStartup" xml:space="preserve"><value>CaptureImage の起動時にホットキーを起動</value></data>
+  <data name="Settings_ArmOnStartupHint" xml:space="preserve"><value>起動中は、ほかのアプリがこれらのキーの組み合わせを受け取れません。</value></data>
+  <data name="Settings_AutoPinAfterCapture" xml:space="preserve"><value>キャプチャごとにフローティングサムネイルをピン留めする</value></data>
+  <data name="Settings_BackupSettings" xml:space="preserve"><value>設定のバックアップと復元</value></data>
+  <data name="Settings_BehaviorSection" xml:space="preserve"><value>動作</value></data>
+  <data name="Settings_CaptureSection" xml:space="preserve"><value>キャプチャ</value></data>
+  <data name="Settings_Clipboard" xml:space="preserve"><value>クリップボードモード</value></data>
+  <data name="Settings_ClipboardCopy" xml:space="preserve"><value>コピーのみ(ファイル無し)</value></data>
+  <data name="Settings_ClipboardCopyAndSave" xml:space="preserve"><value>コピー + ファイル保存</value></data>
+  <data name="Settings_ClipboardNone" xml:space="preserve"><value>オフ(ファイルのみ)</value></data>
   <data name="Settings_Countdown" xml:space="preserve"><value>キャプチャのカウントダウン</value></data>
-  <data name="Settings_CountdownOff" xml:space="preserve"><value>オフ(遅延なし)</value></data>
+  <data name="Settings_Countdown10s" xml:space="preserve"><value>10 秒</value></data>
   <data name="Settings_Countdown3s" xml:space="preserve"><value>3 秒</value></data>
   <data name="Settings_Countdown5s" xml:space="preserve"><value>5 秒</value></data>
-  <data name="Settings_Countdown10s" xml:space="preserve"><value>10 秒</value></data>
-  <data name="Settings_Clipboard" xml:space="preserve"><value>クリップボードモード</value></data>
-  <data name="Settings_ClipboardNone" xml:space="preserve"><value>オフ(ファイルのみ)</value></data>
-  <data name="Settings_ClipboardCopy" xml:space="preserve"><value>コピーのみ(ファイル無し)</value></data>
-  <data name="Settings_ClipboardCopySave" xml:space="preserve"><value>コピー + ファイル保存</value></data>
+  <data name="Settings_CountdownOff" xml:space="preserve"><value>オフ(遅延なし)</value></data>
+  <data name="Settings_DataFolder" xml:space="preserve"><value>データフォルダー</value></data>
+  <data name="Settings_DiagnosticsExported" xml:space="preserve"><value>診断情報をエクスポートしました</value></data>
+  <data name="Settings_Export" xml:space="preserve"><value>エクスポート…</value></data>
+  <data name="Settings_ExportDiagnostics" xml:space="preserve"><value>診断情報をエクスポート</value></data>
+  <data name="Settings_ExportDiagnosticsButton" xml:space="preserve"><value>エクスポート…</value></data>
+  <data name="Settings_ExportDiagnosticsHint" xml:space="preserve"><value>最近のログ、設定、システム情報（ユーザーパスは除去）をまとめた zip です。不具合報告に添付してください。</value></data>
+  <data name="Settings_ExportFailed" xml:space="preserve"><value>エクスポートに失敗しました。</value></data>
+  <data name="Settings_ExportSettings" xml:space="preserve"><value>設定をエクスポート</value></data>
+  <data name="Settings_FileNamePreview" xml:space="preserve"><value>例:</value></data>
+  <data name="Settings_FileNameTemplate" xml:space="preserve"><value>ファイル名テンプレート</value></data>
+  <data name="Settings_FileNameTokens" xml:space="preserve"><value>使用できるトークン: {Game} {Process} {Mode} {yyyy} {MM} {dd} {HH} {mm} {ss} {counter}</value></data>
+  <data name="Settings_Format" xml:space="preserve"><value>既定のフォーマット</value></data>
+  <data name="Settings_HdrAuto" xml:space="preserve"><value>自動（HDR ディスプレイでは HDR）</value></data>
+  <data name="Settings_HdrMode" xml:space="preserve"><value>HDR キャプチャ</value></data>
+  <data name="Settings_HdrModeHint" xml:space="preserve"><value>HDR ディスプレイでは HDR のフレーム全体をキャプチャし、通常の画像にトーンマッピングします。</value></data>
+  <data name="Settings_HdrOff" xml:space="preserve"><value>オフ（常に SDR）</value></data>
+  <data name="Settings_HdrSection" xml:space="preserve"><value>HDR</value></data>
+  <data name="Settings_HotkeyClear" xml:space="preserve"><value>解除</value></data>
+  <data name="Settings_HotkeyHint" xml:space="preserve"><value>ホットキーをクリックして、新しい組み合わせを押します。Esc でキャンセル、Backspace で解除します。ホットキーは起動中のみ機能します。</value></data>
+  <data name="Settings_HotkeyMonitorDescription" xml:space="preserve"><value>マウスポインターがある画面をキャプチャします。</value></data>
+  <data name="Settings_HotkeyRecord" xml:space="preserve"><value>録音…</value></data>
+  <data name="Settings_HotkeyRegionDescription" xml:space="preserve"><value>すべての画面を静止させ、範囲をドラッグして選択できます。</value></data>
+  <data name="Settings_HotkeyReset" xml:space="preserve"><value>リセット</value></data>
+  <data name="Settings_HotkeysSection" xml:space="preserve"><value>ホットキー</value></data>
+  <data name="Settings_HotkeyWindowDescription" xml:space="preserve"><value>固定したウィンドウ、または前面のウィンドウをキャプチャします。</value></data>
+  <data name="Settings_Import" xml:space="preserve"><value>インポート…</value></data>
+  <data name="Settings_ImportFailed" xml:space="preserve"><value>この設定をインポートできませんでした。</value></data>
+  <data name="Settings_ImportSettings" xml:space="preserve"><value>設定をインポート</value></data>
+  <data name="Settings_IncludeCursor" xml:space="preserve"><value>マウスポインターを含める</value></data>
+  <data name="Settings_IncludeWindowFrame" xml:space="preserve"><value>ウィンドウの枠を含める</value></data>
+  <data name="Settings_IncludeWindowFrameHint" xml:space="preserve"><value>ウィンドウのキャプチャにタイトルバーと枠を残します。</value></data>
+  <data name="Settings_JpegQuality" xml:space="preserve"><value>JPEG 品質</value></data>
+  <data name="Settings_Language" xml:space="preserve"><value>言語</value></data>
+  <data name="Settings_LanguageHint" xml:space="preserve"><value>変更はすぐに反映されます。</value></data>
+  <data name="Settings_LogLevel" xml:space="preserve"><value>最小ログレベル</value></data>
+  <data name="Settings_LogLevelDebug" xml:space="preserve"><value>デバッグ</value></data>
+  <data name="Settings_LogLevelError" xml:space="preserve"><value>エラーのみ</value></data>
+  <data name="Settings_LogLevelHint" xml:space="preserve"><value>ローリングログファイルとビューアをフィルタします。サポート診断には Debug、日常使用には Information、Warning または Error を選ぶと出力を抑えられます。</value></data>
+  <data name="Settings_LogLevelInformation" xml:space="preserve"><value>情報</value></data>
+  <data name="Settings_LogLevelWarning" xml:space="preserve"><value>警告</value></data>
+  <data name="Settings_MinimizeToTray" xml:space="preserve"><value>閉じるボタンでトレイに最小化</value></data>
+  <data name="Settings_OpenFolder" xml:space="preserve"><value>フォルダーを開く</value></data>
   <data name="Settings_OpenFolderAfterSave" xml:space="preserve"><value>保存後に出力フォルダーを開く</value></data>
-  <data name="Toast_Countdown" xml:space="preserve"><value>{0} 秒後にキャプチャ…</value></data>
+  <data name="Settings_OutputFolder" xml:space="preserve"><value>出力フォルダー</value></data>
+  <data name="Settings_OutputFolderUnavailable" xml:space="preserve"><value>出力フォルダーを開けません。</value></data>
+  <data name="Settings_OutputSection" xml:space="preserve"><value>出力</value></data>
+  <data name="Settings_PngBalanced" xml:space="preserve"><value>バランス</value></data>
+  <data name="Settings_PngCompression" xml:space="preserve"><value>PNG の圧縮</value></data>
+  <data name="Settings_PngCompressionHint" xml:space="preserve"><value>ファイルを小さくするほど保存に時間がかかります。</value></data>
+  <data name="Settings_PngFast" xml:space="preserve"><value>高速（ファイルが大きい）</value></data>
+  <data name="Settings_PngSmallest" xml:space="preserve"><value>最小（低速）</value></data>
+  <data name="Settings_PreviewBeforeSave" xml:space="preserve"><value>保存前に各キャプチャをプレビュー</value></data>
+  <data name="Settings_Reset" xml:space="preserve"><value>リセット</value></data>
+  <data name="Settings_ResetDone" xml:space="preserve"><value>設定を既定に戻しました</value></data>
+  <data name="Settings_ResetMessage" xml:space="preserve"><value>すべての設定を既定値に戻しますか? 現在のファイルは先にバックアップされ、言語の設定は維持されます。</value></data>
+  <data name="Settings_ResetSettings" xml:space="preserve"><value>すべての設定をリセット</value></data>
+  <data name="Settings_ResetSettingsHint" xml:space="preserve"><value>現在のファイルのバックアップはデータフォルダーに保存されます。</value></data>
+  <data name="Settings_ResetTitle" xml:space="preserve"><value>設定のリセット</value></data>
+  <data name="Settings_ResetToDefault" xml:space="preserve"><value>既定に戻す</value></data>
+  <data name="Settings_SaveHdrSidecar" xml:space="preserve"><value>元の HDR 画像を保存</value></data>
+  <data name="Settings_SaveHdrSidecarHint" xml:space="preserve"><value>HDR キャプチャごとに JPEG XR (.jxr) ファイルを隣に保存します。</value></data>
+  <data name="Settings_ShowNotifications" xml:space="preserve"><value>通知を表示</value></data>
+  <data name="Settings_SoundEnabled" xml:space="preserve"><value>キャプチャ音を再生</value></data>
+  <data name="Settings_StartMinimized" xml:space="preserve"><value>トレイに最小化して起動</value></data>
+  <data name="Settings_StartupSection" xml:space="preserve"><value>起動</value></data>
+  <data name="Settings_StartWithWindows" xml:space="preserve"><value>Windows の起動時に開始</value></data>
+  <data name="Settings_StartWithWindowsFailed" xml:space="preserve"><value>Windows の起動設定を変更できませんでした。</value></data>
+  <data name="Settings_Subtitle" xml:space="preserve"><value>変更は自動的に保存されます。</value></data>
+  <data name="Settings_Theme" xml:space="preserve"><value>テーマ</value></data>
+  <data name="Settings_ThemeDark" xml:space="preserve"><value>ダーク</value></data>
+  <data name="Settings_ThemeHighContrast" xml:space="preserve"><value>ハイコントラスト</value></data>
+  <data name="Settings_ThemeLight" xml:space="preserve"><value>ライト</value></data>
+  <data name="Settings_ThemeSystem" xml:space="preserve"><value>システム</value></data>
+  <data name="Settings_Title" xml:space="preserve"><value>設定</value></data>
+  <data name="Settings_WebpQuality" xml:space="preserve"><value>WebP 品質</value></data>
+
+  <data name="Status_Armed" xml:space="preserve"><value>起動中 — キャプチャのホットキーを押してください。</value></data>
+  <data name="Status_ArmedLocked" xml:space="preserve"><value>起動中 — ウィンドウのホットキーで {0} をキャプチャします。</value></data>
+  <data name="Status_Capturing" xml:space="preserve"><value>キャプチャ中…</value></data>
+  <data name="Status_Idle" xml:space="preserve"><value>停止中 — キャプチャのホットキーは無効です。</value></data>
+  <data name="Status_Saving" xml:space="preserve"><value>保存中…</value></data>
+  <data name="Status_Selecting" xml:space="preserve"><value>ドラッグして範囲を選択します（Esc でキャンセル）。</value></data>
+
+  <data name="Toast_AutoArmed" xml:space="preserve"><value>このゲーム用にホットキーを起動しました</value></data>
+  <data name="Toast_CaptureFailed" xml:space="preserve"><value>キャプチャ失敗</value></data>
+  <data name="Toast_CaptureSaved" xml:space="preserve"><value>キャプチャを保存しました</value></data>
+  <data name="Toast_CaptureSavedCopied" xml:space="preserve"><value>{0}（クリップボードにもコピーしました）</value></data>
   <data name="Toast_ClipboardCopied" xml:space="preserve"><value>クリップボードにコピーしました</value></data>
-
-  <!-- v1.5 pinned thumbnail -->
-  <data name="Settings_AutoPinAfterCapture" xml:space="preserve"><value>キャプチャごとにフローティングサムネイルをピン留めする</value></data>
-  <data name="PinnedWindow_Open" xml:space="preserve"><value>エクスプローラーで表示</value></data>
-  <data name="PinnedWindow_Close" xml:space="preserve"><value>閉じる</value></data>
-
-  <!-- v1.5 OCR -->
-  <data name="Preview_ExtractText" xml:space="preserve"><value>テキストを抽出 (OCR)</value></data>
-  <data name="Toast_OcrSuccess" xml:space="preserve"><value>{0} 単語をコピーしました</value></data>
+  <data name="Toast_Countdown" xml:space="preserve"><value>{0} 秒後にキャプチャ…</value></data>
+  <data name="Toast_CountdownTitle" xml:space="preserve"><value>キャプチャのカウントダウン</value></data>
+  <data name="Toast_Error" xml:space="preserve"><value>エラー</value></data>
   <data name="Toast_OcrEmpty" xml:space="preserve"><value>画像内にテキストが見つかりません</value></data>
+  <data name="Toast_OcrFailed" xml:space="preserve"><value>テキスト認識に失敗しました。</value></data>
+  <data name="Toast_OcrSuccess" xml:space="preserve"><value>{0} 単語をコピーしました</value></data>
   <data name="Toast_OcrUnavailable" xml:space="preserve"><value>この言語の OCR エンジンが利用できません</value></data>
+  <data name="Toast_PathCopied" xml:space="preserve"><value>パスをコピーしました</value></data>
+  <data name="Toast_SettingsExported" xml:space="preserve"><value>設定をエクスポートしました</value></data>
+  <data name="Toast_SettingsImported" xml:space="preserve"><value>設定をインポートしました</value></data>
 
-  <!-- v1.5 region capture -->
-  <data name="Settings_CaptureMode" xml:space="preserve"><value>キャプチャモード</value></data>
-  <data name="Settings_CaptureModeWindow" xml:space="preserve"><value>ウィンドウ単体</value></data>
-  <data name="Settings_CaptureModeRegion" xml:space="preserve"><value>範囲(ドラッグで選択)</value></data>
-  <data name="Region_TargetName" xml:space="preserve"><value>範囲</value></data>
-  <data name="Region_DragHint" xml:space="preserve"><value>四角形をドラッグしてください。Esc でキャンセル。</value></data>
+  <data name="Tray_Arm" xml:space="preserve"><value>ホットキーを起動</value></data>
+  <data name="Tray_CaptureMonitor" xml:space="preserve"><value>画面をキャプチャ</value></data>
+  <data name="Tray_CaptureRegion" xml:space="preserve"><value>範囲をキャプチャ</value></data>
+  <data name="Tray_CaptureWindow" xml:space="preserve"><value>ウィンドウをキャプチャ</value></data>
+  <data name="Tray_Disarm" xml:space="preserve"><value>ホットキーを停止</value></data>
+  <data name="Tray_Exit" xml:space="preserve"><value>終了</value></data>
+  <data name="Tray_OpenFolder" xml:space="preserve"><value>キャプチャフォルダーを開く</value></data>
+  <data name="Tray_ShowWindow" xml:space="preserve"><value>CaptureImage を表示</value></data>
+
+  <data name="Update_Check" xml:space="preserve"><value>更新を確認</value></data>
+  <data name="Update_CurrentVersion" xml:space="preserve"><value>インストール済みのバージョン:</value></data>
+  <data name="Update_Download" xml:space="preserve"><value>ダウンロード</value></data>
+  <data name="Update_Install" xml:space="preserve"><value>インストールして再起動</value></data>
+  <data name="Update_Log" xml:space="preserve"><value>ログ</value></data>
+  <data name="Update_OpenReleases" xml:space="preserve"><value>リリースページ</value></data>
+  <data name="Update_Progress" xml:space="preserve"><value>アップデートの進行状況</value></data>
+  <data name="Update_ReleaseNotes" xml:space="preserve"><value>リリースノート</value></data>
+  <data name="Update_Status_Checking" xml:space="preserve"><value>アップデートを確認しています…</value></data>
+  <data name="Update_Status_Downloading" xml:space="preserve"><value>アップデートをダウンロードしています…</value></data>
+  <data name="Update_Status_Failed" xml:space="preserve"><value>問題が発生しました。詳細は下のログを確認してください。</value></data>
+  <data name="Update_Status_Idle" xml:space="preserve"><value>GitHub で新しいバージョンを確認します。</value></data>
+  <data name="Update_Status_Installing" xml:space="preserve"><value>インストール中 — まもなく CaptureImage が再起動します…</value></data>
+  <data name="Update_Status_Ready" xml:space="preserve"><value>アップデートの準備ができました。再起動してインストールしてください。</value></data>
+  <data name="Update_Status_Unavailable" xml:space="preserve"><value>アップデートはインストール版でのみ利用できます（ポータブル zip やソースからのビルドでは利用できません）。</value></data>
+  <data name="Update_Status_UpdateAvailable" xml:space="preserve"><value>バージョン {0} を利用できます。</value></data>
+  <data name="Update_Status_UpToDate" xml:space="preserve"><value>最新バージョンです。</value></data>
+  <data name="Update_Subtitle" xml:space="preserve"><value>アップデートは GitHub Releases から取得し、CaptureImage の再起動時にインストールされます。</value></data>
+  <data name="Update_Title" xml:space="preserve"><value>アップデート</value></data>
 
 </root>

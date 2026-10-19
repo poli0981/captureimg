@@ -169,6 +169,12 @@ public sealed partial class DashboardViewModel : ViewModelBase, IDisposable
         }
     }
 
+    [RelayCommand]
+    private Task CaptureRegionAsync() => _coordinator.CaptureAsync(CaptureMode.Region);
+
+    [RelayCommand]
+    private Task CaptureMonitorAsync() => _coordinator.CaptureAsync(CaptureMode.Monitor);
+
     [RelayCommand(CanExecute = nameof(HasSelection))]
     private void LockSelected()
     {

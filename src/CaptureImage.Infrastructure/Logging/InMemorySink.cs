@@ -6,6 +6,7 @@ using CaptureImage.Core.Abstractions;
 using CaptureImage.Core.Models;
 using Serilog.Core;
 using Serilog.Events;
+using Serilog.Formatting.Display;
 
 namespace CaptureImage.Infrastructure.Logging;
 
@@ -18,6 +19,9 @@ public sealed class InMemorySink : ILogEventSink, ILogBufferSource
 {
     public const int MaxCapacity = 2_000;
     private const int MaxExceptionLength = 8_192;
+
+    // ":lj" renders strings without quotes, like the log file does.
+    private static readonly MessageTemplateTextFormatter MessageFormatter = new("{Message:lj}", CultureInfo.InvariantCulture);
 
     private readonly Lock _gate = new();
     private readonly Queue<LogEntry> _buffer = new();
@@ -81,8 +85,15 @@ public sealed class InMemorySink : ILogEventSink, ILogBufferSource
             logEvent.Timestamp,
             Map(logEvent.Level),
             source,
-            logEvent.RenderMessage(CultureInfo.InvariantCulture),
+            RenderMessage(logEvent),
             exception);
+    }
+
+    private static string RenderMessage(LogEvent logEvent)
+    {
+        using var writer = new StringWriter(CultureInfo.InvariantCulture);
+        MessageFormatter.Format(logEvent, writer);
+        return writer.ToString();
     }
 
     private static LogEntryLevel Map(LogEventLevel level) => level switch

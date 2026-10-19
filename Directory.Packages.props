@@ -5,15 +5,9 @@
     <CentralPackageTransitivePinningEnabled>true</CentralPackageTransitivePinningEnabled>
   </PropertyGroup>
 
-  <ItemGroup Label="WinUI 3 / Windows App SDK">
-    <PackageVersion Include="Microsoft.WindowsAppSDK" Version="1.8.260921001" />
-    <PackageVersion Include="Microsoft.WindowsAppSDK.Base" Version="1.8.251216001" />
-    <PackageVersion Include="Microsoft.WindowsAppSDK.Foundation" Version="1.8.260803002" />
-    <PackageVersion Include="Microsoft.WindowsAppSDK.Runtime" Version="1.8.260921001" />
-    <PackageVersion Include="Microsoft.WindowsAppSDK.WinUI" Version="1.8.260803003" />
-    <PackageVersion Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.28000.2705" />
-    <PackageVersion Include="Microsoft.Web.WebView2" Version="1.0.4258.31" />
-    <PackageVersion Include="H.NotifyIcon.WinUI" Version="2.4.1" />
+  <ItemGroup Label="WPF UI">
+    <PackageVersion Include="WPF-UI" Version="4.3.0" />
+    <PackageVersion Include="H.NotifyIcon.Wpf" Version="2.4.1" />
   </ItemGroup>
 
   <ItemGroup Label="MVVM">
@@ -30,9 +24,7 @@
 
   <ItemGroup Label="Logging">
     <PackageVersion Include="Serilog" Version="4.4.0" />
-    <PackageVersion Include="Serilog.Extensions.Hosting" Version="10.0.0" />
     <PackageVersion Include="Serilog.Extensions.Logging" Version="10.0.0" />
-    <PackageVersion Include="Serilog.Sinks.Console" Version="6.1.1" />
     <PackageVersion Include="Serilog.Sinks.File" Version="7.0.0" />
     <PackageVersion Include="Serilog.Sinks.Async" Version="2.1.0" />
   </ItemGroup>
@@ -58,6 +50,8 @@
     <PackageVersion Include="AwesomeAssertions" Version="9.6.0" />
     <PackageVersion Include="NSubstitute" Version="6.2.0" />
     <PackageVersion Include="Microsoft.Testing.Extensions.CodeCoverage" Version="18.12.0" />
+    <PackageVersion Include="Xunit.StaFact" Version="4.0.24" />
+    <PackageVersion Include="FlaUI.UIA3" Version="5.0.0" />
   </ItemGroup>
 
 </Project>

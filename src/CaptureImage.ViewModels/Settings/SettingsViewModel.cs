@@ -80,9 +80,10 @@ public sealed partial class SettingsViewModel : ViewModelBase, IDisposable
             LocalizedOption.Create("Balanced", localization, "Settings_PngBalanced"),
             LocalizedOption.Create("Smallest", localization, "Settings_PngSmallest"),
         ];
-        CountdownOptions = [.. SettingValues.CountdownChoices.Select(seconds => new LocalizedOption<int>(
+        CountdownOptions = [.. SettingValues.CountdownChoices.Select(seconds => LocalizedOption.Create(
             seconds,
-            () => seconds == 0 ? localization["Settings_CountdownOff"] : localization.Format("Settings_CountdownSeconds", seconds)))];
+            localization,
+            seconds == 0 ? "Settings_CountdownOff" : $"Settings_Countdown{seconds}s"))];
         ClipboardOptions =
         [
             LocalizedOption.Create(nameof(Core.Models.ClipboardMode.None), localization, "Settings_ClipboardNone"),
@@ -304,7 +305,7 @@ public sealed partial class SettingsViewModel : ViewModelBase, IDisposable
         try
         {
             await _settings.ExportAsync(path).ConfigureAwait(true);
-            _toasts.ShowSuccess(Localization["Settings_SettingsExported"], Path.GetFileName(path));
+            _toasts.ShowSuccess(Localization["Toast_SettingsExported"], Path.GetFileName(path));
         }
         catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
         {
@@ -326,7 +327,7 @@ public sealed partial class SettingsViewModel : ViewModelBase, IDisposable
         {
             await _settings.ImportAsync(path).ConfigureAwait(true);
             ApplySideEffects();
-            _toasts.ShowSuccess(Localization["Settings_SettingsImported"], Path.GetFileName(path));
+            _toasts.ShowSuccess(Localization["Toast_SettingsImported"], Path.GetFileName(path));
         }
         catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or InvalidDataException)
         {

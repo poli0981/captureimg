@@ -32,176 +32,329 @@
   <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
 
   <!-- Navigation -->
-  <data name="Nav_Dashboard" xml:space="preserve"><value>Übersicht</value></data>
-  <data name="Nav_Update" xml:space="preserve"><value>Aktualisierung</value></data>
-  <data name="Nav_Settings" xml:space="preserve"><value>Einstellungen</value></data>
-  <data name="Nav_About" xml:space="preserve"><value>Info</value></data>
-  <data name="Nav_LogViewer" xml:space="preserve"><value>Protokoll</value></data>
-
-  <!-- Dashboard -->
-  <data name="Dashboard_Title" xml:space="preserve"><value>Übersicht</value></data>
-  <data name="Dashboard_Subtitle" xml:space="preserve"><value>Ziel auswählen und scharfschalten — Tastenkombination drücken zum Aufnehmen.</value></data>
-  <data name="Dashboard_Refresh" xml:space="preserve"><value>Aktualisieren</value></data>
-  <data name="Dashboard_Arm" xml:space="preserve"><value>Scharfschalten</value></data>
-  <data name="Dashboard_Disarm" xml:space="preserve"><value>Deaktivieren</value></data>
-  <data name="Dashboard_StatusIdle" xml:space="preserve"><value>Bereit — Ziel auswählen und scharfschalten zum Starten.</value></data>
-  <data name="Dashboard_StatusArmed" xml:space="preserve"><value>Scharfgeschaltet: {0} drücken, um {1} aufzunehmen.</value></data>
-  <data name="Dashboard_StatusCapturing" xml:space="preserve"><value>{0} wird aufgenommen…</value></data>
-  <data name="Dashboard_StatusDisarmed" xml:space="preserve"><value>Deaktiviert.</value></data>
-  <data name="Dashboard_StatusSaved" xml:space="preserve"><value>Gespeichert: {0} ({1}x{2}, {3} ms)</value></data>
-  <data name="Dashboard_StatusFailed" xml:space="preserve"><value>Aufnahme fehlgeschlagen ({0}): {1}</value></data>
-  <data name="Dashboard_TargetsCount" xml:space="preserve"><value>{0} Ziel(e) sichtbar</value></data>
-  <data name="Dashboard_Loading" xml:space="preserve"><value>Wird geladen…</value></data>
-  <data name="Dashboard_EmptyState" xml:space="preserve"><value>Keine sichtbaren Fenster zum Aufnehmen — Spiel oder App starten und dann auf Aktualisieren klicken.</value></data>
-  <data name="Dashboard_LogToggle" xml:space="preserve"><value>Echtzeit-Protokollschublade umschalten</value></data>
-  <data name="Dashboard_SteamBadge" xml:space="preserve"><value>STEAM</value></data>
-  <data name="Dashboard_SteamBadgeTooltip" xml:space="preserve"><value>Steam-Spiel: {0} (AppId {1}). F12-Screenshot ist über das Steam-Overlay verfügbar. Manche Anti-Cheat-geschützte Spiele blockieren externe Aufnahmen.</value></data>
-
-  <!-- Settings -->
-  <data name="Settings_Title" xml:space="preserve"><value>Einstellungen</value></data>
-  <data name="Settings_Language" xml:space="preserve"><value>Sprache</value></data>
-  <data name="Settings_Theme" xml:space="preserve"><value>Design</value></data>
-  <data name="Settings_Theme_System" xml:space="preserve"><value>System</value></data>
-  <data name="Settings_Theme_Light" xml:space="preserve"><value>Hell</value></data>
-  <data name="Settings_Theme_Dark" xml:space="preserve"><value>Dunkel</value></data>
-  <data name="Settings_Hotkey" xml:space="preserve"><value>Aufnahme-Tastenkombination</value></data>
-  <data name="Settings_HotkeyHint" xml:space="preserve"><value>Auf Aufzeichnen klicken und eine Kombination drücken. Esc bricht ab. Zurücksetzen stellt Strg+Umschalt+F12 wieder her.</value></data>
-  <data name="Settings_HotkeyRecord" xml:space="preserve"><value>Aufzeichnen…</value></data>
-  <data name="Settings_HotkeyCancel" xml:space="preserve"><value>Abbrechen</value></data>
-  <data name="Settings_HotkeyReset" xml:space="preserve"><value>Zurücksetzen</value></data>
-  <data name="Settings_HotkeyRecorderPrompt" xml:space="preserve"><value>Tastenkombination drücken (Esc zum Abbrechen)…</value></data>
-  <data name="Settings_HotkeyErrorNoPrimary" xml:space="preserve"><value>Wählen Sie eine Haupttaste (z. B. einen Buchstaben oder eine F-Taste).</value></data>
-  <data name="Settings_HotkeyErrorModifierOnly" xml:space="preserve"><value>Eine Modifizierertaste allein reicht nicht — fügen Sie einen Buchstaben oder eine F-Taste hinzu.</value></data>
-  <data name="Settings_HotkeyErrorNeedsModifier" xml:space="preserve"><value>Einfache Buchstaben und Ziffern benötigen mindestens einen Modifizierer (Strg/Alt/Umschalt/Win).</value></data>
-  <data name="Settings_HotkeyErrorReserved" xml:space="preserve"><value>Diese Kombination ist von Windows reserviert und kann nicht erfasst werden.</value></data>
-  <data name="Settings_HotkeyConflictWarning" xml:space="preserve"><value>Eine andere Anwendung beansprucht möglicherweise diese Kombination — sie wird eventuell nicht ausgelöst, solange diese App läuft.</value></data>
-  <data name="Settings_Format" xml:space="preserve"><value>Standardformat</value></data>
-  <data name="Settings_JpegQuality" xml:space="preserve"><value>JPEG-Qualität</value></data>
-  <data name="Settings_WebpQuality" xml:space="preserve"><value>WebP-Qualität</value></data>
-  <data name="Settings_OutputFolder" xml:space="preserve"><value>Ausgabeordner</value></data>
-  <data name="Settings_OutputFolderDefault" xml:space="preserve"><value>(Standard: Bilder\CaptureImage)</value></data>
-  <data name="Settings_Browse" xml:space="preserve"><value>Durchsuchen…</value></data>
-  <data name="Settings_BrowseTitle" xml:space="preserve"><value>Ausgabeordner wählen</value></data>
-  <data name="Settings_BrowseTooltip" xml:space="preserve"><value>Ordner auswählen anstatt den Pfad einzutippen.</value></data>
-  <data name="Settings_FileNameTemplate" xml:space="preserve"><value>Dateinamenvorlage</value></data>
-  <data name="Settings_PreviewBeforeSave" xml:space="preserve"><value>Jede Aufnahme vor dem Speichern in der Vorschau anzeigen</value></data>
-  <data name="Settings_AutoSwitchOnAltTab" xml:space="preserve"><value>Ziel beim Alt-Tab automatisch umschalten</value></data>
-  <data name="Settings_AutoSwitchOnAltTabHint" xml:space="preserve"><value>Das ausgewählte Ziel folgt dem Vordergrundfenster. Apps, die nicht in der Zielliste stehen, behalten Ihre aktuelle Auswahl bei.</value></data>
-  <data name="Settings_MinimizeToTray" xml:space="preserve"><value>Schließen-Schaltfläche minimiert in die Taskleiste</value></data>
-  <data name="Settings_SoundEnabled" xml:space="preserve"><value>Aufnahmegeräusch abspielen</value></data>
-  <data name="Settings_Import" xml:space="preserve"><value>Importieren…</value></data>
-  <data name="Settings_Export" xml:space="preserve"><value>Exportieren…</value></data>
-  <data name="Settings_ImportTitle" xml:space="preserve"><value>Einstellungen importieren</value></data>
-  <data name="Settings_ExportTitle" xml:space="preserve"><value>Einstellungen exportieren</value></data>
-  <data name="Settings_OpenFile" xml:space="preserve"><value>Einstellungsdatei öffnen</value></data>
-  <data name="Settings_Logging" xml:space="preserve"><value>Protokollierung</value></data>
-  <data name="Settings_LogLevel" xml:space="preserve"><value>Mindestprotokollstufe</value></data>
-  <data name="Settings_LogLevelHint" xml:space="preserve"><value>Filtert die rollierende Protokolldatei und die Anzeige. Debug für Diagnose, Information für den Alltag, Warning oder Error, um Logs ruhig zu halten.</value></data>
-
-  <!-- Update -->
-  <data name="Update_Title" xml:space="preserve"><value>Aktualisierung</value></data>
-  <data name="Update_Check" xml:space="preserve"><value>Nach Updates suchen</value></data>
-  <data name="Update_Download" xml:space="preserve"><value>Herunterladen</value></data>
-  <data name="Update_Install" xml:space="preserve"><value>Installieren und neu starten</value></data>
-  <data name="Update_Status" xml:space="preserve"><value>Status</value></data>
-  <data name="Update_Log" xml:space="preserve"><value>Protokoll</value></data>
-  <data name="Update_NewVersion" xml:space="preserve"><value>Neue Version:</value></data>
-
-  <!-- About -->
-  <data name="About_Title" xml:space="preserve"><value>Über CaptureImage</value></data>
-  <data name="About_Tagline" xml:space="preserve"><value>Schlanke Windows-Bildschirmaufnahme für Spiele ohne integrierte Screenshot-Taste.</value></data>
-  <data name="About_AppLabel" xml:space="preserve"><value>App</value></data>
-  <data name="About_VersionLabel" xml:space="preserve"><value>Version</value></data>
-  <data name="About_LicenseLabel" xml:space="preserve"><value>Lizenz</value></data>
-  <data name="About_DeveloperLabel" xml:space="preserve"><value>Entwickler</value></data>
-  <data name="About_RepositoryLabel" xml:space="preserve"><value>Repository</value></data>
+  <data name="About_AiNotice" xml:space="preserve"><value>CaptureImage wird mit erheblicher Unterstützung eines KI-Programmierassistenten (Claude von Anthropic, über Claude Code) für Code, Tests und Dokumentation entwickelt. Der Maintainer prüft und testet jede Änderung vor der Veröffentlichung.</value></data>
   <data name="About_AiSection" xml:space="preserve"><value>KI-unterstützte Entwicklung</value></data>
-  <data name="About_DisclaimersSection" xml:space="preserve"><value>Hinweise</value></data>
-  <data name="About_TranslationDisclaimer" xml:space="preserve"><value>Übersetzungen</value></data>
-  <data name="About_TranslationDisclaimerBody" xml:space="preserve"><value>Die Sprachpakete Vietnamesisch, Arabisch, Japanisch, vereinfachtes Chinesisch, Koreanisch, Spanisch, Französisch, Deutsch, brasilianisches Portugiesisch und Russisch wurden maschinell unterstützt. Die Terminologie entspricht möglicherweise nicht den muttersprachlichen Konventionen, und einige Fachbegriffe (hotkey, toast, frame usw.) bleiben absichtlich auf Englisch. Muttersprachler, die Korrektur lesen möchten, sind herzlich eingeladen, Pull Requests gegen die .resx-Dateien in src/CaptureImage.UI/Resources/Strings/ einzureichen.</value></data>
   <data name="About_CaptureDisclaimer" xml:space="preserve"><value>Aufnahmeunterstützung</value></data>
   <data name="About_CaptureLimitationDisclaimerBody" xml:space="preserve"><value>CaptureImage kann die meisten Spiele im Fenster- oder randlosen Modus über Windows.Graphics.Capture aufnehmen, jedoch nicht jeden Titel. DRM-geschützte Oberflächen, exklusive Vollbild-Direct3D-9-Spiele und Titel mit Anti-Cheat-Hooks können schwarze Frames liefern oder die Aufnahme verweigern. Für Legacy-Apps wird ein GDI-PrintWindow-Fallback versucht. Vollständige Liste in docs/legal/DISCLAIMER.md §2.</value></data>
+  <data name="About_ContactSection" xml:space="preserve"><value>Mit dem Entwickler verbinden</value></data>
+  <data name="About_DeveloperLabel" xml:space="preserve"><value>Entwickler</value></data>
+  <data name="About_DisclaimersSection" xml:space="preserve"><value>Hinweise</value></data>
+  <data name="About_Discussions" xml:space="preserve"><value>Diskussionen</value></data>
+  <data name="About_DonateBody" xml:space="preserve"><value>CaptureImage ist kostenlos und Open Source. Wenn es Ihnen hilft, ziehen Sie in Betracht, die Entwicklung über einen dieser Kanäle zu unterstützen:</value></data>
+  <data name="About_DonateSection" xml:space="preserve"><value>Projekt unterstützen</value></data>
+  <data name="About_Email" xml:space="preserve"><value>E-Mail</value></data>
+  <data name="About_FeedbackSection" xml:space="preserve"><value>Feedback</value></data>
+  <data name="About_LegalSection" xml:space="preserve"><value>Rechtliche Dokumente</value></data>
   <data name="About_LiabilityDisclaimer" xml:space="preserve"><value>Keine Gewährleistung</value></data>
   <data name="About_LiabilityDisclaimerBody" xml:space="preserve"><value>CaptureImage wird unter GPL-3.0-or-later WIE BESEHEN ohne jegliche Gewährleistung verteilt. Die Autoren haften nicht für verlorene Screenshots, Spielabstürze, Anti-Cheat-Sanktionen oder Datenverluste. Verwendung auf eigene Gefahr. Vollständiger Text in docs/legal/DISCLAIMER.md.</value></data>
-  <data name="About_LegalSection" xml:space="preserve"><value>Rechtliche Dokumente</value></data>
-  <data name="About_ThirdPartySection" xml:space="preserve"><value>Drittanbieterkomponenten</value></data>
-  <data name="About_ThirdPartyHint" xml:space="preserve"><value>Klicken Sie oben auf „Drittanbieterhinweise" für die vollständige Liste mit Upstream-URLs.</value></data>
-  <data name="About_OpenDisclaimer" xml:space="preserve"><value>Haftungsausschluss</value></data>
-  <data name="About_OpenPrivacy" xml:space="preserve"><value>Datenschutz</value></data>
-  <data name="About_OpenTerms" xml:space="preserve"><value>Bedingungen</value></data>
-  <data name="About_OpenLicense" xml:space="preserve"><value>Lizenz (GPL-3.0)</value></data>
-  <data name="About_OpenThirdParty" xml:space="preserve"><value>Drittanbieterhinweise</value></data>
-  <data name="About_OpenContributors" xml:space="preserve"><value>Mitwirkende</value></data>
-
-  <!-- About — Social Dev / Donate / Report Bug (v1.5.1) -->
-  <data name="About_SocialSection" xml:space="preserve"><value>Mit dem Entwickler verbinden</value></data>
-  <data name="About_DonateSection" xml:space="preserve"><value>Projekt unterstützen</value></data>
-  <data name="About_DonateBody" xml:space="preserve"><value>CaptureImage ist kostenlos und Open Source. Wenn es Ihnen hilft, ziehen Sie in Betracht, die Entwicklung über einen dieser Kanäle zu unterstützen:</value></data>
-  <data name="About_OpenGitHubSponsors" xml:space="preserve"><value>GitHub Sponsors</value></data>
-  <data name="About_OpenKoFi" xml:space="preserve"><value>Ko-fi</value></data>
-  <data name="About_OpenBuyMeACoffee" xml:space="preserve"><value>Buy Me a Coffee</value></data>
-  <data name="About_OpenPatreon" xml:space="preserve"><value>Patreon</value></data>
+  <data name="About_LicenseLabel" xml:space="preserve"><value>Lizenz</value></data>
   <data name="About_OpenBugReport" xml:space="preserve"><value>Fehler melden</value></data>
   <data name="About_OpenBugReportHint" xml:space="preserve"><value>Öffnet den GitHub Issue Tracker mit der vorausgefüllten Fehlerbericht-Vorlage.</value></data>
+  <data name="About_OpenContributors" xml:space="preserve"><value>Mitwirkende</value></data>
+  <data name="About_OpenDisclaimer" xml:space="preserve"><value>Haftungsausschluss</value></data>
+  <data name="About_OpenLicense" xml:space="preserve"><value>Lizenz (GPL-3.0)</value></data>
+  <data name="About_OpenNotice" xml:space="preserve"><value>Urheberrechtshinweis</value></data>
+  <data name="About_OpenPrivacy" xml:space="preserve"><value>Datenschutz</value></data>
+  <data name="About_OpenTerms" xml:space="preserve"><value>Bedingungen</value></data>
+  <data name="About_OpenThirdParty" xml:space="preserve"><value>Drittanbieterhinweise</value></data>
+  <data name="About_OtherChannels" xml:space="preserve"><value>Weitere Kanäle</value></data>
+  <data name="About_ReleaseNotes" xml:space="preserve"><value>Versionshinweise</value></data>
+  <data name="About_RepositoryLabel" xml:space="preserve"><value>Repository</value></data>
+  <data name="About_RequestFeature" xml:space="preserve"><value>Funktion vorschlagen</value></data>
+  <data name="About_SponsorEmail" xml:space="preserve"><value>Sponsoring-Anfragen</value></data>
+  <data name="About_Tagline" xml:space="preserve"><value>Schlanke Windows-Bildschirmaufnahme für Spiele ohne integrierte Screenshot-Taste.</value></data>
+  <data name="About_ThirdPartySection" xml:space="preserve"><value>Drittanbieterkomponenten</value></data>
+  <data name="About_TranslationDisclaimer" xml:space="preserve"><value>Übersetzungen</value></data>
+  <data name="About_TranslationDisclaimerBody" xml:space="preserve"><value>Die Sprachpakete Vietnamesisch, Arabisch, Japanisch, vereinfachtes Chinesisch, Koreanisch, Spanisch, Französisch, Deutsch, brasilianisches Portugiesisch und Russisch wurden maschinell unterstützt. Die Terminologie entspricht möglicherweise nicht den muttersprachlichen Konventionen, und einige Fachbegriffe (hotkey, toast, frame usw.) bleiben absichtlich auf Englisch. Muttersprachler, die Korrektur lesen möchten, sind herzlich eingeladen, Pull Requests gegen die .resx-Dateien in src/CaptureImage.UI/Resources/Strings/ einzureichen.</value></data>
+  <data name="About_VersionLabel" xml:space="preserve"><value>Version</value></data>
 
-  <!-- Log viewer -->
-  <data name="Log_Title" xml:space="preserve"><value>Echtzeit-Protokoll</value></data>
-  <data name="Log_Pause" xml:space="preserve"><value>Pause</value></data>
-  <data name="Log_Resume" xml:space="preserve"><value>Fortsetzen</value></data>
+  <data name="Common_Browse" xml:space="preserve"><value>Durchsuchen…</value></data>
+  <data name="Common_Cancel" xml:space="preserve"><value>Abbrechen</value></data>
+  <data name="Common_Close" xml:space="preserve"><value>Schließen</value></data>
+  <data name="Common_CopyImage" xml:space="preserve"><value>Bild kopieren</value></data>
+
+  <data name="Dashboard_Arm" xml:space="preserve"><value>Scharfschalten</value></data>
+  <data name="Dashboard_CaptureMonitor" xml:space="preserve"><value>Bildschirm aufnehmen</value></data>
+  <data name="Dashboard_CaptureRegion" xml:space="preserve"><value>Bereich aufnehmen</value></data>
+  <data name="Dashboard_CaptureSelected" xml:space="preserve"><value>Fenster aufnehmen</value></data>
+  <data name="Dashboard_CreateProfile" xml:space="preserve"><value>Profil erstellen</value></data>
+  <data name="Dashboard_Disarm" xml:space="preserve"><value>Deaktivieren</value></data>
+  <data name="Dashboard_EmptyState" xml:space="preserve"><value>Keine sichtbaren Fenster zum Aufnehmen — Spiel oder App starten und dann auf Aktualisieren klicken.</value></data>
+  <data name="Dashboard_Hotkeys" xml:space="preserve"><value>Aufnahme-Tastenkombinationen</value></data>
+  <data name="Dashboard_Locked" xml:space="preserve"><value>Festgelegt</value></data>
+  <data name="Dashboard_LockedLabel" xml:space="preserve"><value>Fenster-Tastenkombination nimmt auf:</value></data>
+  <data name="Dashboard_LockSelected" xml:space="preserve"><value>Als Ziel festlegen</value></data>
+  <data name="Dashboard_Minimized" xml:space="preserve"><value>Minimiert</value></data>
+  <data name="Dashboard_ProfileBadge" xml:space="preserve"><value>Profil: {0}</value></data>
+  <data name="Dashboard_Refresh" xml:space="preserve"><value>Aktualisieren</value></data>
+  <data name="Dashboard_Search" xml:space="preserve"><value>Fenster suchen</value></data>
+  <data name="Dashboard_SteamBadge" xml:space="preserve"><value>STEAM</value></data>
+  <data name="Dashboard_SteamBadgeTooltip" xml:space="preserve"><value>Steam-Spiel: {0} (AppId {1}). F12-Screenshot ist über das Steam-Overlay verfügbar. Manche Anti-Cheat-geschützte Spiele blockieren externe Aufnahmen.</value></data>
+  <data name="Dashboard_Subtitle" xml:space="preserve"><value>Tastenkombinationen scharfschalten und im Spiel drücken. Ein Fenster festlegen, um immer dieses Fenster aufzunehmen.</value></data>
+  <data name="Dashboard_Title" xml:space="preserve"><value>Übersicht</value></data>
+  <data name="Dashboard_Unlock" xml:space="preserve"><value>Lösen</value></data>
+  <data name="Dashboard_Windows" xml:space="preserve"><value>Geöffnete Fenster</value></data>
+
+  <data name="Error_Cancelled" xml:space="preserve"><value>Aufnahme abgebrochen.</value></data>
+  <data name="Error_EncodingFailure" xml:space="preserve"><value>Das Bild konnte nicht kodiert werden.</value></data>
+  <data name="Error_FileWriteFailure" xml:space="preserve"><value>Die Datei konnte nicht gespeichert werden. Ausgabeordner und freien Speicherplatz prüfen.</value></data>
+  <data name="Error_GraphicsDeviceFailure" xml:space="preserve"><value>Der Grafiktreiber reagiert nicht mehr. Gleich noch einmal versuchen.</value></data>
+  <data name="Error_NoFrameArrived" xml:space="preserve"><value>Von Windows kam kein Bild. Prüfen, ob das Fenster sichtbar ist, und erneut versuchen.</value></data>
+  <data name="Error_NoTarget" xml:space="preserve"><value>Kein Fenster zum Aufnehmen. Ein Spiel in den Vordergrund holen oder in der Übersicht ein Fenster festlegen.</value></data>
+  <data name="Error_NotSupported" xml:space="preserve"><value>Bildschirmaufnahmen werden auf diesem System nicht unterstützt.</value></data>
+  <data name="Error_ProcessExited" xml:space="preserve"><value>Das Spiel oder die App wurde beendet.</value></data>
+  <data name="Error_ProtectedContent" xml:space="preserve"><value>Dieses Fenster blockiert Bildschirmaufnahmen (geschützte Inhalte).</value></data>
+  <data name="Error_TargetGone" xml:space="preserve"><value>Das Fenster wurde geschlossen.</value></data>
+  <data name="Error_TargetMinimized" xml:space="preserve"><value>Das Fenster ist minimiert. Wiederherstellen und erneut versuchen.</value></data>
+  <data name="Error_Unknown" xml:space="preserve"><value>Etwas ist schiefgelaufen. Details stehen im Protokoll.</value></data>
+
+  <data name="Hotkey_None" xml:space="preserve"><value>Nicht festgelegt</value></data>
+  <data name="Hotkey_PressKeys" xml:space="preserve"><value>Tasten drücken…</value></data>
+  <data name="Hotkey_ProblemMessage" xml:space="preserve"><value>Eine andere App verwendet eine der Aufnahme-Tastenkombinationen, oder die Kombination ist ungültig. In den Einstellungen eine andere wählen.</value></data>
+  <data name="Hotkey_ProblemTitle" xml:space="preserve"><value>Eine Tastenkombination funktioniert nicht</value></data>
+  <data name="Hotkey_StatusActive" xml:space="preserve"><value>Aktiv</value></data>
+  <data name="Hotkey_StatusConflict" xml:space="preserve"><value>Von einer anderen App belegt</value></data>
+  <data name="Hotkey_StatusInactive" xml:space="preserve"><value>Aus bis zum Scharfschalten</value></data>
+  <data name="Hotkey_StatusInvalid" xml:space="preserve"><value>Ungültige Kombination</value></data>
+  <data name="Hotkey_StatusUnbound" xml:space="preserve"><value>Nicht festgelegt</value></data>
+  <data name="Hotkey_TakenByOtherApp" xml:space="preserve"><value>Eine andere App verwendet diese Kombination bereits. Eine andere wählen.</value></data>
+  <data name="Hotkey_UsedByMode" xml:space="preserve"><value>Bereits für {0} verwendet.</value></data>
+  <data name="Hotkey_Validation_ModifierOnlyKey" xml:space="preserve"><value>Eine Modifizierertaste allein reicht nicht — fügen Sie einen Buchstaben oder eine F-Taste hinzu.</value></data>
+  <data name="Hotkey_Validation_NoPrimaryKey" xml:space="preserve"><value>Wählen Sie eine Haupttaste (z. B. einen Buchstaben oder eine F-Taste).</value></data>
+  <data name="Hotkey_Validation_RequiresModifier" xml:space="preserve"><value>Einfache Buchstaben und Ziffern benötigen mindestens einen Modifizierer (Strg/Alt/Umschalt/Win).</value></data>
+  <data name="Hotkey_Validation_ReservedByWindows" xml:space="preserve"><value>Diese Kombination ist von Windows reserviert und kann nicht erfasst werden.</value></data>
+
+  <data name="Library_AllGames" xml:space="preserve"><value>Alle Spiele</value></data>
+  <data name="Library_CopyFailed" xml:space="preserve"><value>Das Bild konnte nicht gelesen werden.</value></data>
+  <data name="Library_CopyPath" xml:space="preserve"><value>Pfad kopieren</value></data>
+  <data name="Library_Delete" xml:space="preserve"><value>Löschen</value></data>
+  <data name="Library_Deleted" xml:space="preserve"><value>In den Papierkorb verschoben</value></data>
+  <data name="Library_DeleteFailed" xml:space="preserve"><value>Die Datei konnte nicht in den Papierkorb verschoben werden.</value></data>
+  <data name="Library_DeleteMessage" xml:space="preserve"><value>{0} in den Papierkorb verschieben?</value></data>
+  <data name="Library_DeleteTitle" xml:space="preserve"><value>Aufnahme löschen</value></data>
+  <data name="Library_Empty" xml:space="preserve"><value>Noch keine Aufnahmen. Tastenkombinationen scharfschalten und den ersten Screenshot machen.</value></data>
+  <data name="Library_GameFilter" xml:space="preserve"><value>Nach Spiel filtern</value></data>
+  <data name="Library_HdrOnly" xml:space="preserve"><value>Nur HDR</value></data>
+  <data name="Library_Open" xml:space="preserve"><value>Öffnen</value></data>
+  <data name="Library_OpenHdr" xml:space="preserve"><value>HDR-Version öffnen</value></data>
+  <data name="Library_Pin" xml:space="preserve"><value>Anheften</value></data>
+  <data name="Library_Reveal" xml:space="preserve"><value>Im Ordner anzeigen</value></data>
+  <data name="Library_Search" xml:space="preserve"><value>Aufnahmen suchen</value></data>
+  <data name="Library_SelectHint" xml:space="preserve"><value>Eine Aufnahme auswählen, um Details zu sehen.</value></data>
+  <data name="Library_Summary" xml:space="preserve"><value>{0} von {1} Aufnahmen</value></data>
+  <data name="Library_Title" xml:space="preserve"><value>Aufnahmebibliothek</value></data>
+
   <data name="Log_Clear" xml:space="preserve"><value>Leeren</value></data>
-  <data name="Log_EventsCount" xml:space="preserve"><value>{0} Ereignisse</value></data>
   <data name="Log_EmptyState" xml:space="preserve"><value>Noch keine Protokollereignisse. Live-Ereignisse vom Aufnahme-Engine erscheinen hier.</value></data>
-  <data name="Log_Filter" xml:space="preserve"><value>Mindeststufe:</value></data>
+  <data name="Log_Pause" xml:space="preserve"><value>Pause</value></data>
   <data name="Log_RevealFolder" xml:space="preserve"><value>Ordner öffnen</value></data>
 
-  <!-- Preview -->
-  <data name="Preview_Title" xml:space="preserve"><value>Vorschau</value></data>
+  <data name="Logs_CopyAll" xml:space="preserve"><value>Alles kopieren</value></data>
+  <data name="Logs_CopySelected" xml:space="preserve"><value>Ausgewählte Zeile kopieren</value></data>
+  <data name="Logs_Level" xml:space="preserve"><value>Mindeststufe</value></data>
+  <data name="Logs_LevelAll" xml:space="preserve"><value>Alle Stufen</value></data>
+  <data name="Logs_Search" xml:space="preserve"><value>Protokoll durchsuchen</value></data>
+  <data name="Logs_Subtitle" xml:space="preserve"><value>Aktuelle Ereignisse dieser Sitzung. Zum Melden eines Problems „Diagnose exportieren“ verwenden.</value></data>
+  <data name="Logs_Title" xml:space="preserve"><value>Echtzeit-Protokoll</value></data>
+
+  <data name="Mode_Monitor" xml:space="preserve"><value>Bildschirm</value></data>
+  <data name="Mode_Region" xml:space="preserve"><value>Bereich</value></data>
+  <data name="Mode_Window" xml:space="preserve"><value>Fenster</value></data>
+
+  <data name="Nav_About" xml:space="preserve"><value>Info</value></data>
+  <data name="Nav_Dashboard" xml:space="preserve"><value>Übersicht</value></data>
+  <data name="Nav_Library" xml:space="preserve"><value>Bibliothek</value></data>
+  <data name="Nav_Logs" xml:space="preserve"><value>Protokoll</value></data>
+  <data name="Nav_Profiles" xml:space="preserve"><value>Profile</value></data>
+  <data name="Nav_Settings" xml:space="preserve"><value>Einstellungen</value></data>
+  <data name="Nav_Update" xml:space="preserve"><value>Aktualisierung</value></data>
+
+  <data name="PinnedWindow_Close" xml:space="preserve"><value>Schließen</value></data>
+  <data name="PinnedWindow_Open" xml:space="preserve"><value>Im Explorer anzeigen</value></data>
+
+  <data name="Preview_Discard" xml:space="preserve"><value>Verwerfen</value></data>
+  <data name="Preview_ExtractText" xml:space="preserve"><value>Text extrahieren (OCR)</value></data>
   <data name="Preview_Prompt" xml:space="preserve"><value>Diese Aufnahme speichern?</value></data>
   <data name="Preview_Save" xml:space="preserve"><value>Speichern</value></data>
-  <data name="Preview_Discard" xml:space="preserve"><value>Verwerfen</value></data>
+  <data name="Preview_Title" xml:space="preserve"><value>Vorschau</value></data>
 
-  <!-- Toasts -->
-  <data name="Toast_CaptureSaved" xml:space="preserve"><value>Aufnahme gespeichert</value></data>
-  <data name="Toast_CaptureFailed" xml:space="preserve"><value>Aufnahme fehlgeschlagen</value></data>
-  <data name="Toast_SettingsImported" xml:space="preserve"><value>Einstellungen importiert</value></data>
-  <data name="Toast_SettingsExported" xml:space="preserve"><value>Einstellungen exportiert</value></data>
-  <data name="Toast_Error" xml:space="preserve"><value>Fehler</value></data>
+  <data name="Profiles_Add" xml:space="preserve"><value>Profil hinzufügen</value></data>
+  <data name="Profiles_AutoArm" xml:space="preserve"><value>Automatisch scharfschalten</value></data>
+  <data name="Profiles_AutoArmBadge" xml:space="preserve"><value>Auto</value></data>
+  <data name="Profiles_AutoArmHint" xml:space="preserve"><value>Schaltet die Tastenkombinationen scharf, sobald dieses Spiel im Vordergrund ist.</value></data>
+  <data name="Profiles_AutomationSection" xml:space="preserve"><value>Automatisierung</value></data>
+  <data name="Profiles_Delete" xml:space="preserve"><value>Löschen</value></data>
+  <data name="Profiles_DeleteMessage" xml:space="preserve"><value>Profil „{0}“ löschen? Bereits gespeicherte Aufnahmen bleiben erhalten.</value></data>
+  <data name="Profiles_DeleteTitle" xml:space="preserve"><value>Profil löschen</value></data>
+  <data name="Profiles_DisabledBadge" xml:space="preserve"><value>Aus</value></data>
+  <data name="Profiles_Empty" xml:space="preserve"><value>Noch keine Profile. Hier eines hinzufügen oder in der Übersicht „Profil erstellen“ verwenden, während das Spiel läuft.</value></data>
+  <data name="Profiles_Enabled" xml:space="preserve"><value>Profil aktiv</value></data>
+  <data name="Profiles_ExecutableName" xml:space="preserve"><value>Name der ausführbaren Datei</value></data>
+  <data name="Profiles_ExecutableNameHint" xml:space="preserve"><value>Passt unabhängig vom Installationsort.</value></data>
+  <data name="Profiles_ExecutablePath" xml:space="preserve"><value>Pfad der ausführbaren Datei</value></data>
+  <data name="Profiles_ExecutablePathHint" xml:space="preserve"><value>Die genaueste Zuordnung.</value></data>
+  <data name="Profiles_LockTarget" xml:space="preserve"><value>Spielfenster festlegen</value></data>
+  <data name="Profiles_LockTargetHint" xml:space="preserve"><value>Die Fenster-Tastenkombination nimmt dann das Spiel auf, auch wenn ein anderes Fenster davor liegt.</value></data>
+  <data name="Profiles_MatchesNothing" xml:space="preserve"><value>Pfad oder Name der ausführbaren Datei oder eine Steam-AppId angeben.</value></data>
+  <data name="Profiles_MatchesNothingTitle" xml:space="preserve"><value>Dieses Profil passt noch zu keinem Spiel</value></data>
+  <data name="Profiles_MatchSection" xml:space="preserve"><value>Welches Spiel</value></data>
+  <data name="Profiles_Name" xml:space="preserve"><value>Name</value></data>
+  <data name="Profiles_NewProfile" xml:space="preserve"><value>Neues Profil</value></data>
+  <data name="Profiles_OutputFolder" xml:space="preserve"><value>Ausgabeordner</value></data>
+  <data name="Profiles_OutputSection" xml:space="preserve"><value>Ausgabe</value></data>
+  <data name="Profiles_PickExecutable" xml:space="preserve"><value>Ausführbare Datei des Spiels auswählen</value></data>
+  <data name="Profiles_SteamAppId" xml:space="preserve"><value>Steam-AppId</value></data>
+  <data name="Profiles_SteamAppIdInvalid" xml:space="preserve"><value>Eine Zahl eingeben, z. B. 1245620.</value></data>
+  <data name="Profiles_Subtitle" xml:space="preserve"><value>Ausgabeordner, Format und Dateiname pro Spiel. Ein Profil kann die Tastenkombinationen auch beim Start des Spiels scharfschalten.</value></data>
+  <data name="Profiles_Title" xml:space="preserve"><value>Spielprofile</value></data>
+  <data name="Profiles_UseGlobal" xml:space="preserve"><value>Globale Einstellung verwenden</value></data>
+  <data name="Profiles_UseGlobalButton" xml:space="preserve"><value>Global verwenden</value></data>
 
-  <!-- Tray menu -->
-  <data name="Tray_ShowWindow" xml:space="preserve"><value>CaptureImage anzeigen</value></data>
-  <data name="Tray_OpenFolder" xml:space="preserve"><value>Aufnahmeordner öffnen</value></data>
-  <data name="Tray_Exit" xml:space="preserve"><value>Beenden</value></data>
+  <data name="Region_DragHint" xml:space="preserve"><value>Ziehen, um einen Bereich auszuwählen · Klicken für den ganzen Bildschirm · Esc zum Abbrechen</value></data>
 
-  <!-- v1.5 quick wins -->
+  <data name="Settings_AdvancedSection" xml:space="preserve"><value>Erweitert</value></data>
+  <data name="Settings_AppearanceSection" xml:space="preserve"><value>Darstellung</value></data>
+  <data name="Settings_ArmOnStartup" xml:space="preserve"><value>Beim Start von CaptureImage scharfschalten</value></data>
+  <data name="Settings_ArmOnStartupHint" xml:space="preserve"><value>Im scharfgeschalteten Zustand erhalten andere Apps diese Tastenkombinationen nicht.</value></data>
+  <data name="Settings_AutoPinAfterCapture" xml:space="preserve"><value>Nach jeder Aufnahme ein schwebendes Vorschaubild anpinnen</value></data>
+  <data name="Settings_BackupSettings" xml:space="preserve"><value>Einstellungen sichern und wiederherstellen</value></data>
+  <data name="Settings_BehaviorSection" xml:space="preserve"><value>Verhalten</value></data>
+  <data name="Settings_CaptureSection" xml:space="preserve"><value>Aufnahme</value></data>
+  <data name="Settings_Clipboard" xml:space="preserve"><value>Zwischenablage-Modus</value></data>
+  <data name="Settings_ClipboardCopy" xml:space="preserve"><value>Nur kopieren (keine Datei)</value></data>
+  <data name="Settings_ClipboardCopyAndSave" xml:space="preserve"><value>Kopieren + Datei speichern</value></data>
+  <data name="Settings_ClipboardNone" xml:space="preserve"><value>Aus (nur Datei)</value></data>
   <data name="Settings_Countdown" xml:space="preserve"><value>Aufnahme-Countdown</value></data>
-  <data name="Settings_CountdownOff" xml:space="preserve"><value>Aus (keine Verzögerung)</value></data>
+  <data name="Settings_Countdown10s" xml:space="preserve"><value>10 Sekunden</value></data>
   <data name="Settings_Countdown3s" xml:space="preserve"><value>3 Sekunden</value></data>
   <data name="Settings_Countdown5s" xml:space="preserve"><value>5 Sekunden</value></data>
-  <data name="Settings_Countdown10s" xml:space="preserve"><value>10 Sekunden</value></data>
-  <data name="Settings_Clipboard" xml:space="preserve"><value>Zwischenablage-Modus</value></data>
-  <data name="Settings_ClipboardNone" xml:space="preserve"><value>Aus (nur Datei)</value></data>
-  <data name="Settings_ClipboardCopy" xml:space="preserve"><value>Nur kopieren (keine Datei)</value></data>
-  <data name="Settings_ClipboardCopySave" xml:space="preserve"><value>Kopieren + Datei speichern</value></data>
+  <data name="Settings_CountdownOff" xml:space="preserve"><value>Aus (keine Verzögerung)</value></data>
+  <data name="Settings_DataFolder" xml:space="preserve"><value>Datenordner</value></data>
+  <data name="Settings_DiagnosticsExported" xml:space="preserve"><value>Diagnose exportiert</value></data>
+  <data name="Settings_Export" xml:space="preserve"><value>Exportieren…</value></data>
+  <data name="Settings_ExportDiagnostics" xml:space="preserve"><value>Diagnose exportieren</value></data>
+  <data name="Settings_ExportDiagnosticsButton" xml:space="preserve"><value>Exportieren…</value></data>
+  <data name="Settings_ExportDiagnosticsHint" xml:space="preserve"><value>Ein Zip mit aktuellen Protokollen, Ihren Einstellungen und Systeminformationen (ohne Benutzerpfade) zum Anhängen an einen Fehlerbericht.</value></data>
+  <data name="Settings_ExportFailed" xml:space="preserve"><value>Der Export ist fehlgeschlagen.</value></data>
+  <data name="Settings_ExportSettings" xml:space="preserve"><value>Einstellungen exportieren</value></data>
+  <data name="Settings_FileNamePreview" xml:space="preserve"><value>Beispiel:</value></data>
+  <data name="Settings_FileNameTemplate" xml:space="preserve"><value>Dateinamenvorlage</value></data>
+  <data name="Settings_FileNameTokens" xml:space="preserve"><value>Platzhalter: {Game} {Process} {Mode} {yyyy} {MM} {dd} {HH} {mm} {ss} {counter}</value></data>
+  <data name="Settings_Format" xml:space="preserve"><value>Standardformat</value></data>
+  <data name="Settings_HdrAuto" xml:space="preserve"><value>Automatisch (HDR auf HDR-Bildschirmen)</value></data>
+  <data name="Settings_HdrMode" xml:space="preserve"><value>HDR-Aufnahme</value></data>
+  <data name="Settings_HdrModeHint" xml:space="preserve"><value>Auf HDR-Bildschirmen wird das volle HDR-Bild aufgenommen und per Tone-Mapping in ein normales Bild umgewandelt.</value></data>
+  <data name="Settings_HdrOff" xml:space="preserve"><value>Aus (immer SDR)</value></data>
+  <data name="Settings_HdrSection" xml:space="preserve"><value>HDR</value></data>
+  <data name="Settings_HotkeyClear" xml:space="preserve"><value>Entfernen</value></data>
+  <data name="Settings_HotkeyHint" xml:space="preserve"><value>Auf eine Tastenkombination klicken und die neue Kombination drücken. Esc bricht ab, Rücktaste löscht. Tastenkombinationen funktionieren nur im scharfgeschalteten Zustand.</value></data>
+  <data name="Settings_HotkeyMonitorDescription" xml:space="preserve"><value>Nimmt den Bildschirm unter dem Mauszeiger auf.</value></data>
+  <data name="Settings_HotkeyRecord" xml:space="preserve"><value>Aufzeichnen…</value></data>
+  <data name="Settings_HotkeyRegionDescription" xml:space="preserve"><value>Friert alle Bildschirme ein und lässt Sie einen Bereich aufziehen.</value></data>
+  <data name="Settings_HotkeyReset" xml:space="preserve"><value>Zurücksetzen</value></data>
+  <data name="Settings_HotkeysSection" xml:space="preserve"><value>Tastenkombinationen</value></data>
+  <data name="Settings_HotkeyWindowDescription" xml:space="preserve"><value>Nimmt das festgelegte Fenster oder das Fenster im Vordergrund auf.</value></data>
+  <data name="Settings_Import" xml:space="preserve"><value>Importieren…</value></data>
+  <data name="Settings_ImportFailed" xml:space="preserve"><value>Diese Einstellungen konnten nicht importiert werden.</value></data>
+  <data name="Settings_ImportSettings" xml:space="preserve"><value>Einstellungen importieren</value></data>
+  <data name="Settings_IncludeCursor" xml:space="preserve"><value>Mauszeiger einbeziehen</value></data>
+  <data name="Settings_IncludeWindowFrame" xml:space="preserve"><value>Fensterrahmen einbeziehen</value></data>
+  <data name="Settings_IncludeWindowFrameHint" xml:space="preserve"><value>Behält Titelleiste und Rahmen bei Fensteraufnahmen bei.</value></data>
+  <data name="Settings_JpegQuality" xml:space="preserve"><value>JPEG-Qualität</value></data>
+  <data name="Settings_Language" xml:space="preserve"><value>Sprache</value></data>
+  <data name="Settings_LanguageHint" xml:space="preserve"><value>Änderungen gelten sofort.</value></data>
+  <data name="Settings_LogLevel" xml:space="preserve"><value>Mindestprotokollstufe</value></data>
+  <data name="Settings_LogLevelDebug" xml:space="preserve"><value>Debug</value></data>
+  <data name="Settings_LogLevelError" xml:space="preserve"><value>Nur Fehler</value></data>
+  <data name="Settings_LogLevelHint" xml:space="preserve"><value>Filtert die rollierende Protokolldatei und die Anzeige. Debug für Diagnose, Information für den Alltag, Warning oder Error, um Logs ruhig zu halten.</value></data>
+  <data name="Settings_LogLevelInformation" xml:space="preserve"><value>Information</value></data>
+  <data name="Settings_LogLevelWarning" xml:space="preserve"><value>Warnungen</value></data>
+  <data name="Settings_MinimizeToTray" xml:space="preserve"><value>Schließen-Schaltfläche minimiert in die Taskleiste</value></data>
+  <data name="Settings_OpenFolder" xml:space="preserve"><value>Ordner öffnen</value></data>
   <data name="Settings_OpenFolderAfterSave" xml:space="preserve"><value>Ausgabeordner nach dem Speichern öffnen</value></data>
-  <data name="Toast_Countdown" xml:space="preserve"><value>Aufnahme in {0}…</value></data>
+  <data name="Settings_OutputFolder" xml:space="preserve"><value>Ausgabeordner</value></data>
+  <data name="Settings_OutputFolderUnavailable" xml:space="preserve"><value>Der Ausgabeordner kann nicht geöffnet werden.</value></data>
+  <data name="Settings_OutputSection" xml:space="preserve"><value>Ausgabe</value></data>
+  <data name="Settings_PngBalanced" xml:space="preserve"><value>Ausgewogen</value></data>
+  <data name="Settings_PngCompression" xml:space="preserve"><value>PNG-Komprimierung</value></data>
+  <data name="Settings_PngCompressionHint" xml:space="preserve"><value>Kleinere Dateien brauchen länger zum Speichern.</value></data>
+  <data name="Settings_PngFast" xml:space="preserve"><value>Schnell (größere Dateien)</value></data>
+  <data name="Settings_PngSmallest" xml:space="preserve"><value>Am kleinsten (langsamer)</value></data>
+  <data name="Settings_PreviewBeforeSave" xml:space="preserve"><value>Jede Aufnahme vor dem Speichern in der Vorschau anzeigen</value></data>
+  <data name="Settings_Reset" xml:space="preserve"><value>Zurücksetzen</value></data>
+  <data name="Settings_ResetDone" xml:space="preserve"><value>Einstellungen auf Standard zurückgesetzt</value></data>
+  <data name="Settings_ResetMessage" xml:space="preserve"><value>Alle Einstellungen auf Standard zurücksetzen? Die aktuelle Datei wird vorher gesichert, die Sprache bleibt erhalten.</value></data>
+  <data name="Settings_ResetSettings" xml:space="preserve"><value>Alle Einstellungen zurücksetzen</value></data>
+  <data name="Settings_ResetSettingsHint" xml:space="preserve"><value>Eine Sicherung der aktuellen Datei bleibt im Datenordner.</value></data>
+  <data name="Settings_ResetTitle" xml:space="preserve"><value>Einstellungen zurücksetzen</value></data>
+  <data name="Settings_ResetToDefault" xml:space="preserve"><value>Auf Standard zurücksetzen</value></data>
+  <data name="Settings_SaveHdrSidecar" xml:space="preserve"><value>Original-HDR-Bild behalten</value></data>
+  <data name="Settings_SaveHdrSidecarHint" xml:space="preserve"><value>Speichert neben jeder HDR-Aufnahme eine JPEG-XR-Datei (.jxr).</value></data>
+  <data name="Settings_ShowNotifications" xml:space="preserve"><value>Benachrichtigungen anzeigen</value></data>
+  <data name="Settings_SoundEnabled" xml:space="preserve"><value>Aufnahmegeräusch abspielen</value></data>
+  <data name="Settings_StartMinimized" xml:space="preserve"><value>Minimiert im Infobereich starten</value></data>
+  <data name="Settings_StartupSection" xml:space="preserve"><value>Start</value></data>
+  <data name="Settings_StartWithWindows" xml:space="preserve"><value>Mit Windows starten</value></data>
+  <data name="Settings_StartWithWindowsFailed" xml:space="preserve"><value>Der Windows-Autostart konnte nicht geändert werden.</value></data>
+  <data name="Settings_Subtitle" xml:space="preserve"><value>Änderungen werden automatisch gespeichert.</value></data>
+  <data name="Settings_Theme" xml:space="preserve"><value>Design</value></data>
+  <data name="Settings_ThemeDark" xml:space="preserve"><value>Dunkel</value></data>
+  <data name="Settings_ThemeHighContrast" xml:space="preserve"><value>Hoher Kontrast</value></data>
+  <data name="Settings_ThemeLight" xml:space="preserve"><value>Hell</value></data>
+  <data name="Settings_ThemeSystem" xml:space="preserve"><value>System</value></data>
+  <data name="Settings_Title" xml:space="preserve"><value>Einstellungen</value></data>
+  <data name="Settings_WebpQuality" xml:space="preserve"><value>WebP-Qualität</value></data>
+
+  <data name="Status_Armed" xml:space="preserve"><value>Scharfgeschaltet — eine Aufnahme-Tastenkombination drücken.</value></data>
+  <data name="Status_ArmedLocked" xml:space="preserve"><value>Scharfgeschaltet — die Fenster-Tastenkombination nimmt {0} auf.</value></data>
+  <data name="Status_Capturing" xml:space="preserve"><value>Aufnahme läuft…</value></data>
+  <data name="Status_Idle" xml:space="preserve"><value>Nicht scharfgeschaltet — die Aufnahme-Tastenkombinationen sind aus.</value></data>
+  <data name="Status_Saving" xml:space="preserve"><value>Wird gespeichert…</value></data>
+  <data name="Status_Selecting" xml:space="preserve"><value>Ziehen, um einen Bereich auszuwählen (Esc zum Abbrechen).</value></data>
+
+  <data name="Toast_AutoArmed" xml:space="preserve"><value>Tastenkombinationen für dieses Spiel scharfgeschaltet</value></data>
+  <data name="Toast_CaptureFailed" xml:space="preserve"><value>Aufnahme fehlgeschlagen</value></data>
+  <data name="Toast_CaptureSaved" xml:space="preserve"><value>Aufnahme gespeichert</value></data>
+  <data name="Toast_CaptureSavedCopied" xml:space="preserve"><value>{0} (auch in die Zwischenablage kopiert)</value></data>
   <data name="Toast_ClipboardCopied" xml:space="preserve"><value>In Zwischenablage kopiert</value></data>
-
-  <!-- v1.5 pinned thumbnail -->
-  <data name="Settings_AutoPinAfterCapture" xml:space="preserve"><value>Nach jeder Aufnahme ein schwebendes Vorschaubild anpinnen</value></data>
-  <data name="PinnedWindow_Open" xml:space="preserve"><value>Im Explorer anzeigen</value></data>
-  <data name="PinnedWindow_Close" xml:space="preserve"><value>Schließen</value></data>
-
-  <!-- v1.5 OCR -->
-  <data name="Preview_ExtractText" xml:space="preserve"><value>Text extrahieren (OCR)</value></data>
-  <data name="Toast_OcrSuccess" xml:space="preserve"><value>{0} Wörter kopiert</value></data>
+  <data name="Toast_Countdown" xml:space="preserve"><value>Aufnahme in {0}…</value></data>
+  <data name="Toast_CountdownTitle" xml:space="preserve"><value>Aufnahme-Countdown</value></data>
+  <data name="Toast_Error" xml:space="preserve"><value>Fehler</value></data>
   <data name="Toast_OcrEmpty" xml:space="preserve"><value>Kein Text im Bild gefunden</value></data>
+  <data name="Toast_OcrFailed" xml:space="preserve"><value>Texterkennung fehlgeschlagen.</value></data>
+  <data name="Toast_OcrSuccess" xml:space="preserve"><value>{0} Wörter kopiert</value></data>
   <data name="Toast_OcrUnavailable" xml:space="preserve"><value>OCR-Engine für diese Sprache nicht verfügbar</value></data>
+  <data name="Toast_PathCopied" xml:space="preserve"><value>Pfad kopiert</value></data>
+  <data name="Toast_SettingsExported" xml:space="preserve"><value>Einstellungen exportiert</value></data>
+  <data name="Toast_SettingsImported" xml:space="preserve"><value>Einstellungen importiert</value></data>
 
-  <!-- v1.5 region capture -->
-  <data name="Settings_CaptureMode" xml:space="preserve"><value>Aufnahmemodus</value></data>
-  <data name="Settings_CaptureModeWindow" xml:space="preserve"><value>Einzelfenster</value></data>
-  <data name="Settings_CaptureModeRegion" xml:space="preserve"><value>Bereich (Ziehen zum Auswählen)</value></data>
-  <data name="Region_TargetName" xml:space="preserve"><value>Bereich</value></data>
-  <data name="Region_DragHint" xml:space="preserve"><value>Rechteck ziehen. Esc zum Abbrechen.</value></data>
+  <data name="Tray_Arm" xml:space="preserve"><value>Tastenkombinationen scharfschalten</value></data>
+  <data name="Tray_CaptureMonitor" xml:space="preserve"><value>Bildschirm aufnehmen</value></data>
+  <data name="Tray_CaptureRegion" xml:space="preserve"><value>Bereich aufnehmen</value></data>
+  <data name="Tray_CaptureWindow" xml:space="preserve"><value>Fenster aufnehmen</value></data>
+  <data name="Tray_Disarm" xml:space="preserve"><value>Tastenkombinationen deaktivieren</value></data>
+  <data name="Tray_Exit" xml:space="preserve"><value>Beenden</value></data>
+  <data name="Tray_OpenFolder" xml:space="preserve"><value>Aufnahmeordner öffnen</value></data>
+  <data name="Tray_ShowWindow" xml:space="preserve"><value>CaptureImage anzeigen</value></data>
+
+  <data name="Update_Check" xml:space="preserve"><value>Nach Updates suchen</value></data>
+  <data name="Update_CurrentVersion" xml:space="preserve"><value>Installierte Version:</value></data>
+  <data name="Update_Download" xml:space="preserve"><value>Herunterladen</value></data>
+  <data name="Update_Install" xml:space="preserve"><value>Installieren und neu starten</value></data>
+  <data name="Update_Log" xml:space="preserve"><value>Protokoll</value></data>
+  <data name="Update_OpenReleases" xml:space="preserve"><value>Release-Seite</value></data>
+  <data name="Update_Progress" xml:space="preserve"><value>Fortschritt der Aktualisierung</value></data>
+  <data name="Update_ReleaseNotes" xml:space="preserve"><value>Versionshinweise</value></data>
+  <data name="Update_Status_Checking" xml:space="preserve"><value>Suche nach Updates…</value></data>
+  <data name="Update_Status_Downloading" xml:space="preserve"><value>Update wird heruntergeladen…</value></data>
+  <data name="Update_Status_Failed" xml:space="preserve"><value>Etwas ist schiefgelaufen. Details stehen im Protokoll unten.</value></data>
+  <data name="Update_Status_Idle" xml:space="preserve"><value>Auf GitHub nach einer neueren Version suchen.</value></data>
+  <data name="Update_Status_Installing" xml:space="preserve"><value>Wird installiert — CaptureImage startet gleich neu…</value></data>
+  <data name="Update_Status_Ready" xml:space="preserve"><value>Das Update ist bereit. Zum Installieren neu starten.</value></data>
+  <data name="Update_Status_Unavailable" xml:space="preserve"><value>Updates gibt es nur für die installierte App (nicht für das portable Zip oder einen eigenen Build).</value></data>
+  <data name="Update_Status_UpdateAvailable" xml:space="preserve"><value>Version {0} ist verfügbar.</value></data>
+  <data name="Update_Status_UpToDate" xml:space="preserve"><value>Sie haben die neueste Version.</value></data>
+  <data name="Update_Subtitle" xml:space="preserve"><value>Updates kommen von GitHub Releases und werden beim Neustart von CaptureImage installiert.</value></data>
+  <data name="Update_Title" xml:space="preserve"><value>Aktualisierung</value></data>
 
 </root>

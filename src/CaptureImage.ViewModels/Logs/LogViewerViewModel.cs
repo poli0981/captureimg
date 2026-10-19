@@ -125,7 +125,7 @@ public sealed partial class LogViewerViewModel : ViewModelBase, IDisposable
     {
         if (SelectedEntry is { } entry && await _clipboard.CopyTextAsync(Format(entry)).ConfigureAwait(true))
         {
-            _toasts.ShowSuccess(Localization["Toast_TextCopied"], string.Empty);
+            _toasts.ShowSuccess(Localization["Toast_ClipboardCopied"], string.Empty);
         }
     }
 
@@ -140,7 +140,7 @@ public sealed partial class LogViewerViewModel : ViewModelBase, IDisposable
 
         if (sb.Length > 0 && await _clipboard.CopyTextAsync(sb.ToString()).ConfigureAwait(true))
         {
-            _toasts.ShowSuccess(Localization["Toast_TextCopied"], string.Empty);
+            _toasts.ShowSuccess(Localization["Toast_ClipboardCopied"], string.Empty);
         }
     }
 

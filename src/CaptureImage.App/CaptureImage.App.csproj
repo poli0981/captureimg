@@ -1,0 +1,59 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows10.0.22621.0</TargetFramework>
+    <SupportedOSPlatformVersion>10.0.22621.0</SupportedOSPlatformVersion>
+    <UseWPF>true</UseWPF>
+    <EnableDefaultApplicationDefinition>false</EnableDefaultApplicationDefinition>
+    <RootNamespace>CaptureImage.App</RootNamespace>
+    <!-- Keep the v1 executable name: Velopack updates and shortcuts point at it. -->
+    <AssemblyName>CaptureImage.App</AssemblyName>
+    <StartupObject>CaptureImage.App.Program</StartupObject>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <ApplicationIcon>..\CaptureImage.UI\Assets\CaptureImage.ico</ApplicationIcon>
+    <!-- [LibraryImport] (AllowSetForegroundWindow) generates unsafe marshalling code. -->
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <!-- Only ship satellite assemblies for the UI languages we translate. -->
+    <SatelliteResourceLanguages>en;vi;ar;ja;zh-Hans;ko;es;fr;de;pt-BR;ru</SatelliteResourceLanguages>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Mvvm" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" />
+    <PackageReference Include="Serilog" />
+    <PackageReference Include="Serilog.Extensions.Logging" />
+    <PackageReference Include="Serilog.Sinks.Async" />
+    <PackageReference Include="Serilog.Sinks.File" />
+    <PackageReference Include="Velopack" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CaptureImage.Core\CaptureImage.Core.csproj" />
+    <ProjectReference Include="..\CaptureImage.Infrastructure\CaptureImage.Infrastructure.csproj" />
+    <ProjectReference Include="..\CaptureImage.ViewModels\CaptureImage.ViewModels.csproj" />
+    <ProjectReference Include="..\CaptureImage.UI\CaptureImage.UI.csproj" />
+  </ItemGroup>
+
+  <!-- Legal documents ship next to the executable; About opens them (publish-smoke checks they exist). -->
+  <ItemGroup>
+    <Content Include="..\..\docs\legal\DISCLAIMER.md" Link="docs\legal\DISCLAIMER.md" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="..\..\docs\legal\PRIVACY.md" Link="docs\legal\PRIVACY.md" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="..\..\docs\legal\TERMS.md" Link="docs\legal\TERMS.md" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="..\..\docs\legal\THIRD_PARTY_NOTICES.md" Link="docs\legal\THIRD_PARTY_NOTICES.md" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="..\..\docs\CONTRIBUTORS.md" Link="docs\CONTRIBUTORS.md" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="..\..\LICENSE" Link="LICENSE" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="..\..\NOTICE" Link="NOTICE" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+  <!-- Record the commit (SourceLink fills SourceRevisionId) so About and diagnostics show "2.0.0 (abc1234)". -->
+  <Target Name="EmbedSourceRevision" BeforeTargets="GetAssemblyAttributes" DependsOnTargets="InitializeSourceControlInformation">
+    <ItemGroup Condition="'$(SourceRevisionId)' != ''">
+      <AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute">
+        <_Parameter1>SourceRevisionId</_Parameter1>
+        <_Parameter2>$(SourceRevisionId)</_Parameter2>
+      </AssemblyAttribute>
+    </ItemGroup>
+  </Target>
+
+</Project>

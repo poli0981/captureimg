@@ -17,7 +17,9 @@ namespace CaptureImage.Core.Models;
 /// <para><b>Versioning:</b> bump <see cref="CurrentVersion"/> when the schema changes and add
 /// a step to <see cref="Settings.SettingsMigrator"/>. Never renumber or repurpose fields.</para>
 /// <para><b>Forward compatibility:</b> unknown fields are kept in <c>ExtensionData</c> and
-/// written back unchanged, so a newer build's settings survive a round trip.</para>
+/// written back unchanged, so a newer build's settings survive a round trip. Those properties
+/// have a plain setter: the System.Text.Json source generator treats <c>init</c> properties
+/// as constructor parameters, which extension data cannot bind to.</para>
 /// <para><b>Lenient values:</b> mode-like options are strings parsed with fallbacks
 /// (<see cref="SettingValues"/>) so a hand-edited typo can't make the whole file unreadable.</para>
 /// </remarks>
@@ -48,7 +50,7 @@ public sealed record AppSettings
     public HotkeyBinding? CaptureHotkey { get; init; }
 
     [JsonExtensionData]
-    public Dictionary<string, JsonElement>? ExtensionData { get; init; }
+    public Dictionary<string, JsonElement>? ExtensionData { get; set; }
 }
 
 /// <summary>One global hotkey per capture mode; <see cref="HotkeyBinding.Unbound"/> disables a mode's key.</summary>
@@ -61,7 +63,7 @@ public sealed record HotkeySettings
     public HotkeyBinding Monitor { get; init; } = HotkeyBinding.DefaultFor(CaptureMode.Monitor);
 
     [JsonExtensionData]
-    public Dictionary<string, JsonElement>? ExtensionData { get; init; }
+    public Dictionary<string, JsonElement>? ExtensionData { get; set; }
 
     public HotkeyBinding Get(CaptureMode mode) => mode switch
     {
@@ -126,7 +128,7 @@ public sealed record CaptureSettings
     public bool? AutoSwitchOnAltTab { get; init; }
 
     [JsonExtensionData]
-    public Dictionary<string, JsonElement>? ExtensionData { get; init; }
+    public Dictionary<string, JsonElement>? ExtensionData { get; set; }
 }
 
 /// <summary>Window and behaviour preferences.</summary>
@@ -160,7 +162,7 @@ public sealed record UiSettings
     public bool? ShowLogViewer { get; init; }
 
     [JsonExtensionData]
-    public Dictionary<string, JsonElement>? ExtensionData { get; init; }
+    public Dictionary<string, JsonElement>? ExtensionData { get; set; }
 }
 
 /// <summary>A restorable window position and size (device-independent pixels).</summary>
