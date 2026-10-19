@@ -68,6 +68,7 @@ public sealed partial class CaptureCoordinator : IDisposable
     private GameTarget? _lockedTarget;
     private CapturePhase _phase;
     private int _countdownRemaining;
+    private int _suspendCount;
     private HotkeySettings? _activeHotkeys;
     private IReadOnlyList<HotkeyRegistration> _registrations = [];
     private CancellationTokenSource? _current;
@@ -158,7 +159,14 @@ public sealed partial class CaptureCoordinator : IDisposable
     {
         ObjectDisposedException.ThrowIf(_disposed, this);
         var hotkeys = _settings.Current.Hotkeys;
-        var registrations = _hotkeys.Activate(hotkeys);
+        bool suspended;
+        lock (_gate)
+        {
+            suspended = _suspendCount > 0;
+        }
+
+        // While suspended (hotkey recorder open) only remember the request; resuming registers.
+        IReadOnlyList<HotkeyRegistration> registrations = suspended ? [] : _hotkeys.Activate(hotkeys);
         lock (_gate)
         {
             _armed = true;
@@ -189,6 +197,47 @@ public sealed partial class CaptureCoordinator : IDisposable
 
         LogDisarmed();
         RaiseStateChanged();
+    }
+
+    /// <summary>
+    /// Release the hotkeys while the user records a new combination: a registered combination
+    /// never reaches any window, including our own recorder. Dispose to register them again.
+    /// </summary>
+    public IDisposable SuspendHotkeys()
+    {
+        bool release;
+        lock (_gate)
+        {
+            _suspendCount++;
+            release = _armed && _suspendCount == 1;
+        }
+
+        if (release)
+        {
+            _hotkeys.Deactivate();
+            lock (_gate)
+            {
+                _registrations = [];
+            }
+            RaiseStateChanged();
+        }
+
+        return new HotkeySuspension(this);
+    }
+
+    private void ResumeHotkeys()
+    {
+        bool rearm;
+        lock (_gate)
+        {
+            _suspendCount = Math.Max(0, _suspendCount - 1);
+            rearm = _armed && _suspendCount == 0 && !_disposed;
+        }
+
+        if (rearm)
+        {
+            Arm();
+        }
     }
 
     /// <summary>Pin the Window-mode target; <c>null</c> captures the foreground window.</summary>
@@ -225,7 +274,14 @@ public sealed partial class CaptureCoordinator : IDisposable
     }
 
     /// <summary>Run one capture. Never throws; the outcome says what happened.</summary>
-    public async Task<CaptureOutcome> CaptureAsync(CaptureMode mode, CancellationToken cancellationToken = default)
+    public Task<CaptureOutcome> CaptureAsync(CaptureMode mode, CancellationToken cancellationToken = default) =>
+        CaptureAsync(mode, target: null, cancellationToken);
+
+    /// <summary>
+    /// Run one capture; for <see cref="CaptureMode.Window"/>, <paramref name="target"/> overrides
+    /// the locked / foreground window (the Dashboard's "Capture now" button).
+    /// </summary>
+    public async Task<CaptureOutcome> CaptureAsync(CaptureMode mode, GameTarget? target, CancellationToken cancellationToken = default)
     {
         if (_disposed || Interlocked.Exchange(ref _busy, 1) == 1)
         {
@@ -245,7 +301,7 @@ public sealed partial class CaptureCoordinator : IDisposable
         {
             using (_performance.BeginForegroundWork())
             {
-                outcome = await RunAsync(mode, cts.Token).ConfigureAwait(false);
+                outcome = await RunAsync(mode, target, cts.Token).ConfigureAwait(false);
             }
         }
         catch (OperationCanceledException)
@@ -278,10 +334,13 @@ public sealed partial class CaptureCoordinator : IDisposable
         return outcome;
     }
 
-    private async Task<CaptureOutcome> RunAsync(CaptureMode mode, CancellationToken ct)
+    private async Task<CaptureOutcome> RunAsync(CaptureMode mode, GameTarget? explicitTarget, CancellationToken ct)
     {
         var settings = _settings.Current;
-        var context = await ResolveContextAsync(mode, ct).ConfigureAwait(false);
+        var context = explicitTarget is not null
+            ? await _targets.GetTargetAsync(explicitTarget.WindowHandle, ct).ConfigureAwait(false)
+                ?? throw new CaptureException(CaptureError.TargetGone, "The selected window was closed.")
+            : await ResolveContextAsync(mode, ct).ConfigureAwait(false);
         var profile = ProfileResolver.Resolve(settings.Profiles, context);
         var title = context?.DisplayName ?? ModeName(mode);
 
@@ -639,6 +698,19 @@ public sealed partial class CaptureCoordinator : IDisposable
         if (!Equals(active, _settings.Current.Hotkeys))
         {
             Arm();
+        }
+    }
+
+    private sealed class HotkeySuspension(CaptureCoordinator owner) : IDisposable
+    {
+        private int _disposed;
+
+        public void Dispose()
+        {
+            if (Interlocked.Exchange(ref _disposed, 1) == 0)
+            {
+                owner.ResumeHotkeys();
+            }
         }
     }
 

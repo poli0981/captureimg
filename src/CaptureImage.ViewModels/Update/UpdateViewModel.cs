@@ -2,8 +2,10 @@
 // Copyright (c) CaptureImage Contributors
 
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using CaptureImage.Core.Abstractions;
 using CaptureImage.Core.Models;
+using CaptureImage.ViewModels.Services;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.Logging;
@@ -11,182 +13,242 @@ using Microsoft.Extensions.Logging;
 namespace CaptureImage.ViewModels.Update;
 
 /// <summary>
-/// Update tab. Owns the check/download/install workflow, surfaces the service's log lines
-/// in a scrollable list, and updates state/progress based on <see cref="IUpdateService"/>.
+/// Update page: check GitHub Releases, download, then restart into the new version. The
+/// first visit checks automatically; status text is localized, the detail log is not.
 /// </summary>
 public sealed partial class UpdateViewModel : ViewModelBase, IDisposable
 {
-    private readonly IUpdateService _updateService;
+    private const int MaxLogLines = 200;
+    private static readonly Uri ReleasesUrl = new("https://github.com/poli0981/captureimg/releases");
+
+    private readonly IUpdateService _updates;
+    private readonly IAppLifetime _lifetime;
+    private readonly IShellService _shell;
     private readonly IUIThreadDispatcher _dispatcher;
     private readonly ILogger<UpdateViewModel> _logger;
+    private CancellationTokenSource? _cts;
+    private bool _autoChecked;
     private bool _disposed;
 
-    public ILocalizationService Localization { get; }
-
-    /// <summary>Rolling log of service messages. Bounded to avoid runaway growth.</summary>
-    public ObservableCollection<string> LogLines { get; } = new();
-
-    [ObservableProperty]
-    private UpdateStatus _status = UpdateStatus.Idle;
-
-    [ObservableProperty]
-    private string _currentVersion;
-
-    [ObservableProperty]
-    private string? _availableVersion;
-
-    [ObservableProperty]
-    private string? _releaseNotes;
-
-    [ObservableProperty]
-    private int _downloadProgress;
-
-    [ObservableProperty]
-    private bool _isBusy;
-
     public UpdateViewModel(
-        IUpdateService updateService,
+        IUpdateService updates,
+        IAppLifetime lifetime,
+        IShellService shell,
         IUIThreadDispatcher dispatcher,
         ILocalizationService localization,
+        AppInfo appInfo,
         ILogger<UpdateViewModel> logger)
     {
-        _updateService = updateService;
+        _updates = updates;
+        _lifetime = lifetime;
+        _shell = shell;
         _dispatcher = dispatcher;
         Localization = localization;
+        AppInfo = appInfo;
         _logger = logger;
+        _status = updates.IsAvailable ? UpdateStatus.Idle : UpdateStatus.Unavailable;
 
-        _currentVersion = _updateService.CurrentVersion;
-        _updateService.LogEmitted += OnLogEmitted;
-
-        // Force `{Binding Localization[Update_*]}` bindings to refresh when the user
-        // switches language from Settings while the Update tab is already active —
-        // the service's Item[] notification alone isn't reliably picked up by
-        // compiled indexer bindings through the intermediate Localization property.
+        _updates.LogEmitted += OnLogEmitted;
         Localization.PropertyChanged += OnLocalizationChanged;
     }
 
-    private void OnLocalizationChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+    public ILocalizationService Localization { get; }
+
+    public AppInfo AppInfo { get; }
+
+    public ObservableCollection<string> LogLines { get; } = [];
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(StatusText), nameof(IsWorking), nameof(ShowProgress), nameof(IsUpdateAvailable), nameof(IsReady), nameof(HasFailed))]
+    [NotifyCanExecuteChangedFor(nameof(CheckCommand), nameof(DownloadCommand), nameof(InstallAndRestartCommand), nameof(CancelCommand))]
+    private UpdateStatus _status;
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(StatusText))]
+    private string? _availableVersion;
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(HasReleaseNotes))]
+    private string? _releaseNotes;
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsProgressIndeterminate))]
+    private int _progress;
+
+    public string StatusText => Status == UpdateStatus.UpdateAvailable
+        ? Localization.Format("Update_Status_UpdateAvailable", AvailableVersion ?? "?")
+        : Localization[$"Update_Status_{Status}"];
+
+    public bool IsWorking => Status is UpdateStatus.Checking or UpdateStatus.Downloading or UpdateStatus.Installing;
+
+    public bool ShowProgress => Status is UpdateStatus.Checking or UpdateStatus.Downloading;
+
+    /// <summary>Checking has no percentage; downloading shows one once Velopack reports it.</summary>
+    public bool IsProgressIndeterminate => Status != UpdateStatus.Downloading || Progress <= 0;
+
+    public bool IsUpdateAvailable => Status == UpdateStatus.UpdateAvailable;
+
+    public bool IsReady => Status == UpdateStatus.Ready;
+
+    public bool HasFailed => Status == UpdateStatus.Failed;
+
+    public bool HasReleaseNotes => !string.IsNullOrWhiteSpace(ReleaseNotes);
+
+    /// <summary>Set by the view: the first visit runs a check.</summary>
+    public bool IsPageActive
     {
-        if (_disposed) return;
-        if (e.PropertyName is "Item[]" or nameof(ILocalizationService.CurrentCulture))
+        set
         {
-            OnPropertyChanged(nameof(Localization));
+            if (value && !_autoChecked && _updates.IsAvailable && Status == UpdateStatus.Idle)
+            {
+                _autoChecked = true;
+                CheckCommand.Execute(null);
+            }
         }
-    }
-
-    public bool CanCheck => !IsBusy;
-    public bool CanDownload => !IsBusy && Status == UpdateStatus.UpdateAvailable;
-    public bool CanInstall => !IsBusy && Status == UpdateStatus.Ready;
-
-    partial void OnIsBusyChanged(bool value)
-    {
-        CheckCommand.NotifyCanExecuteChanged();
-        DownloadCommand.NotifyCanExecuteChanged();
-        InstallCommand.NotifyCanExecuteChanged();
-        OnPropertyChanged(nameof(CanCheck));
-        OnPropertyChanged(nameof(CanDownload));
-        OnPropertyChanged(nameof(CanInstall));
-    }
-
-    partial void OnStatusChanged(UpdateStatus value)
-    {
-        CheckCommand.NotifyCanExecuteChanged();
-        DownloadCommand.NotifyCanExecuteChanged();
-        InstallCommand.NotifyCanExecuteChanged();
-        OnPropertyChanged(nameof(CanDownload));
-        OnPropertyChanged(nameof(CanInstall));
     }
 
     [RelayCommand(CanExecute = nameof(CanCheck))]
     private async Task CheckAsync()
     {
-        if (_disposed) return;
+        _autoChecked = true;
+        using var cts = BeginOperation();
+        Status = UpdateStatus.Checking;
         try
         {
-            IsBusy = true;
-            Status = UpdateStatus.Checking;
-
-            var result = await _updateService.CheckAsync().ConfigureAwait(true);
-            CurrentVersion = result.CurrentVersion;
+            var result = await _updates.CheckAsync(cts.Token).ConfigureAwait(true);
             AvailableVersion = result.AvailableVersion;
             ReleaseNotes = result.ReleaseNotes;
             Status = result.Status;
         }
-        catch (Exception ex)
+        catch (OperationCanceledException)
         {
-            _logger.LogError(ex, "Couldn't check for updates.");
-            Status = UpdateStatus.Failed;
+            Status = UpdateStatus.Idle;
         }
         finally
         {
-            IsBusy = false;
+            EndOperation(cts);
         }
     }
 
     [RelayCommand(CanExecute = nameof(CanDownload))]
     private async Task DownloadAsync()
     {
-        if (_disposed) return;
+        using var cts = BeginOperation();
+        Progress = 0;
+        Status = UpdateStatus.Downloading;
         try
         {
-            IsBusy = true;
-            Status = UpdateStatus.Downloading;
-            DownloadProgress = 0;
-
-            var progress = new Progress<int>(p =>
-                _dispatcher.Post(() => DownloadProgress = p));
-
-            await _updateService.DownloadAsync(progress).ConfigureAwait(true);
+            await _updates.DownloadAsync(new DispatchedProgress(_dispatcher, p => Progress = p), cts.Token).ConfigureAwait(true);
             Status = UpdateStatus.Ready;
-            DownloadProgress = 100;
         }
-        catch (Exception ex)
+        catch (OperationCanceledException)
         {
-            _logger.LogError(ex, "Couldn't download the update.");
+            Status = UpdateStatus.UpdateAvailable;
+        }
+        catch (Exception ex) when (ex is HttpRequestException or IOException or InvalidOperationException or UnauthorizedAccessException)
+        {
+            LogDownloadFailed(ex);
+            AppendLog(ex.Message);
             Status = UpdateStatus.Failed;
         }
         finally
         {
-            IsBusy = false;
+            EndOperation(cts);
         }
     }
 
     [RelayCommand(CanExecute = nameof(CanInstall))]
-    private void Install()
+    private void InstallAndRestart()
     {
-        if (_disposed) return;
         try
         {
-            IsBusy = true;
             Status = UpdateStatus.Installing;
-            _updateService.ApplyAndRestart();
+            _updates.ApplyOnExit();
+            _lifetime.Shutdown();
         }
-        catch (Exception ex)
+        catch (Exception ex) when (ex is InvalidOperationException or IOException or UnauthorizedAccessException)
         {
-            _logger.LogError(ex, "Couldn't install the update.");
+            LogInstallFailed(ex);
+            AppendLog(ex.Message);
             Status = UpdateStatus.Failed;
-            IsBusy = false;
         }
     }
 
-    private void OnLogEmitted(object? sender, string line)
+    [RelayCommand(CanExecute = nameof(CanCancel))]
+    private void Cancel() => _cts?.Cancel();
+
+    [RelayCommand]
+    private void OpenReleases() => _shell.OpenUrl(ReleasesUrl);
+
+    private bool CanCheck() => _updates.IsAvailable && !IsWorking;
+
+    private bool CanDownload() => Status == UpdateStatus.UpdateAvailable;
+
+    private bool CanInstall() => Status == UpdateStatus.Ready;
+
+    private bool CanCancel() => Status is UpdateStatus.Checking or UpdateStatus.Downloading;
+
+    private CancellationTokenSource BeginOperation()
     {
-        _dispatcher.Post(() =>
+        var cts = new CancellationTokenSource();
+        _cts = cts;
+        return cts;
+    }
+
+    private void EndOperation(CancellationTokenSource cts)
+    {
+        if (ReferenceEquals(_cts, cts))
         {
-            if (_disposed) return;
-            LogLines.Add($"[{DateTime.Now:HH:mm:ss}] {line}");
-            while (LogLines.Count > 200)
-            {
-                LogLines.RemoveAt(0);
-            }
-        });
+            _cts = null;
+        }
+    }
+
+    private void AppendLog(string line)
+    {
+        LogLines.Add(line);
+        while (LogLines.Count > MaxLogLines)
+        {
+            LogLines.RemoveAt(0);
+        }
+    }
+
+    private void OnLogEmitted(object? sender, string line) => _dispatcher.Post(() =>
+    {
+        if (!_disposed)
+        {
+            AppendLog(line);
+        }
+    });
+
+    private void OnLocalizationChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (!_disposed && e.PropertyName == "Item[]")
+        {
+            OnPropertyChanged(nameof(StatusText));
+        }
     }
 
     public void Dispose()
     {
-        if (_disposed) return;
+        if (_disposed)
+        {
+            return;
+        }
         _disposed = true;
-        _updateService.LogEmitted -= OnLogEmitted;
+        _updates.LogEmitted -= OnLogEmitted;
         Localization.PropertyChanged -= OnLocalizationChanged;
+        _cts?.Cancel();
     }
+
+    /// <summary>Reports progress on the UI thread without relying on a synchronization context.</summary>
+    private sealed class DispatchedProgress(IUIThreadDispatcher dispatcher, Action<int> report) : IProgress<int>
+    {
+        public void Report(int value) => dispatcher.Post(() => report(value));
+    }
+
+    [LoggerMessage(Level = LogLevel.Warning, Message = "Update download failed.")]
+    private partial void LogDownloadFailed(Exception exception);
+
+    [LoggerMessage(Level = LogLevel.Error, Message = "Could not start the update.")]
+    private partial void LogInstallFailed(Exception exception);
 }

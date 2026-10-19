@@ -15,7 +15,7 @@ namespace CaptureImage.ViewModels.Localization;
 /// this assembly. Drives live culture switching: XAML binds to the indexer, and every
 /// change raises <c>PropertyChanged("Item[]")</c> so all bindings refresh in place.
 /// </summary>
-public sealed class ResxLocalizationService : ILocalizationService
+public sealed partial class ResxLocalizationService : ILocalizationService
 {
     private const string ResourceBaseName = "CaptureImage.ViewModels.Resources.Strings.Strings";
 
@@ -82,7 +82,7 @@ public sealed class ResxLocalizationService : ILocalizationService
                 }
                 return value;
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex is MissingManifestResourceException or MissingSatelliteAssemblyException or InvalidOperationException)
             {
                 LogMissingKeyOnce(key, ex);
                 return $"[{key}]";
@@ -97,16 +97,11 @@ public sealed class ResxLocalizationService : ILocalizationService
 
         if (exception is null)
         {
-            _logger.LogWarning(
-                "Localization key '{Key}' missing for culture {Culture}; falling back to bracketed key.",
-                key, _currentCulture.Name);
+            LogMissingKey(key, _currentCulture.Name);
         }
         else
         {
-            _logger.LogWarning(
-                exception,
-                "Localization lookup threw for key '{Key}' culture {Culture}; falling back to bracketed key.",
-                key, _currentCulture.Name);
+            LogLookupFailed(exception, key, _currentCulture.Name);
         }
     }
 
@@ -132,12 +127,18 @@ public sealed class ResxLocalizationService : ILocalizationService
         CultureInfo.DefaultThreadCurrentUICulture = culture;
         CultureInfo.DefaultThreadCurrentCulture = culture;
 
-        // "Item[]" is the magic property name that tells Avalonia to refresh every indexer binding.
+        // "Item[]" is the property name that makes WPF refresh every indexer binding.
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Item[]"));
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CurrentCulture)));
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CurrentFlowDirection)));
         CultureChanged?.Invoke(this, EventArgs.Empty);
     }
+
+    [LoggerMessage(Level = LogLevel.Warning, Message = "Localization key '{Key}' missing for culture {Culture}; showing the bracketed key.")]
+    private partial void LogMissingKey(string key, string culture);
+
+    [LoggerMessage(Level = LogLevel.Warning, Message = "Localization lookup failed for key '{Key}' culture {Culture}; showing the bracketed key.")]
+    private partial void LogLookupFailed(Exception exception, string key, string culture);
 
     private static bool IsRightToLeft(CultureInfo culture)
     {

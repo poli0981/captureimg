@@ -7,9 +7,8 @@ using System.Globalization;
 namespace CaptureImage.Core.Abstractions;
 
 /// <summary>
-/// Direction of text flow for the UI. Maps 1:1 to Avalonia's
-/// <c>Avalonia.Media.FlowDirection</c> but stays in the portable Core assembly so view models
-/// don't have to reference Avalonia.
+/// Direction of text flow for the UI. Maps 1:1 to WPF's <c>System.Windows.FlowDirection</c>
+/// but stays in the portable Core assembly so view models don't reference the UI framework.
 /// </summary>
 public enum TextFlowDirection
 {
@@ -19,8 +18,8 @@ public enum TextFlowDirection
 
 /// <summary>
 /// Runtime localization service. Exposes translated strings via the <see cref="this[string]"/>
-/// indexer so XAML can bind to <c>{Binding [MyKey], Source={StaticResource Localizer}}</c> and
-/// react to culture changes without a restart.
+/// indexer so XAML can bind to <c>{Binding Localization[MyKey]}</c> and react to culture
+/// changes without a restart.
 /// </summary>
 public interface ILocalizationService : INotifyPropertyChanged
 {
@@ -59,5 +58,31 @@ public static class LocalizationServiceExtensions
     {
         ArgumentNullException.ThrowIfNull(localization);
         return string.Format(localization.CurrentCulture, localization[key], args);
+    }
+
+    /// <summary>
+    /// The shipped culture closest to <paramref name="requested"/>: the exact name, then the same
+    /// language (<c>vi</c> → <c>vi-VN</c>, <c>zh-CN</c> → <c>zh-Hans</c>), then English.
+    /// </summary>
+    public static CultureInfo MatchSupportedCulture(this ILocalizationService localization, CultureInfo? requested)
+    {
+        ArgumentNullException.ThrowIfNull(localization);
+        var supported = localization.SupportedCultures;
+        var fallback = supported.Count > 0 ? supported[0] : CultureInfo.GetCultureInfo("en-US");
+        if (requested is null || requested.Equals(CultureInfo.InvariantCulture))
+        {
+            return fallback;
+        }
+
+        for (var culture = requested; !culture.Equals(CultureInfo.InvariantCulture); culture = culture.Parent)
+        {
+            var exact = supported.FirstOrDefault(c => string.Equals(c.Name, culture.Name, StringComparison.OrdinalIgnoreCase));
+            if (exact is not null)
+            {
+                return exact;
+            }
+        }
+
+        return supported.FirstOrDefault(c => c.TwoLetterISOLanguageName == requested.TwoLetterISOLanguageName) ?? fallback;
     }
 }
