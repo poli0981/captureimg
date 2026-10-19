@@ -43,6 +43,8 @@ public partial class App : Application
         _logger = services.GetRequiredService<ILogger<App>>();
         InitializeComponent();
         DispatcherUnhandledException += OnDispatcherUnhandledException;
+        // Sign-out / restart: Windows closes every window; let the main one really close.
+        SessionEnding += (_, _) => _mainWindow?.AllowClose();
     }
 
     /// <summary>Another instance was started: bring this one forward instead.</summary>

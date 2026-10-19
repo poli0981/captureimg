@@ -68,7 +68,17 @@ public sealed class WpfDispatcher(Dispatcher dispatcher) : IUIThreadDispatcher
 /// <summary>Quit the app (tray "Exit", update restart).</summary>
 public sealed class AppLifetime(Dispatcher dispatcher) : IAppLifetime
 {
-    public void Shutdown() => dispatcher.BeginInvoke(() => Application.Current?.Shutdown());
+    public void Shutdown() => dispatcher.BeginInvoke(() =>
+    {
+        if (Application.Current is App app)
+        {
+            app.RequestExit();
+        }
+        else
+        {
+            Application.Current?.Shutdown();
+        }
+    });
 }
 
 /// <summary>System / Light / Dark / HighContrast through WPF UI's theme manager.</summary>

@@ -111,14 +111,15 @@ public partial class MainWindow : FluentWindow, IRecipient<NavigateMessage>
         SavePlacement();
         if (!_allowClose)
         {
+            // Hiding or shutting down from inside Closing is not allowed; do it right after.
             e.Cancel = true;
             if (_settings.Current.UI.MinimizeToTray)
             {
-                Hide();
+                Dispatcher.BeginInvoke(Hide);
             }
             else
             {
-                (Application.Current as App)?.RequestExit();
+                Dispatcher.BeginInvoke(() => (Application.Current as App)?.RequestExit());
             }
             return;
         }
