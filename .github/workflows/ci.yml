@@ -152,9 +152,11 @@ jobs:
           path: inspectcode.sarif
           retention-days: 14
 
+  # audit and license restore on Windows like the build: NuGet prunes the WPF projects'
+  # Windows Desktop packages only there, so a Linux restore can't match the lock files.
   audit:
     name: audit
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     timeout-minutes: 15
     permissions:
       contents: read
@@ -189,7 +191,7 @@ jobs:
 
   license:
     name: license
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     timeout-minutes: 15
     permissions:
       contents: read
@@ -204,10 +206,11 @@ jobs:
         with:
           global-json-file: global.json
 
-      - name: Restore
-        run: |
-          dotnet restore CaptureImage.sln --locked-mode
-          dotnet tool restore
+      - name: Restore (locked)
+        run: dotnet restore CaptureImage.sln --locked-mode
+
+      - name: Restore tools
+        run: dotnet tool restore
 
       # Only the shipped app's dependency closure is checked against the allowlist —
       # build/test-only tooling never reaches users.
