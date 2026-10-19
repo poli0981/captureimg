@@ -1,8 +1,11 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+// Copyright (c) CaptureImage Contributors
+
 namespace CaptureImage.ViewModels.Navigation;
 
 /// <summary>
 /// Abstraction for navigating between top-level view models.
-/// The UI layer binds a <see cref="ContentControl"/> (or equivalent) to
+/// The UI layer binds a <c>ContentControl</c> (or equivalent) to
 /// <see cref="CurrentViewModel"/> and reacts to <see cref="CurrentViewModelChanged"/>.
 /// </summary>
 public interface INavigationService

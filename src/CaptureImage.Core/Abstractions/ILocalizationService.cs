@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+// Copyright (c) CaptureImage Contributors
+
 using System.ComponentModel;
 using System.Globalization;
 
@@ -43,7 +46,7 @@ public interface ILocalizationService : INotifyPropertyChanged
     event EventHandler? CultureChanged;
 
     /// <summary>
-    /// Switch the UI culture. Raises <see cref="PropertyChanged"/> for the indexer (so all
+    /// Switch the UI culture. Raises <see cref="System.ComponentModel.INotifyPropertyChanged.PropertyChanged"/> for the indexer (so all
     /// bindings refresh) and <see cref="CultureChanged"/>.
     /// </summary>
     void SetCulture(CultureInfo culture);

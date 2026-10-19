@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+// Copyright (c) CaptureImage Contributors
+
 using System.ComponentModel;
 using System.Numerics;
 using CaptureImage.UI.Theming;
@@ -29,7 +32,7 @@ public sealed partial class MainWindow : Window
 
     // Show/hide timing matches v1.2-M7 (220 ms slide, 180 ms fade, CircularEaseOut-ish).
     private static readonly TimeSpan SlideDuration = TimeSpan.FromMilliseconds(220);
-    private static readonly TimeSpan FadeDuration  = TimeSpan.FromMilliseconds(180);
+    private static readonly TimeSpan FadeDuration = TimeSpan.FromMilliseconds(180);
 
     public MainWindow()
     {
@@ -116,10 +119,10 @@ public sealed partial class MainWindow : Window
         var pageType = item.Key switch
         {
             "dashboard" => typeof(DashboardPage),
-            "update"    => typeof(UpdatePage),
-            "settings"  => typeof(SettingsPage),
-            "about"     => typeof(AboutPage),
-            _           => null,
+            "update" => typeof(UpdatePage),
+            "settings" => typeof(SettingsPage),
+            "about" => typeof(AboutPage),
+            _ => null,
         };
 
         if (pageType is not null && ContentFrame.CurrentSourcePageType != pageType)

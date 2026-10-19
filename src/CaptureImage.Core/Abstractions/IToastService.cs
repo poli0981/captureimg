@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+// Copyright (c) CaptureImage Contributors
+
 using System.Collections.ObjectModel;
 using CaptureImage.Core.Models;
 

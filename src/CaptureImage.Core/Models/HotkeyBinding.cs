@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+// Copyright (c) CaptureImage Contributors
+
 using CaptureImage.Core.Validation;
 
 namespace CaptureImage.Core.Models;
@@ -28,11 +31,11 @@ public enum HotkeyValidationResult
 [Flags]
 public enum HotkeyModifiers
 {
-    None    = 0,
-    Alt     = 0x0001,
+    None = 0,
+    Alt = 0x0001,
     Control = 0x0002,
-    Shift   = 0x0004,
-    Win     = 0x0008,
+    Shift = 0x0004,
+    Win = 0x0008,
 }
 
 /// <summary>
@@ -51,9 +54,9 @@ public readonly record struct HotkeyBinding(HotkeyModifiers Modifiers, uint Virt
     {
         var parts = new List<string>(5);
         if ((Modifiers & HotkeyModifiers.Control) != 0) parts.Add("Ctrl");
-        if ((Modifiers & HotkeyModifiers.Alt)     != 0) parts.Add("Alt");
-        if ((Modifiers & HotkeyModifiers.Shift)   != 0) parts.Add("Shift");
-        if ((Modifiers & HotkeyModifiers.Win)     != 0) parts.Add("Win");
+        if ((Modifiers & HotkeyModifiers.Alt) != 0) parts.Add("Alt");
+        if ((Modifiers & HotkeyModifiers.Shift) != 0) parts.Add("Shift");
+        if ((Modifiers & HotkeyModifiers.Win) != 0) parts.Add("Win");
         parts.Add(VirtualKeyName(VirtualKey));
         return string.Join("+", parts);
     }
@@ -110,6 +113,6 @@ public readonly record struct HotkeyBinding(HotkeyModifiers Modifiers, uint Virt
         0x0D => "Enter",
         0x09 => "Tab",
         0x1B => "Esc",
-        _    => $"VK_{vk:X2}",
+        _ => $"VK_{vk:X2}",
     };
 }

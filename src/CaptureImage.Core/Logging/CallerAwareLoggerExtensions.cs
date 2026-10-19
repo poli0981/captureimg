@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+// Copyright (c) CaptureImage Contributors
+
 using System.Runtime.CompilerServices;
 using Microsoft.Extensions.Logging;
 
@@ -13,7 +16,7 @@ namespace CaptureImage.Core.Logging;
 /// <para>
 /// The properties are attached via <see cref="ILogger.BeginScope{TState}"/>. The
 /// <c>Serilog.Extensions.Logging</c> provider forwards MEL scope state as
-/// <see cref="Serilog.Events.LogEvent"/> properties, so the output template
+/// Serilog <c>LogEvent</c> properties, so the output template
 /// <c>{File}:{Line}</c> and the <see cref="Models.LogEntry"/> mapper both see them.
 /// </para>
 /// <para>
@@ -290,7 +293,7 @@ public static class CallerAwareLoggerExtensions
             // Path.GetFileName tolerates forward and back slashes, returns the input if the
             // string doesn't look like a path — so empty / odd CallerFilePath values degrade
             // gracefully.
-            ["File"]   = string.IsNullOrEmpty(filePath) ? string.Empty : Path.GetFileName(filePath),
-            ["Line"]   = line,
+            ["File"] = string.IsNullOrEmpty(filePath) ? string.Empty : Path.GetFileName(filePath),
+            ["Line"] = line,
         };
 }

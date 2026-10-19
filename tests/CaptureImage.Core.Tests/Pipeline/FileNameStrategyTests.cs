@@ -1,6 +1,9 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+// Copyright (c) CaptureImage Contributors
+
+using AwesomeAssertions;
 using CaptureImage.Core.Models;
 using CaptureImage.Core.Pipeline;
-using FluentAssertions;
 using Xunit;
 
 namespace CaptureImage.Core.Tests.Pipeline;
@@ -134,7 +137,7 @@ public class FileNameStrategyTests
     }
 
     [Theory]
-    [InlineData(ImageFormat.Png,  "png")]
+    [InlineData(ImageFormat.Png, "png")]
     [InlineData(ImageFormat.Jpeg, "jpg")]
     [InlineData(ImageFormat.Webp, "webp")]
     [InlineData(ImageFormat.Tiff, "tiff")]

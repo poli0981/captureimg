@@ -30,11 +30,11 @@ UpgradeLog*.XML
 _UpgradeReport_Files/
 _Pvt_Extensions/
 
-# Rider / JetBrains (keep .idea for user, but ignore transient files)
-.idea/workspace.xml
-.idea/tasks.xml
-.idea/shelf/
-.idea/httpRequests/
+# Rider / JetBrains — per-user IDE state, never committed.
+.idea/
+
+# Claude Code local state (session settings, worktrees).
+.claude/
 
 # Visual Studio Code
 .vscode/
@@ -50,9 +50,12 @@ _Pvt_Extensions/
 packages/
 !packages/build/
 
-# Test results
+# Test results / coverage / build logs
 TestResults/
 coverage*.xml
+*.cobertura.xml
+coverage-report/
+*.binlog
 *.trx
 *.coverage
 *.coveragexml

@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+// Copyright (c) CaptureImage Contributors
+
 using System.ComponentModel;
 using CaptureImage.Core.Models;
 using CaptureImage.ViewModels.Settings;
@@ -99,10 +102,10 @@ public sealed partial class HotkeyRecorder : UserControl
     private static HotkeyModifiers GetCurrentModifiers()
     {
         var mods = HotkeyModifiers.None;
-        if (IsKeyDown(VirtualKey.Control))                                               mods |= HotkeyModifiers.Control;
-        if (IsKeyDown(VirtualKey.Shift))                                                 mods |= HotkeyModifiers.Shift;
-        if (IsKeyDown(VirtualKey.Menu))                                                  mods |= HotkeyModifiers.Alt;
-        if (IsKeyDown(VirtualKey.LeftWindows) || IsKeyDown(VirtualKey.RightWindows))     mods |= HotkeyModifiers.Win;
+        if (IsKeyDown(VirtualKey.Control)) mods |= HotkeyModifiers.Control;
+        if (IsKeyDown(VirtualKey.Shift)) mods |= HotkeyModifiers.Shift;
+        if (IsKeyDown(VirtualKey.Menu)) mods |= HotkeyModifiers.Alt;
+        if (IsKeyDown(VirtualKey.LeftWindows) || IsKeyDown(VirtualKey.RightWindows)) mods |= HotkeyModifiers.Win;
         return mods;
     }
 

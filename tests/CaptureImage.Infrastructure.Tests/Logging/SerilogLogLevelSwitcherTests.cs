@@ -1,5 +1,8 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+// Copyright (c) CaptureImage Contributors
+
+using AwesomeAssertions;
 using CaptureImage.Infrastructure.Logging;
-using FluentAssertions;
 using Serilog.Core;
 using Serilog.Events;
 using Xunit;
@@ -7,7 +10,7 @@ using Xunit;
 namespace CaptureImage.Infrastructure.Tests.Logging;
 
 /// <summary>
-/// Verifies the canonical mapping between <see cref="AppSettings.LogLevel"/> strings and
+/// Verifies the canonical mapping between <see cref="CaptureImage.Core.Models.AppSettings.LogLevel"/> strings and
 /// Serilog's <see cref="LogEventLevel"/>. Covers the alias forms (info/warn) and the
 /// unknown-value fallback.
 /// </summary>

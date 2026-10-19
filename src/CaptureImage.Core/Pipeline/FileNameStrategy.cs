@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+// Copyright (c) CaptureImage Contributors
+
 using System.Text;
 using CaptureImage.Core.Models;
 
@@ -83,14 +86,14 @@ public sealed class FileNameStrategy
     {
         var tokens = new Dictionary<string, string>(StringComparer.Ordinal)
         {
-            ["{Game}"]    = target.DisplayName,
+            ["{Game}"] = target.DisplayName,
             ["{Process}"] = target.ProcessName,
-            ["{yyyy}"]    = captureTime.Year.ToString("D4"),
-            ["{MM}"]      = captureTime.Month.ToString("D2"),
-            ["{dd}"]      = captureTime.Day.ToString("D2"),
-            ["{HH}"]      = captureTime.Hour.ToString("D2"),
-            ["{mm}"]      = captureTime.Minute.ToString("D2"),
-            ["{ss}"]      = captureTime.Second.ToString("D2"),
+            ["{yyyy}"] = captureTime.Year.ToString("D4"),
+            ["{MM}"] = captureTime.Month.ToString("D2"),
+            ["{dd}"] = captureTime.Day.ToString("D2"),
+            ["{HH}"] = captureTime.Hour.ToString("D2"),
+            ["{mm}"] = captureTime.Minute.ToString("D2"),
+            ["{ss}"] = captureTime.Second.ToString("D2"),
             ["{counter}"] = string.Empty, // stripped here; collision logic handles it
         };
 

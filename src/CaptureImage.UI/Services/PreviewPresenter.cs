@@ -1,8 +1,7 @@
-using System;
-using System.IO;
+// SPDX-License-Identifier: GPL-3.0-or-later
+// Copyright (c) CaptureImage Contributors
+
 using System.Runtime.InteropServices;
-using System.Threading;
-using System.Threading.Tasks;
 using CaptureImage.Core.Abstractions;
 using CaptureImage.Core.Models;
 using CaptureImage.UI.Views;

@@ -1,8 +1,10 @@
-using System.Collections.Generic;
+// SPDX-License-Identifier: GPL-3.0-or-later
+// Copyright (c) CaptureImage Contributors
+
 using System.IO.Abstractions.TestingHelpers;
+using AwesomeAssertions;
 using CaptureImage.Core.Abstractions;
 using CaptureImage.Infrastructure.Steam;
-using FluentAssertions;
 using Microsoft.Extensions.Logging.Abstractions;
 using NSubstitute;
 using Xunit;

@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+// Copyright (c) CaptureImage Contributors
+
 using CaptureImage.Core.Abstractions;
 using CaptureImage.Core.Models;
 using Serilog.Core;
@@ -127,12 +130,12 @@ public sealed class InMemorySink : ILogEventSink, ILogBufferSource
 
     private static LogLevel MapLevel(LogEventLevel level) => level switch
     {
-        LogEventLevel.Verbose     => LogLevel.Verbose,
-        LogEventLevel.Debug       => LogLevel.Debug,
+        LogEventLevel.Verbose => LogLevel.Verbose,
+        LogEventLevel.Debug => LogLevel.Debug,
         LogEventLevel.Information => LogLevel.Information,
-        LogEventLevel.Warning     => LogLevel.Warning,
-        LogEventLevel.Error       => LogLevel.Error,
-        LogEventLevel.Fatal       => LogLevel.Fatal,
-        _                         => LogLevel.Information,
+        LogEventLevel.Warning => LogLevel.Warning,
+        LogEventLevel.Error => LogLevel.Error,
+        LogEventLevel.Fatal => LogLevel.Fatal,
+        _ => LogLevel.Information,
     };
 }

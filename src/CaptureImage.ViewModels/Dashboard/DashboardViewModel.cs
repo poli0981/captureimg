@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+// Copyright (c) CaptureImage Contributors
+
 using System.Collections.ObjectModel;
 using CaptureImage.Core.Abstractions;
 using CaptureImage.Core.Models;
@@ -299,17 +302,17 @@ public sealed partial class DashboardViewModel : ViewModelBase, IDisposable
     {
         StatusMessage = _stateMachine.CurrentState switch
         {
-            CaptureState.Idle            => Localization["Dashboard_StatusIdle"],
+            CaptureState.Idle => Localization["Dashboard_StatusIdle"],
             CaptureState.TargetsSelected => Localization["Dashboard_StatusDisarmed"],
-            CaptureState.Armed           => string.Format(
+            CaptureState.Armed => string.Format(
                 Localization["Dashboard_StatusArmed"],
                 _settings.Current.CaptureHotkey,
                 SelectedTarget?.DisplayName ?? "?"),
-            CaptureState.Capturing       => string.Format(
+            CaptureState.Capturing => string.Format(
                 Localization["Dashboard_StatusCapturing"],
                 SelectedTarget?.DisplayName ?? "?"),
-            CaptureState.Previewing      => Localization["Preview_Prompt"],
-            _                            => StatusMessage,
+            CaptureState.Previewing => Localization["Preview_Prompt"],
+            _ => StatusMessage,
         };
     }
 

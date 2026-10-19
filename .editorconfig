@@ -23,12 +23,21 @@ csharp_using_directive_placement = outside_namespace:warning
 dotnet_sort_system_directives_first = true
 dotnet_separate_import_directive_groups = false
 
-# Nullable
-dotnet_diagnostic.CS8600.severity = warning
-dotnet_diagnostic.CS8601.severity = warning
-dotnet_diagnostic.CS8602.severity = warning
-dotnet_diagnostic.CS8603.severity = warning
-dotnet_diagnostic.CS8618.severity = warning
+# License header on every C# file (IDE0073 is enforced during build).
+file_header_template = SPDX-License-Identifier: GPL-3.0-or-later\nCopyright (c) CaptureImage Contributors
+dotnet_diagnostic.IDE0073.severity = warning
+
+# Style rules enforced during build (EnforceCodeStyleInBuild + TreatWarningsAsErrors).
+# The ":warning" suffix on the options above is honored only by IDEs; these lines make
+# the compiler report them too.
+dotnet_diagnostic.IDE0161.severity = warning # file-scoped namespace
+dotnet_diagnostic.IDE0065.severity = warning # using directives outside the namespace
+dotnet_diagnostic.IDE0005.severity = warning # unnecessary using (needs GenerateDocumentationFile)
+dotnet_diagnostic.IDE0051.severity = warning # unused private member
+dotnet_diagnostic.IDE0052.severity = warning # private member assigned but never read
+dotnet_diagnostic.IDE0059.severity = warning # value assigned but never used
+dotnet_diagnostic.IDE0060.severity = warning # unused parameter
+dotnet_code_quality_unused_parameters = non_public
 
 # Code style - var
 csharp_style_var_for_built_in_types = true:suggestion

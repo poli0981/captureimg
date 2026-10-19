@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+// Copyright (c) CaptureImage Contributors
+
 using CaptureImage.Core.Abstractions;
 using CaptureImage.UI.Views;
 using Microsoft.Extensions.Logging;
@@ -6,7 +9,7 @@ namespace CaptureImage.UI.Services;
 
 /// <summary>
 /// Spawns <see cref="PinnedThumbnailWindow"/> instances on demand. Hops to the UI
-/// thread because <see cref="DashboardViewModel"/> can fire Show from a continuation
+/// thread because <see cref="CaptureImage.ViewModels.Dashboard.DashboardViewModel"/> can fire Show from a continuation
 /// thread after the encoder finishes.
 /// </summary>
 public sealed class PinnedThumbnailHost : IPinnedThumbnailHost

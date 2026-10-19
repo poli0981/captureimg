@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+// Copyright (c) CaptureImage Contributors
+
 using System.Runtime.CompilerServices;
 
 // Expose internal helpers (e.g. FileNameStrategy.ExpandTokens / Sanitize) to the test assembly.

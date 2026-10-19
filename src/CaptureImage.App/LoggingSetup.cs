@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+// Copyright (c) CaptureImage Contributors
+
 using CaptureImage.Core.Logging;
 using CaptureImage.Infrastructure.Logging;
 using Serilog;
@@ -74,12 +77,12 @@ internal static class LoggingSetup
     /// </summary>
     public static LogEventLevel ParseLevel(string? value) => value?.Trim().ToLowerInvariant() switch
     {
-        "debug"       => LogEventLevel.Debug,
+        "debug" => LogEventLevel.Debug,
         "information" => LogEventLevel.Information,
-        "info"        => LogEventLevel.Information,
-        "warning"     => LogEventLevel.Warning,
-        "warn"        => LogEventLevel.Warning,
-        "error"       => LogEventLevel.Error,
-        _             => LogEventLevel.Information,
+        "info" => LogEventLevel.Information,
+        "warning" => LogEventLevel.Warning,
+        "warn" => LogEventLevel.Warning,
+        "error" => LogEventLevel.Error,
+        _ => LogEventLevel.Information,
     };
 }

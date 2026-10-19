@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+// Copyright (c) CaptureImage Contributors
+
 using CaptureImage.Core.Abstractions;
 using CaptureImage.Core.Models;
 using Microsoft.Extensions.Logging;
@@ -70,7 +73,7 @@ public sealed class VelopackUpdateService : IUpdateService
         EmitLog("Checking GitHub for updates…");
         try
         {
-            var info = await _manager.CheckForUpdatesAsync().ConfigureAwait(false);
+            var info = await _manager.CheckForUpdatesAsync().WaitAsync(cancellationToken).ConfigureAwait(false);
             if (info is null)
             {
                 EmitLog("No update available. You are on the latest release.");
@@ -127,8 +130,7 @@ public sealed class VelopackUpdateService : IUpdateService
                         EmitLog($"Download progress: {percent}%");
                     }
                 },
-                ignoreDeltas: false,
-                cancelToken: cancellationToken).ConfigureAwait(false);
+                cancellationToken).ConfigureAwait(false);
 
             EmitLog("Download complete. Ready to install.");
         }

@@ -1,5 +1,7 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+// Copyright (c) CaptureImage Contributors
+
 using System.Runtime.InteropServices.WindowsRuntime;
-using CaptureImage.Core.Abstractions;
 using Microsoft.UI;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
@@ -32,7 +34,6 @@ public sealed partial class RegionSelectorOverlay : Window
 
     private readonly int _screenWidth;
     private readonly int _screenHeight;
-    private readonly byte[] _backgroundPngBytes;
 
     private bool _selecting;
     private Point _selectionStart;
@@ -41,7 +42,6 @@ public sealed partial class RegionSelectorOverlay : Window
     {
         InitializeComponent();
 
-        _backgroundPngBytes = backgroundPngBytes;
         _screenWidth = screenWidth;
         _screenHeight = screenHeight;
         HintText.Text = hintText;

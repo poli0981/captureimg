@@ -1,16 +1,14 @@
-using System;
-using System.Collections.Generic;
+// SPDX-License-Identifier: GPL-3.0-or-later
+// Copyright (c) CaptureImage Contributors
+
 using System.Diagnostics;
-using System.IO;
-using System.Runtime.InteropServices;
-using System.Threading.Tasks;
+using AwesomeAssertions;
 using CaptureImage.Core.Abstractions;
 using CaptureImage.Core.Errors;
 using CaptureImage.Core.Models;
 using CaptureImage.Core.Pipeline;
 using CaptureImage.Infrastructure.Capture;
 using CaptureImage.Infrastructure.Imaging;
-using FluentAssertions;
 using Microsoft.Extensions.Logging.Abstractions;
 using Xunit;
 
@@ -78,7 +76,7 @@ public class WgcIntegrationTests
                     WebpQuality: 85);
 
                 // Act
-                var result = await orchestrator.ExecuteAsync(request);
+                var result = await orchestrator.ExecuteAsync(request, TestContext.Current.CancellationToken);
 
                 // Assert — include failure detail in the error message so we can see why.
                 if (result is CaptureResult.Failure f)
@@ -139,7 +137,7 @@ public class WgcIntegrationTests
             OutputDirectory: Path.GetTempPath(),
             FileNameTemplate: "missing_{ss}");
 
-        var result = await orchestrator.ExecuteAsync(request);
+        var result = await orchestrator.ExecuteAsync(request, TestContext.Current.CancellationToken);
 
         result.Should().BeOfType<CaptureResult.Failure>();
         var fail = (CaptureResult.Failure)result;
@@ -154,7 +152,7 @@ public class WgcIntegrationTests
         var engine = new WindowsGraphicsCaptureEngine(
             deviceManager, NullLogger<WindowsGraphicsCaptureEngine>.Instance);
         var fileNameStrategy = new FileNameStrategy(File.Exists);
-        var encoders = new List<IImageEncoder> { new SkiaImageEncoder(), new ImageSharpTiffEncoder() };
+        var encoders = new List<IImageEncoder> { new SkiaImageEncoder(), new WicTiffEncoder() };
         return new CaptureOrchestrator(
             engine,
             encoders,
