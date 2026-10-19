@@ -1,5 +1,8 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+// Copyright (c) CaptureImage Contributors
+
+using AwesomeAssertions;
 using CaptureImage.Core.Logging;
-using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using Xunit;
 
@@ -8,7 +11,7 @@ namespace CaptureImage.Core.Tests.Logging;
 /// <summary>
 /// Validates that <c>LogXAt</c> extensions attach <c>File</c> / <c>Line</c> / <c>Member</c>
 /// as MEL scope state — which Serilog's MEL bridge then surfaces as structured
-/// <see cref="Serilog.Events.LogEvent"/> properties at runtime.
+/// Serilog <c>LogEvent</c> properties at runtime.
 /// </summary>
 /// <remarks>
 /// Rather than stand up the real Serilog pipeline, we use a tiny spy <see cref="ILogger"/>

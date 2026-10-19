@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+// Copyright (c) CaptureImage Contributors
+
 using CaptureImage.Core.Abstractions;
 using CaptureImage.Core.Models;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -45,8 +48,8 @@ public sealed partial class HotkeyBindingViewModel : ViewModelBase, IDisposable
     /// <summary>Localized error string for <see cref="LastValidationResult"/>, or empty when Ok.</summary>
     public string ErrorMessage => LastValidationResult switch
     {
-        HotkeyValidationResult.NoPrimaryKey     => Localization["Settings_HotkeyErrorNoPrimary"],
-        HotkeyValidationResult.ModifierOnlyKey  => Localization["Settings_HotkeyErrorModifierOnly"],
+        HotkeyValidationResult.NoPrimaryKey => Localization["Settings_HotkeyErrorNoPrimary"],
+        HotkeyValidationResult.ModifierOnlyKey => Localization["Settings_HotkeyErrorModifierOnly"],
         HotkeyValidationResult.RequiresModifier => Localization["Settings_HotkeyErrorNeedsModifier"],
         HotkeyValidationResult.ReservedByWindows => Localization["Settings_HotkeyErrorReserved"],
         _ => string.Empty,

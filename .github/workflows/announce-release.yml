@@ -1,5 +1,8 @@
 name: Announce Release to Discord
 
+# Fires when a release is published. Releases are created as drafts by
+# release.yml and published by the maintainer (`gh release edit --draft=false`),
+# so this event is raised by a user token and actually triggers.
 on:
   release:
     types: [published]
@@ -10,18 +13,16 @@ on:
         required: true
         type: string
 
-# Reusable announce-release.yml only needs `contents: read` to fetch
-# release metadata via the gh CLI.
-permissions:
-  contents: read
+permissions: {}
 
 jobs:
   announce:
-    # Pinned to commit SHA instead of @main — guards against a malicious or
-    # accidental push to poli0981/.github landing in our release pipeline
-    # silently. Dependabot bumps this weekly via the github-actions ecosystem
-    # rule in .github/dependabot.yml.
+    permissions:
+      contents: read
+    # Reusable workflows are pinned to a commit of poli0981/.github.
     uses: poli0981/.github/.github/workflows/announce-release.yml@e973e2f15725356653ef07539016670ad2733f83
     with:
       tag_override: ${{ inputs.tag || '' }}
-    secrets: inherit
+    secrets:
+      DISCORD_RELEASES_WEBHOOK: ${{ secrets.DISCORD_RELEASES_WEBHOOK }}
+      DISCORD_REPO_WEBHOOK: ${{ secrets.DISCORD_REPO_WEBHOOK }}

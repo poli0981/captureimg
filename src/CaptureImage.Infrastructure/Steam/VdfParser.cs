@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+// Copyright (c) CaptureImage Contributors
+
 using System.Text;
 
 namespace CaptureImage.Infrastructure.Steam;
@@ -185,11 +188,11 @@ public static class VdfParser
                     sb.Append(escaped switch
                     {
                         '\\' => '\\',
-                        '"'  => '"',
-                        'n'  => '\n',
-                        't'  => '\t',
-                        'r'  => '\r',
-                        _    => escaped,
+                        '"' => '"',
+                        'n' => '\n',
+                        't' => '\t',
+                        'r' => '\r',
+                        _ => escaped,
                     });
                     continue;
                 }

@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+// Copyright (c) CaptureImage Contributors
+
 using System.IO.Abstractions;
 using CaptureImage.Core.Abstractions;
 using Microsoft.Extensions.Logging;

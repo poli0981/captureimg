@@ -1,5 +1,8 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+// Copyright (c) CaptureImage Contributors
+
+using AwesomeAssertions;
 using CaptureImage.Infrastructure.Steam;
-using FluentAssertions;
 using Xunit;
 
 namespace CaptureImage.Infrastructure.Tests.Steam;

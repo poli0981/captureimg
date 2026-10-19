@@ -1,6 +1,5 @@
-// Marker file to ensure the Infrastructure assembly builds.
-// Real types land in Capture/, Imaging/, Processes/, Steam/, Hotkeys/, Tray/, Settings/,
-// Localization/, Logging/, Update/ as M1+ progresses.
+// SPDX-License-Identifier: GPL-3.0-or-later
+// Copyright (c) CaptureImage Contributors
 
 namespace CaptureImage.Infrastructure;
 

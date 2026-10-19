@@ -21,7 +21,7 @@ documentation (including the file you are reading now).
 Commits where AI authored significant portions of the diff carry the
 trailer:
 
-```
+```text
 Co-Authored-By: Claude Opus 4.6 (1M context) <noreply@anthropic.com>
 ```
 

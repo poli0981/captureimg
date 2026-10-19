@@ -1,11 +1,10 @@
-using System;
-using System.IO;
+// SPDX-License-Identifier: GPL-3.0-or-later
+// Copyright (c) CaptureImage Contributors
+
 using System.IO.Abstractions.TestingHelpers;
-using System.Text.Json;
-using System.Threading.Tasks;
+using AwesomeAssertions;
 using CaptureImage.Core.Models;
 using CaptureImage.Infrastructure.Settings;
-using FluentAssertions;
 using Microsoft.Extensions.Logging.Abstractions;
 using Xunit;
 
@@ -34,7 +33,7 @@ public class JsonSettingsStoreTests
     {
         var (store, _) = Build();
 
-        await store.LoadAsync();
+        await store.LoadAsync(TestContext.Current.CancellationToken);
 
         store.Current.Version.Should().Be(2);
         store.Current.Culture.Should().Be("en-US");
@@ -47,7 +46,7 @@ public class JsonSettingsStoreTests
     public async Task Update_MutatorApplied_CurrentReflectsChange()
     {
         var (store, _) = Build();
-        await store.LoadAsync();
+        await store.LoadAsync(TestContext.Current.CancellationToken);
 
         store.Update(s => s with { Culture = "vi-VN" });
 
@@ -58,7 +57,7 @@ public class JsonSettingsStoreTests
     public async Task Update_FiresChangedEvent()
     {
         var (store, _) = Build();
-        await store.LoadAsync();
+        await store.LoadAsync(TestContext.Current.CancellationToken);
 
         var fired = 0;
         store.Changed += (_, _) => fired++;
@@ -72,10 +71,10 @@ public class JsonSettingsStoreTests
     public async Task FlushAsync_WritesJsonToDisk()
     {
         var (store, fs) = Build();
-        await store.LoadAsync();
+        await store.LoadAsync(TestContext.Current.CancellationToken);
 
         store.Update(s => s with { Culture = "vi-VN" });
-        await store.FlushAsync();
+        await store.FlushAsync(TestContext.Current.CancellationToken);
 
         fs.File.Exists(ExpectedPath).Should().BeTrue();
         var written = fs.File.ReadAllText(ExpectedPath);
@@ -86,7 +85,7 @@ public class JsonSettingsStoreTests
     public async Task FlushAsync_ThenLoadAsync_RoundTripsAllFields()
     {
         var (store, fs) = Build();
-        await store.LoadAsync();
+        await store.LoadAsync(TestContext.Current.CancellationToken);
 
         var newHotkey = new HotkeyBinding(HotkeyModifiers.Control | HotkeyModifiers.Alt, 0x70); // Ctrl+Alt+F1
         store.Update(s => s with
@@ -108,11 +107,11 @@ public class JsonSettingsStoreTests
                 SoundEnabled = false,
             },
         });
-        await store.FlushAsync();
+        await store.FlushAsync(TestContext.Current.CancellationToken);
 
         // Load into a fresh store
         var (store2, _) = (new JsonSettingsStore(fs, NullLogger<JsonSettingsStore>.Instance), fs);
-        await store2.LoadAsync();
+        await store2.LoadAsync(TestContext.Current.CancellationToken);
 
         store2.Current.Culture.Should().Be("ar-SA");
         store2.Current.Theme.Should().Be("Dark");
@@ -135,7 +134,7 @@ public class JsonSettingsStoreTests
         fs.Directory.CreateDirectory(dir);
         fs.File.WriteAllText(ExpectedPath, "{\"version\": 999, \"culture\": \"fr-FR\"}");
 
-        await store.LoadAsync();
+        await store.LoadAsync(TestContext.Current.CancellationToken);
 
         store.Current.Version.Should().Be(2);
         store.Current.Culture.Should().Be("en-US");
@@ -150,7 +149,7 @@ public class JsonSettingsStoreTests
         fs.Directory.CreateDirectory(dir);
         fs.File.WriteAllText(ExpectedPath, "{ not valid json");
 
-        await store.LoadAsync();
+        await store.LoadAsync(TestContext.Current.CancellationToken);
 
         store.Current.Culture.Should().Be("en-US");
     }
@@ -168,7 +167,7 @@ public class JsonSettingsStoreTests
         fs.File.WriteAllText(ExpectedPath,
             "{\"version\": 1, \"culture\": \"vi-VN\", \"theme\": \"System\"}");
 
-        await store.LoadAsync();
+        await store.LoadAsync(TestContext.Current.CancellationToken);
 
         store.Current.Version.Should().Be(2);
         store.Current.Culture.Should().Be("vi-VN");
@@ -189,7 +188,7 @@ public class JsonSettingsStoreTests
         fs.File.WriteAllText(ExpectedPath,
             "{\"version\": 2, \"culture\": \"en-US\", \"logLevel\": \"Debug\"}");
 
-        await store.LoadAsync();
+        await store.LoadAsync(TestContext.Current.CancellationToken);
 
         store.Current.Version.Should().Be(2);
         store.Current.LogLevel.Should().Be("Debug");
@@ -199,12 +198,12 @@ public class JsonSettingsStoreTests
     public async Task ExportAsync_WritesCurrentSettings()
     {
         var (store, fs) = Build();
-        await store.LoadAsync();
+        await store.LoadAsync(TestContext.Current.CancellationToken);
         store.Update(s => s with { Culture = "ar-SA" });
 
         var exportPath = @"C:\exports\my_settings.json";
         fs.Directory.CreateDirectory(@"C:\exports");
-        await store.ExportAsync(exportPath);
+        await store.ExportAsync(exportPath, TestContext.Current.CancellationToken);
 
         fs.File.Exists(exportPath).Should().BeTrue();
         var content = fs.File.ReadAllText(exportPath);
@@ -215,7 +214,7 @@ public class JsonSettingsStoreTests
     public async Task ImportAsync_AdoptsExportedSettings()
     {
         var (store, fs) = Build();
-        await store.LoadAsync();
+        await store.LoadAsync(TestContext.Current.CancellationToken);
 
         // Create a valid settings file to import.
         var importPath = @"C:\imports\from_other_machine.json";
@@ -239,7 +238,7 @@ public class JsonSettingsStoreTests
             """;
         fs.File.WriteAllText(importPath, doc);
 
-        await store.ImportAsync(importPath);
+        await store.ImportAsync(importPath, TestContext.Current.CancellationToken);
 
         store.Current.Culture.Should().Be("vi-VN");
         store.Current.Capture.DefaultFormat.Should().Be(ImageFormat.Jpeg);
@@ -253,7 +252,7 @@ public class JsonSettingsStoreTests
     public async Task ImportAsync_MissingFile_Throws()
     {
         var (store, _) = Build();
-        await store.LoadAsync();
+        await store.LoadAsync(TestContext.Current.CancellationToken);
 
         var act = async () => await store.ImportAsync(@"C:\missing\nope.json");
 
@@ -264,12 +263,12 @@ public class JsonSettingsStoreTests
     public async Task ImportAsync_VersionTooNew_Throws()
     {
         var (store, fs) = Build();
-        await store.LoadAsync();
+        await store.LoadAsync(TestContext.Current.CancellationToken);
         var importPath = @"C:\imports\future.json";
         fs.Directory.CreateDirectory(@"C:\imports");
         fs.File.WriteAllText(importPath, "{\"version\": 999, \"culture\": \"fr-FR\"}");
 
-        var act = async () => await store.ImportAsync(importPath);
+        var act = async () => await store.ImportAsync(importPath, TestContext.Current.CancellationToken);
 
         await act.Should().ThrowAsync<InvalidDataException>();
     }
@@ -278,10 +277,10 @@ public class JsonSettingsStoreTests
     public async Task FlushAsync_UsesAtomicReplace_NoTempFileLeftOver()
     {
         var (store, fs) = Build();
-        await store.LoadAsync();
+        await store.LoadAsync(TestContext.Current.CancellationToken);
         store.Update(s => s with { Culture = "vi-VN" });
 
-        await store.FlushAsync();
+        await store.FlushAsync(TestContext.Current.CancellationToken);
 
         fs.File.Exists(ExpectedPath).Should().BeTrue();
         fs.File.Exists(ExpectedPath + ".tmp").Should().BeFalse();

@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+// Copyright (c) CaptureImage Contributors
+
 using System.Runtime.Versioning;
 using CaptureImage.Core.Abstractions;
 using CaptureImage.Core.Models;
@@ -111,21 +114,21 @@ public sealed class SharpHookHotkeyService : IHotkeyService
         if (binding is null) return;
 
         // libuiohook exposes the native VK on Windows in RawCode.
-        if ((uint)e.Data.RawCode != binding.Value.VirtualKey)
+        if (e.Data.RawCode != binding.Value.VirtualKey)
         {
             return;
         }
 
         var mask = e.RawEvent.Mask;
-        var ctrl  = (mask & ModifierMask.Ctrl)  != 0;
-        var alt   = (mask & ModifierMask.Alt)   != 0;
+        var ctrl = (mask & ModifierMask.Ctrl) != 0;
+        var alt = (mask & ModifierMask.Alt) != 0;
         var shift = (mask & ModifierMask.Shift) != 0;
-        var meta  = (mask & ModifierMask.Meta)  != 0;
+        var meta = (mask & ModifierMask.Meta) != 0;
 
-        var wantCtrl  = binding.Value.Modifiers.HasFlag(HotkeyModifiers.Control);
-        var wantAlt   = binding.Value.Modifiers.HasFlag(HotkeyModifiers.Alt);
+        var wantCtrl = binding.Value.Modifiers.HasFlag(HotkeyModifiers.Control);
+        var wantAlt = binding.Value.Modifiers.HasFlag(HotkeyModifiers.Alt);
         var wantShift = binding.Value.Modifiers.HasFlag(HotkeyModifiers.Shift);
-        var wantWin   = binding.Value.Modifiers.HasFlag(HotkeyModifiers.Win);
+        var wantWin = binding.Value.Modifiers.HasFlag(HotkeyModifiers.Win);
 
         if (ctrl != wantCtrl || alt != wantAlt || shift != wantShift || meta != wantWin)
         {

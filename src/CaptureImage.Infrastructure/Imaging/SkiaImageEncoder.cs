@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+// Copyright (c) CaptureImage Contributors
+
 using System.Runtime.InteropServices;
 using CaptureImage.Core.Abstractions;
 using CaptureImage.Core.Errors;
@@ -11,7 +14,7 @@ namespace CaptureImage.Infrastructure.Imaging;
 /// Avalonia anyway, hardware-friendly, and handles BGRA pre-multiplied input natively.
 /// </summary>
 /// <remarks>
-/// TIFF is intentionally NOT supported here; use <see cref="ImageSharpTiffEncoder"/> for TIFF.
+/// TIFF is intentionally NOT supported here; use <see cref="WicTiffEncoder"/> for TIFF.
 /// The orchestrator picks the right encoder based on <see cref="Supports(ImageFormat)"/>.
 /// </remarks>
 public sealed class SkiaImageEncoder : IImageEncoder
@@ -66,7 +69,7 @@ public sealed class SkiaImageEncoder : IImageEncoder
 
             var (skFormat, quality) = format switch
             {
-                ImageFormat.Png  => (SKEncodedImageFormat.Png,  100),
+                ImageFormat.Png => (SKEncodedImageFormat.Png, 100),
                 ImageFormat.Jpeg => (SKEncodedImageFormat.Jpeg, ClampQuality(jpegQuality)),
                 ImageFormat.Webp => (SKEncodedImageFormat.Webp, ClampQuality(webpQuality)),
                 _ => throw new InvalidOperationException("unreachable"),

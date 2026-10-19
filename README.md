@@ -131,7 +131,7 @@ The build needs:
 
 ## Repository layout
 
-```
+```text
 src/
   CaptureImage.Core            Pure domain (models, abstractions, state machine,
                                pipeline). Portable net9.0, no Windows ties.

@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+// Copyright (c) CaptureImage Contributors
+
 using Microsoft.UI.Dispatching;
 using Microsoft.UI.Xaml;
 
@@ -26,8 +29,8 @@ public static class ThemeApplicator
             root.RequestedTheme = theme switch
             {
                 "Light" => ElementTheme.Light,
-                "Dark"  => ElementTheme.Dark,
-                _       => ElementTheme.Default,
+                "Dark" => ElementTheme.Dark,
+                _ => ElementTheme.Default,
             };
         });
     }

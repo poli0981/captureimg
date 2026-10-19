@@ -1,9 +1,9 @@
-using System;
+// SPDX-License-Identifier: GPL-3.0-or-later
+// Copyright (c) CaptureImage Contributors
+
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Globalization;
-using System.Linq;
-using System.Threading.Tasks;
 using CaptureImage.Core.Abstractions;
 using CaptureImage.Core.Models;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -316,8 +316,8 @@ public sealed partial class SettingsViewModel : ViewModelBase, IDisposable
         var keepCode = SelectedTheme?.Code;
         SupportedThemes.Clear();
         SupportedThemes.Add(new ThemeOption("System", Localization["Settings_Theme_System"]));
-        SupportedThemes.Add(new ThemeOption("Light",  Localization["Settings_Theme_Light"]));
-        SupportedThemes.Add(new ThemeOption("Dark",   Localization["Settings_Theme_Dark"]));
+        SupportedThemes.Add(new ThemeOption("Light", Localization["Settings_Theme_Light"]));
+        SupportedThemes.Add(new ThemeOption("Dark", Localization["Settings_Theme_Dark"]));
 
         // After a culture switch the bound SelectedTheme reference points at a stale
         // option — rebind by Code so the ComboBox shows the right entry.
@@ -464,9 +464,9 @@ public sealed partial class SettingsViewModel : ViewModelBase, IDisposable
     {
         var keepSeconds = SelectedCountdown?.Seconds;
         SupportedCountdowns.Clear();
-        SupportedCountdowns.Add(new CountdownOption(0,  Localization["Settings_CountdownOff"]));
-        SupportedCountdowns.Add(new CountdownOption(3,  Localization["Settings_Countdown3s"]));
-        SupportedCountdowns.Add(new CountdownOption(5,  Localization["Settings_Countdown5s"]));
+        SupportedCountdowns.Add(new CountdownOption(0, Localization["Settings_CountdownOff"]));
+        SupportedCountdowns.Add(new CountdownOption(3, Localization["Settings_Countdown3s"]));
+        SupportedCountdowns.Add(new CountdownOption(5, Localization["Settings_Countdown5s"]));
         SupportedCountdowns.Add(new CountdownOption(10, Localization["Settings_Countdown10s"]));
 
         if (keepSeconds is int s)
@@ -481,8 +481,8 @@ public sealed partial class SettingsViewModel : ViewModelBase, IDisposable
     {
         var keepCode = SelectedClipboardMode?.Code;
         SupportedClipboardModes.Clear();
-        SupportedClipboardModes.Add(new ClipboardOption("None",        Localization["Settings_ClipboardNone"]));
-        SupportedClipboardModes.Add(new ClipboardOption("Copy",        Localization["Settings_ClipboardCopy"]));
+        SupportedClipboardModes.Add(new ClipboardOption("None", Localization["Settings_ClipboardNone"]));
+        SupportedClipboardModes.Add(new ClipboardOption("Copy", Localization["Settings_ClipboardCopy"]));
         SupportedClipboardModes.Add(new ClipboardOption("CopyAndSave", Localization["Settings_ClipboardCopySave"]));
 
         if (keepCode is not null)

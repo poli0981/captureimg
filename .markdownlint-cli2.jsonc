@@ -1,0 +1,17 @@
+{
+  // markdownlint rules for the CI `docs` job (https://github.com/DavidAnson/markdownlint).
+  "config": {
+    "default": true,
+    // Prose is wrapped by hand; tables and URLs make a hard limit impractical.
+    "MD013": false,
+    // README / docs use small bits of inline HTML (badges, <details>, <br>).
+    "MD033": false,
+    // Keep a Changelog repeats "### Added/Fixed/Changed" under every release.
+    "MD024": { "siblings_only": true },
+    // Bold lead-ins ("**Heads-up:** …") are intentional, not headings.
+    "MD036": false,
+    // Pipe alignment inside tables is cosmetic and churns on every edit.
+    "MD060": false
+  },
+  "ignores": ["LICENSE", "**/bin/**", "**/obj/**", "artifacts/**", "TestResults/**", "node_modules/**"]
+}

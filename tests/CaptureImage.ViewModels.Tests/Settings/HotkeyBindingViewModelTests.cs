@@ -1,9 +1,12 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+// Copyright (c) CaptureImage Contributors
+
 using System.ComponentModel;
 using System.Globalization;
+using AwesomeAssertions;
 using CaptureImage.Core.Abstractions;
 using CaptureImage.Core.Models;
 using CaptureImage.ViewModels.Settings;
-using FluentAssertions;
 using Microsoft.Extensions.Logging.Abstractions;
 using NSubstitute;
 using Xunit;
@@ -18,8 +21,8 @@ public class HotkeyBindingViewModelTests
         IHotkeyConflictSniffer? sniffer = null) =>
         new(
             store,
-            hotkeys  ?? Substitute.For<IHotkeyService>(),
-            sniffer  ?? Substitute.For<IHotkeyConflictSniffer>(),
+            hotkeys ?? Substitute.For<IHotkeyService>(),
+            sniffer ?? Substitute.For<IHotkeyConflictSniffer>(),
             new NullLocalizationService(),
             NullLogger<HotkeyBindingViewModel>.Instance);
 

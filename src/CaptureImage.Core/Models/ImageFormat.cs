@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+// Copyright (c) CaptureImage Contributors
+
 namespace CaptureImage.Core.Models;
 
 /// <summary>
@@ -27,7 +30,7 @@ public static class ImageFormatExtensions
     /// </summary>
     public static string Extension(this ImageFormat format) => format switch
     {
-        ImageFormat.Png  => "png",
+        ImageFormat.Png => "png",
         ImageFormat.Jpeg => "jpg",
         ImageFormat.Webp => "webp",
         ImageFormat.Tiff => "tiff",
@@ -39,7 +42,7 @@ public static class ImageFormatExtensions
     /// </summary>
     public static string MimeType(this ImageFormat format) => format switch
     {
-        ImageFormat.Png  => "image/png",
+        ImageFormat.Png => "image/png",
         ImageFormat.Jpeg => "image/jpeg",
         ImageFormat.Webp => "image/webp",
         ImageFormat.Tiff => "image/tiff",

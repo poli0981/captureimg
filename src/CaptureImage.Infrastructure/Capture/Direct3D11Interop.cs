@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+// Copyright (c) CaptureImage Contributors
+
 using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
 using Vortice.Direct3D11;
@@ -21,10 +24,6 @@ namespace CaptureImage.Infrastructure.Capture;
 [SupportedOSPlatform("windows10.0.22621.0")]
 internal static class Direct3D11Interop
 {
-    /// <summary>IID for <c>IDirect3DDxgiInterfaceAccess</c> — defined in the same header.</summary>
-    private static readonly Guid IidIDirect3DDxgiInterfaceAccess =
-        new("A9B3D012-3DF2-4EE3-B8D1-8695F457D3C1");
-
     /// <summary>
     /// Wrap an <see cref="ID3D11Device"/> in a WinRT <see cref="IDirect3DDevice"/> so we can
     /// hand it to <see cref="Windows.Graphics.Capture.Direct3D11CaptureFramePool.CreateFreeThreaded"/>.

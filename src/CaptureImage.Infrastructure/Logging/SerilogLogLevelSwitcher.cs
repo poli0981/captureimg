@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+// Copyright (c) CaptureImage Contributors
+
 using CaptureImage.Core.Abstractions;
 using Serilog.Core;
 using Serilog.Events;
@@ -18,26 +21,26 @@ public sealed class SerilogLogLevelSwitcher : ILogLevelSwitcher
 
     public string CurrentLevel => _levelSwitch.MinimumLevel switch
     {
-        LogEventLevel.Verbose     => "Debug",
-        LogEventLevel.Debug       => "Debug",
+        LogEventLevel.Verbose => "Debug",
+        LogEventLevel.Debug => "Debug",
         LogEventLevel.Information => "Information",
-        LogEventLevel.Warning     => "Warning",
-        LogEventLevel.Error       => "Error",
-        LogEventLevel.Fatal       => "Error",
-        _                         => "Information",
+        LogEventLevel.Warning => "Warning",
+        LogEventLevel.Error => "Error",
+        LogEventLevel.Fatal => "Error",
+        _ => "Information",
     };
 
     public void SetLevel(string level)
     {
         _levelSwitch.MinimumLevel = level?.Trim().ToLowerInvariant() switch
         {
-            "debug"       => LogEventLevel.Debug,
+            "debug" => LogEventLevel.Debug,
             "information" => LogEventLevel.Information,
-            "info"        => LogEventLevel.Information,
-            "warning"     => LogEventLevel.Warning,
-            "warn"        => LogEventLevel.Warning,
-            "error"       => LogEventLevel.Error,
-            _             => LogEventLevel.Information,
+            "info" => LogEventLevel.Information,
+            "warning" => LogEventLevel.Warning,
+            "warn" => LogEventLevel.Warning,
+            "error" => LogEventLevel.Error,
+            _ => LogEventLevel.Information,
         };
     }
 }

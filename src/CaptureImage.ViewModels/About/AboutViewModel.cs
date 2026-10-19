@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+// Copyright (c) CaptureImage Contributors
+
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Reflection;
@@ -52,7 +55,6 @@ public sealed partial class AboutViewModel : ViewModelBase
             new("Microsoft.Extensions.*",     "MIT",        "https://github.com/dotnet/runtime"),
             new("Serilog",                    "Apache-2.0", "https://github.com/serilog/serilog"),
             new("Vortice.Direct3D11 / DXGI",  "MIT",        "https://github.com/amerkoleci/Vortice.Windows"),
-            new("SixLabors.ImageSharp",       "Apache-2.0", "https://github.com/SixLabors/ImageSharp"),
             new("SharpHook",                  "MIT",        "https://github.com/TolikPylypchuk/SharpHook"),
             new("libuiohook",                 "GPL-3.0",    "https://github.com/kwhat/libuiohook"),
             new("Stateless",                  "Apache-2.0", "https://github.com/dotnet-state-machine/stateless"),

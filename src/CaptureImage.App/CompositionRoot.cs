@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+// Copyright (c) CaptureImage Contributors
+
 using System.IO.Abstractions;
 using CaptureImage.Core.Abstractions;
 using CaptureImage.Core.Pipeline;
@@ -83,7 +86,7 @@ internal static class CompositionRoot
         services.AddSingleton<ICaptureEngine, WindowsGraphicsCaptureEngine>();
         services.AddSingleton<PrintWindowFallback>();
         services.AddSingleton<IImageEncoder, SkiaImageEncoder>();
-        services.AddSingleton<IImageEncoder, ImageSharpTiffEncoder>();
+        services.AddSingleton<IImageEncoder, WicTiffEncoder>();
         services.AddSingleton<FileNameStrategy>(_ =>
             new FileNameStrategy(File.Exists));
         services.AddSingleton<CaptureOrchestrator>();

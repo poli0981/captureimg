@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+// Copyright (c) CaptureImage Contributors
+
 using Microsoft.UI.Xaml.Controls;
 
 namespace CaptureImage.UI.Controls;

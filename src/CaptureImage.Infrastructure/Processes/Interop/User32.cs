@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+// Copyright (c) CaptureImage Contributors
+
 using System.Runtime.InteropServices;
 using System.Text;
 
@@ -61,7 +64,7 @@ internal static partial class User32
     public const uint EVENT_SYSTEM_FOREGROUND = 0x0003;
 
     // SetWinEventHook flags
-    public const uint WINEVENT_OUTOFCONTEXT   = 0x0000;
+    public const uint WINEVENT_OUTOFCONTEXT = 0x0000;
     public const uint WINEVENT_SKIPOWNPROCESS = 0x0002;
 
     // GetWindowLongPtr indices
@@ -69,7 +72,7 @@ internal static partial class User32
 
     // Extended window styles
     public const long WS_EX_TOOLWINDOW = 0x00000080;
-    public const long WS_EX_APPWINDOW  = 0x00040000;
+    public const long WS_EX_APPWINDOW = 0x00040000;
     public const long WS_EX_NOREDIRECTIONBITMAP = 0x00200000;
 
     // GetWindow constants

@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+// Copyright (c) CaptureImage Contributors
+
 namespace CaptureImage.Core.Models;
 
 /// <summary>
@@ -36,7 +39,7 @@ public sealed record CapturedFrame(
 
     /// <summary>
     /// Return a heap copy of the pixel buffer with any row padding removed.
-    /// Use when you need <c>Width*Height*4</c> bytes exactly — e.g. feeding ImageSharp.
+    /// Use when you need <c>Width*Height*4</c> bytes exactly — e.g. feeding WIC <c>BitmapEncoder.SetPixelData</c>.
     /// </summary>
     public byte[] ToTightlyPacked()
     {

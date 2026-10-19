@@ -1,3 +1,4 @@
+<!-- markdownlint-disable-file MD041 -->
 <!-- Thanks for contributing to CaptureImage! Please fill in every section. -->
 
 ## Summary

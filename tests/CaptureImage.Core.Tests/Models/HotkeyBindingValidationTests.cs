@@ -1,6 +1,9 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+// Copyright (c) CaptureImage Contributors
+
+using AwesomeAssertions;
 using CaptureImage.Core.Models;
 using CaptureImage.Core.Validation;
-using FluentAssertions;
 using Xunit;
 
 namespace CaptureImage.Core.Tests.Models;

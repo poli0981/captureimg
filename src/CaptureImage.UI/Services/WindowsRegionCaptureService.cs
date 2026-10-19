@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+// Copyright (c) CaptureImage Contributors
+
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
@@ -78,10 +81,10 @@ public sealed class WindowsRegionCaptureService : IRegionCaptureService
             // belt+braces in case of float-rounding edge cases.
             var x = Math.Clamp(result.X, 0, screenWidth - 1);
             var y = Math.Clamp(result.Y, 0, screenHeight - 1);
-            var w = Math.Clamp(result.Width,  1, screenWidth - x);
+            var w = Math.Clamp(result.Width, 1, screenWidth - x);
             var h = Math.Clamp(result.Height, 1, screenHeight - y);
 
-            return CropToBgraFrame(bgraPixels, screenWidth, screenHeight, x, y, w, h);
+            return CropToBgraFrame(bgraPixels, screenHeight, x, y, w, h);
         }
     }
 
@@ -182,7 +185,7 @@ public sealed class WindowsRegionCaptureService : IRegionCaptureService
     }
 
     private static CapturedFrame CropToBgraFrame(
-        byte[] sourceBgra, int srcWidth, int srcHeight,
+        byte[] sourceBgra, int srcHeight,
         int x, int y, int width, int height)
     {
         var srcStride = sourceBgra.Length / srcHeight;

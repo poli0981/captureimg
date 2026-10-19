@@ -12,10 +12,12 @@ You need:
 
 - Push access to <https://github.com/poli0981/captureimg>.
 - The working tree on `main` is clean and all tests pass locally:
+
   ```powershell
   dotnet build CaptureImage.sln -c Release /p:TreatWarningsAsErrors=true
   dotnet test CaptureImage.sln -c Release
   ```
+
 - `CHANGELOG.md` has an entry for the release under `[Unreleased]`.
   Move the entries into a new `## [1.0.0] - 2026-MM-DD` section before
   tagging — the CI release workflow does not rewrite the file.
@@ -59,10 +61,12 @@ Do NOT manually create a release with the broken artifacts. Instead:
 
 1. Investigate the failure in the Actions tab.
 2. Delete the broken tag both locally and on GitHub:
+
    ```powershell
    git tag -d v1.0.0
    git push --delete origin v1.0.0
    ```
+
 3. Fix the underlying problem on `main`.
 4. Re-tag and re-push.
 
@@ -103,10 +107,12 @@ reasonably refuse. To mitigate:
 
 1. The GitHub Release description links to the `SHA256SUMS.txt` file
    and explains how to verify the download:
+
    ```powershell
    Get-FileHash -Algorithm SHA256 Setup.exe
    # Compare the output with the hash listed in SHA256SUMS.txt
    ```
+
 2. [`docs/legal/DISCLAIMER.md §7`](legal/DISCLAIMER.md) explicitly
    documents the unsigned state and the SmartScreen warning so users
    know it is expected, not a compromise.

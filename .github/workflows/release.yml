@@ -1,176 +1,225 @@
 name: Release
 
-# Cut a new release when a tag of the form v1.2.3 is pushed. Publishes the
-# CaptureImage.App project as a multi-file WinAppSDK self-contained Win64
-# build (WinUI 3 can't bundle into a single .exe), wraps it in a Velopack
-# installer, and uploads the result to a GitHub Release matching the tag.
+# Builds a release from a `vX.Y.Z[-pre]` tag and uploads it as a DRAFT GitHub
+# Release. Velopack clients (`prerelease: false`) never see drafts, so the
+# maintainer can verify the assets before publishing with
+# `gh release edit <tag> --draft=false` — publishing with a user token also fires
+# `release: published`, which runs announce-release.yml.
 #
-# Code signing is NOT performed yet (SignPath application was declined).
-# The installer will trigger Windows SmartScreen "Unknown publisher" until
-# a signing cert is available. Users can verify the build manually by
-# comparing SHA256 sums — see docs/RELEASING.md §5.
+# Re-running for an existing tag (the tag ruleset forbids moving tags) works through
+# workflow_dispatch: it checks out the requested tag with the workflow as it is on
+# the default branch. `dry_run` builds and packs without touching any release.
+#
+# Code signing is not available yet (SignPath declined the application); every
+# asset gets a SHA-256 checksum and a GitHub build-provenance attestation instead.
 
 on:
   push:
-    tags:
-      - "v*"
+    tags: ["v*"]
   workflow_dispatch:
     inputs:
-      version:
-        description: "Version to release (without leading v, e.g. 1.0.0)"
+      tag:
+        description: "Existing release tag to build, e.g. v2.0.0"
         required: true
         type: string
+      dry_run:
+        description: "Build and pack only (no GitHub Release)"
+        type: boolean
+        default: true
+
+permissions: {}
 
 concurrency:
-  group: release-${{ github.ref }}
+  group: release-${{ inputs.tag || github.ref_name }}
   cancel-in-progress: false
 
-permissions:
-  contents: write  # needed to create a GitHub Release
+env:
+  DOTNET_NOLOGO: "true"
+  DOTNET_CLI_TELEMETRY_OPTOUT: "true"
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: "true"
+  # Must stay identical across releases so installed copies keep updating and
+  # existing shortcuts stay valid.
+  PACK_ID: CaptureImage
+  PACK_TITLE: CaptureImage
+  MAIN_EXE: CaptureImage.App.exe
+  CHANNEL: win
 
 jobs:
-  release:
+  build:
+    name: build
     runs-on: windows-latest
-    timeout-minutes: 30
-
-    env:
-      PACK_ID: CaptureImage
-      MAIN_EXE: CaptureImage.App.exe
-
+    timeout-minutes: 45
+    permissions:
+      contents: read
+    outputs:
+      tag: ${{ steps.version.outputs.tag }}
+      version: ${{ steps.version.outputs.version }}
+      prerelease: ${{ steps.version.outputs.prerelease }}
     steps:
-      - name: Checkout
-        uses: actions/checkout@v7
-        with:
-          fetch-depth: 0
-
-      - name: Resolve version
+      - name: Resolve and validate the tag
         id: version
         shell: pwsh
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          INPUT_TAG: ${{ inputs.tag }}
+          REF_NAME: ${{ github.ref_name }}
         run: |
-          if ($env:GITHUB_REF -like "refs/tags/v*") {
-            $v = $env:GITHUB_REF -replace "^refs/tags/v", ""
-          } elseif ("${{ github.event.inputs.version }}" -ne "") {
-            $v = "${{ github.event.inputs.version }}"
-          } else {
-            throw "No tag and no manual version supplied."
-          }
-          Write-Host "Resolved version: $v"
-          "version=$v" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+          $tag = if ($env:EVENT_NAME -eq 'workflow_dispatch') { $env:INPUT_TAG } else { $env:REF_NAME }
+          $semver = '^v(?<v>(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(-[0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*)?)$'
+          if ($tag -notmatch $semver) { throw "Not a SemVer release tag: '$tag'" }
+          $version = $Matches.v
+          "tag=$tag" | Out-File $env:GITHUB_OUTPUT -Append -Encoding utf8
+          "version=$version" | Out-File $env:GITHUB_OUTPUT -Append -Encoding utf8
+          "prerelease=$($version.Contains('-').ToString().ToLowerInvariant())" | Out-File $env:GITHUB_OUTPUT -Append -Encoding utf8
 
+      - name: Checkout the tag
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: refs/tags/${{ steps.version.outputs.tag }}
+          persist-credentials: false
+
+      - name: Tag must match Directory.Build.props
+        shell: pwsh
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          [xml]$props = Get-Content Directory.Build.props
+          $declared = @($props.Project.PropertyGroup | ForEach-Object { $_.Version } | Where-Object { $_ })[0]
+          if ($declared -ne $env:VERSION) { throw "Tag version $env:VERSION does not match Directory.Build.props ($declared)." }
+
+      # No NuGet cache here: a poisoned cache must never reach release binaries.
       - name: Setup .NET
-        uses: actions/setup-dotnet@v6
+        uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
         with:
           global-json-file: global.json
 
-      - name: Restore + test
+      - name: Restore, build, test
         run: |
-          dotnet restore CaptureImage.sln
-          dotnet test CaptureImage.sln -c Release --logger "trx;LogFileName=test-results.trx" --results-directory ./TestResults
+          dotnet restore CaptureImage.sln --locked-mode
+          dotnet build CaptureImage.sln -c Release --no-restore
+          dotnet test --solution CaptureImage.sln -c Release --no-build
+          dotnet tool restore
 
-      - name: Publish CaptureImage.App (win-x64 self-contained, multi-file)
-        # WinUI 3's WindowsAppSDK runtime can't be bundled into a single .exe —
-        # PublishSingleFile / IncludeNativeLibrariesForSelfExtract are dropped
-        # in v1.3. WindowsAppSDKSelfContained=true (set in the csproj) ships
-        # the runtime as ~50 .dll files alongside the .exe. Velopack packages
-        # the whole folder.
+      - name: Publish app
+        # WinUI's targets add RIDs during a Platform=x64 publish restore, which locked
+        # mode rejects; the solution-wide restores in the other jobs stay locked.
         run: >
           dotnet publish src/CaptureImage.App/CaptureImage.App.csproj
-          -c Release
-          -r win-x64
-          --self-contained
-          /p:Platform=x64
-          /p:WindowsPackageType=None
-          /p:Version=${{ steps.version.outputs.version }}
-          /p:AssemblyVersion=${{ steps.version.outputs.version }}.0
-          /p:FileVersion=${{ steps.version.outputs.version }}.0
-          -o ./publish
+          -c Release -r win-x64 --self-contained
+          /p:Platform=x64 /p:WindowsPackageType=None
+          /p:RestoreLockedMode=false
+          -o publish
 
-      - name: Install Velopack CLI
-        run: dotnet tool install --global vpk
-
-      - name: Add dotnet tools to PATH
+      - name: Release notes from CHANGELOG
         shell: pwsh
-        run: echo "$env:USERPROFILE\.dotnet\tools" | Out-File -FilePath $env:GITHUB_PATH -Append
-
-      - name: Download previous release (for delta generation)
-        # Velopack only emits a *-delta.nupkg when it finds a previous full package
-        # in --outputDir. Fetching the last GitHub release before pack gives the
-        # Update tab a working incremental path from n-1 → n. Safe to continue-on-error:
-        # a first-ever release has nothing to download and we just publish full.
-        shell: pwsh
-        continue-on-error: true
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
         run: |
-          New-Item -ItemType Directory -Force -Path ./releases | Out-Null
-          vpk download github --repoUrl https://github.com/${{ github.repository }} --outputDir ./releases --channel win
+          $lines = Get-Content CHANGELOG.md
+          $start = [Array]::FindIndex($lines, [Predicate[string]] { param($l) $l -match "^## \[$([regex]::Escape($env:VERSION))\]" })
+          if ($start -lt 0) { throw "CHANGELOG.md has no section for $env:VERSION." }
+          $end = [Array]::FindIndex($lines, $start + 1, [Predicate[string]] { param($l) $l -match '^## \[' })
+          if ($end -lt 0) { $end = $lines.Length }
+          $lines[($start + 1)..($end - 1)] | Out-File release-notes.md -Encoding utf8
 
       - name: Velopack pack
-        # --channel win produces the modern releases.win.json manifest alongside the
-        # legacy RELEASES file, which is what Velopack clients >= 0.0.900 poll for.
-        # --delta BestSize keeps the hotfix payload small (typical v1.1.0 → v1.1.1
-        # delta is a few MB vs the ~55 MB full).
-        run: >
-          vpk pack
-          --packId ${{ env.PACK_ID }}
-          --packVersion ${{ steps.version.outputs.version }}
-          --packDir ./publish
-          --mainExe ${{ env.MAIN_EXE }}
-          --outputDir ./releases
-          --channel win
-          --delta BestSize
-
-      - name: Compute SHA256 sums
         shell: pwsh
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+        # Full packages only: deltas need the previous package and are not worth the
+        # extra moving parts for this app's size.
         run: |
-          $outDir = "./releases"
-          Get-ChildItem $outDir -File | ForEach-Object {
-            $hash = (Get-FileHash $_.FullName -Algorithm SHA256).Hash.ToLower()
-            "$hash  $($_.Name)" | Out-File -FilePath "$outDir\SHA256SUMS.txt" -Append -Encoding utf8
-          }
-          Get-Content "$outDir\SHA256SUMS.txt"
+          dotnet vpk pack --packId $env:PACK_ID --packVersion $env:VERSION --packTitle $env:PACK_TITLE `
+            --packAuthors "poli0981 and contributors" --packDir publish --mainExe $env:MAIN_EXE `
+            --channel $env:CHANNEL --shortcuts "Desktop,StartMenuRoot" --delta None `
+            --releaseNotes release-notes.md --outputDir releases
 
-      - name: Upload release artifacts
-        uses: actions/upload-artifact@v7
+      - name: Collect assets, SBOM and checksums
+        shell: pwsh
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          New-Item -ItemType Directory dist | Out-Null
+          Get-ChildItem releases -File | Copy-Item -Destination dist
+          dotnet CycloneDX src/CaptureImage.App/CaptureImage.App.csproj --output dist `
+            --filename "CaptureImage-$env:VERSION-sbom.cdx.json" --output-format Json `
+            --set-name CaptureImage --set-version $env:VERSION --exclude-test-projects
+          Push-Location dist
+          Get-ChildItem -File | Sort-Object Name | ForEach-Object {
+            "$((Get-FileHash $_.Name -Algorithm SHA256).Hash.ToLowerInvariant())  $($_.Name)"
+          } | Out-File SHA256SUMS.txt -Encoding utf8
+          Get-Content SHA256SUMS.txt
+          Pop-Location
+
+      - name: Release body
+        shell: pwsh
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+          REPOSITORY: ${{ github.repository }}
+        run: |
+          $body = @(
+            "## CaptureImage v$env:VERSION", '',
+            (Get-Content release-notes.md -Raw), '',
+            '### Downloads',
+            '- **`CaptureImage-win-Setup.exe`** — installer (per-user, no admin prompt). Windows 11 22H2 or later.',
+            '- **`CaptureImage-win-Portable.zip`** — extract-and-run build without installer.',
+            '- **`*-full.nupkg`**, **`releases.win.json`** — update feed used by the in-app updater.',
+            '- **`SHA256SUMS.txt`**, **`*-sbom.cdx.json`** — checksums and CycloneDX SBOM.', '',
+            '### Verify the download',
+            'The installer is not code-signed yet, so Windows SmartScreen shows "Unknown publisher".',
+            'Check the checksum or the build-provenance attestation before running it:', '',
+            '```powershell',
+            'Get-FileHash -Algorithm SHA256 .\CaptureImage-win-Setup.exe   # compare with SHA256SUMS.txt',
+            "gh attestation verify .\CaptureImage-win-Setup.exe --repo $env:REPOSITORY",
+            '```'
+          )
+          $body | Out-File release-body.md -Encoding utf8
+
+      - name: Upload release payload
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
-          name: captureimage-release-${{ steps.version.outputs.version }}
-          path: ./releases/**
+          name: release-${{ steps.version.outputs.version }}
+          path: |
+            dist/**
+            release-body.md
           retention-days: 30
+          if-no-files-found: error
 
-      - name: Create / update GitHub Release
-        uses: softprops/action-gh-release@v3
-        if: startsWith(github.ref, 'refs/tags/v')
+  publish:
+    name: publish
+    needs: build
+    if: github.event_name == 'push' || !inputs.dry_run
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: write # create / update the draft release
+      id-token: write # build provenance
+      attestations: write
+    steps:
+      - name: Download release payload
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
         with:
-          name: CaptureImage v${{ steps.version.outputs.version }}
-          tag_name: ${{ github.ref_name }}
-          draft: false
-          prerelease: false
-          generate_release_notes: true
-          files: |
-            ./releases/*.exe
-            ./releases/*.nupkg
-            ./releases/*.zip
-            ./releases/RELEASES
-            ./releases/releases.*.json
-            ./releases/SHA256SUMS.txt
-          body: |
-            ## CaptureImage v${{ steps.version.outputs.version }}
+          name: release-${{ needs.build.outputs.version }}
 
-            Lightweight Windows screen capture for games without a built-in screenshot key.
+      - name: Attest build provenance
+        uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8 # v4.2.2
+        with:
+          subject-path: dist/*
 
-            ### Downloads
-            - **`Setup.exe`** — Velopack installer. Windows 11 22H2+ only.
-            - **`*.nupkg`** — portable Velopack package for manual install / CI updates.
-            - **`*-Portable.zip`** — extract-and-run multi-file build, no installer.
-            - **`RELEASES`** — Velopack release manifest.
-            - **`SHA256SUMS.txt`** — checksums for manual verification.
-
-            ### Unsigned installer notice
-            This release is **not code-signed** yet (OSS signing application
-            pending). Windows SmartScreen will show an "Unknown publisher"
-            warning on first run. To verify the installer is unmodified:
-
-            1. Download `SHA256SUMS.txt` from this release.
-            2. Run `Get-FileHash -Algorithm SHA256 Setup.exe` in PowerShell.
-            3. Compare with the entry in `SHA256SUMS.txt`.
-
-            ### Changelog
-            See [CHANGELOG.md](https://github.com/poli0981/captureimg/blob/v${{ steps.version.outputs.version }}/CHANGELOG.md).
+      - name: Create or update the draft release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          TAG: ${{ needs.build.outputs.tag }}
+          VERSION: ${{ needs.build.outputs.version }}
+          PRERELEASE: ${{ needs.build.outputs.prerelease }}
+        run: |
+          set -euo pipefail
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            gh release edit "$TAG" --notes-file release-body.md
+            gh release upload "$TAG" dist/* --clobber
+          else
+            flags=(--draft --verify-tag --title "CaptureImage v$VERSION" --notes-file release-body.md)
+            if [ "$PRERELEASE" = "true" ]; then flags+=(--prerelease); fi
+            gh release create "$TAG" "${flags[@]}" dist/*
+          fi

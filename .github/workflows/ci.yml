@@ -1,60 +1,275 @@
 name: CI
 
-# Build + test CaptureImage on every push to main and every pull request.
-# Runs on windows-latest because the Infrastructure project targets
-# net9.0-windows10.0.22621.0 and the WGC integration tests require a real
-# desktop session with Windows 11 22H2 SDK.
-
-# Minimum permissions required to checkout the repo and run dotnet
-# build/test. No package writes, no release uploads, no PR comments.
-permissions:
-  contents: read
+# Every job name below is a required status check on `main` (repository ruleset).
+# Keep job ids stable and never add `paths:` filters here: a required check that
+# does not report leaves the pull request waiting forever.
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
   workflow_dispatch:
 
-# Cancel in-progress runs for the same ref when a new commit lands.
+permissions: {}
+
 concurrency:
   group: ci-${{ github.ref }}
   cancel-in-progress: true
 
-jobs:
-  build-test:
-    runs-on: windows-latest
-    timeout-minutes: 20
+env:
+  DOTNET_NOLOGO: "true"
+  DOTNET_CLI_TELEMETRY_OPTOUT: "true"
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: "true"
+  NUGET_PACKAGES: ${{ github.workspace }}/.nuget/packages
 
+jobs:
+  build:
+    name: build
+    runs-on: windows-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read
     steps:
       - name: Checkout
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          fetch-depth: 0  # full history so MinVer / git describe works later
+          persist-credentials: false
 
       - name: Setup .NET
-        uses: actions/setup-dotnet@v6
+        uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
         with:
-          # Honor global.json; avoids drift between local + CI.
           global-json-file: global.json
+          cache: true
+          cache-dependency-path: "**/packages.lock.json"
 
-      - name: Print .NET version
-        run: dotnet --info
+      - name: Restore (locked)
+        run: dotnet restore CaptureImage.sln --locked-mode
 
-      - name: Restore
-        run: dotnet restore CaptureImage.sln
+      - name: Build (Release, warnings as errors)
+        run: dotnet build CaptureImage.sln -c Release --no-restore
 
-      - name: Build (Release, no restore)
-        run: dotnet build CaptureImage.sln -c Release --no-restore /p:TreatWarningsAsErrors=true /p:WarningsAsErrors=nullable
+      - name: Test (Microsoft.Testing.Platform + coverage)
+        run: >
+          dotnet test --solution CaptureImage.sln -c Release --no-build
+          --results-directory TestResults
+          --coverage --coverage-output-format cobertura
+          --report-xunit-trx
 
-      - name: Test
-        run: dotnet test CaptureImage.sln -c Release --no-build --logger "trx;LogFileName=test-results.trx" --results-directory ./TestResults
-
-      - name: Upload test results
+      - name: Coverage summary
         if: always()
-        uses: actions/upload-artifact@v7
+        shell: pwsh
+        run: |
+          dotnet tool restore
+          dotnet reportgenerator "-reports:TestResults/*.cobertura.xml" "-targetdir:coverage-report" `
+            "-reporttypes:MarkdownSummaryGithub;Cobertura" "-assemblyfilters:+CaptureImage.*;-CaptureImage.*.Tests"
+          if (Test-Path coverage-report/SummaryGithub.md) {
+            Get-Content coverage-report/SummaryGithub.md | Out-File $env:GITHUB_STEP_SUMMARY -Append -Encoding utf8
+          }
+
+      - name: Upload test results + coverage
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: test-results
-          path: ./TestResults/**/*.trx
+          path: |
+            TestResults/**/*.trx
+            coverage-report/**
           retention-days: 14
+
+  format:
+    name: format
+    runs-on: windows-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
+        with:
+          global-json-file: global.json
+          cache: true
+          cache-dependency-path: "**/packages.lock.json"
+
+      - name: Restore (locked)
+        run: dotnet restore CaptureImage.sln --locked-mode
+
+      - name: Whitespace / line endings
+        run: dotnet format whitespace CaptureImage.sln --no-restore --verify-no-changes
+
+      # Unused-member rules (IDE0051/0052/…) are enforced by the compiler in `build`,
+      # where XAML-generated code is visible; `dotnet format` cannot see it.
+      - name: Code style (SPDX header, namespaces, usings)
+        run: >
+          dotnet format style CaptureImage.sln --no-restore --verify-no-changes
+          --diagnostics IDE0073 IDE0161 IDE0065 IDE0005
+
+  deadcode:
+    name: deadcode
+    runs-on: windows-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
+        with:
+          global-json-file: global.json
+          cache: true
+          cache-dependency-path: "**/packages.lock.json"
+
+      - name: Restore + build
+        run: |
+          dotnet restore CaptureImage.sln --locked-mode
+          dotnet build CaptureImage.sln -c Release --no-restore
+          dotnet tool restore
+
+      # Quoted: PowerShell splits a dash-prefixed native argument at its first period.
+      - name: JetBrains InspectCode
+        run: >
+          dotnet jb inspectcode CaptureImage.sln "--output=inspectcode.sarif" "--format=Sarif"
+          "--severity=SUGGESTION" "--properties:Configuration=Release" --no-build
+
+      - name: Gate on dead / redundant code
+        shell: pwsh
+        # The WinUI projects are excluded until they are replaced in v2.0 (their XAML
+        # x:Name fields and handlers produce false positives).
+        run: >
+          ./.github/scripts/inspectcode-gate.ps1 -Sarif inspectcode.sarif
+          -ExcludePath "src/CaptureImage.UI/;src/CaptureImage.App/;tests/CaptureImage.UI.Tests/"
+
+      - name: Upload InspectCode report
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: inspectcode
+          path: inspectcode.sarif
+          retention-days: 14
+
+  audit:
+    name: audit
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
+        with:
+          global-json-file: global.json
+
+      - name: Restore (locked)
+        run: dotnet restore CaptureImage.sln --locked-mode
+
+      - name: Vulnerable packages (direct + transitive)
+        shell: pwsh
+        run: |
+          dotnet list CaptureImage.sln package --vulnerable --include-transitive --format json --output-version 1 > vulnerable.json
+          ./.github/scripts/vulnerability-gate.ps1 -Report vulnerable.json
+
+      - name: Deprecated / outdated packages (report only)
+        if: always()
+        shell: pwsh
+        run: |
+          "## Deprecated packages`n" | Out-File $env:GITHUB_STEP_SUMMARY -Append -Encoding utf8
+          '```' | Out-File $env:GITHUB_STEP_SUMMARY -Append -Encoding utf8
+          dotnet list CaptureImage.sln package --deprecated --include-transitive | Out-File $env:GITHUB_STEP_SUMMARY -Append -Encoding utf8
+          '```' | Out-File $env:GITHUB_STEP_SUMMARY -Append -Encoding utf8
+
+  license:
+    name: license
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
+        with:
+          global-json-file: global.json
+
+      - name: Restore
+        run: |
+          dotnet restore CaptureImage.sln --locked-mode
+          dotnet tool restore
+
+      # Only the shipped app's dependency closure is checked against the allowlist —
+      # build/test-only tooling never reaches users.
+      - name: Licenses of shipped dependencies
+        run: >
+          dotnet nuget-license -i src/CaptureImage.App/CaptureImage.App.csproj -t
+          -a .github/license/allowed-licenses.json
+          -ignore .github/license/ignored-packages.json
+          -o Markdown -fo license-report.md
+
+      - name: License report
+        if: always()
+        shell: pwsh
+        run: |
+          if (Test-Path license-report.md) {
+            "## Licenses of shipped dependencies`n" | Out-File $env:GITHUB_STEP_SUMMARY -Append -Encoding utf8
+            Get-Content license-report.md | Out-File $env:GITHUB_STEP_SUMMARY -Append -Encoding utf8
+          }
+
+  publish-smoke:
+    name: publish-smoke
+    runs-on: windows-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
+        with:
+          global-json-file: global.json
+          cache: true
+          cache-dependency-path: "**/packages.lock.json"
+
+      - name: Publish app (same switches as the release workflow)
+        # WinUI's targets add RIDs during a Platform=x64 publish restore, which locked
+        # mode rejects; the solution-wide restores in the other jobs stay locked.
+        run: >
+          dotnet publish src/CaptureImage.App/CaptureImage.App.csproj
+          -c Release -r win-x64 --self-contained
+          /p:Platform=x64 /p:WindowsPackageType=None
+          /p:RestoreLockedMode=false
+          -o publish
+
+      - name: Verify published payload
+        shell: pwsh
+        run: |
+          $required = @(
+            'CaptureImage.App.exe', 'CaptureImage.App.pri', 'LICENSE', 'NOTICE',
+            'docs/legal/DISCLAIMER.md', 'docs/legal/PRIVACY.md', 'docs/legal/TERMS.md',
+            'docs/legal/THIRD_PARTY_NOTICES.md', 'docs/CONTRIBUTORS.md'
+          )
+          $missing = $required | Where-Object { -not (Test-Path (Join-Path publish $_)) }
+          $xbf = @(Get-ChildItem publish -Recurse -Filter *.xbf).Count
+          if ($xbf -eq 0) { $missing += '*.xbf (compiled XAML)' }
+          if ($missing) { $missing | ForEach-Object { "::error title=publish-smoke::missing $_" }; exit 1 }
+          "publish-smoke: payload OK ($xbf compiled XAML files)"

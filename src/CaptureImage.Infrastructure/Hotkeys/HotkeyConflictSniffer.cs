@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+// Copyright (c) CaptureImage Contributors
+
 using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
 using CaptureImage.Core.Abstractions;
@@ -16,7 +19,7 @@ namespace CaptureImage.Infrastructure.Hotkeys;
 /// <para>
 /// The <see cref="HotkeyModifiers"/> flag values deliberately match the Win32
 /// <c>MOD_*</c> constants so no re-mapping is needed. Bindings flagged by
-/// <see cref="Validation.ReservedHotkeys"/> often still register successfully
+/// <see cref="CaptureImage.Core.Validation.ReservedHotkeys"/> often still register successfully
 /// here (Windows gets to eat the keypress first), so both checks are needed.
 /// </para>
 /// </remarks>
@@ -47,7 +50,10 @@ public sealed partial class HotkeyConflictSniffer : IHotkeyConflictSniffer
 
         if (RegisterHotKey(IntPtr.Zero, id, mods, binding.VirtualKey))
         {
-            UnregisterHotKey(IntPtr.Zero, id);
+            if (!UnregisterHotKey(IntPtr.Zero, id))
+            {
+                _logger.LogDebug("UnregisterHotKey failed for probe id {Id}.", id);
+            }
             return false;
         }
 
@@ -68,13 +74,13 @@ public sealed partial class HotkeyConflictSniffer : IHotkeyConflictSniffer
     /// </summary>
     private static string DescribeWin32Error(int code) => code switch
     {
-        0    => "ERROR_SUCCESS",
-        5    => "ERROR_ACCESS_DENIED",
-        87   => "ERROR_INVALID_PARAMETER",
+        0 => "ERROR_SUCCESS",
+        5 => "ERROR_ACCESS_DENIED",
+        87 => "ERROR_INVALID_PARAMETER",
         1400 => "ERROR_INVALID_WINDOW_HANDLE",
         1409 => "ERROR_HOTKEY_ALREADY_REGISTERED",
         1419 => "ERROR_HOTKEY_NOT_REGISTERED",
-        _    => "UNKNOWN",
+        _ => "UNKNOWN",
     };
 
     [LibraryImport("user32.dll", SetLastError = true)]

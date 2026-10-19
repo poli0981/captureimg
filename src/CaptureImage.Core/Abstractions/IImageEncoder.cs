@@ -1,10 +1,13 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+// Copyright (c) CaptureImage Contributors
+
 using CaptureImage.Core.Models;
 
 namespace CaptureImage.Core.Abstractions;
 
 /// <summary>
 /// Encodes a <see cref="CapturedFrame"/> to a byte stream in a target <see cref="ImageFormat"/>.
-/// Encoders may be format-specialized (SkiaSharp for PNG/JPEG/WebP, ImageSharp for TIFF);
+/// Encoders may be format-specialized (SkiaSharp for PNG/JPEG/WebP, WIC for TIFF);
 /// the dispatcher picks the right one per request.
 /// </summary>
 public interface IImageEncoder

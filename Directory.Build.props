@@ -1,36 +1,60 @@
 <Project>
 
-  <PropertyGroup>
-    <!-- Language / compiler -->
+  <PropertyGroup Label="Language / compiler">
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
-    <WarningsAsErrors>nullable</WarningsAsErrors>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <AnalysisLevel>latest</AnalysisLevel>
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+    <!-- Needed so IDE0005 (unnecessary using) is reported by the compiler, not only in the IDE.
+         CS1591 (missing XML doc on public members) stays muted below. -->
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+  </PropertyGroup>
 
-    <!-- Deterministic + source link friendly -->
+  <PropertyGroup Label="Reproducible restore + build">
     <Deterministic>true</Deterministic>
     <ContinuousIntegrationBuild Condition="'$(CI)' == 'true'">true</ContinuousIntegrationBuild>
+    <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
+    <RestoreLockedMode Condition="'$(CI)' == 'true'">true</RestoreLockedMode>
+    <!-- Dependabot's NuGet updater runs on Linux. Without this, every Windows-TFM project fails
+         to evaluate there and every newer package version is reported "not compatible", so no
+         update PR is ever opened. Harmless on Windows. -->
+    <EnableWindowsTargeting>true</EnableWindowsTargeting>
+    <!-- The app ships for win-x64 only. Declaring the RID for every project keeps each
+         packages.lock.json identical between a plain `dotnet restore` and the
+         `dotnet publish -r win-x64` restore, so locked mode works for both. -->
+    <RuntimeIdentifiers>win-x64</RuntimeIdentifiers>
+  </PropertyGroup>
 
-    <!-- Assembly / product info -->
+  <PropertyGroup Label="Supply chain">
+    <NuGetAudit>true</NuGetAudit>
+    <NuGetAuditMode>all</NuGetAuditMode>
+    <NuGetAuditLevel>low</NuGetAuditLevel>
+  </PropertyGroup>
+
+  <PropertyGroup Label="Version (single source of truth — the release workflow checks the tag against it)">
+    <Version>1.5.1</Version>
+    <AssemblyVersion>$([System.Text.RegularExpressions.Regex]::Match('$(Version)', '^\d+\.\d+\.\d+').Value).0</AssemblyVersion>
+    <FileVersion>$(AssemblyVersion)</FileVersion>
+    <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
+  </PropertyGroup>
+
+  <PropertyGroup Label="Product metadata">
     <Product>CaptureImage</Product>
     <Company>CaptureImage Contributors</Company>
     <Authors>poli0981 and contributors</Authors>
     <Copyright>Copyright (c) CaptureImage Contributors. Licensed under GPL-3.0-or-later.</Copyright>
-    <Version>1.0.0</Version>
-    <AssemblyVersion>1.0.0.0</AssemblyVersion>
-    <FileVersion>1.0.0.0</FileVersion>
     <NeutralLanguage>en</NeutralLanguage>
-
-    <!-- Repository metadata — lands in the assembly manifest and the About tab. -->
     <RepositoryUrl>https://github.com/poli0981/captureimg</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageProjectUrl>https://github.com/poli0981/captureimg</PackageProjectUrl>
     <PackageLicenseExpression>GPL-3.0-or-later</PackageLicenseExpression>
+  </PropertyGroup>
 
-    <!-- Repo-wide suppressions -->
+  <PropertyGroup Label="Repo-wide suppressions">
+    <!-- CA1014: CLSCompliant attribute is meaningless for an app. CS1591: XML docs on every
+         public member are not required. -->
     <NoWarn>$(NoWarn);CA1014;CS1591</NoWarn>
   </PropertyGroup>
 

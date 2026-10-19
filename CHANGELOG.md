@@ -259,6 +259,7 @@ auto-update users hit this on the first launch after Velopack restart.
 ### Recovery for v1.3.0 users
 
 If you already updated to broken v1.3.0:
+
 - The Update tab can't help (the app's window doesn't open).
 - Download `CaptureImage-win-Setup.exe` from the v1.3.1 GitHub Release
   and run it — the installer detects the existing install and replaces
@@ -574,7 +575,7 @@ intact.
   surface).
 - New `tests/CaptureImage.ViewModels.Tests/Preview/PreviewViewModelTests.cs`
   covering the v1.1.2 M1 fix: Localization PropertyChanged forwarding
-  + Dispose detachment.
+  - Dispose detachment.
 
 ## [1.1.1] - 2026-04-20
 
@@ -964,7 +965,7 @@ Major shell rewire landing everything the spec calls "polish".
 - `IconExtractor` — extracts the associated icon for an executable and encodes as
   PNG bytes, cached by path.
 - `GameDetector` (`IProcessDetector`) — composes WindowEnumerator + IconExtractor
-  + ISteamDetector into a single `EnumerateTargetsAsync()` call.
+  - ISteamDetector into a single `EnumerateTargetsAsync()` call.
 - `WmiProcessWatcher` (`IProcessWatcher`) — WMI `__InstanceCreationEvent` /
   `__InstanceDeletionEvent` subscription over `Win32_Process`, 2s poll window.
 - `AvaloniaUIDispatcher` — `IUIThreadDispatcher` implementation over

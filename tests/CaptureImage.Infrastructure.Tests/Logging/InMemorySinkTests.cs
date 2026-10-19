@@ -1,8 +1,9 @@
-using System;
-using System.Collections.Generic;
+// SPDX-License-Identifier: GPL-3.0-or-later
+// Copyright (c) CaptureImage Contributors
+
+using AwesomeAssertions;
 using CaptureImage.Core.Models;
 using CaptureImage.Infrastructure.Logging;
-using FluentAssertions;
 using Serilog.Events;
 using Serilog.Parsing;
 using Xunit;

@@ -142,9 +142,11 @@ verify the download is authentic:
 
 1. Download `SHA256SUMS.txt` from the same GitHub Release page.
 2. Compute the hash of your downloaded `Setup.exe`:
+
    ```powershell
    Get-FileHash -Algorithm SHA256 .\Setup.exe
    ```
+
 3. Compare the output against the entry in `SHA256SUMS.txt`.
 
 Only then click **More info** → **Run anyway** in SmartScreen. If the
