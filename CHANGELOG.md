@@ -86,8 +86,8 @@ your game, get a clean screenshot. Settings from 1.x are carried over automatica
 ### Project
 
 - Required pull-request checks: build and tests (with coverage), formatting, dead code, vulnerable
-  and incompatibly licensed dependencies, a smoke test of the published app, PR title, dependency
-  review, workflow lint and documentation links. CodeQL (extended queries), OpenSSF Scorecard and
+  and incompatibly licensed dependencies, a smoke test of the published app, end-to-end UI tests,
+  PR title, dependency review, workflow lint and documentation links. CodeQL (extended queries), OpenSSF Scorecard and
   SonarCloud also review every change.
 - Releases ship a CycloneDX SBOM, SHA-256 checksums and GitHub build-provenance attestations, and are
   published as drafts first.
