@@ -72,7 +72,15 @@ public partial class App : Application
         _services.GetRequiredService<IThemeService>().Apply(settings.Current.Theme);
 
         _tray = _services.GetRequiredService<TrayIcon>();
-        _tray.Show();
+        try
+        {
+            _tray.Show();
+        }
+        catch (Exception ex) when (ex is InvalidOperationException or System.ComponentModel.Win32Exception or System.Runtime.InteropServices.COMException)
+        {
+            // No notification area (e.g. a CI desktop without Explorer): keep running without the icon.
+            LogTrayUnavailable(_logger, ex);
+        }
 
         if (_options.SmokeTest || !(_options.StartMinimized || settings.Current.UI.StartMinimized))
         {
@@ -234,6 +242,9 @@ public partial class App : Application
 
     [LoggerMessage(Level = LogLevel.Error, Message = "Smoke test failed.")]
     private static partial void LogSmokeTestFailed(ILogger logger, Exception exception);
+
+    [LoggerMessage(Level = LogLevel.Warning, Message = "The tray icon could not be created; continuing without it.")]
+    private static partial void LogTrayUnavailable(ILogger logger, Exception exception);
 
     [LoggerMessage(Level = LogLevel.Error, Message = "Unhandled exception on the UI thread.")]
     private static partial void LogUnhandled(ILogger logger, Exception exception);
