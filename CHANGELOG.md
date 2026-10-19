@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.0.0] - 2026-10-19
+
 CaptureImage 2.0 is a rewrite of the app around the same idea: arm the hotkeys, press one in
 your game, get a clean screenshot. Settings from 1.x are carried over automatically.
 
@@ -71,6 +73,8 @@ your game, get a clean screenshot. Settings from 1.x are carried over automatica
   release notes never reached the Update page.
 - File names now avoid reserved device names (`CON`, `NUL`, …), invisible bidirectional and
   zero-width characters, and names that are too long.
+- Settings missing from the settings file — such as options added by an update — were turned off
+  or set to zero instead of taking their default values.
 
 ### Removed
 

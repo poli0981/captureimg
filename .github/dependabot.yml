@@ -4,10 +4,10 @@ version: 2
 # EnableWindowsTargeting=true — Dependabot's updater runs on Linux and otherwise
 # reports every newer version as "not compatible" with the Windows TFMs.
 #
-# open-pull-requests-limit is 0 while the v2.0 rewrite is in flight (every merge
-# would force the large rewrite PR to rebase and re-run all required checks).
-# Security updates are not affected by the limit. Restore the limits after the
-# 2.0.0 release.
+# The updater restores on Linux, where NuGet prunes the WPF projects' Windows
+# Desktop packages differently: if a PR fails `restore --locked-mode`, run
+# `dotnet restore CaptureImage.sln --force-evaluate` on Windows and push the
+# lock files.
 
 updates:
   - package-ecosystem: nuget
@@ -19,7 +19,7 @@ updates:
       timezone: Asia/Ho_Chi_Minh
     cooldown:
       default-days: 7
-    open-pull-requests-limit: 0
+    open-pull-requests-limit: 5
     commit-message:
       prefix: "chore(deps)"
       include: scope
@@ -74,7 +74,7 @@ updates:
       timezone: Asia/Ho_Chi_Minh
     cooldown:
       default-days: 7
-    open-pull-requests-limit: 0
+    open-pull-requests-limit: 3
     commit-message:
       prefix: "chore(ci)"
     labels:

@@ -295,7 +295,7 @@ jobs:
           retention-days: 14
           if-no-files-found: ignore
 
-  # End-to-end UI tests (FlaUI) against the real app. Not a required check yet.
+  # End-to-end UI tests (FlaUI) against the real app.
   ui-tests:
     name: ui-tests
     runs-on: windows-latest

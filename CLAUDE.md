@@ -83,8 +83,8 @@ tests/*                          Core, Infrastructure, ViewModels tests + App.Ui
 - Required checks: `build`, `format`, `deadcode` (InspectCode, file-local rules), `audit`,
   `license` (shipped dependencies vs `.github/license/allowed-licenses.json`), `publish-smoke`
   (publish + `--smoke-test` + page screenshots artifact), `pr-title`, `dependency-review`,
-  `workflow-lint` (actionlint + zizmor), `docs` (markdownlint + offline lychee), plus CodeQL via the
-  code-scanning rule. `ui-tests` runs too but is not required yet.
+  `workflow-lint` (actionlint + zizmor), `docs` (markdownlint + offline lychee), `ui-tests` (FlaUI
+  against the built app), plus CodeQL via the code-scanning rule.
 - Never add `paths:` filters to a workflow that provides a required check. Actions are pinned to
   full commit SHAs with a `# vX.Y.Z` comment.
 - SonarCloud (automatic analysis, project `poli0981_captureimg`) comments on PRs — fix what it

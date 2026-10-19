@@ -45,6 +45,7 @@ Every pull request must pass the required checks before it can be merged (squash
 - **audit** / **license** — no vulnerable packages; shipped dependencies use a GPL-compatible
   license.
 - **publish-smoke** — the published app starts and opens every page.
+- **ui-tests** — end-to-end tests drive the built app through UI Automation (FlaUI).
 - **pr-title** — the title follows [Conventional Commits](https://www.conventionalcommits.org/), e.g.
   `fix(capture): keep alpha opaque` or `feat(ui)!: …` for breaking changes.
 - **dependency-review**, **workflow-lint**, **docs**.
