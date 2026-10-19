@@ -35,7 +35,7 @@
   <data name="About_AiNotice" xml:space="preserve"><value>CaptureImage is developed with substantial help from an AI coding assistant (Claude by Anthropic, through Claude Code) for code, tests and documentation. The maintainer reviews and tests every change before release.</value></data>
   <data name="About_AiSection" xml:space="preserve"><value>AI-assisted development</value></data>
   <data name="About_CaptureDisclaimer" xml:space="preserve"><value>Capture support</value></data>
-  <data name="About_CaptureLimitationDisclaimerBody" xml:space="preserve"><value>CaptureImage can capture most windowed and borderless games via Windows.Graphics.Capture, but not every title works. DRM-protected surfaces, exclusive-fullscreen Direct3D 9 games, and titles with anti-cheat hooks may return black frames or refuse capture. A GDI PrintWindow fallback is attempted for legacy apps. See docs/legal/DISCLAIMER.md §2 for the full list.</value></data>
+  <data name="About_CaptureLimitationDisclaimerBody" xml:space="preserve"><value>CaptureImage can capture most windowed and borderless games via Windows.Graphics.Capture, but not every title works. DRM-protected surfaces, exclusive-fullscreen Direct3D 9 games, and titles with anti-cheat hooks may return black frames or refuse capture. See docs/legal/DISCLAIMER.md §2 for the full list.</value></data>
   <data name="About_ContactSection" xml:space="preserve"><value>Connect with the developer</value></data>
   <data name="About_DeveloperLabel" xml:space="preserve"><value>Developer</value></data>
   <data name="About_DisclaimersSection" xml:space="preserve"><value>Disclaimers</value></data>
@@ -65,7 +65,7 @@
   <data name="About_Tagline" xml:space="preserve"><value>Lightweight Windows screen capture for games without a built-in screenshot key.</value></data>
   <data name="About_ThirdPartySection" xml:space="preserve"><value>Third-party components</value></data>
   <data name="About_TranslationDisclaimer" xml:space="preserve"><value>Translations</value></data>
-  <data name="About_TranslationDisclaimerBody" xml:space="preserve"><value>The Vietnamese, Arabic, Japanese, Simplified Chinese, Korean, Spanish, French, German, Brazilian Portuguese, and Russian language packs are machine-assisted. Terminology may not match native conventions, and some technical words (hotkey, toast, frame, etc.) are kept in English on purpose. Native speakers willing to proofread are warmly invited to submit pull requests against the .resx files in src/CaptureImage.UI/Resources/Strings/.</value></data>
+  <data name="About_TranslationDisclaimerBody" xml:space="preserve"><value>The Vietnamese, Arabic, Japanese, Simplified Chinese, Korean, Spanish, French, German, Brazilian Portuguese, and Russian language packs are machine-assisted. Terminology may not match native conventions, and some technical words (hotkey, toast, frame, etc.) are kept in English on purpose. Native speakers willing to proofread are warmly invited to submit pull requests against the .resx files in src/CaptureImage.ViewModels/Resources/Strings/.</value></data>
   <data name="About_VersionLabel" xml:space="preserve"><value>Version</value></data>
 
   <data name="Common_Browse" xml:space="preserve"><value>Browse…</value></data>
@@ -96,6 +96,7 @@
   <data name="Dashboard_Windows" xml:space="preserve"><value>Open windows</value></data>
 
   <data name="Error_Cancelled" xml:space="preserve"><value>Capture cancelled.</value></data>
+  <data name="Error_ClipboardFailure" xml:space="preserve"><value>The image could not be copied to the clipboard. Another app may be using it; try again.</value></data>
   <data name="Error_EncodingFailure" xml:space="preserve"><value>The image could not be encoded.</value></data>
   <data name="Error_FileWriteFailure" xml:space="preserve"><value>The file could not be saved. Check the output folder and free disk space.</value></data>
   <data name="Error_GraphicsDeviceFailure" xml:space="preserve"><value>The graphics driver stopped responding. Try again in a moment.</value></data>

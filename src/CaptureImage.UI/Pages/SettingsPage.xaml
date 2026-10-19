@@ -10,6 +10,7 @@
     xmlns:vm="clr-namespace:CaptureImage.ViewModels.Settings;assembly=CaptureImage.ViewModels"
     Title="{loc:Tr Nav_Settings}"
     d:DataContext="{d:DesignInstance Type=vm:SettingsViewModel}"
+    Foreground="{DynamicResource TextFillColorPrimaryBrush}"
     ScrollViewer.CanContentScroll="False"
     AutomationProperties.AutomationId="SettingsPage"
     mc:Ignorable="d">

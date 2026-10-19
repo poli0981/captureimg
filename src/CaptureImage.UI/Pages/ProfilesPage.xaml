@@ -9,6 +9,7 @@
     xmlns:vm="clr-namespace:CaptureImage.ViewModels.Profiles;assembly=CaptureImage.ViewModels"
     Title="{loc:Tr Nav_Profiles}"
     d:DataContext="{d:DesignInstance Type=vm:ProfilesViewModel}"
+    Foreground="{DynamicResource TextFillColorPrimaryBrush}"
     ScrollViewer.CanContentScroll="False"
     AutomationProperties.AutomationId="ProfilesPage"
     mc:Ignorable="d">

@@ -28,6 +28,7 @@ public static class HdrToneMapper
     public const float KneeStart = 0.8f;
 
     private const int LutSize = 4096;
+    private static readonly float MaxHalf = (float)Half.MaxValue;
     private static readonly byte[] SrgbLut = BuildSrgbLut();
 
     /// <summary>Return an 8-bit BGRA rendition of <paramref name="frame"/>; SDR frames are returned unchanged.</summary>
@@ -55,9 +56,9 @@ public static class HdrToneMapper
             var dst = output.AsSpan(y * outStride, outStride);
             for (var x = 0; x < width; x++)
             {
-                var r = Math.Max(0f, (float)row[x * 4] * scale);
-                var g = Math.Max(0f, (float)row[(x * 4) + 1] * scale);
-                var b = Math.Max(0f, (float)row[(x * 4) + 2] * scale);
+                var r = Channel(row[x * 4], scale);
+                var g = Channel(row[(x * 4) + 1], scale);
+                var b = Channel(row[(x * 4) + 2], scale);
 
                 var max = Math.Max(r, Math.Max(g, b));
                 if (max > KneeStart)
@@ -93,6 +94,16 @@ public static class HdrToneMapper
     /// <summary>sRGB OETF for a linear value in [0, 1] (exposed for tests).</summary>
     public static float LinearToSrgb(float linear) =>
         linear <= 0.0031308f ? 12.92f * linear : (1.055f * MathF.Pow(linear, 1f / 2.4f)) - 0.055f;
+
+    /// <summary>
+    /// One linear channel, rescaled. Negative values and NaN become 0; +infinity is capped at the
+    /// largest half value so the highlight shoulder takes it to white (∞ / ∞ would give NaN, i.e. black).
+    /// </summary>
+    private static float Channel(Half value, float scale)
+    {
+        var linear = (float)value;
+        return linear > 0f ? Math.Min(linear, MaxHalf) * scale : 0f;
+    }
 
     private static byte Encode(float linear)
     {

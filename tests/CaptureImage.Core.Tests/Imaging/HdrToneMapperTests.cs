@@ -221,6 +221,34 @@ public class HdrToneMapperTests
         above.Should().BeApproximately(below, 1e-5f);
     }
 
+    [Fact]
+    public void InfiniteHighlight_BecomesWhite()
+    {
+        var pixel = ToneMapOne(new RgbaPixel(float.PositiveInfinity, float.PositiveInfinity, float.PositiveInfinity, 1f), Hdr240);
+
+        pixel.Should().Be(new BgraPixel(255, 255, 255, 255));
+    }
+
+    [Fact]
+    public void InfiniteChannel_KeepsItsHue()
+    {
+        var pixel = ToneMapOne(new RgbaPixel(float.PositiveInfinity, 0.5f, 0.5f, 1f), Hdr240);
+
+        pixel.R.Should().Be(255);
+        pixel.G.Should().BeLessThan(8, "finite channels are negligible next to an infinite one");
+        pixel.B.Should().BeLessThan(8);
+    }
+
+    [Fact]
+    public void NaNChannel_BecomesZero_AndTheOthersStillRollOff()
+    {
+        var withNaN = ToneMapOne(new RgbaPixel(float.NaN, 0.9f, 0.5f, 1f), HdrInfo.Sdr);
+
+        withNaN.Should().Be(ToneMapOne(new RgbaPixel(0f, 0.9f, 0.5f, 1f), HdrInfo.Sdr));
+        withNaN.R.Should().Be(0);
+        withNaN.G.Should().BeCloseTo(SrgbByte(HdrToneMapper.CompressHighlight(0.9f)), 1, "a highlight next to a NaN is still compressed");
+    }
+
     private static BgraPixel ToneMapOne(RgbaPixel pixel, HdrInfo? hdr) =>
         Frames.ReadBgra(HdrToneMapper.ToSdr(Frames.SolidHalf(1, 1, pixel, hdr)), 0, 0);
 

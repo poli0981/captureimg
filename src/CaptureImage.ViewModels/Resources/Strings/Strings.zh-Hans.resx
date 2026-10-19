@@ -35,7 +35,7 @@
   <data name="About_AiNotice" xml:space="preserve"><value>CaptureImage 的代码、测试和文档在开发中大量借助了 AI 编程助手（Anthropic 的 Claude，通过 Claude Code）。每项更改在发布前都由维护者审查和测试。</value></data>
   <data name="About_AiSection" xml:space="preserve"><value>AI 辅助开发</value></data>
   <data name="About_CaptureDisclaimer" xml:space="preserve"><value>截图支持</value></data>
-  <data name="About_CaptureLimitationDisclaimerBody" xml:space="preserve"><value>CaptureImage 通过 Windows.Graphics.Capture 可截取大多数窗口化和无边框游戏,但并非所有游戏都受支持。受 DRM 保护的画面、独占全屏 Direct3D 9 游戏以及带反作弊钩子的游戏可能会返回黑屏或拒绝截图。对于旧应用会尝试 GDI PrintWindow 回退。完整列表请参阅 docs/legal/DISCLAIMER.md §2。</value></data>
+  <data name="About_CaptureLimitationDisclaimerBody" xml:space="preserve"><value>CaptureImage 通过 Windows.Graphics.Capture 可截取大多数窗口化和无边框游戏,但并非所有游戏都受支持。受 DRM 保护的画面、独占全屏 Direct3D 9 游戏以及带反作弊钩子的游戏可能会返回黑屏或拒绝截图。完整列表请参阅 docs/legal/DISCLAIMER.md §2。</value></data>
   <data name="About_ContactSection" xml:space="preserve"><value>与开发者联系</value></data>
   <data name="About_DeveloperLabel" xml:space="preserve"><value>开发者</value></data>
   <data name="About_DisclaimersSection" xml:space="preserve"><value>免责声明</value></data>
@@ -65,7 +65,7 @@
   <data name="About_Tagline" xml:space="preserve"><value>面向无内置截图键游戏的轻量级 Windows 屏幕截图工具。</value></data>
   <data name="About_ThirdPartySection" xml:space="preserve"><value>第三方组件</value></data>
   <data name="About_TranslationDisclaimer" xml:space="preserve"><value>翻译</value></data>
-  <data name="About_TranslationDisclaimerBody" xml:space="preserve"><value>越南语、阿拉伯语、日语、简体中文、韩语、西班牙语、法语、德语、巴西葡萄牙语和俄语语言包采用机器辅助翻译。术语可能与母语习惯不一致,部分技术术语(hotkey、toast、frame 等)有意保留为英文。欢迎母语为相关语言的志愿者校对,可通过对 src/CaptureImage.UI/Resources/Strings/ 下的 .resx 文件提交 Pull Request。</value></data>
+  <data name="About_TranslationDisclaimerBody" xml:space="preserve"><value>越南语、阿拉伯语、日语、简体中文、韩语、西班牙语、法语、德语、巴西葡萄牙语和俄语语言包采用机器辅助翻译。术语可能与母语习惯不一致,部分技术术语(hotkey、toast、frame 等)有意保留为英文。欢迎母语为相关语言的志愿者校对,可通过对 src/CaptureImage.ViewModels/Resources/Strings/ 下的 .resx 文件提交 Pull Request。</value></data>
   <data name="About_VersionLabel" xml:space="preserve"><value>版本</value></data>
 
   <data name="Common_Browse" xml:space="preserve"><value>浏览…</value></data>
@@ -96,6 +96,7 @@
   <data name="Dashboard_Windows" xml:space="preserve"><value>已打开的窗口</value></data>
 
   <data name="Error_Cancelled" xml:space="preserve"><value>已取消截图。</value></data>
+  <data name="Error_ClipboardFailure" xml:space="preserve"><value>无法将图像复制到剪贴板。可能有其他应用正在使用剪贴板，请重试。</value></data>
   <data name="Error_EncodingFailure" xml:space="preserve"><value>无法编码图像。</value></data>
   <data name="Error_FileWriteFailure" xml:space="preserve"><value>无法保存文件。请检查输出文件夹和可用磁盘空间。</value></data>
   <data name="Error_GraphicsDeviceFailure" xml:space="preserve"><value>显卡驱动程序停止响应。请稍后重试。</value></data>

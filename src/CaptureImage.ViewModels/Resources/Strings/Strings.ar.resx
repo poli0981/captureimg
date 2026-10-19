@@ -35,7 +35,7 @@
   <data name="About_AiNotice" xml:space="preserve"><value>يُطوَّر CaptureImage بمساعدة كبيرة من مساعد برمجة يعمل بالذكاء الاصطناعي (Claude من Anthropic عبر Claude Code) في كتابة الشيفرة والاختبارات والتوثيق. يراجع المشرف كل تغيير ويختبره قبل الإصدار.</value></data>
   <data name="About_AiSection" xml:space="preserve"><value>التطوير بمساعدة الذكاء الاصطناعي</value></data>
   <data name="About_CaptureDisclaimer" xml:space="preserve"><value>دعم الالتقاط</value></data>
-  <data name="About_CaptureLimitationDisclaimerBody" xml:space="preserve"><value>يمكن لـ CaptureImage التقاط معظم الألعاب النافذية وعديمة الحدود عبر Windows.Graphics.Capture، لكن ليست كل لعبة تعمل. الأسطح المحمية بـ DRM، وألعاب Direct3D 9 بالشاشة الكاملة الحصرية، والألعاب ذات خطافات anti-cheat قد تعيد إطارات سوداء أو ترفض الالتقاط. تُجرَّب آلية احتياطية GDI PrintWindow للتطبيقات القديمة. راجع docs/legal/DISCLAIMER.md §2 للقائمة الكاملة.</value></data>
+  <data name="About_CaptureLimitationDisclaimerBody" xml:space="preserve"><value>يمكن لـ CaptureImage التقاط معظم الألعاب النافذية وعديمة الحدود عبر Windows.Graphics.Capture، لكن ليست كل لعبة تعمل. الأسطح المحمية بـ DRM، وألعاب Direct3D 9 بالشاشة الكاملة الحصرية، والألعاب ذات خطافات anti-cheat قد تعيد إطارات سوداء أو ترفض الالتقاط. راجع docs/legal/DISCLAIMER.md §2 للقائمة الكاملة.</value></data>
   <data name="About_ContactSection" xml:space="preserve"><value>تواصل مع المطور</value></data>
   <data name="About_DeveloperLabel" xml:space="preserve"><value>المطور</value></data>
   <data name="About_DisclaimersSection" xml:space="preserve"><value>إخلاءات المسؤولية</value></data>
@@ -65,7 +65,7 @@
   <data name="About_Tagline" xml:space="preserve"><value>أداة خفيفة لالتقاط الشاشة على Windows للألعاب التي لا تحتوي على مفتاح التقاط مدمج.</value></data>
   <data name="About_ThirdPartySection" xml:space="preserve"><value>مكونات الطرف الثالث</value></data>
   <data name="About_TranslationDisclaimer" xml:space="preserve"><value>الترجمات</value></data>
-  <data name="About_TranslationDisclaimerBody" xml:space="preserve"><value>حزم لغة الفيتنامية والعربية واليابانية والصينية المبسطة والكورية والإسبانية والفرنسية والألمانية والبرتغالية البرازيلية والروسية مترجمة بمساعدة الآلة. قد لا تتطابق المصطلحات مع العرف المحلي، وبعض الكلمات التقنية (hotkey، toast، frame، إلخ) تُركت بالإنجليزية عمداً. نرحب بمتحدثي اللغة الأم الراغبين في المراجعة لإرسال طلبات سحب على ملفات .resx في src/CaptureImage.UI/Resources/Strings/.</value></data>
+  <data name="About_TranslationDisclaimerBody" xml:space="preserve"><value>حزم لغة الفيتنامية والعربية واليابانية والصينية المبسطة والكورية والإسبانية والفرنسية والألمانية والبرتغالية البرازيلية والروسية مترجمة بمساعدة الآلة. قد لا تتطابق المصطلحات مع العرف المحلي، وبعض الكلمات التقنية (hotkey، toast، frame، إلخ) تُركت بالإنجليزية عمداً. نرحب بمتحدثي اللغة الأم الراغبين في المراجعة لإرسال طلبات سحب على ملفات .resx في src/CaptureImage.ViewModels/Resources/Strings/.</value></data>
   <data name="About_VersionLabel" xml:space="preserve"><value>الإصدار</value></data>
 
   <data name="Common_Browse" xml:space="preserve"><value>استعراض…</value></data>
@@ -96,6 +96,7 @@
   <data name="Dashboard_Windows" xml:space="preserve"><value>النوافذ المفتوحة</value></data>
 
   <data name="Error_Cancelled" xml:space="preserve"><value>تم إلغاء الالتقاط.</value></data>
+  <data name="Error_ClipboardFailure" xml:space="preserve"><value>تعذّر نسخ الصورة إلى الحافظة. ربما يستخدمها تطبيق آخر؛ حاول مجددًا.</value></data>
   <data name="Error_EncodingFailure" xml:space="preserve"><value>تعذّر ترميز الصورة.</value></data>
   <data name="Error_FileWriteFailure" xml:space="preserve"><value>تعذّر حفظ الملف. تحقق من مجلد الإخراج والمساحة الفارغة على القرص.</value></data>
   <data name="Error_GraphicsDeviceFailure" xml:space="preserve"><value>توقف برنامج تشغيل الرسومات عن الاستجابة. حاول مجددًا بعد قليل.</value></data>

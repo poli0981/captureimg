@@ -410,6 +410,11 @@ public sealed partial class CaptureCoordinator : IDisposable
 
         var copied = clipboardMode != ClipboardMode.None
             && await _clipboard.CopyImageAsync(displayFrame, CancellationToken.None).ConfigureAwait(false);
+        if (clipboardMode == ClipboardMode.Copy && !copied)
+        {
+            // Nothing was written to disk either, so this is a failure, not a silent "success".
+            throw new CaptureException(CaptureError.ClipboardFailure, "The image could not be copied to the clipboard.");
+        }
 
         AfterCapture(settings, displayFrame, record, copied, title);
         return new CaptureOutcome(record is null ? CaptureOutcomeKind.Copied : CaptureOutcomeKind.Saved, mode) { Record = record };
