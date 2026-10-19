@@ -207,7 +207,7 @@ public sealed partial class WgcCaptureEngine : ICaptureEngine, IDisposable
         {
             for (var y = 0; y < area.Height; y++)
             {
-                Marshal.Copy(mapped.DataPointer + (nint)(y * (long)mapped.RowPitch), pixels, y * rowBytes, rowBytes);
+                Marshal.Copy(mapped.DataPointer + (nint)(y * mapped.RowPitch), pixels, y * rowBytes, rowBytes);
             }
         }
         finally

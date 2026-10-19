@@ -117,7 +117,7 @@ internal sealed partial class SingleInstance : IDisposable
         }
     }
 
-    [LibraryImport("user32.dll", SetLastError = true)]
-    [return: MarshalAs(UnmanagedType.Bool)]
-    private static partial bool AllowSetForegroundWindow(int processId);
+    // The BOOL result is ignored: when the call isn't allowed the window simply flashes instead.
+    [LibraryImport("user32.dll")]
+    private static partial void AllowSetForegroundWindow(int processId);
 }

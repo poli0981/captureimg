@@ -37,7 +37,7 @@ public sealed partial class DisplayService : IDisplayService, IDisposable
         var handles = new List<HMONITOR>(4);
         unsafe
         {
-            PInvoke.EnumDisplayMonitors(HDC.Null, (RECT?)null, (monitor, _, _, _) =>
+            PInvoke.EnumDisplayMonitors(HDC.Null, null, (monitor, _, _, _) =>
             {
                 handles.Add(monitor);
                 return true;

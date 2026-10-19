@@ -31,7 +31,7 @@ public sealed class DashboardViewModelTests : IDisposable
     public DashboardViewModelTests()
     {
         _fixture = new CoordinatorFixture(_store);
-        _fixture.Targets.EnumerateAsync(Arg.Any<CancellationToken>()).Returns(_ => (IReadOnlyList<GameTarget>)_windows);
+        _fixture.Targets.EnumerateAsync(Arg.Any<CancellationToken>()).Returns(_ => _windows);
         _vm = new DashboardViewModel(
             _fixture.Coordinator,
             _fixture.Targets,
