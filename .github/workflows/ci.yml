@@ -134,10 +134,11 @@ jobs:
           dotnet build CaptureImage.sln -c Release --no-restore
           dotnet tool restore
 
+      # Quoted: PowerShell splits a dash-prefixed native argument at its first period.
       - name: JetBrains InspectCode
         run: >
-          dotnet jb inspectcode CaptureImage.sln -o=inspectcode.sarif --format=Sarif
-          --severity=SUGGESTION --properties:Configuration=Release --no-build
+          dotnet jb inspectcode CaptureImage.sln "--output=inspectcode.sarif" "--format=Sarif"
+          "--severity=SUGGESTION" "--properties:Configuration=Release" --no-build
 
       - name: Gate on dead / redundant code
         shell: pwsh
