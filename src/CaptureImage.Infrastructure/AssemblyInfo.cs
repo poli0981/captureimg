@@ -1,11 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 // Copyright (c) CaptureImage Contributors
 
-namespace CaptureImage.Infrastructure;
+using System.Runtime.CompilerServices;
 
-/// <summary>
-/// Marker type for locating the <c>CaptureImage.Infrastructure</c> assembly.
-/// </summary>
-public static class InfrastructureAssemblyMarker
-{
-}
+[assembly: InternalsVisibleTo("CaptureImage.Infrastructure.Tests")]

@@ -5,23 +5,22 @@
     <SupportedOSPlatformVersion>10.0.22621.0</SupportedOSPlatformVersion>
     <RootNamespace>CaptureImage.Infrastructure</RootNamespace>
     <AssemblyName>CaptureImage.Infrastructure</AssemblyName>
-    <UseWindowsForms>false</UseWindowsForms>
-    <UseWpf>false</UseWpf>
-    <!-- Required by the LibraryImport source generator (Processes/Interop/User32.cs). -->
+    <!-- CsWin32-generated P/Invoke and the WGC/WIC readback use pointers. -->
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <!-- SHFILEOPSTRUCT has architecture-specific packing; the app ships win-x64 only. -->
+    <CsWin32PlatformTarget>x64</CsWin32PlatformTarget>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
-    <PackageReference Include="System.Management" />
-    <PackageReference Include="System.Drawing.Common" />
-    <PackageReference Include="System.IO.Abstractions" />
+    <PackageReference Include="Microsoft.Windows.CsWin32" PrivateAssets="all" />
     <PackageReference Include="Serilog" />
-    <PackageReference Include="SharpHook" />
+    <PackageReference Include="SkiaSharp" />
+    <PackageReference Include="System.Drawing.Common" />
+    <PackageReference Include="Velopack" />
+    <PackageReference Include="Vortice.Direct2D1" />
     <PackageReference Include="Vortice.Direct3D11" />
     <PackageReference Include="Vortice.DXGI" />
-    <PackageReference Include="SkiaSharp" />
-    <PackageReference Include="Velopack" />
   </ItemGroup>
 
   <ItemGroup>

@@ -2,26 +2,25 @@
 // Copyright (c) CaptureImage Contributors
 
 using System.Text.Json.Serialization;
+using CaptureImage.Core.Library;
 using CaptureImage.Core.Models;
 
 namespace CaptureImage.Infrastructure.Settings;
 
 /// <summary>
-/// <see cref="JsonSerializerContext"/> for source-generated (AOT-friendly) serialization of
-/// <see cref="AppSettings"/>. Keeps reflection off the hot path and lights up ahead-of-time
-/// compilation when we flip the switch.
+/// Source-generated System.Text.Json metadata for settings and the library index (no
+/// reflection at runtime). Comments and trailing commas are accepted so a hand-edited
+/// <c>settings.json</c> still loads.
 /// </summary>
 [JsonSourceGenerationOptions(
     WriteIndented = true,
     PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase,
     DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
-    UseStringEnumConverter = true)]
+    UseStringEnumConverter = true,
+    ReadCommentHandling = System.Text.Json.JsonCommentHandling.Skip,
+    AllowTrailingCommas = true)]
 [JsonSerializable(typeof(AppSettings))]
-[JsonSerializable(typeof(CaptureSettings))]
-[JsonSerializable(typeof(UiSettings))]
-[JsonSerializable(typeof(HotkeyBinding))]
-[JsonSerializable(typeof(HotkeyModifiers))]
-[JsonSerializable(typeof(ImageFormat))]
+[JsonSerializable(typeof(List<CaptureRecord>))]
 internal sealed partial class SettingsJsonContext : JsonSerializerContext
 {
 }

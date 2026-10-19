@@ -28,14 +28,6 @@
     <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.13" />
   </ItemGroup>
 
-  <ItemGroup Label="Hotkeys">
-    <PackageVersion Include="SharpHook" Version="5.3.9" />
-  </ItemGroup>
-
-  <ItemGroup Label="State machine">
-    <PackageVersion Include="Stateless" Version="5.20.1" />
-  </ItemGroup>
-
   <ItemGroup Label="Logging">
     <PackageVersion Include="Serilog" Version="4.4.0" />
     <PackageVersion Include="Serilog.Extensions.Hosting" Version="10.0.0" />
@@ -45,16 +37,12 @@
     <PackageVersion Include="Serilog.Sinks.Async" Version="2.1.0" />
   </ItemGroup>
 
-  <ItemGroup Label="Windows interop + D3D11">
+  <ItemGroup Label="Windows interop: Direct3D 11, DXGI, WIC, Win32 P/Invoke">
     <PackageVersion Include="Vortice.Direct3D11" Version="3.8.3" />
     <PackageVersion Include="Vortice.DXGI" Version="3.8.3" />
-    <PackageVersion Include="System.Management" Version="10.0.13" />
+    <PackageVersion Include="Vortice.Direct2D1" Version="3.8.3" />
+    <PackageVersion Include="Microsoft.Windows.CsWin32" Version="0.3.363" />
     <PackageVersion Include="System.Drawing.Common" Version="10.0.13" />
-  </ItemGroup>
-
-  <ItemGroup Label="Filesystem abstractions">
-    <PackageVersion Include="System.IO.Abstractions" Version="21.2.1" />
-    <PackageVersion Include="System.IO.Abstractions.TestingHelpers" Version="21.2.1" />
   </ItemGroup>
 
   <ItemGroup Label="Imaging">

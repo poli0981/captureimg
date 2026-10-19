@@ -13,8 +13,6 @@
     <PackageReference Include="AwesomeAssertions" />
     <PackageReference Include="Microsoft.Testing.Extensions.CodeCoverage" />
     <PackageReference Include="NSubstitute" />
-    <PackageReference Include="System.IO.Abstractions" />
-    <PackageReference Include="System.IO.Abstractions.TestingHelpers" />
   </ItemGroup>
 
   <ItemGroup>

@@ -415,7 +415,8 @@ public sealed partial class CaptureCoordinator : IDisposable
         var effective = options with { PreferHdr = options.PreferHdr && monitor?.Hdr.IsHdrActive == true };
         try
         {
-            return await _engine.CaptureAsync(new WindowCaptureSource(target.WindowHandle), effective, ct).ConfigureAwait(false);
+            var frame = await _engine.CaptureAsync(new WindowCaptureSource(target.WindowHandle), effective, ct).ConfigureAwait(false);
+            return WithHdrInfo(frame, monitor);
         }
         catch (CaptureException ex) when (ex.ErrorCode == CaptureError.TargetGone && LockedTarget?.WindowHandle == target.WindowHandle)
         {
@@ -430,7 +431,8 @@ public sealed partial class CaptureCoordinator : IDisposable
         var monitor = _displays.GetMonitorAtCursor()
             ?? throw new CaptureException(CaptureError.TargetGone, "No monitor found under the cursor.");
         var effective = options with { PreferHdr = options.PreferHdr && monitor.Hdr.IsHdrActive, IncludeWindowFrame = true };
-        return await _engine.CaptureAsync(new MonitorCaptureSource(monitor.Handle), effective, ct).ConfigureAwait(false);
+        var frame = await _engine.CaptureAsync(new MonitorCaptureSource(monitor.Handle), effective, ct).ConfigureAwait(false);
+        return WithHdrInfo(frame, monitor);
     }
 
     /// <summary>
@@ -447,7 +449,7 @@ public sealed partial class CaptureCoordinator : IDisposable
             {
                 var effective = options with { PreferHdr = options.PreferHdr && monitor.Hdr.IsHdrActive, IncludeWindowFrame = true };
                 var frame = await _engine.CaptureAsync(new MonitorCaptureSource(monitor.Handle), effective, ct).ConfigureAwait(false);
-                frames.Add((monitor, frame));
+                frames.Add((monitor, WithHdrInfo(frame, monitor)));
             }
             catch (CaptureException ex)
             {
@@ -475,6 +477,10 @@ public sealed partial class CaptureCoordinator : IDisposable
         var source = frames.First(f => f.Monitor.Handle == selection.Monitor.Handle).Frame;
         return FrameOperations.Crop(source, selection.Area);
     }
+
+    /// <summary>HDR frames carry the display's white level so tone-mapping matches what the user saw.</summary>
+    private static CapturedFrame WithHdrInfo(CapturedFrame frame, MonitorInfo? monitor) =>
+        frame.IsHdr && monitor is not null ? frame with { Hdr = monitor.Hdr } : frame;
 
     private static string ResolveOutputDirectory(AppSettings settings, GameProfile? profile)
     {

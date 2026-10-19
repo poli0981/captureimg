@@ -1,231 +1,165 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 // Copyright (c) CaptureImage Contributors
 
-using System.IO.Abstractions;
 using CaptureImage.Core.Abstractions;
 using CaptureImage.Core.Models;
 using Microsoft.Extensions.Logging;
+using Microsoft.Win32;
 
 namespace CaptureImage.Infrastructure.Steam;
 
 /// <summary>
-/// Scans Steam library folders by reading <c>steamapps\libraryfolders.vdf</c> and every
-/// <c>steamapps\appmanifest_*.acf</c> under the discovered libraries. Results are cached
-/// for the lifetime of the scanner; call <see cref="Refresh"/> to re-scan after user installs
-/// or removes a library.
+/// Maps executables to installed Steam apps by reading <c>libraryfolders.vdf</c> and the
+/// <c>appmanifest_*.acf</c> files of every library. Scanned once, lazily, thread-safe.
 /// </summary>
-public sealed class SteamLibraryScanner : ISteamDetector
+public sealed partial class SteamLibraryScanner : ISteamDetector
 {
-    private readonly IFileSystem _fs;
-    private readonly ISteamRootLocator _rootLocator;
+    private readonly Func<string?> _steamRoot;
     private readonly ILogger<SteamLibraryScanner> _logger;
-    private readonly object _gate = new();
-    private IReadOnlyList<SteamLibrary>? _libraries;
+    private readonly Lazy<IReadOnlyList<SteamLibrary>> _libraries;
 
-    public SteamLibraryScanner(
-        IFileSystem fs,
-        ISteamRootLocator rootLocator,
-        ILogger<SteamLibraryScanner> logger)
+    /// <summary>Production constructor: Steam's install folder comes from the registry.</summary>
+    public SteamLibraryScanner(ILogger<SteamLibraryScanner> logger)
+        : this(FindSteamRootInRegistry, logger)
     {
-        _fs = fs;
-        _rootLocator = rootLocator;
+    }
+
+    /// <param name="steamRoot">Returns Steam's install folder, or <c>null</c> when Steam isn't installed.</param>
+    /// <param name="logger">Logger.</param>
+    public SteamLibraryScanner(Func<string?> steamRoot, ILogger<SteamLibraryScanner> logger)
+    {
+        _steamRoot = steamRoot;
         _logger = logger;
-    }
-
-    public IReadOnlyList<SteamLibrary> Libraries
-    {
-        get
-        {
-            EnsureLoaded();
-            return _libraries!;
-        }
-    }
-
-    public void Refresh()
-    {
-        lock (_gate)
-        {
-            _libraries = null;
-        }
+        _libraries = new Lazy<IReadOnlyList<SteamLibrary>>(LoadLibraries, LazyThreadSafetyMode.ExecutionAndPublication);
     }
 
     public SteamAppInfo? TryGetAppInfo(string executablePath)
     {
-        if (string.IsNullOrWhiteSpace(executablePath)) return null;
-        EnsureLoaded();
-
-        var normalized = NormalizePath(executablePath);
-
-        foreach (var lib in _libraries!)
+        if (string.IsNullOrWhiteSpace(executablePath))
         {
-            var commonRoot = _fs.Path.Combine(lib.Path, "steamapps", "common");
-            var commonNormalized = NormalizePath(commonRoot);
-            var prefix = commonNormalized.EndsWith(_fs.Path.DirectorySeparatorChar)
-                ? commonNormalized
-                : commonNormalized + _fs.Path.DirectorySeparatorChar;
+            return null;
+        }
 
-            if (!normalized.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
+        string normalized;
+        try
+        {
+            normalized = Normalize(executablePath);
+        }
+        catch (Exception ex) when (ex is ArgumentException or NotSupportedException or PathTooLongException)
+        {
+            return null;
+        }
+
+        foreach (var library in _libraries.Value)
+        {
+            var common = Normalize(Path.Combine(library.Path, "steamapps", "common")) + Path.DirectorySeparatorChar;
+            if (!normalized.StartsWith(common, StringComparison.OrdinalIgnoreCase))
             {
                 continue;
             }
 
-            var relative = normalized[prefix.Length..];
-            var separators = new[] { _fs.Path.DirectorySeparatorChar, _fs.Path.AltDirectorySeparatorChar };
-            var installDir = relative.Split(separators, 2, StringSplitOptions.RemoveEmptyEntries)[0];
-
-            foreach (var app in lib.Apps.Values)
-            {
-                if (app.InstallDir.Equals(installDir, StringComparison.OrdinalIgnoreCase))
-                {
-                    return app;
-                }
-            }
-            return null;
+            var installDir = normalized[common.Length..].Split(['\\', '/'], 2, StringSplitOptions.RemoveEmptyEntries)[0];
+            return library.Apps.Values.FirstOrDefault(app => app.InstallDir.Equals(installDir, StringComparison.OrdinalIgnoreCase));
         }
 
         return null;
     }
 
-    private void EnsureLoaded()
+    private static string? FindSteamRootInRegistry()
     {
-        if (_libraries is not null) return;
-
-        lock (_gate)
-        {
-            if (_libraries is not null) return;
-            _libraries = LoadLibraries();
-        }
+        string?[] candidates =
+        [
+            Registry.CurrentUser.OpenSubKey(@"Software\Valve\Steam")?.GetValue("SteamPath") as string,
+            Registry.LocalMachine.OpenSubKey(@"SOFTWARE\WOW6432Node\Valve\Steam")?.GetValue("InstallPath") as string,
+            Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Valve\Steam")?.GetValue("InstallPath") as string,
+        ];
+        return candidates.FirstOrDefault(path => !string.IsNullOrWhiteSpace(path) && Directory.Exists(path));
     }
 
     private IReadOnlyList<SteamLibrary> LoadLibraries()
     {
-        var steamRoot = _rootLocator.TryFindSteamRoot();
-        if (steamRoot is null)
-        {
-            _logger.LogDebug("Steam not detected on this machine; scanner will return an empty library list.");
-            return Array.Empty<SteamLibrary>();
-        }
-
-        var libraryFoldersVdf = _fs.Path.Combine(steamRoot, "steamapps", "libraryfolders.vdf");
-        if (!_fs.File.Exists(libraryFoldersVdf))
-        {
-            _logger.LogWarning("libraryfolders.vdf not found at {Path}.", libraryFoldersVdf);
-            return Array.Empty<SteamLibrary>();
-        }
-
-        IReadOnlyList<string> libraryPaths;
+        string? root;
         try
         {
-            var root = VdfParser.Parse(_fs.File.ReadAllText(libraryFoldersVdf));
-            libraryPaths = ExtractLibraryPaths(root);
+            root = _steamRoot();
         }
-        catch (Exception ex)
+        catch (Exception ex) when (ex is System.Security.SecurityException or UnauthorizedAccessException or IOException)
         {
-            _logger.LogError(ex, "Failed to parse {Path}.", libraryFoldersVdf);
-            return Array.Empty<SteamLibrary>();
+            LogRootLookupFailed(ex);
+            return [];
         }
 
-        var libraries = new List<SteamLibrary>(libraryPaths.Count);
-        foreach (var libPath in libraryPaths)
+        if (root is null)
         {
-            var apps = LoadAppsInLibrary(libPath);
-            libraries.Add(new SteamLibrary(libPath, apps));
+            LogNoSteam();
+            return [];
         }
-        _logger.LogInformation(
-            "Steam scan complete: {LibraryCount} librar(ies), {AppCount} total app manifest(s).",
-            libraries.Count,
-            TotalAppCount(libraries));
+
+        var libraryFolders = Path.Combine(root, "steamapps", "libraryfolders.vdf");
+        IReadOnlyList<string> paths;
+        try
+        {
+            paths = File.Exists(libraryFolders) ? ExtractLibraryPaths(VdfParser.Parse(File.ReadAllText(libraryFolders))) : [root];
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or FormatException or InvalidDataException)
+        {
+            LogParseFailed(ex, "libraryfolders.vdf");
+            paths = [root];
+        }
+
+        var libraries = paths.Select(path => new SteamLibrary(path, LoadApps(path))).ToList();
+        LogScanned(libraries.Count, libraries.Sum(l => l.Apps.Count));
         return libraries;
     }
 
-    private static int TotalAppCount(IReadOnlyList<SteamLibrary> libraries)
+    private static List<string> ExtractLibraryPaths(VdfNode root)
     {
-        var total = 0;
-        foreach (var lib in libraries) total += lib.Apps.Count;
-        return total;
+        var container = root.Key.Equals("libraryfolders", StringComparison.OrdinalIgnoreCase) ? root : root["libraryfolders"] ?? root;
+        return [.. container.BranchChildren().Select(child => child.ValueOf("path")).OfType<string>().Where(p => !string.IsNullOrWhiteSpace(p))];
     }
 
-    /// <summary>
-    /// Walk the parsed <c>libraryfolders.vdf</c> and collect every <c>path</c> leaf
-    /// that lives one level under a numeric branch. The schema is:
-    /// <code>
-    /// "libraryfolders" {
-    ///     "0" { "path" "C:\\Program Files (x86)\\Steam" ... }
-    ///     "1" { "path" "D:\\SteamLibrary"                 ... }
-    /// }
-    /// </code>
-    /// </summary>
-    private static IReadOnlyList<string> ExtractLibraryPaths(VdfNode root)
+    private Dictionary<uint, SteamAppInfo> LoadApps(string libraryPath)
     {
-        var paths = new List<string>();
-
-        // `root` may be the outer "libraryfolders" branch or our synthetic wrapper.
-        var container = root.Key.Equals("libraryfolders", StringComparison.OrdinalIgnoreCase)
-            ? root
-            : root["libraryfolders"] ?? root;
-
-        foreach (var child in container.BranchChildren())
-        {
-            var path = child.ValueOf("path");
-            if (!string.IsNullOrWhiteSpace(path))
-            {
-                paths.Add(path);
-            }
-        }
-        return paths;
-    }
-
-    /// <summary>
-    /// Read every <c>appmanifest_*.acf</c> under <c>{libraryPath}\steamapps</c> and
-    /// extract <c>appid</c> + <c>name</c> + <c>installdir</c>. Missing or malformed
-    /// manifests are skipped with a warning.
-    /// </summary>
-    private IReadOnlyDictionary<uint, SteamAppInfo> LoadAppsInLibrary(string libraryPath)
-    {
-        var steamappsDir = _fs.Path.Combine(libraryPath, "steamapps");
-        if (!_fs.Directory.Exists(steamappsDir))
-        {
-            return new Dictionary<uint, SteamAppInfo>();
-        }
-
         var apps = new Dictionary<uint, SteamAppInfo>();
-        foreach (var manifestPath in _fs.Directory.EnumerateFiles(steamappsDir, "appmanifest_*.acf"))
+        var steamapps = Path.Combine(libraryPath, "steamapps");
+        if (!Directory.Exists(steamapps))
+        {
+            return apps;
+        }
+
+        foreach (var manifest in Directory.EnumerateFiles(steamapps, "appmanifest_*.acf"))
         {
             try
             {
-                var text = _fs.File.ReadAllText(manifestPath);
-                var root = VdfParser.Parse(text);
-                var state = root.Key.Equals("AppState", StringComparison.OrdinalIgnoreCase)
-                    ? root
-                    : root["AppState"];
-                if (state is null) continue;
-
-                var appIdStr = state.ValueOf("appid");
-                var name = state.ValueOf("name") ?? string.Empty;
-                var installDir = state.ValueOf("installdir") ?? string.Empty;
-
-                if (!uint.TryParse(appIdStr, out var appId) || string.IsNullOrWhiteSpace(installDir))
+                var root = VdfParser.Parse(File.ReadAllText(manifest));
+                var state = root.Key.Equals("AppState", StringComparison.OrdinalIgnoreCase) ? root : root["AppState"];
+                if (state is null
+                    || !uint.TryParse(state.ValueOf("appid"), out var appId)
+                    || state.ValueOf("installdir") is not { Length: > 0 } installDir)
                 {
                     continue;
                 }
-
-                apps[appId] = new SteamAppInfo(appId, name, installDir);
+                apps[appId] = new SteamAppInfo(appId, state.ValueOf("name") ?? string.Empty, installDir);
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or FormatException or InvalidDataException)
             {
-                _logger.LogWarning(ex, "Failed to parse Steam app manifest {Path}.", manifestPath);
+                LogParseFailed(ex, Path.GetFileName(manifest));
             }
         }
         return apps;
     }
 
-    /// <summary>
-    /// Canonicalize a path for prefix comparison: collapse slashes, remove trailing
-    /// separator, keep the drive letter case-insensitive. Does NOT resolve symlinks.
-    /// </summary>
-    private string NormalizePath(string path)
-    {
-        var fullPath = _fs.Path.GetFullPath(path);
-        return fullPath.TrimEnd(_fs.Path.DirectorySeparatorChar, _fs.Path.AltDirectorySeparatorChar);
-    }
+    private static string Normalize(string path) => Path.GetFullPath(path).TrimEnd('\\', '/');
+
+    [LoggerMessage(Level = LogLevel.Debug, Message = "Steam is not installed; no Steam badges.")]
+    private partial void LogNoSteam();
+
+    [LoggerMessage(Level = LogLevel.Debug, Message = "Could not look up Steam's install folder.")]
+    private partial void LogRootLookupFailed(Exception exception);
+
+    [LoggerMessage(Level = LogLevel.Warning, Message = "Could not parse Steam file {FileName}.")]
+    private partial void LogParseFailed(Exception exception, string fileName);
+
+    [LoggerMessage(Level = LogLevel.Information, Message = "Steam scan: {LibraryCount} libraries, {AppCount} installed apps.")]
+    private partial void LogScanned(int libraryCount, int appCount);
 }

@@ -36,26 +36,37 @@ public static class FrameOperations
     }
 
     /// <summary>
-    /// Set every alpha byte of an 8-bit frame to 255, in place. Window captures can carry
-    /// partially transparent pixels (Mica, rounded corners, GDI sources); saved screenshots
-    /// must never be see-through.
+    /// Make every pixel fully opaque, in place (alpha 255 for 8-bit frames, 1.0 for FP16).
+    /// Window captures can carry partially transparent pixels (Mica, rounded corners);
+    /// saved screenshots must never be see-through.
     /// </summary>
     public static void ForceOpaque(CapturedFrame frame)
     {
         ArgumentNullException.ThrowIfNull(frame);
-        if (frame.Format != FramePixelFormat.Bgra8)
+        var pixels = frame.Pixels;
+        if (frame.Format == FramePixelFormat.Bgra8)
         {
+            for (var y = 0; y < frame.Height; y++)
+            {
+                var offset = (y * frame.RowStride) + 3;
+                var end = offset + (frame.Width * 4);
+                for (var i = offset; i < end; i += 4)
+                {
+                    pixels[i] = 0xFF;
+                }
+            }
             return;
         }
 
-        var pixels = frame.Pixels;
+        // Half-precision 1.0 is 0x3C00, stored little-endian in bytes 6-7 of each pixel.
         for (var y = 0; y < frame.Height; y++)
         {
-            var offset = (y * frame.RowStride) + 3;
-            var end = offset + (frame.Width * 4);
-            for (var i = offset; i < end; i += 4)
+            var offset = (y * frame.RowStride) + 6;
+            var end = offset + (frame.Width * 8);
+            for (var i = offset; i < end; i += 8)
             {
-                pixels[i] = 0xFF;
+                pixels[i] = 0x00;
+                pixels[i + 1] = 0x3C;
             }
         }
     }

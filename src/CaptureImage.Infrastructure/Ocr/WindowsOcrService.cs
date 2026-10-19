@@ -1,129 +1,128 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 // Copyright (c) CaptureImage Contributors
 
+using System.Collections.Concurrent;
+using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.WindowsRuntime;
-using System.Runtime.Versioning;
 using CaptureImage.Core.Abstractions;
+using CaptureImage.Core.Models;
 using Microsoft.Extensions.Logging;
 using Windows.Globalization;
 using Windows.Graphics.Imaging;
 using Windows.Media.Ocr;
-using Windows.Storage.Streams;
 using OcrResult = CaptureImage.Core.Abstractions.OcrResult;
-using WinOcrResult = Windows.Media.Ocr.OcrResult;
 
 namespace CaptureImage.Infrastructure.Ocr;
 
 /// <summary>
-/// <see cref="IOcrService"/> backed by the OS-supplied <c>Windows.Media.Ocr</c> engine.
-/// All recognition runs on-device; nothing leaves the machine. Engine availability
-/// depends on the user's installed language packs (Settings → Time &amp; language →
-/// Language &amp; region → "Optional features" → "Basic typing"+"Optical character
-/// recognition").
+/// Offline OCR with Windows.Media.Ocr. The BGRA frame goes straight into a
+/// <see cref="SoftwareBitmap"/> (v1 encoded a PNG only to decode it again), frames larger than
+/// the engine limit are downscaled, engines are cached per language, and failures are
+/// reported as failures instead of "no text found".
 /// </summary>
-[SupportedOSPlatform("windows10.0.10240.0")]
-public sealed class WindowsOcrService : IOcrService
+public sealed partial class WindowsOcrService : IOcrService
 {
     private readonly ILogger<WindowsOcrService> _logger;
+    private readonly ConcurrentDictionary<string, OcrEngine?> _engines = new(StringComparer.OrdinalIgnoreCase);
 
     public WindowsOcrService(ILogger<WindowsOcrService> logger)
     {
         _logger = logger;
     }
 
-    public async Task<OcrResult> RecognizeAsync(
-        byte[] pngBytes,
-        string? languageTag,
-        CancellationToken cancellationToken = default)
+    public async Task<OcrResult> RecognizeAsync(CapturedFrame frame, string? languageTag, CancellationToken cancellationToken = default)
     {
-        if (pngBytes is null || pngBytes.Length == 0)
+        ArgumentNullException.ThrowIfNull(frame);
+        if (frame.Format != FramePixelFormat.Bgra8 || frame.Width == 0 || frame.Height == 0)
         {
-            return new OcrResult(string.Empty, 0.0, EngineAvailable: false);
+            return OcrResult.Failed;
         }
 
-        var engine = ResolveEngine(languageTag);
+        var engine = _engines.GetOrAdd(languageTag ?? string.Empty, CreateEngine);
         if (engine is null)
         {
-            _logger.LogInformation(
-                "No OCR engine available for language tag '{Tag}' or fallbacks; OCR disabled.",
-                languageTag ?? "(auto)");
-            return new OcrResult(string.Empty, 0.0, EngineAvailable: false);
+            LogNoEngine(languageTag ?? "(user languages)");
+            return new OcrResult(OcrStatus.EngineUnavailable, string.Empty);
         }
 
         try
         {
-            using var stream = new InMemoryRandomAccessStream();
-            await stream.WriteAsync(pngBytes.AsBuffer()).AsTask(cancellationToken).ConfigureAwait(false);
-            stream.Seek(0);
-
-            var decoder = await BitmapDecoder.CreateAsync(stream).AsTask(cancellationToken).ConfigureAwait(false);
-            using var softwareBitmap = await decoder.GetSoftwareBitmapAsync().AsTask(cancellationToken).ConfigureAwait(false);
-
-            WinOcrResult result = await engine.RecognizeAsync(softwareBitmap).AsTask(cancellationToken).ConfigureAwait(false);
-
-            // Average per-line confidence — OcrResult on the WinRT side exposes per-word
-            // confidence on each Word inside each Line. The library's own
-            // OcrResult.Text already gives us reading-order text.
-            double sum = 0;
-            int count = 0;
-            foreach (var line in result.Lines)
-            {
-                // Windows OCR does not report per-word confidence. We just count words and
-                // report a coarse 0.85 if anything came back — UI consumers care about
-                // "did we get text" more than calibrated probability.
-                count += line.Words.Count;
-                sum += 0.85 * line.Words.Count;
-            }
-            var confidence = count > 0 ? sum / count : 0.0;
-
-            return new OcrResult(result.Text ?? string.Empty, confidence, EngineAvailable: true);
+            var input = Downscale(frame, (int)OcrEngine.MaxImageDimension);
+            using var bitmap = SoftwareBitmap.CreateCopyFromBuffer(
+                input.ToTightlyPacked().AsBuffer(),
+                BitmapPixelFormat.Bgra8,
+                input.Width,
+                input.Height,
+                BitmapAlphaMode.Ignore);
+            var result = await engine.RecognizeAsync(bitmap).AsTask(cancellationToken).ConfigureAwait(false);
+            var text = result.Text?.Trim() ?? string.Empty;
+            return new OcrResult(text.Length == 0 ? OcrStatus.NoText : OcrStatus.Success, text);
         }
-        catch (OperationCanceledException)
+        catch (Exception ex) when (ex is COMException or ArgumentException or InvalidOperationException)
         {
-            throw;
-        }
-        catch (Exception ex)
-        {
-            _logger.LogWarning(ex, "OCR recognition threw; returning empty result.");
-            return new OcrResult(string.Empty, 0.0, EngineAvailable: true);
+            LogFailed(ex);
+            return OcrResult.Failed;
         }
     }
 
-    private OcrEngine? ResolveEngine(string? languageTag)
+    private static OcrEngine? CreateEngine(string languageTag)
     {
-        // 1. Explicit language tag if the caller passed one.
-        if (!string.IsNullOrWhiteSpace(languageTag))
+        if (!string.IsNullOrWhiteSpace(languageTag) && Language.IsWellFormed(languageTag))
         {
-            try
+            var language = new Language(languageTag);
+            if (OcrEngine.IsLanguageSupported(language))
             {
-                var lang = new Language(languageTag);
-                if (OcrEngine.IsLanguageSupported(lang))
-                {
-                    return OcrEngine.TryCreateFromLanguage(lang);
-                }
-            }
-            catch (ArgumentException)
-            {
-                // Unknown / malformed tag — fall through to user profile chain.
+                return OcrEngine.TryCreateFromLanguage(language);
             }
         }
 
-        // 2. User profile languages (whatever the OS thinks the user types in).
-        var profileEngine = OcrEngine.TryCreateFromUserProfileLanguages();
-        if (profileEngine is not null) return profileEngine;
-
-        // 3. Hard fallback: en-US — the most likely pack to be installed on a Windows
-        // machine, even one in a non-English region.
-        try
-        {
-            var enUS = new Language("en-US");
-            if (OcrEngine.IsLanguageSupported(enUS))
-            {
-                return OcrEngine.TryCreateFromLanguage(enUS);
-            }
-        }
-        catch (ArgumentException) { /* shouldn't happen, but stay graceful */ }
-
-        return null;
+        return OcrEngine.TryCreateFromUserProfileLanguages()
+            ?? OcrEngine.TryCreateFromLanguage(new Language("en-US"));
     }
+
+    /// <summary>Box-filter downscale so the longest edge fits the OCR engine's limit.</summary>
+    private static CapturedFrame Downscale(CapturedFrame frame, int maxDimension)
+    {
+        var longest = Math.Max(frame.Width, frame.Height);
+        if (longest <= maxDimension)
+        {
+            return frame;
+        }
+
+        var factor = (int)Math.Ceiling(longest / (double)maxDimension);
+        var width = frame.Width / factor;
+        var height = frame.Height / factor;
+        var output = new byte[width * height * 4];
+        var samples = factor * factor;
+        for (var y = 0; y < height; y++)
+        {
+            for (var x = 0; x < width; x++)
+            {
+                int b = 0, g = 0, r = 0;
+                for (var dy = 0; dy < factor; dy++)
+                {
+                    var row = ((y * factor) + dy) * frame.RowStride;
+                    for (var dx = 0; dx < factor; dx++)
+                    {
+                        var i = row + (((x * factor) + dx) * 4);
+                        b += frame.Pixels[i];
+                        g += frame.Pixels[i + 1];
+                        r += frame.Pixels[i + 2];
+                    }
+                }
+                var o = ((y * width) + x) * 4;
+                output[o] = (byte)(b / samples);
+                output[o + 1] = (byte)(g / samples);
+                output[o + 2] = (byte)(r / samples);
+                output[o + 3] = 0xFF;
+            }
+        }
+        return new CapturedFrame(width, height, width * 4, output);
+    }
+
+    [LoggerMessage(Level = LogLevel.Information, Message = "No OCR language is installed for {Language}.")]
+    private partial void LogNoEngine(string language);
+
+    [LoggerMessage(Level = LogLevel.Warning, Message = "Text recognition failed.")]
+    private partial void LogFailed(Exception exception);
 }

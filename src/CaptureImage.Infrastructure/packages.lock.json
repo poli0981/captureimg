@@ -11,17 +11,22 @@
           "Microsoft.Extensions.DependencyInjection.Abstractions": "10.0.13"
         }
       },
+      "Microsoft.Windows.CsWin32": {
+        "type": "Direct",
+        "requested": "[0.3.363, )",
+        "resolved": "0.3.363",
+        "contentHash": "Fd1p6Fr5H6A+c4FO033CojR8jKsvYZm6vigrKvB/auI40KXb0Vb+ge0F6baGBZptc1yIKVxmh/Iu8/KvLVQ94A==",
+        "dependencies": {
+          "Microsoft.Windows.SDK.Win32Docs": "0.1.42-alpha",
+          "Microsoft.Windows.SDK.Win32Metadata": "71.0.30-preview",
+          "Microsoft.Windows.WDK.Win32Metadata": "0.13.25-experimental"
+        }
+      },
       "Serilog": {
         "type": "Direct",
         "requested": "[4.4.0, )",
         "resolved": "4.4.0",
         "contentHash": "ZC6Le3rr4TVJJjS4KsQAesxeF1EhW9qcZmmG7eP5Y2G3+gTGkJEUXkq4+tZNPtyp05I0wWOxnIjwtxFweJsObw=="
-      },
-      "SharpHook": {
-        "type": "Direct",
-        "requested": "[5.3.9, )",
-        "resolved": "5.3.9",
-        "contentHash": "qNcBMHiVZJ3qP+M/MyQZvHdf51UPKpKYUVR2rJ6o6E4dd7G8WJgP8M6J/Qy8aeZ5bt9nC9L5QVKbZFoQirfCXQ=="
       },
       "SkiaSharp": {
         "type": "Direct",
@@ -41,30 +46,21 @@
           "Microsoft.Win32.SystemEvents": "10.0.13"
         }
       },
-      "System.IO.Abstractions": {
-        "type": "Direct",
-        "requested": "[21.2.1, )",
-        "resolved": "21.2.1",
-        "contentHash": "fLz5LB8tl52AXw/e9rk3BV259TUHG/Yp7PgXGWQuiGvSERAv0ABXhtArSOEdx4K+VlXEh90zFgYYGcZza9VyFA==",
-        "dependencies": {
-          "TestableIO.System.IO.Abstractions": "21.2.1",
-          "TestableIO.System.IO.Abstractions.Wrappers": "21.2.1"
-        }
-      },
-      "System.Management": {
-        "type": "Direct",
-        "requested": "[10.0.13, )",
-        "resolved": "10.0.13",
-        "contentHash": "cL8qiJmJtlSIcAoZH4s07VTxTdddvEP12MFeM+KBZagn4CuD/0SFQsmKn5g9MLfiSrYjdAxIwOTO0kATY9A0UA==",
-        "dependencies": {
-          "System.CodeDom": "10.0.13"
-        }
-      },
       "Velopack": {
         "type": "Direct",
         "requested": "[1.2.161, )",
         "resolved": "1.2.161",
         "contentHash": "OpHNacIumnkhaaX3ZlQ/TCR4YPOJvud2/PAOoWb6o+mIrLwIVA275I5wAgt4q/1O2VrJeDwR1qFQyqzG4lUArg=="
+      },
+      "Vortice.Direct2D1": {
+        "type": "Direct",
+        "requested": "[3.8.3, )",
+        "resolved": "3.8.3",
+        "contentHash": "SDHEmNUT3A4P8yj+g7q3AnRZ9fvqOOe/EoWjsgkHlQ3C9Tkc51rTeZXC9bQPySli+/lFTui8vMs9tpWZqf+AwQ==",
+        "dependencies": {
+          "SharpGen.Runtime": "2.4.2-beta",
+          "Vortice.DXGI": "3.8.3"
+        }
       },
       "Vortice.Direct3D11": {
         "type": "Direct",
@@ -91,6 +87,24 @@
         "resolved": "10.0.13",
         "contentHash": "rtd1rRf5uiusn/r+hNsODiCjvA+nErw+1EQb2uCv0EedLi2GEYWgLK0V31SXzcZ2b0D7VeoOrHJ0WCQqfbO67Q=="
       },
+      "Microsoft.Windows.SDK.Win32Docs": {
+        "type": "Transitive",
+        "resolved": "0.1.42-alpha",
+        "contentHash": "Z/9po23gUA9aoukirh2ItMU2ZS9++Js9Gdds9fu5yuMojDrmArvY2y+tq9985tR3cxFxpZO1O35Wjfo0khj5HA=="
+      },
+      "Microsoft.Windows.SDK.Win32Metadata": {
+        "type": "Transitive",
+        "resolved": "71.0.30-preview",
+        "contentHash": "h/FD+SrIlxgr+HD/WrJnLvpTdyWFAX7F0FCMPRxPJFTt4Qz70wGXKEBZvvIDX7om4hP0Tb7O0s1ND3aUvigL8g=="
+      },
+      "Microsoft.Windows.WDK.Win32Metadata": {
+        "type": "Transitive",
+        "resolved": "0.13.25-experimental",
+        "contentHash": "IM50tb/+UIwBr9FMr6ZKcZjCMW+Axo6NjGqKxgjUfyCY8dRnYUfrJEXxAaXoWtYP4X8EmASmC1Jtwh4XucseZg==",
+        "dependencies": {
+          "Microsoft.Windows.SDK.Win32Metadata": "63.0.31-preview"
+        }
+      },
       "SharpGen.Runtime": {
         "type": "Transitive",
         "resolved": "2.4.2-beta",
@@ -108,24 +122,6 @@
         "type": "Transitive",
         "resolved": "4.153.1",
         "contentHash": "Yqg6rChTVh0BUE8QQxtOA3uUBnihfgID4yex/AvDa0+os2bVcBjmI3Qj9tnOB+R1hd/Jry1Gwl8qw5JI9HZG8Q=="
-      },
-      "System.CodeDom": {
-        "type": "Transitive",
-        "resolved": "10.0.13",
-        "contentHash": "rTW3WGWYugm9qMihqSXXHxAIVP9Ay4ASkYc8CJLDbuscbc88lpO8U/asZpeYb9GiXbD8wNDhRoV5b2JEbHmtow=="
-      },
-      "TestableIO.System.IO.Abstractions": {
-        "type": "Transitive",
-        "resolved": "21.2.1",
-        "contentHash": "47NQXrfVUF+0b8W5EMnERR7FpgWE04wuYR1s9WvlNyh1hnRMGDPOvmewBLIZUG88Rhj9buzG3VVR8sAgH7TzjA=="
-      },
-      "TestableIO.System.IO.Abstractions.Wrappers": {
-        "type": "Transitive",
-        "resolved": "21.2.1",
-        "contentHash": "a0jzTAZRIic40USnf8b59EbJ6+hh/kndLV3mTxgSGBkjei/H9qjULOtk/ZHQtRD8lLaUav7ZsMZn6JiwCgDmEw==",
-        "dependencies": {
-          "TestableIO.System.IO.Abstractions": "21.2.1"
-        }
       },
       "Vortice.DirectX": {
         "type": "Transitive",
@@ -145,8 +141,7 @@
       "captureimage.core": {
         "type": "Project",
         "dependencies": {
-          "Microsoft.Extensions.Logging.Abstractions": "[10.0.13, )",
-          "Stateless": "[5.20.1, )"
+          "Microsoft.Extensions.Logging.Abstractions": "[10.0.13, )"
         }
       },
       "Microsoft.Extensions.DependencyInjection.Abstractions": {
@@ -154,30 +149,9 @@
         "requested": "[10.0.13, )",
         "resolved": "10.0.13",
         "contentHash": "G2GrGWNAPZBsii2F6AU8n+JT2tC1/I0Ml/e9ZyNCgPjf3hZqronP7o0X91aAynCmVeae8KkSIUNXXeXCNRmdVQ=="
-      },
-      "Stateless": {
-        "type": "CentralTransitive",
-        "requested": "[5.20.1, )",
-        "resolved": "5.20.1",
-        "contentHash": "jQeuXgIeXEjFAImajavoxvJNcevO+zyK+9ICGzy0LRe/e1tP4vJUnO4Yrg6rP601wYRnulQs59mQH73TbIZzNg=="
       }
     },
     "net10.0-windows10.0.22621/win-x64": {
-      "SharpHook": {
-        "type": "Direct",
-        "requested": "[5.3.9, )",
-        "resolved": "5.3.9",
-        "contentHash": "qNcBMHiVZJ3qP+M/MyQZvHdf51UPKpKYUVR2rJ6o6E4dd7G8WJgP8M6J/Qy8aeZ5bt9nC9L5QVKbZFoQirfCXQ=="
-      },
-      "System.Management": {
-        "type": "Direct",
-        "requested": "[10.0.13, )",
-        "resolved": "10.0.13",
-        "contentHash": "cL8qiJmJtlSIcAoZH4s07VTxTdddvEP12MFeM+KBZagn4CuD/0SFQsmKn5g9MLfiSrYjdAxIwOTO0kATY9A0UA==",
-        "dependencies": {
-          "System.CodeDom": "10.0.13"
-        }
-      },
       "Microsoft.Win32.SystemEvents": {
         "type": "Transitive",
         "resolved": "10.0.13",
