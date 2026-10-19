@@ -1,160 +1,114 @@
 # Disclaimer
 
-_Last updated: 2026-04-15_
+_Last updated: 2026-10-19 (CaptureImage 2.0)_
 
-This document describes the known limitations of **CaptureImage** and the
-caveats that apply to its development, translations, and licensing. Please
-read it before using the application in any production or archival setting.
+This document describes the known limitations of **CaptureImage** and the caveats that apply to its
+development, translations and licensing. Please read it before relying on the application.
 
 ## 1. No warranty
 
-CaptureImage is licensed under the **GNU General Public License v3.0 or
-later** (see [`LICENSE`](../../LICENSE)). Under Sections 15 and 16 of that
-license, the software is provided **"AS IS"**, without warranty of any kind,
-express or implied, including but not limited to the warranties of
-merchantability, fitness for a particular purpose, and non-infringement.
+CaptureImage is licensed under the **GNU General Public License v3.0 or later** (see
+[`LICENSE`](../../LICENSE)). Under sections 15 and 16 of that license the software is provided
+**"AS IS"**, without warranty of any kind, express or implied, including the warranties of
+merchantability, fitness for a particular purpose and non-infringement.
 
-The author(s) and contributors shall not be held liable for any claim,
-damages, or other liability, whether in an action of contract, tort, or
-otherwise, arising from, out of, or in connection with the software or the
-use or other dealings in the software — including, without limitation:
+The authors and contributors are not liable for any claim, damages or other liability arising from
+the software or its use — including, without limitation:
 
 - lost or corrupted screenshots,
-- game crashes, anti-cheat bans, or account suspensions caused by third-party
-  software interacting with a title's process,
-- data loss resulting from disk full errors, abrupt shutdowns, or failed
-  atomic file writes, or
-- any consequence of running an unsigned binary, a self-built binary, or a
-  binary downloaded from an unofficial source.
+- game crashes, anti-cheat actions or account suspensions involving third-party software that
+  interacts with a game,
+- data loss from full disks or abrupt shutdowns, or
+- any consequence of running an unsigned, self-built or unofficially distributed binary.
 
 **Use at your own risk.**
 
 ## 2. Capture support is not universal
 
-CaptureImage is designed to capture the visible surface of a target window
-using the Windows `Windows.Graphics.Capture` API, with an optional GDI
-`PrintWindow` fallback for legacy windowed applications. **It does not, and
-by design cannot, capture every application or game.** Known limitations
-include, without limitation:
+CaptureImage captures windows and screens with the Windows `Windows.Graphics.Capture` API. **It
+does not, and by design cannot, capture every application or game.** Known limitations include:
 
-1. **DRM / protected content.** Applications that mark their swap chain as
-   protected (DRM movie players, secure conferencing, some banking apps) will
-   produce either an all-black frame or a `ProtectedContent` error. This is a
-   Windows-level restriction, not a bug in CaptureImage.
-2. **Exclusive-fullscreen Direct3D 9 titles.** Some older games that refuse
-   to register with the Desktop Window Manager cannot be captured by
-   Windows.Graphics.Capture. The GDI fallback may return a black frame for
-   these as well.
-3. **Anti-cheat protected titles.** Games protected by kernel-mode anti-cheat
-   systems (VAC, EAC, BattlEye, Vanguard, etc.) may block external capture
-   tools, or — in rare cases — treat such tools as untrusted and apply
-   account sanctions. CaptureImage is **not** a cheat and does not read game
-   memory or inject code, but anti-cheat heuristics are outside our control.
-   If a given title's anti-cheat flags this tool, **stop using it with that
-   title immediately** and report the incident via the project's issue
-   tracker.
-4. **High-DPI / multi-monitor mismatches.** When a target window spans two
-   monitors with different scale factors, the captured frame may include
-   scaling artifacts at the monitor boundary.
-5. **Layered / transparent windows.** Capture fidelity for windows that rely
-   heavily on layered composition (e.g. some overlays, screen reader
-   highlights) is best-effort and may omit overlay effects.
-6. **Minimized or occluded windows.** A minimized window has no live surface
-   to capture. Windows.Graphics.Capture may deliver a stale cached frame,
-   the last-rendered bitmap, or time out with `NoFrameArrived`.
+1. **Protected content.** Windows that mark their content as protected (DRM video, some
+   conferencing and banking apps) produce a black image or a "protected content" error. This is a
+   Windows restriction.
+2. **Exclusive full-screen games.** Some older games that bypass the desktop compositor cannot be
+   captured, and the region overlays and notifications cannot appear above them. Borderless or
+   windowed mode usually works.
+3. **Anti-cheat.** Games protected by kernel-level anti-cheat (VAC, EAC, BattlEye, Vanguard and
+   others) may block external capture. CaptureImage does not read game memory or inject code, but
+   anti-cheat decisions are outside our control. If a game's anti-cheat objects to CaptureImage,
+   **stop using it with that game** and tell us (§8).
+4. **Hotkeys.** While armed, the capture hotkeys are registered with Windows, so the game and other
+   apps do not receive those key combinations; disarm to give them back. A few games read the
+   keyboard in a way that bypasses registered hotkeys — use the tray menu's region or screen capture
+   there.
+5. **HDR.** HDR captures are tone-mapped to a standard image using the display's SDR white level.
+   Colors and highlights are an approximation of what an HDR display shows; keep the JPEG XR original
+   if exact HDR data matters.
+6. **Minimized windows** have nothing to capture; restore the window first.
+7. **Mixed-DPI setups.** A window spanning monitors with different scaling may show scaling seams in
+   its capture.
 
-If a specific title does not work, please file an issue describing the game,
-its graphics API, whether it runs windowed / borderless / fullscreen, and
-whether the `PrintWindow` fallback was also unable to capture it.
+If a game does not work, please open an issue with the game, its graphics API, and whether it runs
+windowed, borderless or full screen.
 
-## 3. Development was AI-assisted
+## 3. Development is AI-assisted
 
-The implementation of CaptureImage was carried out with significant
-assistance from the **Claude Opus 4.6** large language model (Anthropic),
-used through Claude Code, during the 2026 development cycle. AI assistance
-included — but was not limited to — code generation, unit test drafting,
-architectural design proposals, Win32 / WinRT interop troubleshooting,
-P/Invoke signature authoring, XAML layout, commit message drafting, and
-documentation writing (including this disclaimer).
+CaptureImage is developed with substantial help from an AI coding assistant — Claude (Anthropic),
+used through Claude Code — for code, tests, Windows interop, user-interface layout, translations,
+commit messages and documentation (including this disclaimer).
 
-Every change was reviewed, accepted, and tested by a human maintainer
-before landing in version control. However, AI-assisted code may still
-contain subtle errors, non-idiomatic patterns, or references to APIs that
-behave differently than the model expected. Users and downstream
-distributors should treat the source as they would any other community
-contribution: **read it, audit it, and run the tests before shipping.**
-
-Commits authored with AI assistance carry a `Co-Authored-By` trailer that
-names the model. Git history is the authoritative record.
+The maintainer reviews, tests and accepts every change before it is released. AI-assisted code can
+still contain subtle mistakes, so treat the source as you would any community contribution: read
+it, audit it and run the tests before you depend on it. Commits with meaningful AI authorship carry
+a `Co-Authored-By` trailer; the git history is the authoritative record.
 
 ## 4. Translations are machine-assisted
 
-CaptureImage ships with localized strings for English (`en-US`),
-Vietnamese (`vi-VN`), and Arabic (`ar-SA`). The Arabic translation in
-particular was produced with assistance from the same AI model; the
-Vietnamese strings were reviewed by a native speaker but still pass
-through an automated generation step.
-
-Consequences:
-
-- Terminology may not match native conventions in every locale.
-- Some technical jargon (e.g. "hotkey", "toast", "frame") is deliberately
-  kept in English because it is more recognizable to developers than any
-  localized equivalent.
-- Right-to-left layouts (Arabic) are verified for structural mirroring but
-  copy may still sound machine-translated.
-
-Native speakers willing to proofread any shipped language are warmly
-invited to open a pull request — see [`CONTRIBUTORS.md`](../CONTRIBUTORS.md).
+The user interface is available in English, Vietnamese, Arabic, Japanese, Simplified Chinese,
+Korean, Spanish, French, German, Brazilian Portuguese and Russian. Except where a native speaker has
+reviewed them, the translations were produced with AI assistance. Terminology may not match native
+conventions everywhere, and some technical words (for example "hotkey") are kept as users commonly
+know them. Native speakers who can proofread a language are very welcome — see
+[`CONTRIBUTING.md`](../../CONTRIBUTING.md).
 
 ## 5. Trademarks
 
-"Steam", "Dota", "Counter-Strike", "Windows", "DirectX",
-"Microsoft .NET", "WinUI", "Windows App SDK", "Velopack", "SkiaSharp",
-"ImageSharp", "Serilog", "SharpHook", and any other third-party names that
-appear in the
-source, documentation, or UI strings are trademarks or registered
-trademarks of their respective owners. Their use in this project is for
-identification purposes only and does not imply any affiliation with, or
-endorsement by, the respective trademark holders.
+Microsoft, Windows, DirectX, .NET, Steam, Valve, GitHub, WPF UI, Velopack, SkiaSharp, Serilog and
+other names that appear in the source code, documentation or user interface are trademarks of their
+respective owners, used only to identify them. No affiliation or endorsement is implied.
 
 ## 6. No legal advice
 
-This disclaimer summarizes the project's intent in plain language and is
-**not** a substitute for the actual license text. Where this document
-conflicts with [`LICENSE`](../../LICENSE), the license text controls. If
-you need legal certainty about your use of CaptureImage — for example
-because you intend to redistribute it, bundle it with another product, or
-integrate it into a commercial offering — consult a qualified attorney in
-your jurisdiction.
+This disclaimer summarizes the project's intent in plain language and does not replace the license.
+Where it conflicts with [`LICENSE`](../../LICENSE), the license controls. If you need legal certainty
+— for example to redistribute or bundle CaptureImage — consult a lawyer in your jurisdiction.
 
-## 7. Unsigned installer — SmartScreen warning
+## 7. Unsigned installer — SmartScreen
 
-Until a code-signing certificate is available, the installer (`Setup.exe`
-produced by Velopack) is **not Authenticode-signed**. Windows SmartScreen
-will show the "Unknown publisher" warning on first run:
+Until a code-signing certificate is available, the installer `CaptureImage-win-Setup.exe` is **not
+Authenticode-signed**, and Windows SmartScreen shows an "unknown publisher" warning on first run.
+That alone does not mean the file was altered. To verify a download:
 
-> Windows protected your PC · Microsoft Defender SmartScreen prevented
-> an unrecognized app from starting.
-
-This is expected, not a sign that the binary has been tampered with. To
-verify the download is authentic:
-
-1. Download `SHA256SUMS.txt` from the same GitHub Release page.
-2. Compute the hash of your downloaded `Setup.exe`:
+1. Download `SHA256SUMS.txt` from the same release page.
+2. Compute the hash of your download and compare:
 
    ```powershell
-   Get-FileHash -Algorithm SHA256 .\Setup.exe
+   Get-FileHash -Algorithm SHA256 .\CaptureImage-win-Setup.exe
    ```
 
-3. Compare the output against the entry in `SHA256SUMS.txt`.
+3. Or verify the GitHub build-provenance attestation:
 
-Only then click **More info** → **Run anyway** in SmartScreen. If the
-hashes do not match, **do not run the installer** and report the
-discrepancy via a GitHub Security Advisory.
+   ```powershell
+   gh attestation verify .\CaptureImage-win-Setup.exe --repo poli0981/captureimg
+   ```
 
-The project's application to <https://signpath.io> (free OSS code
-signing) was declined in the first round. Until it is accepted or an
-alternative signing path becomes available, every release ships under
-these terms. Re-signing old releases is not planned — each release is
-the authoritative artifact at its point in time.
+Only then choose **More info → Run anyway**. If the hashes don't match, **do not run the file** and
+report it to `security@poli0981.dev` or through a GitHub security advisory.
+
+## 8. Contact
+
+- Game publishers and anti-cheat vendors with concerns about CaptureImage: `games@poli0981.dev`.
+- Copyright, DMCA or takedown requests: `dmca@poli0981.dev` (or `takedown@poli0981.dev`).
+- Other legal questions: `legal@poli0981.dev`.
+- Everything else: `contact@poli0981.dev` · <https://poli0981.dev/links>.

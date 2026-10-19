@@ -1,247 +1,139 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 // Copyright (c) CaptureImage Contributors
 
-using System.ComponentModel;
-using System.Globalization;
 using AwesomeAssertions;
 using CaptureImage.Core.Abstractions;
+using CaptureImage.Core.Capture;
 using CaptureImage.Core.Models;
 using CaptureImage.ViewModels.Settings;
-using Microsoft.Extensions.Logging.Abstractions;
 using NSubstitute;
 using Xunit;
 
 namespace CaptureImage.ViewModels.Tests.Settings;
 
-public class HotkeyBindingViewModelTests
+public sealed class HotkeyBindingViewModelTests : IDisposable
 {
-    private static HotkeyBindingViewModel NewVm(
-        FakeSettingsStore store,
-        IHotkeyService? hotkeys = null,
-        IHotkeyConflictSniffer? sniffer = null) =>
-        new(
-            store,
-            hotkeys ?? Substitute.For<IHotkeyService>(),
-            sniffer ?? Substitute.For<IHotkeyConflictSniffer>(),
-            new NullLocalizationService(),
-            NullLogger<HotkeyBindingViewModel>.Instance);
+    private const uint VkF9 = 0x78;
+    private const uint VkG = 0x47;
+    private const uint VkShift = 0x10;
 
-    [Fact]
-    public void Constructor_SeedsCurrentBinding_FromSettings()
+    private readonly FakeSettingsStore _store = new();
+    private readonly CoordinatorFixture _fixture;
+    private readonly HotkeyBindingViewModel _window;
+
+    public HotkeyBindingViewModelTests()
     {
-        var store = new FakeSettingsStore
-        {
-            Current = new AppSettings { CaptureHotkey = new HotkeyBinding(HotkeyModifiers.Control, 0x7B) },
-        };
-
-        var vm = NewVm(store);
-
-        vm.CurrentBinding.Should().Be(store.Current.CaptureHotkey);
-        vm.IsRecording.Should().BeFalse();
-        vm.LastValidationResult.Should().Be(HotkeyValidationResult.Ok);
-        vm.ConflictDetected.Should().BeFalse();
+        _fixture = new CoordinatorFixture(_store);
+        _window = new HotkeyBindingViewModel(CaptureMode.Window, _store, _fixture.Coordinator, _fixture.Hotkeys, new KeyLocalization());
     }
 
+    public void Dispose() => _fixture.Dispose();
+
     [Fact]
-    public void StartRecording_Flips_IsRecording()
+    public void Recording_ReleasesTheArmedHotkeys_AndAcceptingRestoresThem()
     {
-        var vm = NewVm(new FakeSettingsStore());
+        _fixture.Coordinator.Arm();
+        _fixture.Hotkeys.ClearReceivedCalls();
 
-        vm.StartRecordingCommand.Execute(null);
+        _window.StartRecordingCommand.Execute(null);
+        _fixture.Hotkeys.Received(1).Deactivate();
+        _window.DisplayText.Should().Be("Hotkey_PressKeys");
 
-        vm.IsRecording.Should().BeTrue();
-        vm.LastValidationResult.Should().Be(HotkeyValidationResult.Ok);
-        vm.ConflictDetected.Should().BeFalse();
+        var accepted = _window.Submit(HotkeyModifiers.Control | HotkeyModifiers.Alt, VkF9);
+
+        accepted.Should().BeTrue();
+        _window.IsRecording.Should().BeFalse();
+        _store.Current.Hotkeys.Window.Should().Be(new HotkeyBinding(HotkeyModifiers.Control | HotkeyModifiers.Alt, VkF9));
+        _fixture.Hotkeys.Received().Activate(Arg.Is<HotkeySettings>(h => h.Window.VirtualKey == VkF9));
     }
 
     [Fact]
-    public void CancelRecording_ClearsState()
+    public void ModifierOnlyPress_KeepsRecordingWithoutAMessage()
     {
-        var vm = NewVm(new FakeSettingsStore());
-        vm.StartRecordingCommand.Execute(null);
-        vm.IsRecording.Should().BeTrue();
+        _window.StartRecordingCommand.Execute(null);
 
-        vm.CancelRecordingCommand.Execute(null);
+        _window.Submit(HotkeyModifiers.Shift, VkShift).Should().BeFalse();
 
-        vm.IsRecording.Should().BeFalse();
-        vm.LastValidationResult.Should().Be(HotkeyValidationResult.Ok);
+        _window.IsRecording.Should().BeTrue();
+        _window.HasError.Should().BeFalse();
     }
 
     [Fact]
-    public void TryCommitRecorded_NotRecording_IsIgnored()
+    public void ReservedCombination_IsRejectedWithItsReason()
     {
-        var store = new FakeSettingsStore();
-        var original = store.Current.CaptureHotkey;
-        var vm = NewVm(store);
+        _window.StartRecordingCommand.Execute(null);
 
-        vm.TryCommitRecorded(new HotkeyBinding(HotkeyModifiers.Control | HotkeyModifiers.Alt, 0x78));
+        _window.Submit(HotkeyModifiers.Win, VkG).Should().BeFalse();
 
-        store.UpdateCallCount.Should().Be(0);
-        vm.CurrentBinding.Should().Be(original);
+        _window.Message.Should().Be("Hotkey_Validation_ReservedByWindows");
+        _window.HasError.Should().BeTrue();
+        _store.Current.Hotkeys.Window.Should().Be(HotkeyBinding.DefaultFor(CaptureMode.Window));
     }
 
     [Fact]
-    public void TryCommitRecorded_ValidNoConflict_PersistsAndClearsRecording()
+    public void CombinationOfAnotherMode_IsRejected()
     {
-        var store = new FakeSettingsStore();
-        var sniffer = Substitute.For<IHotkeyConflictSniffer>();
-        sniffer.IsConflicted(Arg.Any<HotkeyBinding>()).Returns(false);
-        var vm = NewVm(store, sniffer: sniffer);
-        vm.StartRecordingCommand.Execute(null);
+        _window.StartRecordingCommand.Execute(null);
+        var region = HotkeyBinding.DefaultFor(CaptureMode.Region);
 
-        var candidate = new HotkeyBinding(HotkeyModifiers.Control | HotkeyModifiers.Alt, 0x78);
-        vm.TryCommitRecorded(candidate);
+        _window.Submit(region.Modifiers, region.VirtualKey).Should().BeFalse();
 
-        store.Current.CaptureHotkey.Should().Be(candidate);
-        vm.CurrentBinding.Should().Be(candidate);
-        vm.IsRecording.Should().BeFalse();
-        vm.LastValidationResult.Should().Be(HotkeyValidationResult.Ok);
-        vm.ConflictDetected.Should().BeFalse();
-        sniffer.Received(1).IsConflicted(candidate);
+        _window.Message.Should().Be("Hotkey_UsedByMode");
     }
 
     [Fact]
-    public void TryCommitRecorded_Conflict_SavesButFlagsWarning()
+    public void CombinationOwnedByAnotherApp_IsRejected()
     {
-        var store = new FakeSettingsStore();
-        var sniffer = Substitute.For<IHotkeyConflictSniffer>();
-        sniffer.IsConflicted(Arg.Any<HotkeyBinding>()).Returns(true);
-        var vm = NewVm(store, sniffer: sniffer);
-        vm.StartRecordingCommand.Execute(null);
+        _fixture.Hotkeys.IsTakenByAnotherApp(Arg.Any<HotkeyBinding>()).Returns(true);
+        _window.StartRecordingCommand.Execute(null);
 
-        var candidate = new HotkeyBinding(HotkeyModifiers.Control | HotkeyModifiers.Alt, 0x78);
-        vm.TryCommitRecorded(candidate);
+        _window.Submit(HotkeyModifiers.Control, VkF9).Should().BeFalse();
 
-        vm.ConflictDetected.Should().BeTrue();
-        vm.CurrentBinding.Should().Be(candidate);
-        store.Current.CaptureHotkey.Should().Be(candidate);
-        vm.IsRecording.Should().BeFalse();
+        _window.Message.Should().Be("Hotkey_TakenByOtherApp");
+        _window.IsRecording.Should().BeTrue();
     }
 
     [Fact]
-    public void TryCommitRecorded_Reserved_KeepsRecordingAndExposesError()
+    public void Clear_UnbindsTheMode()
     {
-        var store = new FakeSettingsStore();
-        var original = store.Current.CaptureHotkey;
-        var vm = NewVm(store);
-        vm.StartRecordingCommand.Execute(null);
+        _window.ClearCommand.Execute(null);
 
-        // Win+L — reserved by the Windows shell
-        vm.TryCommitRecorded(new HotkeyBinding(HotkeyModifiers.Win, 0x4C));
-
-        vm.IsRecording.Should().BeTrue();
-        vm.LastValidationResult.Should().Be(HotkeyValidationResult.ReservedByWindows);
-        vm.HasError.Should().BeTrue();
-        store.UpdateCallCount.Should().Be(0);
-        store.Current.CaptureHotkey.Should().Be(original);
+        _store.Current.Hotkeys.Window.IsUnbound.Should().BeTrue();
+        _window.DisplayText.Should().Be("Hotkey_None");
     }
 
     [Fact]
-    public void TryCommitRecorded_ModifierOnly_KeepsRecording()
+    public void ResetToDefault_RestoresTheModeDefault()
     {
-        var store = new FakeSettingsStore();
-        var vm = NewVm(store);
-        vm.StartRecordingCommand.Execute(null);
+        _window.ClearCommand.Execute(null);
 
-        // VK_CONTROL as the "primary" — not a real combo
-        vm.TryCommitRecorded(new HotkeyBinding(HotkeyModifiers.Control, 0x11));
+        _window.ResetToDefaultCommand.Execute(null);
 
-        vm.IsRecording.Should().BeTrue();
-        vm.LastValidationResult.Should().Be(HotkeyValidationResult.ModifierOnlyKey);
+        _store.Current.Hotkeys.Window.Should().Be(HotkeyBinding.DefaultFor(CaptureMode.Window));
+        _window.IsDefault.Should().BeTrue();
     }
 
     [Fact]
-    public void ResetToDefault_PersistsDefaultBinding()
+    public void CancelRecording_ResumesTheHotkeys()
     {
-        var store = new FakeSettingsStore
-        {
-            Current = new AppSettings { CaptureHotkey = new HotkeyBinding(HotkeyModifiers.Alt, 0x77) },
-        };
-        var vm = NewVm(store);
+        _fixture.Coordinator.Arm();
+        _window.StartRecordingCommand.Execute(null);
+        _fixture.Hotkeys.ClearReceivedCalls();
 
-        vm.ResetToDefaultCommand.Execute(null);
+        _window.CancelRecordingCommand.Execute(null);
 
-        store.Current.CaptureHotkey.Should().Be(HotkeyBinding.Default);
-        vm.CurrentBinding.Should().Be(HotkeyBinding.Default);
+        _fixture.Hotkeys.Received(1).Activate(Arg.Any<HotkeySettings>());
+        _window.IsRecording.Should().BeFalse();
     }
 
     [Fact]
-    public void ExternalSettingsChange_UpdatesCurrentBinding()
+    public void ConflictAfterArming_IsShown_AndClearedWhenRegistered()
     {
-        var store = new FakeSettingsStore();
-        var vm = NewVm(store);
+        _window.ApplyRegistration(new HotkeyRegistration(CaptureMode.Window, HotkeyBinding.Default, HotkeyRegistrationStatus.Conflict));
+        _window.HasError.Should().BeTrue();
+        _window.Message.Should().Be("Hotkey_StatusConflict");
 
-        var imported = new HotkeyBinding(HotkeyModifiers.Control | HotkeyModifiers.Shift, 0x75);
-        store.Current = store.Current with { CaptureHotkey = imported };
-        store.RaiseChanged();
-
-        vm.CurrentBinding.Should().Be(imported);
-    }
-
-    [Fact]
-    public void TryCommitRecorded_WhileHotkeyServiceRunning_LiveRebinds()
-    {
-        var store = new FakeSettingsStore();
-        var hotkeys = Substitute.For<IHotkeyService>();
-        // Service "running" means CurrentBinding is non-null.
-        hotkeys.CurrentBinding.Returns(HotkeyBinding.Default);
-        var vm = NewVm(store, hotkeys: hotkeys);
-        vm.StartRecordingCommand.Execute(null);
-
-        var candidate = new HotkeyBinding(HotkeyModifiers.Control | HotkeyModifiers.Alt, 0x78);
-        vm.TryCommitRecorded(candidate);
-
-        hotkeys.Received(1).SetBinding(candidate);
-    }
-
-    [Fact]
-    public void TryCommitRecorded_WhileHotkeyServiceStopped_SkipsLiveRebind()
-    {
-        var store = new FakeSettingsStore();
-        var hotkeys = Substitute.For<IHotkeyService>();
-        hotkeys.CurrentBinding.Returns((HotkeyBinding?)null);
-        var vm = NewVm(store, hotkeys: hotkeys);
-        vm.StartRecordingCommand.Execute(null);
-
-        vm.TryCommitRecorded(new HotkeyBinding(HotkeyModifiers.Control | HotkeyModifiers.Alt, 0x78));
-
-        hotkeys.DidNotReceive().SetBinding(Arg.Any<HotkeyBinding>());
-    }
-
-    // -- helpers --------------------------------------------------------------
-
-    private sealed class FakeSettingsStore : ISettingsStore
-    {
-        public AppSettings Current { get; set; } = new();
-        public int UpdateCallCount { get; private set; }
-        public event EventHandler? Changed;
-        public string SettingsFilePath => "fake://settings.json";
-
-        public Task LoadAsync(CancellationToken ct = default) => Task.CompletedTask;
-        public Task FlushAsync(CancellationToken ct = default) => Task.CompletedTask;
-        public Task ExportAsync(string p, CancellationToken ct = default) => Task.CompletedTask;
-        public Task ImportAsync(string p, CancellationToken ct = default) => Task.CompletedTask;
-
-        public void Update(Func<AppSettings, AppSettings> mutator)
-        {
-            UpdateCallCount++;
-            Current = mutator(Current);
-            Changed?.Invoke(this, EventArgs.Empty);
-        }
-
-        public void RaiseChanged() => Changed?.Invoke(this, EventArgs.Empty);
-    }
-
-    private sealed class NullLocalizationService : ILocalizationService
-    {
-        public CultureInfo CurrentCulture => CultureInfo.InvariantCulture;
-        public TextFlowDirection CurrentFlowDirection => TextFlowDirection.LeftToRight;
-        public IReadOnlyList<CultureInfo> SupportedCultures { get; } = new[] { CultureInfo.InvariantCulture };
-        public string this[string key] => string.Empty;
-
-        public event PropertyChangedEventHandler? PropertyChanged { add { } remove { } }
-        public event EventHandler? CultureChanged { add { } remove { } }
-
-        public void SetCulture(CultureInfo culture) { }
+        _window.ApplyRegistration(new HotkeyRegistration(CaptureMode.Window, HotkeyBinding.Default, HotkeyRegistrationStatus.Registered));
+        _window.HasError.Should().BeFalse();
     }
 }

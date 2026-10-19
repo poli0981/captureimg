@@ -2,218 +2,215 @@
 // Copyright (c) CaptureImage Contributors
 
 using CaptureImage.Core.Abstractions;
+using CaptureImage.Core.Capture;
 using CaptureImage.Core.Models;
+using CaptureImage.Core.Pipeline;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Microsoft.Extensions.Logging;
 
 namespace CaptureImage.ViewModels.Settings;
 
 /// <summary>
-/// Bridge between the <c>HotkeyRecorder</c> control and persistence. Owns the
-/// <i>recording-mode</i> flag, the last validation outcome, and the
-/// <i>conflict-detected</i> warning; handles the commit flow:
-/// validate → sniff-for-conflict → persist → live-rebind the hotkey service
-/// (so an armed capture picks up the new combo without disarm/re-arm).
+/// The hotkey of one capture mode in Settings: shows the binding, records a new one (the
+/// capture hotkeys are released while recording so the combination reaches the recorder),
+/// and rejects invalid, duplicate or already-taken combinations with a message.
 /// </summary>
-public sealed partial class HotkeyBindingViewModel : ViewModelBase, IDisposable
+public sealed partial class HotkeyBindingViewModel : ViewModelBase
 {
     private readonly ISettingsStore _settings;
+    private readonly CaptureCoordinator _coordinator;
     private readonly IHotkeyService _hotkeys;
-    private readonly IHotkeyConflictSniffer _sniffer;
-    private readonly ILogger<HotkeyBindingViewModel> _logger;
-    private bool _disposed;
+    private IDisposable? _suspension;
 
-    /// <summary>Exposed so the <c>HotkeyRecorder</c> control can resolve localized strings.</summary>
+    public HotkeyBindingViewModel(
+        CaptureMode mode,
+        ISettingsStore settings,
+        CaptureCoordinator coordinator,
+        IHotkeyService hotkeys,
+        ILocalizationService localization)
+    {
+        Mode = mode;
+        _settings = settings;
+        _coordinator = coordinator;
+        _hotkeys = hotkeys;
+        Localization = localization;
+        _binding = settings.Current.Hotkeys.Get(mode);
+    }
+
     public ILocalizationService Localization { get; }
 
-    [ObservableProperty]
-    private HotkeyBinding _currentBinding;
+    public CaptureMode Mode { get; }
+
+    public string ModeName => Localization[$"Mode_{Mode}"];
+
+    public string Description => Localization[$"Settings_Hotkey{Mode}Description"];
 
     [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(DisplayText), nameof(IsDefault))]
+    private HotkeyBinding _binding;
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(DisplayText))]
     private bool _isRecording;
 
     [ObservableProperty]
-    private HotkeyValidationResult _lastValidationResult = HotkeyValidationResult.Ok;
+    private string _message = string.Empty;
 
     [ObservableProperty]
-    private bool _conflictDetected;
+    private bool _hasError;
 
-    /// <summary>Human-readable current binding (e.g. <c>"Ctrl+Shift+F12"</c>).</summary>
-    public string DisplayText => CurrentBinding.ToString();
+    public string DisplayText => IsRecording
+        ? Localization["Hotkey_PressKeys"]
+        : Binding.IsUnbound ? Localization["Hotkey_None"] : Binding.ToString();
 
-    /// <summary><c>true</c> when <see cref="LastValidationResult"/> is non-Ok — drives UI error styling.</summary>
-    public bool HasError => LastValidationResult != HotkeyValidationResult.Ok;
-
-    /// <summary>Localized error string for <see cref="LastValidationResult"/>, or empty when Ok.</summary>
-    public string ErrorMessage => LastValidationResult switch
-    {
-        HotkeyValidationResult.NoPrimaryKey => Localization["Settings_HotkeyErrorNoPrimary"],
-        HotkeyValidationResult.ModifierOnlyKey => Localization["Settings_HotkeyErrorModifierOnly"],
-        HotkeyValidationResult.RequiresModifier => Localization["Settings_HotkeyErrorNeedsModifier"],
-        HotkeyValidationResult.ReservedByWindows => Localization["Settings_HotkeyErrorReserved"],
-        _ => string.Empty,
-    };
-
-    // -- localized labels ---------------------------------------------------
-    //
-    // Plain computed properties exposing each Localization[key] the HotkeyRecorder
-    // control binds to. Compiled indexer bindings (`{Binding Localization[Settings_Foo]}`)
-    // don't reevaluate reliably when the intermediate `Localization` reference is
-    // unchanged on the live view — binding to a plain property and raising
-    // OnPropertyChanged on culture switch is the reliable pattern. Matches the same
-    // refactor applied to SettingsViewModel and MainWindowViewModel.
-
-    public string HotkeyFieldAutomationName => Localization["Settings_Hotkey"];
-    public string RecorderPromptText => Localization["Settings_HotkeyRecorderPrompt"];
-    public string RecordLabel => Localization["Settings_HotkeyRecord"];
-    public string CancelLabel => Localization["Settings_HotkeyCancel"];
-    public string ResetLabel => Localization["Settings_HotkeyReset"];
-    public string ConflictWarningText => Localization["Settings_HotkeyConflictWarning"];
-
-    public HotkeyBindingViewModel(
-        ISettingsStore settings,
-        IHotkeyService hotkeys,
-        IHotkeyConflictSniffer sniffer,
-        ILocalizationService localization,
-        ILogger<HotkeyBindingViewModel> logger)
-    {
-        _settings = settings;
-        _hotkeys = hotkeys;
-        _sniffer = sniffer;
-        _logger = logger;
-        Localization = localization;
-
-        _currentBinding = settings.Current.CaptureHotkey;
-        _settings.Changed += OnSettingsChanged;
-
-        // Localized ErrorMessage + ConflictWarning come from the indexer — push a fresh
-        // PropertyChanged on culture switch so bound TextBlocks re-resolve strings in place.
-        Localization.PropertyChanged += OnLocalizationChanged;
-    }
-
-    private void OnLocalizationChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
-    {
-        if (_disposed) return;
-        if (e.PropertyName is "Item[]" or nameof(ILocalizationService.CurrentCulture))
-        {
-            OnPropertyChanged(nameof(ErrorMessage));
-            OnPropertyChanged(nameof(Localization));
-            // Plain-property refresh for every HotkeyRecorder label — indexer-path
-            // bindings don't wake reliably on Localization-reference ping.
-            OnPropertyChanged(nameof(HotkeyFieldAutomationName));
-            OnPropertyChanged(nameof(RecorderPromptText));
-            OnPropertyChanged(nameof(RecordLabel));
-            OnPropertyChanged(nameof(CancelLabel));
-            OnPropertyChanged(nameof(ResetLabel));
-            OnPropertyChanged(nameof(ConflictWarningText));
-        }
-    }
-
-    private void OnSettingsChanged(object? sender, EventArgs e)
-    {
-        if (_disposed) return;
-        var binding = _settings.Current.CaptureHotkey;
-        if (binding != CurrentBinding)
-        {
-            CurrentBinding = binding;
-        }
-    }
+    public bool IsDefault => Binding == HotkeyBinding.DefaultFor(Mode);
 
     [RelayCommand]
     private void StartRecording()
     {
-        _logger.LogDebug("HotkeyRecorder StartRecording invoked.");
+        if (IsRecording)
+        {
+            return;
+        }
+
+        _suspension = _coordinator.SuspendHotkeys();
         IsRecording = true;
-        LastValidationResult = HotkeyValidationResult.Ok;
-        ConflictDetected = false;
+        SetMessage(string.Empty, isError: false);
     }
 
     [RelayCommand]
-    private void CancelRecording()
+    private void CancelRecording() => StopRecording();
+
+    [RelayCommand]
+    private void Clear()
     {
-        _logger.LogDebug("HotkeyRecorder CancelRecording invoked (was recording={WasRecording}).", IsRecording);
-        IsRecording = false;
-        LastValidationResult = HotkeyValidationResult.Ok;
-        ConflictDetected = false;
+        StopRecording();
+        Commit(HotkeyBinding.Unbound);
+        SetMessage(string.Empty, isError: false);
     }
 
     [RelayCommand]
     private void ResetToDefault()
     {
-        _logger.LogDebug("HotkeyRecorder ResetToDefault invoked.");
-        ApplyBinding(HotkeyBinding.Default);
+        StopRecording();
+        TryCommit(HotkeyBinding.DefaultFor(Mode));
     }
 
     /// <summary>
-    /// Offered by the recorder control when the user presses a complete combination.
-    /// Rejects silently when not in recording mode so stray key events outside the
-    /// recorder do not leak into settings.
+    /// The recorder saw a key press. Returns <c>true</c> when the combination was accepted
+    /// (recording ends); modifier-only presses are ignored while the user is still typing.
     /// </summary>
-    /// <remarks>
-    /// <para>
-    /// Flow: <see cref="HotkeyBinding.Validate"/> first. Invalid → keep recording
-    /// so the user sees the error and can try again. Valid → sniff for cross-process
-    /// conflicts (non-blocking; user keeps the combo), persist, and live-rebind.
-    /// </para>
-    /// </remarks>
-    public void TryCommitRecorded(HotkeyBinding candidate)
+    public bool Submit(HotkeyModifiers modifiers, uint virtualKey)
     {
-        if (!IsRecording) return;
+        if (!IsRecording)
+        {
+            return false;
+        }
 
+        var candidate = new HotkeyBinding(modifiers, virtualKey);
         var validation = candidate.Validate();
-        LastValidationResult = validation;
+        if (validation is HotkeyValidationResult.NoPrimaryKey or HotkeyValidationResult.ModifierOnlyKey)
+        {
+            return false;
+        }
 
         if (validation != HotkeyValidationResult.Ok)
         {
-            _logger.LogDebug(
-                "Rejecting recorded hotkey {Binding}: {Reason}.", candidate, validation);
+            SetMessage(Localization[$"Hotkey_Validation_{validation}"], isError: true);
+            return false;
+        }
+
+        if (!TryCommit(candidate))
+        {
+            return false;
+        }
+
+        StopRecording();
+        return true;
+    }
+
+    /// <summary>Show the registration result while armed (conflicts appear after arming).</summary>
+    public void ApplyRegistration(HotkeyRegistration? registration)
+    {
+        if (IsRecording)
+        {
             return;
         }
 
-        ConflictDetected = _sniffer.IsConflicted(candidate);
-        if (ConflictDetected)
+        switch (registration?.Status)
         {
-            _logger.LogInformation(
-                "Recorded hotkey {Binding} is already claimed by another process; saving anyway.",
-                candidate);
-        }
-
-        ApplyBinding(candidate);
-    }
-
-    private void ApplyBinding(HotkeyBinding binding)
-    {
-        _settings.Update(s => s with { CaptureHotkey = binding });
-        CurrentBinding = binding;
-        IsRecording = false;
-        LastValidationResult = HotkeyValidationResult.Ok;
-
-        // Live rebind so a currently-armed capture picks the new combo up immediately.
-        // When the service is stopped (disarmed), the next Arm will SetBinding from settings.
-        if (_hotkeys.CurrentBinding is not null)
-        {
-            _hotkeys.SetBinding(binding);
-            _logger.LogInformation("Live-rebound capture hotkey to {Binding}.", binding);
+            case HotkeyRegistrationStatus.Conflict:
+                SetMessage(Localization["Hotkey_StatusConflict"], isError: true);
+                break;
+            case HotkeyRegistrationStatus.Invalid:
+                SetMessage(Localization["Hotkey_StatusInvalid"], isError: true);
+                break;
+            default:
+                if (HasError)
+                {
+                    SetMessage(string.Empty, isError: false);
+                }
+                break;
         }
     }
 
-    partial void OnCurrentBindingChanged(HotkeyBinding value)
+    /// <summary>Settings changed elsewhere (import, reset).</summary>
+    public void Reload()
     {
+        if (!IsRecording)
+        {
+            Binding = _settings.Current.Hotkeys.Get(Mode);
+        }
+    }
+
+    /// <summary>Refresh localized text after a language switch.</summary>
+    public void RefreshText()
+    {
+        OnPropertyChanged(nameof(ModeName));
+        OnPropertyChanged(nameof(Description));
         OnPropertyChanged(nameof(DisplayText));
     }
 
-    partial void OnLastValidationResultChanged(HotkeyValidationResult value)
+    private bool TryCommit(HotkeyBinding candidate)
     {
-        OnPropertyChanged(nameof(HasError));
-        OnPropertyChanged(nameof(ErrorMessage));
+        var current = _settings.Current.Hotkeys;
+        foreach (var other in Enum.GetValues<CaptureMode>())
+        {
+            if (other != Mode && current.Get(other) == candidate)
+            {
+                SetMessage(Localization.Format("Hotkey_UsedByMode", Localization[$"Mode_{other}"]), isError: true);
+                return false;
+            }
+        }
+
+        if (_hotkeys.IsTakenByAnotherApp(candidate))
+        {
+            SetMessage(Localization["Hotkey_TakenByOtherApp"], isError: true);
+            return false;
+        }
+
+        Commit(candidate);
+        SetMessage(string.Empty, isError: false);
+        return true;
     }
 
-    public void Dispose()
+    private void Commit(HotkeyBinding binding)
     {
-        if (_disposed) return;
-        _disposed = true;
-        _settings.Changed -= OnSettingsChanged;
-        Localization.PropertyChanged -= OnLocalizationChanged;
+        Binding = binding;
+        _settings.Update(s => s with { Hotkeys = s.Hotkeys.With(Mode, binding) });
+    }
+
+    private void StopRecording()
+    {
+        IsRecording = false;
+        var suspension = _suspension;
+        _suspension = null;
+        suspension?.Dispose();
+    }
+
+    private void SetMessage(string message, bool isError)
+    {
+        Message = message;
+        HasError = isError && message.Length > 0;
     }
 }

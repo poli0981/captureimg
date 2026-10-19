@@ -1,0 +1,360 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="xml:space" type="xsd:string" msdata:Ordinal="4" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+
+  <!-- Navigation -->
+  <data name="About_AiNotice" xml:space="preserve"><value>CaptureImage is developed with substantial help from an AI coding assistant (Claude by Anthropic, through Claude Code) for code, tests and documentation. The maintainer reviews and tests every change before release.</value></data>
+  <data name="About_AiSection" xml:space="preserve"><value>AI-assisted development</value></data>
+  <data name="About_CaptureDisclaimer" xml:space="preserve"><value>Capture support</value></data>
+  <data name="About_CaptureLimitationDisclaimerBody" xml:space="preserve"><value>CaptureImage can capture most windowed and borderless games via Windows.Graphics.Capture, but not every title works. DRM-protected surfaces, exclusive-fullscreen Direct3D 9 games, and titles with anti-cheat hooks may return black frames or refuse capture. A GDI PrintWindow fallback is attempted for legacy apps. See docs/legal/DISCLAIMER.md §2 for the full list.</value></data>
+  <data name="About_ContactSection" xml:space="preserve"><value>Connect with the developer</value></data>
+  <data name="About_DeveloperLabel" xml:space="preserve"><value>Developer</value></data>
+  <data name="About_DisclaimersSection" xml:space="preserve"><value>Disclaimers</value></data>
+  <data name="About_Discussions" xml:space="preserve"><value>Discussions</value></data>
+  <data name="About_DonateBody" xml:space="preserve"><value>CaptureImage is free and open source. If it helps you, consider supporting development through any of these:</value></data>
+  <data name="About_DonateSection" xml:space="preserve"><value>Support the project</value></data>
+  <data name="About_Email" xml:space="preserve"><value>Email</value></data>
+  <data name="About_FeedbackSection" xml:space="preserve"><value>Feedback</value></data>
+  <data name="About_LegalSection" xml:space="preserve"><value>Legal documents</value></data>
+  <data name="About_LiabilityDisclaimer" xml:space="preserve"><value>No warranty</value></data>
+  <data name="About_LiabilityDisclaimerBody" xml:space="preserve"><value>CaptureImage is distributed under GPL-3.0-or-later AS IS, without warranty of any kind. The authors are not liable for lost screenshots, game crashes, anti-cheat sanctions, or data loss. Use at your own risk. See docs/legal/DISCLAIMER.md for the full text.</value></data>
+  <data name="About_LicenseLabel" xml:space="preserve"><value>License</value></data>
+  <data name="About_OpenBugReport" xml:space="preserve"><value>Report a bug</value></data>
+  <data name="About_OpenBugReportHint" xml:space="preserve"><value>Opens the GitHub issue tracker with the bug report template pre-filled.</value></data>
+  <data name="About_OpenContributors" xml:space="preserve"><value>Contributors</value></data>
+  <data name="About_OpenDisclaimer" xml:space="preserve"><value>Disclaimer</value></data>
+  <data name="About_OpenLicense" xml:space="preserve"><value>License (GPL-3.0)</value></data>
+  <data name="About_OpenNotice" xml:space="preserve"><value>Copyright notice</value></data>
+  <data name="About_OpenPrivacy" xml:space="preserve"><value>Privacy</value></data>
+  <data name="About_OpenTerms" xml:space="preserve"><value>Terms</value></data>
+  <data name="About_OpenThirdParty" xml:space="preserve"><value>Third-party notices</value></data>
+  <data name="About_OtherChannels" xml:space="preserve"><value>Other channels</value></data>
+  <data name="About_ReleaseNotes" xml:space="preserve"><value>Release notes</value></data>
+  <data name="About_RepositoryLabel" xml:space="preserve"><value>Repository</value></data>
+  <data name="About_RequestFeature" xml:space="preserve"><value>Suggest a feature</value></data>
+  <data name="About_SponsorEmail" xml:space="preserve"><value>Sponsorship enquiries</value></data>
+  <data name="About_Tagline" xml:space="preserve"><value>Lightweight Windows screen capture for games without a built-in screenshot key.</value></data>
+  <data name="About_ThirdPartySection" xml:space="preserve"><value>Third-party components</value></data>
+  <data name="About_TranslationDisclaimer" xml:space="preserve"><value>Translations</value></data>
+  <data name="About_TranslationDisclaimerBody" xml:space="preserve"><value>The Vietnamese, Arabic, Japanese, Simplified Chinese, Korean, Spanish, French, German, Brazilian Portuguese, and Russian language packs are machine-assisted. Terminology may not match native conventions, and some technical words (hotkey, toast, frame, etc.) are kept in English on purpose. Native speakers willing to proofread are warmly invited to submit pull requests against the .resx files in src/CaptureImage.UI/Resources/Strings/.</value></data>
+  <data name="About_VersionLabel" xml:space="preserve"><value>Version</value></data>
+
+  <data name="Common_Browse" xml:space="preserve"><value>Browse…</value></data>
+  <data name="Common_Cancel" xml:space="preserve"><value>Cancel</value></data>
+  <data name="Common_Close" xml:space="preserve"><value>Close</value></data>
+  <data name="Common_CopyImage" xml:space="preserve"><value>Copy image</value></data>
+
+  <data name="Dashboard_Arm" xml:space="preserve"><value>Arm</value></data>
+  <data name="Dashboard_CaptureMonitor" xml:space="preserve"><value>Capture screen</value></data>
+  <data name="Dashboard_CaptureRegion" xml:space="preserve"><value>Capture region</value></data>
+  <data name="Dashboard_CaptureSelected" xml:space="preserve"><value>Capture window</value></data>
+  <data name="Dashboard_CreateProfile" xml:space="preserve"><value>Create profile</value></data>
+  <data name="Dashboard_Disarm" xml:space="preserve"><value>Disarm</value></data>
+  <data name="Dashboard_EmptyState" xml:space="preserve"><value>No visible windows to capture — launch your game or app, then click Refresh.</value></data>
+  <data name="Dashboard_Hotkeys" xml:space="preserve"><value>Capture hotkeys</value></data>
+  <data name="Dashboard_Locked" xml:space="preserve"><value>Locked</value></data>
+  <data name="Dashboard_LockedLabel" xml:space="preserve"><value>Window hotkey captures:</value></data>
+  <data name="Dashboard_LockSelected" xml:space="preserve"><value>Lock as target</value></data>
+  <data name="Dashboard_Minimized" xml:space="preserve"><value>Minimized</value></data>
+  <data name="Dashboard_ProfileBadge" xml:space="preserve"><value>Profile: {0}</value></data>
+  <data name="Dashboard_Refresh" xml:space="preserve"><value>Refresh</value></data>
+  <data name="Dashboard_Search" xml:space="preserve"><value>Search windows</value></data>
+  <data name="Dashboard_SteamBadge" xml:space="preserve"><value>STEAM</value></data>
+  <data name="Dashboard_SteamBadgeTooltip" xml:space="preserve"><value>Steam game: {0} (AppId {1}). F12 screenshot is available via Steam Overlay. Some anti-cheat protected games may block external capture.</value></data>
+  <data name="Dashboard_Subtitle" xml:space="preserve"><value>Arm the hotkeys, then press one in your game. Lock a window to always capture that window.</value></data>
+  <data name="Dashboard_Title" xml:space="preserve"><value>Dashboard</value></data>
+  <data name="Dashboard_Unlock" xml:space="preserve"><value>Unlock</value></data>
+  <data name="Dashboard_Windows" xml:space="preserve"><value>Open windows</value></data>
+
+  <data name="Error_Cancelled" xml:space="preserve"><value>Capture cancelled.</value></data>
+  <data name="Error_EncodingFailure" xml:space="preserve"><value>The image could not be encoded.</value></data>
+  <data name="Error_FileWriteFailure" xml:space="preserve"><value>The file could not be saved. Check the output folder and free disk space.</value></data>
+  <data name="Error_GraphicsDeviceFailure" xml:space="preserve"><value>The graphics driver stopped responding. Try again in a moment.</value></data>
+  <data name="Error_NoFrameArrived" xml:space="preserve"><value>No image arrived from Windows. Make sure the window is visible and try again.</value></data>
+  <data name="Error_NoTarget" xml:space="preserve"><value>No window to capture. Bring a game to the front or lock a window on the Dashboard.</value></data>
+  <data name="Error_NotSupported" xml:space="preserve"><value>Screen capture isn't supported on this system.</value></data>
+  <data name="Error_ProcessExited" xml:space="preserve"><value>The game or app has exited.</value></data>
+  <data name="Error_ProtectedContent" xml:space="preserve"><value>This window blocks screen capture (protected content).</value></data>
+  <data name="Error_TargetGone" xml:space="preserve"><value>The window was closed.</value></data>
+  <data name="Error_TargetMinimized" xml:space="preserve"><value>The window is minimized. Restore it and try again.</value></data>
+  <data name="Error_Unknown" xml:space="preserve"><value>Something went wrong. The log has the details.</value></data>
+
+  <data name="Hotkey_None" xml:space="preserve"><value>Not set</value></data>
+  <data name="Hotkey_PressKeys" xml:space="preserve"><value>Press keys…</value></data>
+  <data name="Hotkey_ProblemMessage" xml:space="preserve"><value>Another app is using one of the capture hotkeys, or a combination is invalid. Pick a different one in Settings.</value></data>
+  <data name="Hotkey_ProblemTitle" xml:space="preserve"><value>A hotkey isn't working</value></data>
+  <data name="Hotkey_StatusActive" xml:space="preserve"><value>Active</value></data>
+  <data name="Hotkey_StatusConflict" xml:space="preserve"><value>In use by another app</value></data>
+  <data name="Hotkey_StatusInactive" xml:space="preserve"><value>Off until armed</value></data>
+  <data name="Hotkey_StatusInvalid" xml:space="preserve"><value>Invalid combination</value></data>
+  <data name="Hotkey_StatusUnbound" xml:space="preserve"><value>Not set</value></data>
+  <data name="Hotkey_TakenByOtherApp" xml:space="preserve"><value>Another app already uses this combination. Choose a different one.</value></data>
+  <data name="Hotkey_UsedByMode" xml:space="preserve"><value>Already used for {0}.</value></data>
+  <data name="Hotkey_Validation_ModifierOnlyKey" xml:space="preserve"><value>A modifier key alone isn't enough — add a letter or an F-key.</value></data>
+  <data name="Hotkey_Validation_NoPrimaryKey" xml:space="preserve"><value>Select a primary key (e.g. a letter or an F-key).</value></data>
+  <data name="Hotkey_Validation_RequiresModifier" xml:space="preserve"><value>Plain letters and digits need at least one modifier (Ctrl/Alt/Shift/Win).</value></data>
+  <data name="Hotkey_Validation_ReservedByWindows" xml:space="preserve"><value>This combination is reserved by Windows and cannot be captured.</value></data>
+
+  <data name="Library_AllGames" xml:space="preserve"><value>All games</value></data>
+  <data name="Library_CopyFailed" xml:space="preserve"><value>The image could not be read.</value></data>
+  <data name="Library_CopyPath" xml:space="preserve"><value>Copy path</value></data>
+  <data name="Library_Delete" xml:space="preserve"><value>Delete</value></data>
+  <data name="Library_Deleted" xml:space="preserve"><value>Moved to the Recycle Bin</value></data>
+  <data name="Library_DeleteFailed" xml:space="preserve"><value>The file could not be moved to the Recycle Bin.</value></data>
+  <data name="Library_DeleteMessage" xml:space="preserve"><value>Move {0} to the Recycle Bin?</value></data>
+  <data name="Library_DeleteTitle" xml:space="preserve"><value>Delete capture</value></data>
+  <data name="Library_Empty" xml:space="preserve"><value>No captures yet. Arm the hotkeys and take your first screenshot.</value></data>
+  <data name="Library_GameFilter" xml:space="preserve"><value>Filter by game</value></data>
+  <data name="Library_HdrOnly" xml:space="preserve"><value>HDR only</value></data>
+  <data name="Library_Open" xml:space="preserve"><value>Open</value></data>
+  <data name="Library_OpenHdr" xml:space="preserve"><value>Open HDR</value></data>
+  <data name="Library_Pin" xml:space="preserve"><value>Pin</value></data>
+  <data name="Library_Reveal" xml:space="preserve"><value>Show in folder</value></data>
+  <data name="Library_Search" xml:space="preserve"><value>Search captures</value></data>
+  <data name="Library_SelectHint" xml:space="preserve"><value>Select a capture to see its details.</value></data>
+  <data name="Library_Summary" xml:space="preserve"><value>{0} of {1} captures</value></data>
+  <data name="Library_Title" xml:space="preserve"><value>Capture library</value></data>
+
+  <data name="Log_Clear" xml:space="preserve"><value>Clear</value></data>
+  <data name="Log_EmptyState" xml:space="preserve"><value>No log events yet. Live events from the capture engine will appear here.</value></data>
+  <data name="Log_Pause" xml:space="preserve"><value>Pause</value></data>
+  <data name="Log_RevealFolder" xml:space="preserve"><value>Open folder</value></data>
+
+  <data name="Logs_CopyAll" xml:space="preserve"><value>Copy all</value></data>
+  <data name="Logs_CopySelected" xml:space="preserve"><value>Copy selected line</value></data>
+  <data name="Logs_Level" xml:space="preserve"><value>Min level</value></data>
+  <data name="Logs_LevelAll" xml:space="preserve"><value>All levels</value></data>
+  <data name="Logs_Search" xml:space="preserve"><value>Search the log</value></data>
+  <data name="Logs_Subtitle" xml:space="preserve"><value>Recent events from this session. Use Export diagnostics when you report a problem.</value></data>
+  <data name="Logs_Title" xml:space="preserve"><value>Real-time log</value></data>
+
+  <data name="Mode_Monitor" xml:space="preserve"><value>Screen</value></data>
+  <data name="Mode_Region" xml:space="preserve"><value>Region</value></data>
+  <data name="Mode_Window" xml:space="preserve"><value>Window</value></data>
+
+  <data name="Nav_About" xml:space="preserve"><value>About</value></data>
+  <data name="Nav_Dashboard" xml:space="preserve"><value>Dashboard</value></data>
+  <data name="Nav_Library" xml:space="preserve"><value>Library</value></data>
+  <data name="Nav_Logs" xml:space="preserve"><value>Log</value></data>
+  <data name="Nav_Profiles" xml:space="preserve"><value>Profiles</value></data>
+  <data name="Nav_Settings" xml:space="preserve"><value>Settings</value></data>
+  <data name="Nav_Update" xml:space="preserve"><value>Update</value></data>
+
+  <data name="PinnedWindow_Close" xml:space="preserve"><value>Close</value></data>
+  <data name="PinnedWindow_Open" xml:space="preserve"><value>Show in Explorer</value></data>
+
+  <data name="Preview_Discard" xml:space="preserve"><value>Discard</value></data>
+  <data name="Preview_ExtractText" xml:space="preserve"><value>Extract text (OCR)</value></data>
+  <data name="Preview_Prompt" xml:space="preserve"><value>Save this capture?</value></data>
+  <data name="Preview_Save" xml:space="preserve"><value>Save</value></data>
+  <data name="Preview_Title" xml:space="preserve"><value>Preview</value></data>
+
+  <data name="Profiles_Add" xml:space="preserve"><value>Add profile</value></data>
+  <data name="Profiles_AutoArm" xml:space="preserve"><value>Arm automatically</value></data>
+  <data name="Profiles_AutoArmBadge" xml:space="preserve"><value>Auto-arm</value></data>
+  <data name="Profiles_AutoArmHint" xml:space="preserve"><value>Arm the hotkeys when this game comes to the front.</value></data>
+  <data name="Profiles_AutomationSection" xml:space="preserve"><value>Automation</value></data>
+  <data name="Profiles_Delete" xml:space="preserve"><value>Delete</value></data>
+  <data name="Profiles_DeleteMessage" xml:space="preserve"><value>Delete the profile "{0}"? Captures already saved are kept.</value></data>
+  <data name="Profiles_DeleteTitle" xml:space="preserve"><value>Delete profile</value></data>
+  <data name="Profiles_DisabledBadge" xml:space="preserve"><value>Off</value></data>
+  <data name="Profiles_Empty" xml:space="preserve"><value>No profiles yet. Add one here, or use Create profile on the Dashboard while the game is running.</value></data>
+  <data name="Profiles_Enabled" xml:space="preserve"><value>Profile enabled</value></data>
+  <data name="Profiles_ExecutableName" xml:space="preserve"><value>Executable name</value></data>
+  <data name="Profiles_ExecutableNameHint" xml:space="preserve"><value>Matches the game wherever it is installed.</value></data>
+  <data name="Profiles_ExecutablePath" xml:space="preserve"><value>Executable path</value></data>
+  <data name="Profiles_ExecutablePathHint" xml:space="preserve"><value>The most specific match.</value></data>
+  <data name="Profiles_LockTarget" xml:space="preserve"><value>Lock the game window</value></data>
+  <data name="Profiles_LockTargetHint" xml:space="preserve"><value>The Window hotkey then captures the game even when another window is in front.</value></data>
+  <data name="Profiles_MatchesNothing" xml:space="preserve"><value>Set an executable path, an executable name or a Steam AppId.</value></data>
+  <data name="Profiles_MatchesNothingTitle" xml:space="preserve"><value>This profile doesn't match any game yet</value></data>
+  <data name="Profiles_MatchSection" xml:space="preserve"><value>Which game</value></data>
+  <data name="Profiles_Name" xml:space="preserve"><value>Name</value></data>
+  <data name="Profiles_NewProfile" xml:space="preserve"><value>New profile</value></data>
+  <data name="Profiles_OutputFolder" xml:space="preserve"><value>Output folder</value></data>
+  <data name="Profiles_OutputSection" xml:space="preserve"><value>Output</value></data>
+  <data name="Profiles_PickExecutable" xml:space="preserve"><value>Choose the game executable</value></data>
+  <data name="Profiles_SteamAppId" xml:space="preserve"><value>Steam AppId</value></data>
+  <data name="Profiles_SteamAppIdInvalid" xml:space="preserve"><value>Enter a number, e.g. 1245620.</value></data>
+  <data name="Profiles_Subtitle" xml:space="preserve"><value>Per-game output folder, format and file name. A profile can also arm the hotkeys when its game starts.</value></data>
+  <data name="Profiles_Title" xml:space="preserve"><value>Game profiles</value></data>
+  <data name="Profiles_UseGlobal" xml:space="preserve"><value>Use the global setting</value></data>
+  <data name="Profiles_UseGlobalButton" xml:space="preserve"><value>Use global</value></data>
+
+  <data name="Region_DragHint" xml:space="preserve"><value>Drag to select an area · Click for the whole screen · Esc to cancel</value></data>
+
+  <data name="Settings_AdvancedSection" xml:space="preserve"><value>Advanced</value></data>
+  <data name="Settings_AppearanceSection" xml:space="preserve"><value>Appearance</value></data>
+  <data name="Settings_ArmOnStartup" xml:space="preserve"><value>Arm when CaptureImage starts</value></data>
+  <data name="Settings_ArmOnStartupHint" xml:space="preserve"><value>While armed, other apps don't receive these key combinations.</value></data>
+  <data name="Settings_AutoPinAfterCapture" xml:space="preserve"><value>Pin a floating thumbnail after each capture</value></data>
+  <data name="Settings_BackupSettings" xml:space="preserve"><value>Back up and restore settings</value></data>
+  <data name="Settings_BehaviorSection" xml:space="preserve"><value>Behavior</value></data>
+  <data name="Settings_CaptureSection" xml:space="preserve"><value>Capture</value></data>
+  <data name="Settings_Clipboard" xml:space="preserve"><value>Clipboard mode</value></data>
+  <data name="Settings_ClipboardCopy" xml:space="preserve"><value>Copy only (no file)</value></data>
+  <data name="Settings_ClipboardCopyAndSave" xml:space="preserve"><value>Copy + save file</value></data>
+  <data name="Settings_ClipboardNone" xml:space="preserve"><value>Off (file only)</value></data>
+  <data name="Settings_Countdown" xml:space="preserve"><value>Capture countdown</value></data>
+  <data name="Settings_Countdown10s" xml:space="preserve"><value>10 seconds</value></data>
+  <data name="Settings_Countdown3s" xml:space="preserve"><value>3 seconds</value></data>
+  <data name="Settings_Countdown5s" xml:space="preserve"><value>5 seconds</value></data>
+  <data name="Settings_CountdownOff" xml:space="preserve"><value>Off (no delay)</value></data>
+  <data name="Settings_DataFolder" xml:space="preserve"><value>Data folder</value></data>
+  <data name="Settings_DiagnosticsExported" xml:space="preserve"><value>Diagnostics exported</value></data>
+  <data name="Settings_Export" xml:space="preserve"><value>Export…</value></data>
+  <data name="Settings_ExportDiagnostics" xml:space="preserve"><value>Export diagnostics</value></data>
+  <data name="Settings_ExportDiagnosticsButton" xml:space="preserve"><value>Export…</value></data>
+  <data name="Settings_ExportDiagnosticsHint" xml:space="preserve"><value>A zip with recent logs, your settings and system information (user paths removed) to attach to a bug report.</value></data>
+  <data name="Settings_ExportFailed" xml:space="preserve"><value>The export failed.</value></data>
+  <data name="Settings_ExportSettings" xml:space="preserve"><value>Export settings</value></data>
+  <data name="Settings_FileNamePreview" xml:space="preserve"><value>Example:</value></data>
+  <data name="Settings_FileNameTemplate" xml:space="preserve"><value>File name template</value></data>
+  <data name="Settings_FileNameTokens" xml:space="preserve"><value>Tokens: {Game} {Process} {Mode} {yyyy} {MM} {dd} {HH} {mm} {ss} {counter}</value></data>
+  <data name="Settings_Format" xml:space="preserve"><value>Default format</value></data>
+  <data name="Settings_HdrAuto" xml:space="preserve"><value>Auto (HDR on HDR displays)</value></data>
+  <data name="Settings_HdrMode" xml:space="preserve"><value>HDR capture</value></data>
+  <data name="Settings_HdrModeHint" xml:space="preserve"><value>On HDR displays the full HDR frame is captured and tone-mapped to a normal image.</value></data>
+  <data name="Settings_HdrOff" xml:space="preserve"><value>Off (always SDR)</value></data>
+  <data name="Settings_HdrSection" xml:space="preserve"><value>HDR</value></data>
+  <data name="Settings_HotkeyClear" xml:space="preserve"><value>Clear</value></data>
+  <data name="Settings_HotkeyHint" xml:space="preserve"><value>Click a hotkey, then press the new combination. Esc cancels, Backspace clears. Hotkeys only work while armed.</value></data>
+  <data name="Settings_HotkeyMonitorDescription" xml:space="preserve"><value>Captures the screen under the mouse pointer.</value></data>
+  <data name="Settings_HotkeyRecord" xml:space="preserve"><value>Record…</value></data>
+  <data name="Settings_HotkeyRegionDescription" xml:space="preserve"><value>Freezes every screen and lets you drag an area.</value></data>
+  <data name="Settings_HotkeyReset" xml:space="preserve"><value>Reset</value></data>
+  <data name="Settings_HotkeysSection" xml:space="preserve"><value>Hotkeys</value></data>
+  <data name="Settings_HotkeyWindowDescription" xml:space="preserve"><value>Captures the locked window, or the window in front.</value></data>
+  <data name="Settings_Import" xml:space="preserve"><value>Import…</value></data>
+  <data name="Settings_ImportFailed" xml:space="preserve"><value>These settings could not be imported.</value></data>
+  <data name="Settings_ImportSettings" xml:space="preserve"><value>Import settings</value></data>
+  <data name="Settings_IncludeCursor" xml:space="preserve"><value>Include the mouse pointer</value></data>
+  <data name="Settings_IncludeWindowFrame" xml:space="preserve"><value>Include the window frame</value></data>
+  <data name="Settings_IncludeWindowFrameHint" xml:space="preserve"><value>Keeps the title bar and borders in window captures.</value></data>
+  <data name="Settings_JpegQuality" xml:space="preserve"><value>JPEG quality</value></data>
+  <data name="Settings_Language" xml:space="preserve"><value>Language</value></data>
+  <data name="Settings_LanguageHint" xml:space="preserve"><value>Changes apply immediately.</value></data>
+  <data name="Settings_LogLevel" xml:space="preserve"><value>Minimum log level</value></data>
+  <data name="Settings_LogLevelDebug" xml:space="preserve"><value>Debug</value></data>
+  <data name="Settings_LogLevelError" xml:space="preserve"><value>Errors only</value></data>
+  <data name="Settings_LogLevelHint" xml:space="preserve"><value>Filters the rolling log file and viewer. Pick Debug for support diagnostics, Information for day-to-day, Warning or Error to keep logs quiet.</value></data>
+  <data name="Settings_LogLevelInformation" xml:space="preserve"><value>Information</value></data>
+  <data name="Settings_LogLevelWarning" xml:space="preserve"><value>Warnings</value></data>
+  <data name="Settings_MinimizeToTray" xml:space="preserve"><value>Close button minimizes to tray</value></data>
+  <data name="Settings_OpenFolder" xml:space="preserve"><value>Open folder</value></data>
+  <data name="Settings_OpenFolderAfterSave" xml:space="preserve"><value>Open output folder after save</value></data>
+  <data name="Settings_OutputFolder" xml:space="preserve"><value>Output folder</value></data>
+  <data name="Settings_OutputFolderUnavailable" xml:space="preserve"><value>The output folder can't be opened.</value></data>
+  <data name="Settings_OutputSection" xml:space="preserve"><value>Output</value></data>
+  <data name="Settings_PngBalanced" xml:space="preserve"><value>Balanced</value></data>
+  <data name="Settings_PngCompression" xml:space="preserve"><value>PNG compression</value></data>
+  <data name="Settings_PngCompressionHint" xml:space="preserve"><value>Smaller files take longer to save.</value></data>
+  <data name="Settings_PngFast" xml:space="preserve"><value>Fast (larger files)</value></data>
+  <data name="Settings_PngSmallest" xml:space="preserve"><value>Smallest (slower)</value></data>
+  <data name="Settings_PreviewBeforeSave" xml:space="preserve"><value>Preview each capture before saving</value></data>
+  <data name="Settings_Reset" xml:space="preserve"><value>Reset</value></data>
+  <data name="Settings_ResetDone" xml:space="preserve"><value>Settings restored to defaults</value></data>
+  <data name="Settings_ResetMessage" xml:space="preserve"><value>Restore all settings to their defaults? The current file is backed up first, and your language is kept.</value></data>
+  <data name="Settings_ResetSettings" xml:space="preserve"><value>Reset all settings</value></data>
+  <data name="Settings_ResetSettingsHint" xml:space="preserve"><value>A backup of the current file is kept in the data folder.</value></data>
+  <data name="Settings_ResetTitle" xml:space="preserve"><value>Reset settings</value></data>
+  <data name="Settings_ResetToDefault" xml:space="preserve"><value>Reset to default</value></data>
+  <data name="Settings_SaveHdrSidecar" xml:space="preserve"><value>Keep the original HDR image</value></data>
+  <data name="Settings_SaveHdrSidecarHint" xml:space="preserve"><value>Saves a JPEG XR (.jxr) file next to each HDR capture.</value></data>
+  <data name="Settings_ShowNotifications" xml:space="preserve"><value>Show notifications</value></data>
+  <data name="Settings_SoundEnabled" xml:space="preserve"><value>Play capture sound</value></data>
+  <data name="Settings_StartMinimized" xml:space="preserve"><value>Start minimized to the tray</value></data>
+  <data name="Settings_StartupSection" xml:space="preserve"><value>Startup</value></data>
+  <data name="Settings_StartWithWindows" xml:space="preserve"><value>Start with Windows</value></data>
+  <data name="Settings_StartWithWindowsFailed" xml:space="preserve"><value>Windows startup could not be changed.</value></data>
+  <data name="Settings_Subtitle" xml:space="preserve"><value>Changes are saved automatically.</value></data>
+  <data name="Settings_Theme" xml:space="preserve"><value>Theme</value></data>
+  <data name="Settings_ThemeDark" xml:space="preserve"><value>Dark</value></data>
+  <data name="Settings_ThemeHighContrast" xml:space="preserve"><value>High contrast</value></data>
+  <data name="Settings_ThemeLight" xml:space="preserve"><value>Light</value></data>
+  <data name="Settings_ThemeSystem" xml:space="preserve"><value>System</value></data>
+  <data name="Settings_Title" xml:space="preserve"><value>Settings</value></data>
+  <data name="Settings_WebpQuality" xml:space="preserve"><value>WebP quality</value></data>
+
+  <data name="Status_Armed" xml:space="preserve"><value>Armed — press a capture hotkey.</value></data>
+  <data name="Status_ArmedLocked" xml:space="preserve"><value>Armed — the Window hotkey captures {0}.</value></data>
+  <data name="Status_Capturing" xml:space="preserve"><value>Capturing…</value></data>
+  <data name="Status_Idle" xml:space="preserve"><value>Not armed — the capture hotkeys are off.</value></data>
+  <data name="Status_Saving" xml:space="preserve"><value>Saving…</value></data>
+  <data name="Status_Selecting" xml:space="preserve"><value>Drag to select an area (Esc to cancel).</value></data>
+
+  <data name="Toast_AutoArmed" xml:space="preserve"><value>Hotkeys armed for this game</value></data>
+  <data name="Toast_CaptureFailed" xml:space="preserve"><value>Capture failed</value></data>
+  <data name="Toast_CaptureSaved" xml:space="preserve"><value>Capture saved</value></data>
+  <data name="Toast_CaptureSavedCopied" xml:space="preserve"><value>{0} (also copied to the clipboard)</value></data>
+  <data name="Toast_ClipboardCopied" xml:space="preserve"><value>Copied to clipboard</value></data>
+  <data name="Toast_Countdown" xml:space="preserve"><value>Capturing in {0}…</value></data>
+  <data name="Toast_CountdownTitle" xml:space="preserve"><value>Capture countdown</value></data>
+  <data name="Toast_Error" xml:space="preserve"><value>Error</value></data>
+  <data name="Toast_OcrEmpty" xml:space="preserve"><value>No text found in image</value></data>
+  <data name="Toast_OcrFailed" xml:space="preserve"><value>Text recognition failed.</value></data>
+  <data name="Toast_OcrSuccess" xml:space="preserve"><value>{0} words copied</value></data>
+  <data name="Toast_OcrUnavailable" xml:space="preserve"><value>OCR engine unavailable for this language</value></data>
+  <data name="Toast_PathCopied" xml:space="preserve"><value>Path copied</value></data>
+  <data name="Toast_SettingsExported" xml:space="preserve"><value>Settings exported</value></data>
+  <data name="Toast_SettingsImported" xml:space="preserve"><value>Settings imported</value></data>
+
+  <data name="Tray_Arm" xml:space="preserve"><value>Arm hotkeys</value></data>
+  <data name="Tray_CaptureMonitor" xml:space="preserve"><value>Capture screen</value></data>
+  <data name="Tray_CaptureRegion" xml:space="preserve"><value>Capture region</value></data>
+  <data name="Tray_CaptureWindow" xml:space="preserve"><value>Capture window</value></data>
+  <data name="Tray_Disarm" xml:space="preserve"><value>Disarm hotkeys</value></data>
+  <data name="Tray_Exit" xml:space="preserve"><value>Exit</value></data>
+  <data name="Tray_OpenFolder" xml:space="preserve"><value>Open captures folder</value></data>
+  <data name="Tray_ShowWindow" xml:space="preserve"><value>Show CaptureImage</value></data>
+
+  <data name="Update_Check" xml:space="preserve"><value>Check for updates</value></data>
+  <data name="Update_CurrentVersion" xml:space="preserve"><value>Installed version:</value></data>
+  <data name="Update_Download" xml:space="preserve"><value>Download</value></data>
+  <data name="Update_Install" xml:space="preserve"><value>Install &amp; restart</value></data>
+  <data name="Update_Log" xml:space="preserve"><value>Log</value></data>
+  <data name="Update_OpenReleases" xml:space="preserve"><value>Release page</value></data>
+  <data name="Update_Progress" xml:space="preserve"><value>Update progress</value></data>
+  <data name="Update_ReleaseNotes" xml:space="preserve"><value>Release notes</value></data>
+  <data name="Update_Status_Checking" xml:space="preserve"><value>Checking for updates…</value></data>
+  <data name="Update_Status_Downloading" xml:space="preserve"><value>Downloading the update…</value></data>
+  <data name="Update_Status_Failed" xml:space="preserve"><value>Something went wrong. Details are in the log below.</value></data>
+  <data name="Update_Status_Idle" xml:space="preserve"><value>Check GitHub for a newer version.</value></data>
+  <data name="Update_Status_Installing" xml:space="preserve"><value>Installing — CaptureImage restarts in a moment…</value></data>
+  <data name="Update_Status_Ready" xml:space="preserve"><value>The update is ready. Restart to install it.</value></data>
+  <data name="Update_Status_Unavailable" xml:space="preserve"><value>Updates are only available in the installed app (not the portable zip or a source build).</value></data>
+  <data name="Update_Status_UpdateAvailable" xml:space="preserve"><value>Version {0} is available.</value></data>
+  <data name="Update_Status_UpToDate" xml:space="preserve"><value>You have the latest version.</value></data>
+  <data name="Update_Subtitle" xml:space="preserve"><value>Updates come from GitHub Releases and are installed when CaptureImage restarts.</value></data>
+  <data name="Update_Title" xml:space="preserve"><value>Update</value></data>
+
+</root>

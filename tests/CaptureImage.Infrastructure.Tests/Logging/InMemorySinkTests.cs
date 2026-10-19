@@ -1,9 +1,11 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 // Copyright (c) CaptureImage Contributors
 
+using System.Globalization;
 using AwesomeAssertions;
 using CaptureImage.Core.Models;
 using CaptureImage.Infrastructure.Logging;
+using Serilog;
 using Serilog.Events;
 using Serilog.Parsing;
 using Xunit;
@@ -11,138 +13,227 @@ using Xunit;
 namespace CaptureImage.Infrastructure.Tests.Logging;
 
 /// <summary>
-/// Covers the ring-buffer semantics, pause/resume behaviour, and <c>Snapshot()</c> copy
-/// guarantees of <see cref="InMemorySink"/> — the real-time log viewer's event source.
+/// <see cref="InMemorySink"/>, the log viewer's ring buffer: capacity and exception-size
+/// bounds, pause/clear, snapshot isolation and how messages are rendered.
 /// </summary>
 public class InMemorySinkTests
 {
+    /// <summary>InMemorySink.MaxExceptionLength (private).</summary>
+    private const int MaxExceptionLength = 8_192;
+
     [Fact]
-    public void Emit_AppendsToBuffer_AndRaisesEmitted_WhenNotPaused()
+    public void Emit_BuffersTheEntry_AndRaisesEmitted()
     {
         var sink = new InMemorySink();
         var raised = new List<LogEntry>();
         sink.Emitted += (_, entry) => raised.Add(entry);
+        var timestamp = new DateTimeOffset(2026, 10, 19, 7, 15, 0, TimeSpan.FromHours(7));
 
-        sink.Emit(Event("hello", LogEventLevel.Information));
+        sink.Emit(Event("hello", LogEventLevel.Information, timestamp: timestamp));
 
-        sink.Snapshot().Should().HaveCount(1);
-        sink.Snapshot()[0].Message.Should().Be("hello");
-        raised.Should().HaveCount(1);
-        raised[0].Level.Should().Be(LogLevel.Information);
+        var entry = sink.Snapshot().Should().ContainSingle().Subject;
+        entry.Message.Should().Be("hello");
+        entry.Level.Should().Be(LogEntryLevel.Information);
+        entry.Timestamp.Should().Be(timestamp);
+        entry.SourceContext.Should().BeEmpty();
+        entry.Exception.Should().BeNull();
+        raised.Should().ContainSingle().Which.Should().BeSameAs(entry);
+    }
+
+    [Theory]
+    [InlineData(LogEventLevel.Verbose, LogEntryLevel.Verbose)]
+    [InlineData(LogEventLevel.Debug, LogEntryLevel.Debug)]
+    [InlineData(LogEventLevel.Information, LogEntryLevel.Information)]
+    [InlineData(LogEventLevel.Warning, LogEntryLevel.Warning)]
+    [InlineData(LogEventLevel.Error, LogEntryLevel.Error)]
+    [InlineData(LogEventLevel.Fatal, LogEntryLevel.Fatal)]
+    public void Emit_MapsEverySerilogLevel(LogEventLevel level, LogEntryLevel expected)
+    {
+        var sink = new InMemorySink();
+
+        sink.Emit(Event("x", level));
+
+        sink.Snapshot().Should().ContainSingle().Which.Level.Should().Be(expected);
     }
 
     [Fact]
-    public void Emit_WhilePaused_StillBuffersButDoesNotRaiseEmitted()
+    public void Emit_BeyondCapacity_DropsTheOldestEntries()
+    {
+        var sink = new InMemorySink();
+
+        for (var i = 0; i < InMemorySink.MaxCapacity + 5; i++)
+        {
+            sink.Emit(Event("msg-" + i, LogEventLevel.Information));
+        }
+
+        var snapshot = sink.Snapshot();
+        snapshot.Should().HaveCount(InMemorySink.MaxCapacity);
+        snapshot[0].Message.Should().Be("msg-5");
+        snapshot[^1].Message.Should().Be("msg-" + (InMemorySink.MaxCapacity + 4));
+    }
+
+    [Fact]
+    public void Emit_FromManyThreads_StaysWithinCapacity()
+    {
+        var sink = new InMemorySink();
+        var raised = 0;
+        sink.Emitted += (_, _) => Interlocked.Increment(ref raised);
+
+        Parallel.For(0, 4 * InMemorySink.MaxCapacity, new ParallelOptions { CancellationToken = TestContext.Current.CancellationToken },
+            i => sink.Emit(Event("m" + i, LogEventLevel.Debug)));
+
+        sink.Snapshot().Should().HaveCount(InMemorySink.MaxCapacity);
+        raised.Should().Be(4 * InMemorySink.MaxCapacity);
+    }
+
+    [Fact]
+    public void Emit_LongExceptionText_IsTruncated()
+    {
+        var sink = new InMemorySink();
+        var exception = new InvalidOperationException(new string('x', 3 * MaxExceptionLength));
+
+        sink.Emit(Event("boom", LogEventLevel.Error, exception));
+
+        var text = sink.Snapshot()[0].Exception;
+        text.Should().NotBeNull();
+        text.Should().StartWith(exception.ToString()[..MaxExceptionLength]);
+        text.Should().EndWith(Environment.NewLine + "…");
+        text.Should().HaveLength(MaxExceptionLength + Environment.NewLine.Length + 1);
+    }
+
+    [Fact]
+    public void Emit_ShortExceptionText_IsKeptWhole()
+    {
+        var sink = new InMemorySink();
+        InvalidOperationException exception;
+        try
+        {
+            throw new InvalidOperationException("short failure");
+        }
+        catch (InvalidOperationException ex)
+        {
+            exception = ex;
+        }
+
+        sink.Emit(Event("failed", LogEventLevel.Warning, exception));
+
+        sink.Snapshot()[0].Exception.Should().Be(exception.ToString());
+    }
+
+    [Fact]
+    public void Paused_SuppressesEmitted_ButStillBuffers()
     {
         var sink = new InMemorySink { Paused = true };
         var raised = new List<LogEntry>();
         sink.Emitted += (_, entry) => raised.Add(entry);
 
-        sink.Emit(Event("hidden", LogEventLevel.Warning));
+        sink.Emit(Event("while paused", LogEventLevel.Warning));
 
-        sink.Snapshot().Should().HaveCount(1);
+        sink.Paused.Should().BeTrue();
+        sink.Snapshot().Should().ContainSingle().Which.Message.Should().Be("while paused");
         raised.Should().BeEmpty();
-    }
 
-    [Fact]
-    public void Emit_OverflowingCapacity_EvictsOldestFirst()
-    {
-        var sink = new InMemorySink();
+        sink.Paused = false;
+        sink.Emit(Event("after resume", LogEventLevel.Warning));
 
-        // Fire one beyond capacity so the first event has to be dropped.
-        for (var i = 0; i < InMemorySink.MaxCapacity + 1; i++)
-        {
-            sink.Emit(Event($"msg-{i}", LogEventLevel.Information));
-        }
-
-        var snapshot = sink.Snapshot();
-        snapshot.Should().HaveCount(InMemorySink.MaxCapacity);
-        snapshot[0].Message.Should().Be("msg-1"); // index 0 evicted
-        snapshot[^1].Message.Should().Be($"msg-{InMemorySink.MaxCapacity}");
-    }
-
-    [Fact]
-    public void Snapshot_ReturnsCopy_MutationsDontAffectBuffer()
-    {
-        var sink = new InMemorySink();
-        sink.Emit(Event("a", LogEventLevel.Information));
-
-        var firstSnapshot = sink.Snapshot();
-        sink.Emit(Event("b", LogEventLevel.Information));
-
-        // The earlier snapshot is frozen at the moment it was taken.
-        firstSnapshot.Should().HaveCount(1);
-        firstSnapshot[0].Message.Should().Be("a");
-        // But the sink itself has moved on.
+        raised.Should().ContainSingle().Which.Message.Should().Be("after resume");
         sink.Snapshot().Should().HaveCount(2);
     }
 
     [Fact]
-    public void Clear_EmptiesBuffer()
+    public void Clear_EmptiesTheBuffer_AndLaterEntriesAreKept()
     {
         var sink = new InMemorySink();
         sink.Emit(Event("x", LogEventLevel.Information));
         sink.Emit(Event("y", LogEventLevel.Information));
 
         sink.Clear();
-
         sink.Snapshot().Should().BeEmpty();
+
+        sink.Emit(Event("z", LogEventLevel.Information));
+        sink.Snapshot().Should().ContainSingle().Which.Message.Should().Be("z");
     }
 
     [Fact]
-    public void Emit_CapturesCallerProperties_WhenPresentOnEvent()
+    public void Snapshot_IsACopy()
     {
         var sink = new InMemorySink();
-        var ev = EventWithCaller("with caller", "Engine.cs", 42, "Start");
+        sink.Emit(Event("a", LogEventLevel.Information));
 
-        sink.Emit(ev);
+        var first = sink.Snapshot();
+        sink.Emit(Event("b", LogEventLevel.Information));
 
-        var entry = sink.Snapshot()[0];
-        entry.File.Should().Be("Engine.cs");
-        entry.Line.Should().Be(42);
-        entry.Member.Should().Be("Start");
-        entry.FileLineText.Should().Be("Engine.cs:42");
+        first.Should().ContainSingle().Which.Message.Should().Be("a");
+        sink.Snapshot().Should().HaveCount(2);
     }
 
     [Fact]
-    public void Emit_LeavesCallerPropertiesNull_WhenAbsent()
+    public void Message_RendersStringArgumentsWithoutQuotes_LikeTheLogFile()
     {
         var sink = new InMemorySink();
-        sink.Emit(Event("plain", LogEventLevel.Information));
+        using var logger = new LoggerConfiguration().MinimumLevel.Verbose().WriteTo.Sink(sink).CreateLogger();
 
-        var entry = sink.Snapshot()[0];
-        entry.File.Should().BeNull();
-        entry.Line.Should().BeNull();
-        entry.Member.Should().BeNull();
-        entry.FileLineText.Should().BeEmpty();
+        logger.Information("Saved {FileName} to {Folder} ({Count} files)", "shot.png", @"D:\Captures", 3);
+
+        sink.Snapshot().Should().ContainSingle().Which.Message.Should().Be(@"Saved shot.png to D:\Captures (3 files)");
     }
 
-    // -- helpers --------------------------------------------------------------
-
-    private static LogEvent Event(string message, LogEventLevel level)
+    [Fact]
+    public void Message_IsRenderedWithTheInvariantCulture()
     {
-        var template = new MessageTemplateParser().Parse(message);
-        return new LogEvent(
-            DateTimeOffset.UtcNow,
-            level,
-            exception: null,
-            template,
-            properties: Array.Empty<LogEventProperty>());
+        var sink = new InMemorySink();
+        using var logger = new LoggerConfiguration().MinimumLevel.Verbose().WriteTo.Sink(sink).CreateLogger();
+        var saved = CultureInfo.CurrentCulture;
+        try
+        {
+            CultureInfo.CurrentCulture = CultureInfo.GetCultureInfo("de-DE");
+            logger.Information("Encoded in {Seconds} s", 1.5);
+        }
+        finally
+        {
+            CultureInfo.CurrentCulture = saved;
+        }
+
+        sink.Snapshot()[0].Message.Should().Be("Encoded in 1.5 s");
     }
 
-    private static LogEvent EventWithCaller(string message, string file, int line, string member)
+    [Fact]
+    public void SourceContext_IsCapturedFromTheLoggerCategory()
     {
-        var template = new MessageTemplateParser().Parse(message);
-        return new LogEvent(
-            DateTimeOffset.UtcNow,
-            LogEventLevel.Information,
-            exception: null,
-            template,
-            properties: new[]
-            {
-                new LogEventProperty("File", new ScalarValue(file)),
-                new LogEventProperty("Line", new ScalarValue(line)),
-                new LogEventProperty("Member", new ScalarValue(member)),
-            });
+        var sink = new InMemorySink();
+        using var logger = new LoggerConfiguration().MinimumLevel.Verbose().WriteTo.Sink(sink).CreateLogger();
+
+        logger.ForContext<InMemorySinkTests>().Warning("categorized");
+
+        var entry = sink.Snapshot().Should().ContainSingle().Subject;
+        entry.SourceContext.Should().Be(typeof(InMemorySinkTests).FullName);
+        entry.ShortSource.Should().Be(nameof(InMemorySinkTests));
+        entry.Level.Should().Be(LogEntryLevel.Warning);
     }
+
+    [Fact]
+    public void SourceContext_ThatIsNotAString_IsIgnored()
+    {
+        var sink = new InMemorySink();
+
+        sink.Emit(Event("odd", LogEventLevel.Information, properties: [new LogEventProperty("SourceContext", new ScalarValue(42))]));
+
+        sink.Snapshot()[0].SourceContext.Should().BeEmpty();
+    }
+
+    [Fact]
+    public void Emit_Null_Throws()
+    {
+        var act = () => new InMemorySink().Emit(null!);
+
+        act.Should().Throw<ArgumentNullException>();
+    }
+
+    private static LogEvent Event(
+        string message,
+        LogEventLevel level,
+        Exception? exception = null,
+        DateTimeOffset? timestamp = null,
+        IEnumerable<LogEventProperty>? properties = null) =>
+        new(timestamp ?? DateTimeOffset.UtcNow, level, exception, new MessageTemplateParser().Parse(message), properties ?? []);
 }

@@ -39,6 +39,13 @@ dotnet_diagnostic.IDE0059.severity = warning # value assigned but never used
 dotnet_diagnostic.IDE0060.severity = warning # unused parameter
 dotnet_code_quality_unused_parameters = non_public
 
+# src/ builds with AnalysisMode=Recommended (src/Directory.Build.props). Rules switched off:
+# CA1716 flags names that are keywords in other .NET languages (IWindowWatcher.Stop is "Stop"
+# in VB); this is a C#-only app. CA1873 flags argument evaluation in log calls; the ones left
+# run once per startup or per error, and LoggerMessage methods check IsEnabled themselves.
+dotnet_diagnostic.CA1716.severity = none
+dotnet_diagnostic.CA1873.severity = none
+
 # Code style - var
 csharp_style_var_for_built_in_types = true:suggestion
 csharp_style_var_when_type_is_apparent = true:suggestion
@@ -52,3 +59,7 @@ csharp_new_line_before_finally = true
 csharp_new_line_before_members_in_object_initializers = true
 csharp_new_line_before_members_in_anonymous_types = true
 csharp_new_line_between_query_expression_clauses = true
+
+# View models: XAML binds to instance properties even when they return constants.
+[src/CaptureImage.ViewModels/**.cs]
+dotnet_diagnostic.CA1822.severity = none

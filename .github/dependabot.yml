@@ -29,8 +29,6 @@ updates:
       microsoft-extensions:
         patterns:
           - "Microsoft.Extensions.*"
-          - "System.Management"
-          - "System.Drawing.Common"
       serilog:
         patterns:
           - "Serilog*"
@@ -45,18 +43,21 @@ updates:
         patterns:
           - "Velopack"
           - "vpk"
-      windows-app-sdk:
+      wpf-ui:
         patterns:
-          - "Microsoft.WindowsAppSDK*"
-          - "Microsoft.Windows.SDK.BuildTools*"
-          - "Microsoft.Web.WebView2"
+          - "WPF-UI*"
+          - "H.NotifyIcon*"
+          - "CommunityToolkit.Mvvm"
+      win32-interop:
+        patterns:
+          - "Microsoft.Windows.CsWin32"
       test-tooling:
         patterns:
           - "xunit*"
           - "AwesomeAssertions"
           - "NSubstitute"
           - "Microsoft.Testing.*"
-          - "System.IO.Abstractions*"
+          - "FlaUI*"
       dev-tools:
         patterns:
           - "jetbrains.resharper.globaltools"

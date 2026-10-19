@@ -1,0 +1,360 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="xml:space" type="xsd:string" msdata:Ordinal="4" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+
+  <!-- Navigation -->
+  <data name="About_AiNotice" xml:space="preserve"><value>CaptureImage được phát triển với sự hỗ trợ đáng kể từ trợ lý lập trình AI (Claude của Anthropic, qua Claude Code) cho mã nguồn, kiểm thử và tài liệu. Người duy trì xem xét và kiểm thử mọi thay đổi trước khi phát hành.</value></data>
+  <data name="About_AiSection" xml:space="preserve"><value>Phát triển có hỗ trợ AI</value></data>
+  <data name="About_CaptureDisclaimer" xml:space="preserve"><value>Khả năng chụp</value></data>
+  <data name="About_CaptureLimitationDisclaimerBody" xml:space="preserve"><value>CaptureImage có thể chụp hầu hết game cửa sổ và borderless qua Windows.Graphics.Capture, nhưng không phải game nào cũng hoạt động. Bề mặt có DRM, game Direct3D 9 exclusive-fullscreen, và game có hook anti-cheat có thể trả khung đen hoặc từ chối chụp. Cơ chế dự phòng GDI PrintWindow được thử cho ứng dụng cũ. Xem docs/legal/DISCLAIMER.md §2 để biết danh sách đầy đủ.</value></data>
+  <data name="About_ContactSection" xml:space="preserve"><value>Kết nối với nhà phát triển</value></data>
+  <data name="About_DeveloperLabel" xml:space="preserve"><value>Nhà phát triển</value></data>
+  <data name="About_DisclaimersSection" xml:space="preserve"><value>Tuyên bố miễn trừ</value></data>
+  <data name="About_Discussions" xml:space="preserve"><value>Thảo luận</value></data>
+  <data name="About_DonateBody" xml:space="preserve"><value>CaptureImage là phần mềm tự do, mã nguồn mở. Nếu công cụ này giúp ích, hãy cân nhắc ủng hộ qua một trong các kênh sau:</value></data>
+  <data name="About_DonateSection" xml:space="preserve"><value>Ủng hộ project</value></data>
+  <data name="About_Email" xml:space="preserve"><value>Email</value></data>
+  <data name="About_FeedbackSection" xml:space="preserve"><value>Góp ý</value></data>
+  <data name="About_LegalSection" xml:space="preserve"><value>Tài liệu pháp lý</value></data>
+  <data name="About_LiabilityDisclaimer" xml:space="preserve"><value>Không bảo hành</value></data>
+  <data name="About_LiabilityDisclaimerBody" xml:space="preserve"><value>CaptureImage được phân phối theo GPL-3.0-or-later NGUYÊN TRẠNG, không kèm bảo đảm dưới bất kỳ hình thức nào. Các tác giả không chịu trách nhiệm về ảnh chụp bị mất, game crash, chế tài từ anti-cheat, hay mất dữ liệu. Dùng với rủi ro của chính bạn. Xem docs/legal/DISCLAIMER.md để biết toàn văn.</value></data>
+  <data name="About_LicenseLabel" xml:space="preserve"><value>Giấy phép</value></data>
+  <data name="About_OpenBugReport" xml:space="preserve"><value>Báo lỗi</value></data>
+  <data name="About_OpenBugReportHint" xml:space="preserve"><value>Mở GitHub issue tracker với template báo lỗi đã điền sẵn.</value></data>
+  <data name="About_OpenContributors" xml:space="preserve"><value>Contributors</value></data>
+  <data name="About_OpenDisclaimer" xml:space="preserve"><value>Disclaimer</value></data>
+  <data name="About_OpenLicense" xml:space="preserve"><value>License (GPL-3.0)</value></data>
+  <data name="About_OpenNotice" xml:space="preserve"><value>Thông báo bản quyền</value></data>
+  <data name="About_OpenPrivacy" xml:space="preserve"><value>Privacy</value></data>
+  <data name="About_OpenTerms" xml:space="preserve"><value>Terms</value></data>
+  <data name="About_OpenThirdParty" xml:space="preserve"><value>Third-party notices</value></data>
+  <data name="About_OtherChannels" xml:space="preserve"><value>Các kênh khác</value></data>
+  <data name="About_ReleaseNotes" xml:space="preserve"><value>Ghi chú phát hành</value></data>
+  <data name="About_RepositoryLabel" xml:space="preserve"><value>Kho mã nguồn</value></data>
+  <data name="About_RequestFeature" xml:space="preserve"><value>Đề xuất tính năng</value></data>
+  <data name="About_SponsorEmail" xml:space="preserve"><value>Liên hệ tài trợ</value></data>
+  <data name="About_Tagline" xml:space="preserve"><value>Công cụ chụp màn hình Windows gọn nhẹ cho các game không có phím chụp có sẵn.</value></data>
+  <data name="About_ThirdPartySection" xml:space="preserve"><value>Thành phần third-party</value></data>
+  <data name="About_TranslationDisclaimer" xml:space="preserve"><value>Bản dịch</value></data>
+  <data name="About_TranslationDisclaimerBody" xml:space="preserve"><value>Các gói ngôn ngữ tiếng Việt, tiếng Ả Rập, tiếng Nhật, tiếng Trung giản thể, tiếng Hàn, tiếng Tây Ban Nha, tiếng Pháp, tiếng Đức, tiếng Bồ Đào Nha (Brazil) và tiếng Nga đang dùng bản dịch máy. Thuật ngữ có thể không khớp với quy ước bản ngữ, và một số từ kỹ thuật (hotkey, toast, frame, v.v.) được giữ tiếng Anh có chủ đích. Người bản ngữ sẵn lòng hiệu đính xin gửi pull request vào các tệp .resx trong src/CaptureImage.UI/Resources/Strings/.</value></data>
+  <data name="About_VersionLabel" xml:space="preserve"><value>Phiên bản</value></data>
+
+  <data name="Common_Browse" xml:space="preserve"><value>Duyệt…</value></data>
+  <data name="Common_Cancel" xml:space="preserve"><value>Huỷ</value></data>
+  <data name="Common_Close" xml:space="preserve"><value>Đóng</value></data>
+  <data name="Common_CopyImage" xml:space="preserve"><value>Copy ảnh</value></data>
+
+  <data name="Dashboard_Arm" xml:space="preserve"><value>Sẵn sàng</value></data>
+  <data name="Dashboard_CaptureMonitor" xml:space="preserve"><value>Chụp màn hình</value></data>
+  <data name="Dashboard_CaptureRegion" xml:space="preserve"><value>Chụp vùng</value></data>
+  <data name="Dashboard_CaptureSelected" xml:space="preserve"><value>Chụp cửa sổ</value></data>
+  <data name="Dashboard_CreateProfile" xml:space="preserve"><value>Tạo profile</value></data>
+  <data name="Dashboard_Disarm" xml:space="preserve"><value>Ngừng</value></data>
+  <data name="Dashboard_EmptyState" xml:space="preserve"><value>Không có cửa sổ nào để chụp — khởi chạy game hoặc ứng dụng của bạn, rồi bấm Làm mới.</value></data>
+  <data name="Dashboard_Hotkeys" xml:space="preserve"><value>Hotkey chụp</value></data>
+  <data name="Dashboard_Locked" xml:space="preserve"><value>Đã khoá</value></data>
+  <data name="Dashboard_LockedLabel" xml:space="preserve"><value>Hotkey Cửa sổ sẽ chụp:</value></data>
+  <data name="Dashboard_LockSelected" xml:space="preserve"><value>Khoá làm mục tiêu</value></data>
+  <data name="Dashboard_Minimized" xml:space="preserve"><value>Đang thu nhỏ</value></data>
+  <data name="Dashboard_ProfileBadge" xml:space="preserve"><value>Profile: {0}</value></data>
+  <data name="Dashboard_Refresh" xml:space="preserve"><value>Làm mới</value></data>
+  <data name="Dashboard_Search" xml:space="preserve"><value>Tìm cửa sổ</value></data>
+  <data name="Dashboard_SteamBadge" xml:space="preserve"><value>STEAM</value></data>
+  <data name="Dashboard_SteamBadgeTooltip" xml:space="preserve"><value>Game Steam: {0} (AppId {1}). Phím F12 có sẵn qua Steam Overlay. Một số game có anti-cheat có thể chặn capture từ bên ngoài.</value></data>
+  <data name="Dashboard_Subtitle" xml:space="preserve"><value>Bật sẵn sàng cho hotkey, rồi nhấn hotkey ngay trong game. Khoá một cửa sổ để luôn chụp đúng cửa sổ đó.</value></data>
+  <data name="Dashboard_Title" xml:space="preserve"><value>Bảng điều khiển</value></data>
+  <data name="Dashboard_Unlock" xml:space="preserve"><value>Bỏ khoá</value></data>
+  <data name="Dashboard_Windows" xml:space="preserve"><value>Các cửa sổ đang mở</value></data>
+
+  <data name="Error_Cancelled" xml:space="preserve"><value>Đã huỷ chụp.</value></data>
+  <data name="Error_EncodingFailure" xml:space="preserve"><value>Không thể mã hoá hình ảnh.</value></data>
+  <data name="Error_FileWriteFailure" xml:space="preserve"><value>Không thể lưu tệp. Hãy kiểm tra thư mục lưu và dung lượng ổ đĩa còn trống.</value></data>
+  <data name="Error_GraphicsDeviceFailure" xml:space="preserve"><value>Driver đồ hoạ ngừng phản hồi. Hãy thử lại sau giây lát.</value></data>
+  <data name="Error_NoFrameArrived" xml:space="preserve"><value>Windows không trả về hình ảnh. Hãy đảm bảo cửa sổ đang hiển thị rồi thử lại.</value></data>
+  <data name="Error_NoTarget" xml:space="preserve"><value>Không có cửa sổ để chụp. Hãy đưa game lên phía trước hoặc khoá một cửa sổ trong Bảng điều khiển.</value></data>
+  <data name="Error_NotSupported" xml:space="preserve"><value>Hệ thống này không hỗ trợ chụp màn hình.</value></data>
+  <data name="Error_ProcessExited" xml:space="preserve"><value>Game hoặc ứng dụng đã thoát.</value></data>
+  <data name="Error_ProtectedContent" xml:space="preserve"><value>Cửa sổ này chặn chụp màn hình (nội dung được bảo vệ).</value></data>
+  <data name="Error_TargetGone" xml:space="preserve"><value>Cửa sổ đã bị đóng.</value></data>
+  <data name="Error_TargetMinimized" xml:space="preserve"><value>Cửa sổ đang thu nhỏ. Hãy mở lại cửa sổ rồi thử lại.</value></data>
+  <data name="Error_Unknown" xml:space="preserve"><value>Đã xảy ra lỗi. Xem chi tiết trong nhật ký.</value></data>
+
+  <data name="Hotkey_None" xml:space="preserve"><value>Chưa đặt</value></data>
+  <data name="Hotkey_PressKeys" xml:space="preserve"><value>Nhấn phím…</value></data>
+  <data name="Hotkey_ProblemMessage" xml:space="preserve"><value>Một ứng dụng khác đang dùng hotkey chụp, hoặc tổ hợp phím không hợp lệ. Hãy chọn tổ hợp khác trong Cài đặt.</value></data>
+  <data name="Hotkey_ProblemTitle" xml:space="preserve"><value>Có hotkey không hoạt động</value></data>
+  <data name="Hotkey_StatusActive" xml:space="preserve"><value>Đang hoạt động</value></data>
+  <data name="Hotkey_StatusConflict" xml:space="preserve"><value>Ứng dụng khác đang dùng</value></data>
+  <data name="Hotkey_StatusInactive" xml:space="preserve"><value>Tắt cho tới khi sẵn sàng</value></data>
+  <data name="Hotkey_StatusInvalid" xml:space="preserve"><value>Tổ hợp không hợp lệ</value></data>
+  <data name="Hotkey_StatusUnbound" xml:space="preserve"><value>Chưa đặt</value></data>
+  <data name="Hotkey_TakenByOtherApp" xml:space="preserve"><value>Một ứng dụng khác đã dùng tổ hợp này. Hãy chọn tổ hợp khác.</value></data>
+  <data name="Hotkey_UsedByMode" xml:space="preserve"><value>Đã được dùng cho {0}.</value></data>
+  <data name="Hotkey_Validation_ModifierOnlyKey" xml:space="preserve"><value>Chỉ phím bổ trợ là chưa đủ — hãy thêm chữ cái hoặc phím F.</value></data>
+  <data name="Hotkey_Validation_NoPrimaryKey" xml:space="preserve"><value>Chọn một phím chính (ví dụ chữ cái hoặc phím F).</value></data>
+  <data name="Hotkey_Validation_RequiresModifier" xml:space="preserve"><value>Chữ cái hoặc chữ số cần kèm ít nhất một phím bổ trợ (Ctrl/Alt/Shift/Win).</value></data>
+  <data name="Hotkey_Validation_ReservedByWindows" xml:space="preserve"><value>Tổ hợp này bị Windows giữ và không thể chụp được.</value></data>
+
+  <data name="Library_AllGames" xml:space="preserve"><value>Tất cả game</value></data>
+  <data name="Library_CopyFailed" xml:space="preserve"><value>Không thể đọc hình ảnh.</value></data>
+  <data name="Library_CopyPath" xml:space="preserve"><value>Copy đường dẫn</value></data>
+  <data name="Library_Delete" xml:space="preserve"><value>Xoá</value></data>
+  <data name="Library_Deleted" xml:space="preserve"><value>Đã chuyển vào Thùng rác</value></data>
+  <data name="Library_DeleteFailed" xml:space="preserve"><value>Không thể chuyển tệp vào Thùng rác.</value></data>
+  <data name="Library_DeleteMessage" xml:space="preserve"><value>Chuyển {0} vào Thùng rác?</value></data>
+  <data name="Library_DeleteTitle" xml:space="preserve"><value>Xoá ảnh chụp</value></data>
+  <data name="Library_Empty" xml:space="preserve"><value>Chưa có ảnh chụp nào. Hãy bật sẵn sàng hotkey và chụp tấm đầu tiên.</value></data>
+  <data name="Library_GameFilter" xml:space="preserve"><value>Lọc theo game</value></data>
+  <data name="Library_HdrOnly" xml:space="preserve"><value>Chỉ HDR</value></data>
+  <data name="Library_Open" xml:space="preserve"><value>Mở</value></data>
+  <data name="Library_OpenHdr" xml:space="preserve"><value>Mở bản HDR</value></data>
+  <data name="Library_Pin" xml:space="preserve"><value>Ghim</value></data>
+  <data name="Library_Reveal" xml:space="preserve"><value>Mở thư mục chứa</value></data>
+  <data name="Library_Search" xml:space="preserve"><value>Tìm ảnh chụp</value></data>
+  <data name="Library_SelectHint" xml:space="preserve"><value>Chọn một ảnh chụp để xem chi tiết.</value></data>
+  <data name="Library_Summary" xml:space="preserve"><value>{0} / {1} ảnh chụp</value></data>
+  <data name="Library_Title" xml:space="preserve"><value>Thư viện ảnh chụp</value></data>
+
+  <data name="Log_Clear" xml:space="preserve"><value>Xoá</value></data>
+  <data name="Log_EmptyState" xml:space="preserve"><value>Chưa có sự kiện nhật ký nào. Sự kiện thời gian thực từ capture engine sẽ xuất hiện ở đây.</value></data>
+  <data name="Log_Pause" xml:space="preserve"><value>Tạm dừng</value></data>
+  <data name="Log_RevealFolder" xml:space="preserve"><value>Mở thư mục</value></data>
+
+  <data name="Logs_CopyAll" xml:space="preserve"><value>Copy tất cả</value></data>
+  <data name="Logs_CopySelected" xml:space="preserve"><value>Copy dòng đã chọn</value></data>
+  <data name="Logs_Level" xml:space="preserve"><value>Mức tối thiểu</value></data>
+  <data name="Logs_LevelAll" xml:space="preserve"><value>Tất cả mức</value></data>
+  <data name="Logs_Search" xml:space="preserve"><value>Tìm trong nhật ký</value></data>
+  <data name="Logs_Subtitle" xml:space="preserve"><value>Các sự kiện gần đây trong phiên này. Hãy dùng Xuất chẩn đoán khi báo lỗi.</value></data>
+  <data name="Logs_Title" xml:space="preserve"><value>Nhật ký thời gian thực</value></data>
+
+  <data name="Mode_Monitor" xml:space="preserve"><value>Màn hình</value></data>
+  <data name="Mode_Region" xml:space="preserve"><value>Vùng</value></data>
+  <data name="Mode_Window" xml:space="preserve"><value>Cửa sổ</value></data>
+
+  <data name="Nav_About" xml:space="preserve"><value>Giới thiệu</value></data>
+  <data name="Nav_Dashboard" xml:space="preserve"><value>Bảng điều khiển</value></data>
+  <data name="Nav_Library" xml:space="preserve"><value>Thư viện</value></data>
+  <data name="Nav_Logs" xml:space="preserve"><value>Nhật ký</value></data>
+  <data name="Nav_Profiles" xml:space="preserve"><value>Profile game</value></data>
+  <data name="Nav_Settings" xml:space="preserve"><value>Cài đặt</value></data>
+  <data name="Nav_Update" xml:space="preserve"><value>Cập nhật</value></data>
+
+  <data name="PinnedWindow_Close" xml:space="preserve"><value>Đóng</value></data>
+  <data name="PinnedWindow_Open" xml:space="preserve"><value>Hiện trong Explorer</value></data>
+
+  <data name="Preview_Discard" xml:space="preserve"><value>Bỏ</value></data>
+  <data name="Preview_ExtractText" xml:space="preserve"><value>Trích xuất văn bản (OCR)</value></data>
+  <data name="Preview_Prompt" xml:space="preserve"><value>Lưu ảnh chụp này?</value></data>
+  <data name="Preview_Save" xml:space="preserve"><value>Lưu</value></data>
+  <data name="Preview_Title" xml:space="preserve"><value>Xem trước</value></data>
+
+  <data name="Profiles_Add" xml:space="preserve"><value>Thêm profile</value></data>
+  <data name="Profiles_AutoArm" xml:space="preserve"><value>Tự động sẵn sàng</value></data>
+  <data name="Profiles_AutoArmBadge" xml:space="preserve"><value>Tự sẵn sàng</value></data>
+  <data name="Profiles_AutoArmHint" xml:space="preserve"><value>Bật sẵn sàng hotkey khi game này được đưa lên phía trước.</value></data>
+  <data name="Profiles_AutomationSection" xml:space="preserve"><value>Tự động hoá</value></data>
+  <data name="Profiles_Delete" xml:space="preserve"><value>Xoá</value></data>
+  <data name="Profiles_DeleteMessage" xml:space="preserve"><value>Xoá profile "{0}"? Các ảnh đã chụp vẫn được giữ.</value></data>
+  <data name="Profiles_DeleteTitle" xml:space="preserve"><value>Xoá profile</value></data>
+  <data name="Profiles_DisabledBadge" xml:space="preserve"><value>Tắt</value></data>
+  <data name="Profiles_Empty" xml:space="preserve"><value>Chưa có profile nào. Hãy thêm ở đây, hoặc dùng Tạo profile trong Bảng điều khiển khi game đang chạy.</value></data>
+  <data name="Profiles_Enabled" xml:space="preserve"><value>Bật profile</value></data>
+  <data name="Profiles_ExecutableName" xml:space="preserve"><value>Tên tệp thực thi</value></data>
+  <data name="Profiles_ExecutableNameHint" xml:space="preserve"><value>Khớp với game dù được cài ở bất kỳ đâu.</value></data>
+  <data name="Profiles_ExecutablePath" xml:space="preserve"><value>Đường dẫn tệp thực thi</value></data>
+  <data name="Profiles_ExecutablePathHint" xml:space="preserve"><value>Cách khớp chính xác nhất.</value></data>
+  <data name="Profiles_LockTarget" xml:space="preserve"><value>Khoá cửa sổ game</value></data>
+  <data name="Profiles_LockTargetHint" xml:space="preserve"><value>Khi đó hotkey Cửa sổ sẽ chụp game kể cả khi một cửa sổ khác đang ở phía trước.</value></data>
+  <data name="Profiles_MatchesNothing" xml:space="preserve"><value>Hãy đặt đường dẫn tệp thực thi, tên tệp thực thi hoặc Steam AppId.</value></data>
+  <data name="Profiles_MatchesNothingTitle" xml:space="preserve"><value>Profile này chưa khớp với game nào</value></data>
+  <data name="Profiles_MatchSection" xml:space="preserve"><value>Áp dụng cho game nào</value></data>
+  <data name="Profiles_Name" xml:space="preserve"><value>Tên</value></data>
+  <data name="Profiles_NewProfile" xml:space="preserve"><value>Profile mới</value></data>
+  <data name="Profiles_OutputFolder" xml:space="preserve"><value>Thư mục lưu</value></data>
+  <data name="Profiles_OutputSection" xml:space="preserve"><value>Đầu ra</value></data>
+  <data name="Profiles_PickExecutable" xml:space="preserve"><value>Chọn tệp thực thi của game</value></data>
+  <data name="Profiles_SteamAppId" xml:space="preserve"><value>Steam AppId</value></data>
+  <data name="Profiles_SteamAppIdInvalid" xml:space="preserve"><value>Hãy nhập một số, ví dụ 1245620.</value></data>
+  <data name="Profiles_Subtitle" xml:space="preserve"><value>Thư mục lưu, định dạng và tên tệp riêng cho từng game. Profile cũng có thể tự bật sẵn sàng hotkey khi game khởi động.</value></data>
+  <data name="Profiles_Title" xml:space="preserve"><value>Profile game</value></data>
+  <data name="Profiles_UseGlobal" xml:space="preserve"><value>Dùng cài đặt chung</value></data>
+  <data name="Profiles_UseGlobalButton" xml:space="preserve"><value>Dùng chung</value></data>
+
+  <data name="Region_DragHint" xml:space="preserve"><value>Kéo để chọn vùng · Nhấp để chụp toàn màn hình · Esc để huỷ</value></data>
+
+  <data name="Settings_AdvancedSection" xml:space="preserve"><value>Nâng cao</value></data>
+  <data name="Settings_AppearanceSection" xml:space="preserve"><value>Hiển thị</value></data>
+  <data name="Settings_ArmOnStartup" xml:space="preserve"><value>Sẵn sàng ngay khi CaptureImage khởi động</value></data>
+  <data name="Settings_ArmOnStartupHint" xml:space="preserve"><value>Khi đang sẵn sàng, các ứng dụng khác sẽ không nhận được các tổ hợp phím này.</value></data>
+  <data name="Settings_AutoPinAfterCapture" xml:space="preserve"><value>Ghim ảnh nhỏ nổi sau mỗi lần chụp</value></data>
+  <data name="Settings_BackupSettings" xml:space="preserve"><value>Sao lưu và khôi phục cài đặt</value></data>
+  <data name="Settings_BehaviorSection" xml:space="preserve"><value>Hoạt động</value></data>
+  <data name="Settings_CaptureSection" xml:space="preserve"><value>Chụp</value></data>
+  <data name="Settings_Clipboard" xml:space="preserve"><value>Chế độ clipboard</value></data>
+  <data name="Settings_ClipboardCopy" xml:space="preserve"><value>Chỉ copy (không lưu file)</value></data>
+  <data name="Settings_ClipboardCopyAndSave" xml:space="preserve"><value>Copy + lưu file</value></data>
+  <data name="Settings_ClipboardNone" xml:space="preserve"><value>Tắt (chỉ lưu file)</value></data>
+  <data name="Settings_Countdown" xml:space="preserve"><value>Đếm ngược trước khi chụp</value></data>
+  <data name="Settings_Countdown10s" xml:space="preserve"><value>10 giây</value></data>
+  <data name="Settings_Countdown3s" xml:space="preserve"><value>3 giây</value></data>
+  <data name="Settings_Countdown5s" xml:space="preserve"><value>5 giây</value></data>
+  <data name="Settings_CountdownOff" xml:space="preserve"><value>Tắt (không trễ)</value></data>
+  <data name="Settings_DataFolder" xml:space="preserve"><value>Thư mục dữ liệu</value></data>
+  <data name="Settings_DiagnosticsExported" xml:space="preserve"><value>Đã xuất chẩn đoán</value></data>
+  <data name="Settings_Export" xml:space="preserve"><value>Xuất…</value></data>
+  <data name="Settings_ExportDiagnostics" xml:space="preserve"><value>Xuất chẩn đoán</value></data>
+  <data name="Settings_ExportDiagnosticsButton" xml:space="preserve"><value>Xuất…</value></data>
+  <data name="Settings_ExportDiagnosticsHint" xml:space="preserve"><value>Tệp zip gồm nhật ký gần đây, cài đặt và thông tin hệ thống (đã ẩn đường dẫn người dùng) để đính kèm khi báo lỗi.</value></data>
+  <data name="Settings_ExportFailed" xml:space="preserve"><value>Xuất thất bại.</value></data>
+  <data name="Settings_ExportSettings" xml:space="preserve"><value>Xuất cài đặt</value></data>
+  <data name="Settings_FileNamePreview" xml:space="preserve"><value>Ví dụ:</value></data>
+  <data name="Settings_FileNameTemplate" xml:space="preserve"><value>Mẫu tên tệp</value></data>
+  <data name="Settings_FileNameTokens" xml:space="preserve"><value>Biến: {Game} {Process} {Mode} {yyyy} {MM} {dd} {HH} {mm} {ss} {counter}</value></data>
+  <data name="Settings_Format" xml:space="preserve"><value>Định dạng mặc định</value></data>
+  <data name="Settings_HdrAuto" xml:space="preserve"><value>Tự động (HDR trên màn hình HDR)</value></data>
+  <data name="Settings_HdrMode" xml:space="preserve"><value>Chụp HDR</value></data>
+  <data name="Settings_HdrModeHint" xml:space="preserve"><value>Trên màn hình HDR, toàn bộ khung hình HDR được chụp rồi chuyển đổi tông màu thành ảnh thường.</value></data>
+  <data name="Settings_HdrOff" xml:space="preserve"><value>Tắt (luôn SDR)</value></data>
+  <data name="Settings_HdrSection" xml:space="preserve"><value>HDR</value></data>
+  <data name="Settings_HotkeyClear" xml:space="preserve"><value>Xoá</value></data>
+  <data name="Settings_HotkeyHint" xml:space="preserve"><value>Nhấn vào một hotkey rồi nhấn tổ hợp phím mới. Esc để huỷ, Backspace để xoá. Hotkey chỉ hoạt động khi đang sẵn sàng.</value></data>
+  <data name="Settings_HotkeyMonitorDescription" xml:space="preserve"><value>Chụp màn hình đang có con trỏ chuột.</value></data>
+  <data name="Settings_HotkeyRecord" xml:space="preserve"><value>Ghi…</value></data>
+  <data name="Settings_HotkeyRegionDescription" xml:space="preserve"><value>Đóng băng mọi màn hình để bạn kéo chọn một vùng.</value></data>
+  <data name="Settings_HotkeyReset" xml:space="preserve"><value>Đặt lại</value></data>
+  <data name="Settings_HotkeysSection" xml:space="preserve"><value>Hotkey</value></data>
+  <data name="Settings_HotkeyWindowDescription" xml:space="preserve"><value>Chụp cửa sổ đã khoá, hoặc cửa sổ đang ở phía trước.</value></data>
+  <data name="Settings_Import" xml:space="preserve"><value>Nhập…</value></data>
+  <data name="Settings_ImportFailed" xml:space="preserve"><value>Không thể nhập các cài đặt này.</value></data>
+  <data name="Settings_ImportSettings" xml:space="preserve"><value>Nhập cài đặt</value></data>
+  <data name="Settings_IncludeCursor" xml:space="preserve"><value>Chụp cả con trỏ chuột</value></data>
+  <data name="Settings_IncludeWindowFrame" xml:space="preserve"><value>Chụp cả khung cửa sổ</value></data>
+  <data name="Settings_IncludeWindowFrameHint" xml:space="preserve"><value>Giữ thanh tiêu đề và viền khi chụp cửa sổ.</value></data>
+  <data name="Settings_JpegQuality" xml:space="preserve"><value>Chất lượng JPEG</value></data>
+  <data name="Settings_Language" xml:space="preserve"><value>Ngôn ngữ</value></data>
+  <data name="Settings_LanguageHint" xml:space="preserve"><value>Thay đổi có hiệu lực ngay.</value></data>
+  <data name="Settings_LogLevel" xml:space="preserve"><value>Mức log tối thiểu</value></data>
+  <data name="Settings_LogLevelDebug" xml:space="preserve"><value>Gỡ lỗi (Debug)</value></data>
+  <data name="Settings_LogLevelError" xml:space="preserve"><value>Chỉ lỗi</value></data>
+  <data name="Settings_LogLevelHint" xml:space="preserve"><value>Lọc cả file log xoay vòng và cửa sổ Log. Chọn Debug khi gỡ lỗi, Information cho vận hành hằng ngày, Warning hoặc Error để giữ log gọn.</value></data>
+  <data name="Settings_LogLevelInformation" xml:space="preserve"><value>Thông tin</value></data>
+  <data name="Settings_LogLevelWarning" xml:space="preserve"><value>Cảnh báo</value></data>
+  <data name="Settings_MinimizeToTray" xml:space="preserve"><value>Nút đóng sẽ thu nhỏ xuống tray</value></data>
+  <data name="Settings_OpenFolder" xml:space="preserve"><value>Mở thư mục</value></data>
+  <data name="Settings_OpenFolderAfterSave" xml:space="preserve"><value>Mở thư mục đầu ra sau khi lưu</value></data>
+  <data name="Settings_OutputFolder" xml:space="preserve"><value>Thư mục lưu</value></data>
+  <data name="Settings_OutputFolderUnavailable" xml:space="preserve"><value>Không thể mở thư mục lưu.</value></data>
+  <data name="Settings_OutputSection" xml:space="preserve"><value>Đầu ra</value></data>
+  <data name="Settings_PngBalanced" xml:space="preserve"><value>Cân bằng</value></data>
+  <data name="Settings_PngCompression" xml:space="preserve"><value>Mức nén PNG</value></data>
+  <data name="Settings_PngCompressionHint" xml:space="preserve"><value>Tệp càng nhỏ thì lưu càng lâu.</value></data>
+  <data name="Settings_PngFast" xml:space="preserve"><value>Nhanh (tệp lớn hơn)</value></data>
+  <data name="Settings_PngSmallest" xml:space="preserve"><value>Nhỏ nhất (chậm hơn)</value></data>
+  <data name="Settings_PreviewBeforeSave" xml:space="preserve"><value>Xem trước từng ảnh chụp trước khi lưu</value></data>
+  <data name="Settings_Reset" xml:space="preserve"><value>Đặt lại</value></data>
+  <data name="Settings_ResetDone" xml:space="preserve"><value>Đã khôi phục cài đặt mặc định</value></data>
+  <data name="Settings_ResetMessage" xml:space="preserve"><value>Khôi phục mọi cài đặt về mặc định? Tệp hiện tại sẽ được sao lưu trước, và ngôn ngữ của bạn được giữ nguyên.</value></data>
+  <data name="Settings_ResetSettings" xml:space="preserve"><value>Đặt lại mọi cài đặt</value></data>
+  <data name="Settings_ResetSettingsHint" xml:space="preserve"><value>Bản sao lưu của tệp hiện tại được giữ trong thư mục dữ liệu.</value></data>
+  <data name="Settings_ResetTitle" xml:space="preserve"><value>Đặt lại cài đặt</value></data>
+  <data name="Settings_ResetToDefault" xml:space="preserve"><value>Đặt về mặc định</value></data>
+  <data name="Settings_SaveHdrSidecar" xml:space="preserve"><value>Giữ ảnh HDR gốc</value></data>
+  <data name="Settings_SaveHdrSidecarHint" xml:space="preserve"><value>Lưu thêm một tệp JPEG XR (.jxr) cạnh mỗi ảnh chụp HDR.</value></data>
+  <data name="Settings_ShowNotifications" xml:space="preserve"><value>Hiện thông báo</value></data>
+  <data name="Settings_SoundEnabled" xml:space="preserve"><value>Phát âm thanh khi chụp</value></data>
+  <data name="Settings_StartMinimized" xml:space="preserve"><value>Khởi động thu nhỏ xuống tray</value></data>
+  <data name="Settings_StartupSection" xml:space="preserve"><value>Khởi động</value></data>
+  <data name="Settings_StartWithWindows" xml:space="preserve"><value>Khởi động cùng Windows</value></data>
+  <data name="Settings_StartWithWindowsFailed" xml:space="preserve"><value>Không thể thay đổi khởi động cùng Windows.</value></data>
+  <data name="Settings_Subtitle" xml:space="preserve"><value>Thay đổi được lưu tự động.</value></data>
+  <data name="Settings_Theme" xml:space="preserve"><value>Giao diện</value></data>
+  <data name="Settings_ThemeDark" xml:space="preserve"><value>Tối</value></data>
+  <data name="Settings_ThemeHighContrast" xml:space="preserve"><value>Độ tương phản cao</value></data>
+  <data name="Settings_ThemeLight" xml:space="preserve"><value>Sáng</value></data>
+  <data name="Settings_ThemeSystem" xml:space="preserve"><value>Theo hệ thống</value></data>
+  <data name="Settings_Title" xml:space="preserve"><value>Cài đặt</value></data>
+  <data name="Settings_WebpQuality" xml:space="preserve"><value>Chất lượng WebP</value></data>
+
+  <data name="Status_Armed" xml:space="preserve"><value>Đang sẵn sàng — nhấn hotkey để chụp.</value></data>
+  <data name="Status_ArmedLocked" xml:space="preserve"><value>Đang sẵn sàng — hotkey Cửa sổ sẽ chụp {0}.</value></data>
+  <data name="Status_Capturing" xml:space="preserve"><value>Đang chụp…</value></data>
+  <data name="Status_Idle" xml:space="preserve"><value>Chưa sẵn sàng — hotkey chụp đang tắt.</value></data>
+  <data name="Status_Saving" xml:space="preserve"><value>Đang lưu…</value></data>
+  <data name="Status_Selecting" xml:space="preserve"><value>Kéo để chọn vùng (Esc để huỷ).</value></data>
+
+  <data name="Toast_AutoArmed" xml:space="preserve"><value>Đã bật sẵn sàng hotkey cho game này</value></data>
+  <data name="Toast_CaptureFailed" xml:space="preserve"><value>Chụp thất bại</value></data>
+  <data name="Toast_CaptureSaved" xml:space="preserve"><value>Đã lưu ảnh chụp</value></data>
+  <data name="Toast_CaptureSavedCopied" xml:space="preserve"><value>{0} (đồng thời đã copy vào clipboard)</value></data>
+  <data name="Toast_ClipboardCopied" xml:space="preserve"><value>Đã copy vào clipboard</value></data>
+  <data name="Toast_Countdown" xml:space="preserve"><value>Chụp sau {0}…</value></data>
+  <data name="Toast_CountdownTitle" xml:space="preserve"><value>Đếm ngược chụp</value></data>
+  <data name="Toast_Error" xml:space="preserve"><value>Lỗi</value></data>
+  <data name="Toast_OcrEmpty" xml:space="preserve"><value>Không tìm thấy văn bản trong ảnh</value></data>
+  <data name="Toast_OcrFailed" xml:space="preserve"><value>Nhận dạng văn bản thất bại.</value></data>
+  <data name="Toast_OcrSuccess" xml:space="preserve"><value>Đã copy {0} từ</value></data>
+  <data name="Toast_OcrUnavailable" xml:space="preserve"><value>Bộ máy OCR không khả dụng cho ngôn ngữ này</value></data>
+  <data name="Toast_PathCopied" xml:space="preserve"><value>Đã copy đường dẫn</value></data>
+  <data name="Toast_SettingsExported" xml:space="preserve"><value>Đã xuất cài đặt</value></data>
+  <data name="Toast_SettingsImported" xml:space="preserve"><value>Đã nhập cài đặt</value></data>
+
+  <data name="Tray_Arm" xml:space="preserve"><value>Bật sẵn sàng hotkey</value></data>
+  <data name="Tray_CaptureMonitor" xml:space="preserve"><value>Chụp màn hình</value></data>
+  <data name="Tray_CaptureRegion" xml:space="preserve"><value>Chụp vùng</value></data>
+  <data name="Tray_CaptureWindow" xml:space="preserve"><value>Chụp cửa sổ</value></data>
+  <data name="Tray_Disarm" xml:space="preserve"><value>Ngừng hotkey</value></data>
+  <data name="Tray_Exit" xml:space="preserve"><value>Thoát</value></data>
+  <data name="Tray_OpenFolder" xml:space="preserve"><value>Mở thư mục ảnh</value></data>
+  <data name="Tray_ShowWindow" xml:space="preserve"><value>Hiện CaptureImage</value></data>
+
+  <data name="Update_Check" xml:space="preserve"><value>Kiểm tra bản mới</value></data>
+  <data name="Update_CurrentVersion" xml:space="preserve"><value>Phiên bản đã cài:</value></data>
+  <data name="Update_Download" xml:space="preserve"><value>Tải về</value></data>
+  <data name="Update_Install" xml:space="preserve"><value>Cài đặt &amp; khởi động lại</value></data>
+  <data name="Update_Log" xml:space="preserve"><value>Nhật ký</value></data>
+  <data name="Update_OpenReleases" xml:space="preserve"><value>Trang phát hành</value></data>
+  <data name="Update_Progress" xml:space="preserve"><value>Tiến trình cập nhật</value></data>
+  <data name="Update_ReleaseNotes" xml:space="preserve"><value>Ghi chú phát hành</value></data>
+  <data name="Update_Status_Checking" xml:space="preserve"><value>Đang kiểm tra cập nhật…</value></data>
+  <data name="Update_Status_Downloading" xml:space="preserve"><value>Đang tải bản cập nhật…</value></data>
+  <data name="Update_Status_Failed" xml:space="preserve"><value>Đã xảy ra lỗi. Chi tiết nằm trong nhật ký bên dưới.</value></data>
+  <data name="Update_Status_Idle" xml:space="preserve"><value>Kiểm tra phiên bản mới trên GitHub.</value></data>
+  <data name="Update_Status_Installing" xml:space="preserve"><value>Đang cài đặt — CaptureImage sẽ khởi động lại trong giây lát…</value></data>
+  <data name="Update_Status_Ready" xml:space="preserve"><value>Bản cập nhật đã sẵn sàng. Khởi động lại để cài đặt.</value></data>
+  <data name="Update_Status_Unavailable" xml:space="preserve"><value>Chỉ bản cài đặt mới cập nhật được (bản zip portable hoặc bản tự build thì không).</value></data>
+  <data name="Update_Status_UpdateAvailable" xml:space="preserve"><value>Đã có phiên bản {0}.</value></data>
+  <data name="Update_Status_UpToDate" xml:space="preserve"><value>Bạn đang dùng phiên bản mới nhất.</value></data>
+  <data name="Update_Subtitle" xml:space="preserve"><value>Bản cập nhật được tải từ GitHub Releases và được cài khi CaptureImage khởi động lại.</value></data>
+  <data name="Update_Title" xml:space="preserve"><value>Cập nhật</value></data>
+
+</root>

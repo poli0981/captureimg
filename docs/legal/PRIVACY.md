@@ -1,114 +1,101 @@
 # Privacy Policy
 
-_Last updated: 2026-04-15_
+_Last updated: 2026-10-19 (CaptureImage 2.0)_
 
-This policy describes what data **CaptureImage** reads from your computer,
-what it stores, and what it sends over the network. It applies to the
-official builds distributed from the project's GitHub Releases page.
+This policy describes what **CaptureImage** reads on your computer, what it stores, and what it
+sends over the network. It applies to the official builds published on the project's
+[GitHub Releases](https://github.com/poli0981/captureimg/releases) page.
 
 ## Summary
 
-- CaptureImage is a **local, offline-first** desktop application.
-- It **does not** collect telemetry, analytics, usage metrics, crash
-  reports, or any personal information.
-- It does not create an account, ask for credentials, or authenticate you
-  with any service.
-- The only network access the app performs is the **update check** against
-  a configured GitHub repository's Releases API (see §3), and only when you
-  explicitly enable auto-check in Settings or click "Check for updates".
-- Optional cloud upload providers (Google Drive, Dropbox) are **post-1.0
-  stretch features** and are not present in this release.
+- CaptureImage is a **local, offline** desktop application.
+- It collects **no telemetry, analytics, usage statistics or crash reports**, and has no account
+  or sign-in.
+- The only network access is the **update check and download** against GitHub Releases (§3).
+- Captures stay on your computer unless you move them yourself.
 
-## 1. Data the app reads from your machine
-
-To build the list of capture targets and to save your settings, the app
-reads the following on each launch or when you refresh the Dashboard:
+## 1. What the app reads
 
 | Source | What is read | Why |
 |---|---|---|
-| Running processes | Process IDs, process names, executable paths, main window handles and titles | Populate the Dashboard list; resolve a target HWND for capture |
-| Executable icons | The associated icon of each target's `.exe` | Display next to each target in the Dashboard |
-| Windows registry | `HKLM\SOFTWARE\Valve\Steam\InstallPath` (32- and 64-bit views) | Locate the Steam install directory |
-| File system | `steamapps\libraryfolders.vdf` and `steamapps\appmanifest_*.acf` under every detected Steam library | Attribute capture targets to Steam games so the warning badge can be shown |
-| File system | `%LocalAppData%\CaptureImage\settings.json` | Load your persisted preferences |
-| File system | The captured window's pixel buffer via Direct3D11 / GDI | Produce the output image |
+| Open windows | Window handles, titles, process ids, process names and executable paths, from Windows window events (`SetWinEventHook`) and process queries | The Dashboard window list, game profiles and auto-arm |
+| Executable icons | The icon of each listed program | Shown next to each window |
+| Displays | Monitor positions, scaling (DPI), HDR state and SDR white level | Multi-monitor capture and HDR tone mapping |
+| Screen contents | The pixels of the window, monitor or area being captured — **only when you press a capture hotkey or click a capture button** | To produce the screenshot |
+| Steam | `HKCU\Software\Valve\Steam\SteamPath` or `HKLM\SOFTWARE\Valve\Steam\InstallPath`, then `libraryfolders.vdf` and `appmanifest_*.acf` | The Steam badge and Steam AppId matching in profiles |
+| Image files | Pictures in your capture output folders | The Library index and its thumbnails |
+| Settings | `settings.json` in the data folder (§2); on the first start of 2.x, the 1.x file in `%LocalAppData%\CaptureImage` is copied | Your preferences |
 
-None of this data leaves your machine. Everything is kept in memory for the
-duration of the process, except settings and the captures you explicitly
-save.
+Keyboard input is **not** monitored. The capture hotkeys are registered with Windows
+(`RegisterHotKey`) only while you have them armed; Windows then tells the app when one of those
+exact combinations is pressed. While the hotkey recorder in Settings is open, it reads the keys you
+press in that field.
 
-## 2. Data the app writes to your machine
+**Text recognition (OCR)** runs on your device with the Windows OCR engine, only when you click
+**Extract text**; the recognized text is copied to your clipboard and is not stored.
 
-| Location | What is written | Retention |
+## 2. What the app writes
+
+| Location | Content | Kept until |
 |---|---|---|
-| `%LocalAppData%\CaptureImage\settings.json` | Your preferences (language, hotkey, format, quality sliders, output folder, toggles) | Until you delete the file or uninstall the app |
-| `%LocalAppData%\CaptureImage\logs\captureimg-YYYYMMDD.log` | Diagnostic log: process list, capture events, errors, settings changes | Rolling daily; max 14 files, 10 MB each |
-| Your chosen output folder (default: `%USERPROFILE%\Pictures\CaptureImage\`) | The PNG / JPEG / WebP / TIFF files you capture | Until you delete them |
+| `%LocalAppData%\poli0981\CaptureImage\settings.json` (and `settings.*.bak.json` backups made before a reset or when a file can't be read) | Your preferences and game profiles | You reset them or delete the folder |
+| `%LocalAppData%\poli0981\CaptureImage\library.json` | Path, time, size, format and game name of each capture | The capture is deleted or the folder is removed |
+| `%LocalAppData%\poli0981\CaptureImage\thumbnails\` | Small JPEG previews for the Library | You delete the folder |
+| `%LocalAppData%\poli0981\CaptureImage\logs\` | Diagnostic log (§2.1) | 14 daily files, at most 10 MB each |
+| Your output folder (default `Pictures\CaptureImage`) | Your captures, and the `.jxr` HDR original when that option is on | You delete them |
+| Clipboard | A capture, a file path or recognized text — when you choose to copy, or when the clipboard mode is on | The next thing you copy |
+| `HKCU\Software\Microsoft\Windows\CurrentVersion\Run` → `CaptureImage` | The command that starts the app with Windows — only when **Start with Windows** is on | You turn the option off or uninstall |
 
-Logs are written in plain text and contain only information the app
-already knows about your local environment (process names, window titles,
-file paths, error stacks). They do **not** contain window contents, pixel
-data, or personal information from your documents.
+Deleting a capture in the Library moves it (and its HDR original) to the **Recycle Bin**.
+
+### 2.1 Logs
+
+Logs contain what the app does: settings changes, capture results with file names and sizes,
+hotkey registrations, errors. Your user-profile path is replaced by `%USERPROFILE%`, and window
+titles are only logged at the **Debug** level. Logs never contain pixels or the content of your
+documents.
+
+### 2.2 Diagnostics export
+
+**Settings → Advanced → Export diagnostics** creates a zip with recent logs, your settings and
+system information (Windows and .NET versions, graphics adapter, monitors, scaling and HDR state),
+with user paths removed. It is saved where you choose and is never sent anywhere by the app —
+attach it to a bug report only if you want to.
+
+### 2.3 Local communication
+
+A second copy of the app talks to the first through a local named pipe that only your Windows
+account can open, to bring the existing window forward. Nothing leaves the computer.
 
 ## 3. Network access
 
-The only built-in network access is the **update check**, and only when
-both of the following are true:
+The app connects to the internet only to **check for and download updates**:
 
-1. `UiSettings.AutoCheck` is enabled (off by default) **or** you click the
-   "Check for updates" button manually.
-2. You are connected to the internet.
+- when you open the **Update** page (one check per session) or click **Check for updates**, it
+  downloads the release list (`releases.win.json`) from this project's GitHub Releases over HTTPS;
+- when you click **Download**, it downloads the update package from GitHub.
 
-The update check performs an HTTPS GET against the GitHub Releases API for
-the configured repository. No cookies, headers, or identifiers are sent
-beyond the standard `User-Agent` that the .NET HTTP client adds, and
-Velopack's default metadata. GitHub may log the request in its own access
-logs under GitHub's privacy policy — CaptureImage does not control or
-receive those logs.
+No identifiers, cookies or system information are sent beyond what any HTTPS request carries (your
+IP address and a standard user agent). GitHub may log these requests under
+[its own privacy statement](https://docs.github.com/site-policy/privacy-policies/github-general-privacy-statement).
 
-If an update is available, clicking **Download** issues a second HTTPS
-request to GitHub's Releases CDN for the package bytes. Download progress
-is kept entirely in memory.
+When the .NET Desktop Runtime is missing, Setup and the updater download it from Microsoft.
+Links in the About page open in your browser; the app itself does not fetch them.
 
-CaptureImage does **not**:
+CaptureImage does **not** send crash reports, contact analytics or license servers, upload
+captures, or collect hardware identifiers.
 
-- Send crash reports.
-- Ping any analytics or metrics endpoint.
-- Upload any captured image anywhere automatically.
-- Check in with a license server.
-- Phone home with system information, hardware fingerprints, or GUIDs.
+## 4. Your choices
 
-## 4. Optional cloud upload (future)
+- Disarm the hotkeys at any time; nothing is captured without your action.
+- Delete `%LocalAppData%\poli0981\CaptureImage` to remove settings, the library index, thumbnails
+  and logs. Uninstalling removes the program and the "Start with Windows" entry; your captures and
+  the data folder stay until you delete them.
+- The source code is public under GPL-3.0, so every behavior above can be checked.
 
-The project plan includes optional cloud upload providers (Google Drive,
-Dropbox) as a post-1.0 stretch feature. If/when those land, they will be
-**off by default**, documented separately in this file, and require the
-user to:
+Changes to this policy are listed in [`CHANGELOG.md`](../../CHANGELOG.md) and in the date above.
 
-1. Explicitly enable the provider in Settings.
-2. Complete an OAuth authorization flow that grants the app access to a
-   single folder.
-3. Opt in per-capture or via a global toggle.
+## 5. Contact
 
-No cloud upload code is present or compiled into the binary in this
-release.
-
-## 5. Your rights
-
-Because no data leaves your machine, there is nothing for the project to
-delete, export, or access on request. You can:
-
-- Delete `%LocalAppData%\CaptureImage\` to clear all settings and logs.
-- Uninstall the app via its installer or by deleting its folder.
-- Review the source code on GitHub — the project is licensed under
-  GPL-3.0 so every network call is auditable.
-
-If a future release changes this policy, the changes will be noted in
-[`CHANGELOG.md`](../../CHANGELOG.md) and in the `Last updated` field at the
-top of this file.
-
-## 6. Contact
-
-CaptureImage is a volunteer-run open-source project. Privacy questions can
-be raised as GitHub issues on the repository. There is no dedicated
-privacy officer, data processing agreement, or paid support channel.
+Privacy questions: `privacy@poli0981.dev`. Other channels: <https://poli0981.dev/links>.
+CaptureImage is a volunteer open-source project with no paid support.

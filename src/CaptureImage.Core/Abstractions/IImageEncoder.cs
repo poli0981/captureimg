@@ -5,30 +5,40 @@ using CaptureImage.Core.Models;
 
 namespace CaptureImage.Core.Abstractions;
 
-/// <summary>
-/// Encodes a <see cref="CapturedFrame"/> to a byte stream in a target <see cref="ImageFormat"/>.
-/// Encoders may be format-specialized (SkiaSharp for PNG/JPEG/WebP, WIC for TIFF);
-/// the dispatcher picks the right one per request.
-/// </summary>
+/// <summary>PNG zlib effort.</summary>
+public enum PngCompressionLevel
+{
+    /// <summary>Fastest save, larger files.</summary>
+    Fast,
+
+    /// <summary>Default trade-off.</summary>
+    Balanced,
+
+    /// <summary>Smallest files, slowest save.</summary>
+    Smallest,
+}
+
+/// <summary>Text metadata embedded into saved images where the format supports it.</summary>
+public sealed record ImageMetadata(string? Title, string Software, DateTimeOffset CapturedAt);
+
+/// <summary>Per-save encoder options.</summary>
+public sealed record EncoderSettings(
+    int JpegQuality = 90,
+    int WebpQuality = 85,
+    PngCompressionLevel PngCompression = PngCompressionLevel.Balanced,
+    ImageMetadata? Metadata = null);
+
+/// <summary>Encodes a <see cref="CapturedFrame"/> into an image file stream.</summary>
 public interface IImageEncoder
 {
-    /// <summary>True if this encoder can handle <paramref name="format"/>.</summary>
-    bool Supports(ImageFormat format);
+    /// <summary>True if this encoder can write <paramref name="format"/> from <paramref name="pixelFormat"/> input.</summary>
+    bool Supports(ImageFormat format, FramePixelFormat pixelFormat);
 
-    /// <summary>
-    /// Encode <paramref name="frame"/> into <paramref name="destination"/>.
-    /// </summary>
-    /// <param name="frame">Raw BGRA source frame.</param>
-    /// <param name="format">Target format. Must be supported by this encoder.</param>
-    /// <param name="jpegQuality">1-100, used only when format is JPEG.</param>
-    /// <param name="webpQuality">1-100, used only when format is WebP.</param>
-    /// <param name="destination">Writable stream; flushed but not closed.</param>
-    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <summary>Encode into <paramref name="destination"/> (flushed, not closed).</summary>
     Task EncodeAsync(
         CapturedFrame frame,
         ImageFormat format,
-        int jpegQuality,
-        int webpQuality,
+        EncoderSettings settings,
         Stream destination,
         CancellationToken cancellationToken = default);
 }

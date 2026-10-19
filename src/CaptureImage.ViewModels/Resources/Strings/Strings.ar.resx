@@ -1,0 +1,360 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="xml:space" type="xsd:string" msdata:Ordinal="4" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+
+  <!-- Navigation -->
+  <data name="About_AiNotice" xml:space="preserve"><value>يُطوَّر CaptureImage بمساعدة كبيرة من مساعد برمجة يعمل بالذكاء الاصطناعي (Claude من Anthropic عبر Claude Code) في كتابة الشيفرة والاختبارات والتوثيق. يراجع المشرف كل تغيير ويختبره قبل الإصدار.</value></data>
+  <data name="About_AiSection" xml:space="preserve"><value>التطوير بمساعدة الذكاء الاصطناعي</value></data>
+  <data name="About_CaptureDisclaimer" xml:space="preserve"><value>دعم الالتقاط</value></data>
+  <data name="About_CaptureLimitationDisclaimerBody" xml:space="preserve"><value>يمكن لـ CaptureImage التقاط معظم الألعاب النافذية وعديمة الحدود عبر Windows.Graphics.Capture، لكن ليست كل لعبة تعمل. الأسطح المحمية بـ DRM، وألعاب Direct3D 9 بالشاشة الكاملة الحصرية، والألعاب ذات خطافات anti-cheat قد تعيد إطارات سوداء أو ترفض الالتقاط. تُجرَّب آلية احتياطية GDI PrintWindow للتطبيقات القديمة. راجع docs/legal/DISCLAIMER.md §2 للقائمة الكاملة.</value></data>
+  <data name="About_ContactSection" xml:space="preserve"><value>تواصل مع المطور</value></data>
+  <data name="About_DeveloperLabel" xml:space="preserve"><value>المطور</value></data>
+  <data name="About_DisclaimersSection" xml:space="preserve"><value>إخلاءات المسؤولية</value></data>
+  <data name="About_Discussions" xml:space="preserve"><value>النقاشات</value></data>
+  <data name="About_DonateBody" xml:space="preserve"><value>CaptureImage مجاني ومفتوح المصدر. إذا ساعدك، فكر في دعم التطوير من خلال إحدى هذه الطرق:</value></data>
+  <data name="About_DonateSection" xml:space="preserve"><value>ادعم المشروع</value></data>
+  <data name="About_Email" xml:space="preserve"><value>البريد الإلكتروني</value></data>
+  <data name="About_FeedbackSection" xml:space="preserve"><value>الملاحظات</value></data>
+  <data name="About_LegalSection" xml:space="preserve"><value>المستندات القانونية</value></data>
+  <data name="About_LiabilityDisclaimer" xml:space="preserve"><value>بدون ضمان</value></data>
+  <data name="About_LiabilityDisclaimerBody" xml:space="preserve"><value>يُوزَّع CaptureImage بموجب GPL-3.0-or-later كما هو، دون أي ضمان من أي نوع. المؤلفون غير مسؤولين عن لقطات الشاشة المفقودة أو تعطل الألعاب أو عقوبات anti-cheat أو فقد البيانات. الاستخدام على مسؤوليتك الخاصة. راجع docs/legal/DISCLAIMER.md للنص الكامل.</value></data>
+  <data name="About_LicenseLabel" xml:space="preserve"><value>الترخيص</value></data>
+  <data name="About_OpenBugReport" xml:space="preserve"><value>الإبلاغ عن خطأ</value></data>
+  <data name="About_OpenBugReportHint" xml:space="preserve"><value>يفتح متعقب مشكلات GitHub مع نموذج تقرير الخطأ معبأ مسبقًا.</value></data>
+  <data name="About_OpenContributors" xml:space="preserve"><value>Contributors</value></data>
+  <data name="About_OpenDisclaimer" xml:space="preserve"><value>Disclaimer</value></data>
+  <data name="About_OpenLicense" xml:space="preserve"><value>License (GPL-3.0)</value></data>
+  <data name="About_OpenNotice" xml:space="preserve"><value>إشعار حقوق النشر</value></data>
+  <data name="About_OpenPrivacy" xml:space="preserve"><value>Privacy</value></data>
+  <data name="About_OpenTerms" xml:space="preserve"><value>Terms</value></data>
+  <data name="About_OpenThirdParty" xml:space="preserve"><value>Third-party notices</value></data>
+  <data name="About_OtherChannels" xml:space="preserve"><value>قنوات أخرى</value></data>
+  <data name="About_ReleaseNotes" xml:space="preserve"><value>ملاحظات الإصدار</value></data>
+  <data name="About_RepositoryLabel" xml:space="preserve"><value>المستودع</value></data>
+  <data name="About_RequestFeature" xml:space="preserve"><value>اقترح ميزة</value></data>
+  <data name="About_SponsorEmail" xml:space="preserve"><value>استفسارات الرعاية</value></data>
+  <data name="About_Tagline" xml:space="preserve"><value>أداة خفيفة لالتقاط الشاشة على Windows للألعاب التي لا تحتوي على مفتاح التقاط مدمج.</value></data>
+  <data name="About_ThirdPartySection" xml:space="preserve"><value>مكونات الطرف الثالث</value></data>
+  <data name="About_TranslationDisclaimer" xml:space="preserve"><value>الترجمات</value></data>
+  <data name="About_TranslationDisclaimerBody" xml:space="preserve"><value>حزم لغة الفيتنامية والعربية واليابانية والصينية المبسطة والكورية والإسبانية والفرنسية والألمانية والبرتغالية البرازيلية والروسية مترجمة بمساعدة الآلة. قد لا تتطابق المصطلحات مع العرف المحلي، وبعض الكلمات التقنية (hotkey، toast، frame، إلخ) تُركت بالإنجليزية عمداً. نرحب بمتحدثي اللغة الأم الراغبين في المراجعة لإرسال طلبات سحب على ملفات .resx في src/CaptureImage.UI/Resources/Strings/.</value></data>
+  <data name="About_VersionLabel" xml:space="preserve"><value>الإصدار</value></data>
+
+  <data name="Common_Browse" xml:space="preserve"><value>استعراض…</value></data>
+  <data name="Common_Cancel" xml:space="preserve"><value>إلغاء</value></data>
+  <data name="Common_Close" xml:space="preserve"><value>إغلاق</value></data>
+  <data name="Common_CopyImage" xml:space="preserve"><value>نسخ الصورة</value></data>
+
+  <data name="Dashboard_Arm" xml:space="preserve"><value>تفعيل</value></data>
+  <data name="Dashboard_CaptureMonitor" xml:space="preserve"><value>التقاط الشاشة</value></data>
+  <data name="Dashboard_CaptureRegion" xml:space="preserve"><value>التقاط منطقة</value></data>
+  <data name="Dashboard_CaptureSelected" xml:space="preserve"><value>التقاط النافذة</value></data>
+  <data name="Dashboard_CreateProfile" xml:space="preserve"><value>إنشاء ملف تعريف</value></data>
+  <data name="Dashboard_Disarm" xml:space="preserve"><value>إلغاء التفعيل</value></data>
+  <data name="Dashboard_EmptyState" xml:space="preserve"><value>لا توجد نوافذ مرئية للالتقاط — شغّل لعبتك أو تطبيقك، ثم انقر على تحديث.</value></data>
+  <data name="Dashboard_Hotkeys" xml:space="preserve"><value>مفاتيح اختصار الالتقاط</value></data>
+  <data name="Dashboard_Locked" xml:space="preserve"><value>مثبّت</value></data>
+  <data name="Dashboard_LockedLabel" xml:space="preserve"><value>مفتاح اختصار النافذة يلتقط:</value></data>
+  <data name="Dashboard_LockSelected" xml:space="preserve"><value>تثبيت كهدف</value></data>
+  <data name="Dashboard_Minimized" xml:space="preserve"><value>مصغّرة</value></data>
+  <data name="Dashboard_ProfileBadge" xml:space="preserve"><value>ملف التعريف: {0}</value></data>
+  <data name="Dashboard_Refresh" xml:space="preserve"><value>تحديث</value></data>
+  <data name="Dashboard_Search" xml:space="preserve"><value>البحث في النوافذ</value></data>
+  <data name="Dashboard_SteamBadge" xml:space="preserve"><value>STEAM</value></data>
+  <data name="Dashboard_SteamBadgeTooltip" xml:space="preserve"><value>لعبة Steam: {0} (AppId {1}). F12 متاح عبر Steam Overlay. بعض الألعاب المحمية بـ anti-cheat قد تمنع الالتقاط الخارجي.</value></data>
+  <data name="Dashboard_Subtitle" xml:space="preserve"><value>فعّل مفاتيح الاختصار، ثم اضغط أحدها داخل لعبتك. ثبّت نافذة لالتقاطها دائمًا.</value></data>
+  <data name="Dashboard_Title" xml:space="preserve"><value>لوحة التحكم</value></data>
+  <data name="Dashboard_Unlock" xml:space="preserve"><value>إلغاء التثبيت</value></data>
+  <data name="Dashboard_Windows" xml:space="preserve"><value>النوافذ المفتوحة</value></data>
+
+  <data name="Error_Cancelled" xml:space="preserve"><value>تم إلغاء الالتقاط.</value></data>
+  <data name="Error_EncodingFailure" xml:space="preserve"><value>تعذّر ترميز الصورة.</value></data>
+  <data name="Error_FileWriteFailure" xml:space="preserve"><value>تعذّر حفظ الملف. تحقق من مجلد الإخراج والمساحة الفارغة على القرص.</value></data>
+  <data name="Error_GraphicsDeviceFailure" xml:space="preserve"><value>توقف برنامج تشغيل الرسومات عن الاستجابة. حاول مجددًا بعد قليل.</value></data>
+  <data name="Error_NoFrameArrived" xml:space="preserve"><value>لم تصل أي صورة من Windows. تأكد من أن النافذة ظاهرة ثم حاول مجددًا.</value></data>
+  <data name="Error_NoTarget" xml:space="preserve"><value>لا توجد نافذة لالتقاطها. اجلب لعبة إلى المقدمة أو ثبّت نافذة في لوحة التحكم.</value></data>
+  <data name="Error_NotSupported" xml:space="preserve"><value>التقاط الشاشة غير مدعوم على هذا النظام.</value></data>
+  <data name="Error_ProcessExited" xml:space="preserve"><value>تم إغلاق اللعبة أو التطبيق.</value></data>
+  <data name="Error_ProtectedContent" xml:space="preserve"><value>هذه النافذة تمنع التقاط الشاشة (محتوى محمي).</value></data>
+  <data name="Error_TargetGone" xml:space="preserve"><value>تم إغلاق النافذة.</value></data>
+  <data name="Error_TargetMinimized" xml:space="preserve"><value>النافذة مصغّرة. استعِدها ثم حاول مجددًا.</value></data>
+  <data name="Error_Unknown" xml:space="preserve"><value>حدث خطأ ما. التفاصيل في السجل.</value></data>
+
+  <data name="Hotkey_None" xml:space="preserve"><value>غير معيّن</value></data>
+  <data name="Hotkey_PressKeys" xml:space="preserve"><value>اضغط المفاتيح…</value></data>
+  <data name="Hotkey_ProblemMessage" xml:space="preserve"><value>يستخدم تطبيق آخر أحد مفاتيح اختصار الالتقاط، أو أن المجموعة غير صالحة. اختر مجموعة أخرى في الإعدادات.</value></data>
+  <data name="Hotkey_ProblemTitle" xml:space="preserve"><value>أحد مفاتيح الاختصار لا يعمل</value></data>
+  <data name="Hotkey_StatusActive" xml:space="preserve"><value>نشط</value></data>
+  <data name="Hotkey_StatusConflict" xml:space="preserve"><value>مستخدم من تطبيق آخر</value></data>
+  <data name="Hotkey_StatusInactive" xml:space="preserve"><value>متوقف حتى التفعيل</value></data>
+  <data name="Hotkey_StatusInvalid" xml:space="preserve"><value>مجموعة غير صالحة</value></data>
+  <data name="Hotkey_StatusUnbound" xml:space="preserve"><value>غير معيّن</value></data>
+  <data name="Hotkey_TakenByOtherApp" xml:space="preserve"><value>يستخدم تطبيق آخر هذه المجموعة بالفعل. اختر مجموعة أخرى.</value></data>
+  <data name="Hotkey_UsedByMode" xml:space="preserve"><value>مستخدم بالفعل لـ {0}.</value></data>
+  <data name="Hotkey_Validation_ModifierOnlyKey" xml:space="preserve"><value>مفتاح التعديل وحده غير كافٍ — أضف حرفًا أو مفتاح F.</value></data>
+  <data name="Hotkey_Validation_NoPrimaryKey" xml:space="preserve"><value>حدد مفتاحًا رئيسيًا (مثل حرف أو مفتاح F).</value></data>
+  <data name="Hotkey_Validation_RequiresModifier" xml:space="preserve"><value>الحروف والأرقام العادية تحتاج إلى مفتاح تعديل واحد على الأقل (Ctrl/Alt/Shift/Win).</value></data>
+  <data name="Hotkey_Validation_ReservedByWindows" xml:space="preserve"><value>هذه المجموعة محجوزة من قبل Windows ولا يمكن التقاطها.</value></data>
+
+  <data name="Library_AllGames" xml:space="preserve"><value>كل الألعاب</value></data>
+  <data name="Library_CopyFailed" xml:space="preserve"><value>تعذّرت قراءة الصورة.</value></data>
+  <data name="Library_CopyPath" xml:space="preserve"><value>نسخ المسار</value></data>
+  <data name="Library_Delete" xml:space="preserve"><value>حذف</value></data>
+  <data name="Library_Deleted" xml:space="preserve"><value>تم النقل إلى سلة المحذوفات</value></data>
+  <data name="Library_DeleteFailed" xml:space="preserve"><value>تعذّر نقل الملف إلى سلة المحذوفات.</value></data>
+  <data name="Library_DeleteMessage" xml:space="preserve"><value>هل تريد نقل {0} إلى سلة المحذوفات؟</value></data>
+  <data name="Library_DeleteTitle" xml:space="preserve"><value>حذف اللقطة</value></data>
+  <data name="Library_Empty" xml:space="preserve"><value>لا توجد لقطات بعد. فعّل مفاتيح الاختصار والتقط أول لقطة شاشة.</value></data>
+  <data name="Library_GameFilter" xml:space="preserve"><value>تصفية حسب اللعبة</value></data>
+  <data name="Library_HdrOnly" xml:space="preserve"><value>HDR فقط</value></data>
+  <data name="Library_Open" xml:space="preserve"><value>فتح</value></data>
+  <data name="Library_OpenHdr" xml:space="preserve"><value>فتح نسخة HDR</value></data>
+  <data name="Library_Pin" xml:space="preserve"><value>تثبيت على الشاشة</value></data>
+  <data name="Library_Reveal" xml:space="preserve"><value>إظهار في المجلد</value></data>
+  <data name="Library_Search" xml:space="preserve"><value>البحث في اللقطات</value></data>
+  <data name="Library_SelectHint" xml:space="preserve"><value>اختر لقطة لعرض تفاصيلها.</value></data>
+  <data name="Library_Summary" xml:space="preserve"><value>{0} من {1} لقطة</value></data>
+  <data name="Library_Title" xml:space="preserve"><value>مكتبة اللقطات</value></data>
+
+  <data name="Log_Clear" xml:space="preserve"><value>مسح</value></data>
+  <data name="Log_EmptyState" xml:space="preserve"><value>لا توجد أحداث سجل بعد. ستظهر الأحداث المباشرة من محرك الالتقاط هنا.</value></data>
+  <data name="Log_Pause" xml:space="preserve"><value>إيقاف مؤقت</value></data>
+  <data name="Log_RevealFolder" xml:space="preserve"><value>فتح المجلد</value></data>
+
+  <data name="Logs_CopyAll" xml:space="preserve"><value>نسخ الكل</value></data>
+  <data name="Logs_CopySelected" xml:space="preserve"><value>نسخ السطر المحدد</value></data>
+  <data name="Logs_Level" xml:space="preserve"><value>الحد الأدنى</value></data>
+  <data name="Logs_LevelAll" xml:space="preserve"><value>كل المستويات</value></data>
+  <data name="Logs_Search" xml:space="preserve"><value>البحث في السجل</value></data>
+  <data name="Logs_Subtitle" xml:space="preserve"><value>أحدث أحداث هذه الجلسة. استخدم «تصدير بيانات التشخيص» عند الإبلاغ عن مشكلة.</value></data>
+  <data name="Logs_Title" xml:space="preserve"><value>السجل في الوقت الفعلي</value></data>
+
+  <data name="Mode_Monitor" xml:space="preserve"><value>الشاشة</value></data>
+  <data name="Mode_Region" xml:space="preserve"><value>منطقة</value></data>
+  <data name="Mode_Window" xml:space="preserve"><value>نافذة</value></data>
+
+  <data name="Nav_About" xml:space="preserve"><value>حول</value></data>
+  <data name="Nav_Dashboard" xml:space="preserve"><value>لوحة التحكم</value></data>
+  <data name="Nav_Library" xml:space="preserve"><value>المكتبة</value></data>
+  <data name="Nav_Logs" xml:space="preserve"><value>السجل</value></data>
+  <data name="Nav_Profiles" xml:space="preserve"><value>ملفات التعريف</value></data>
+  <data name="Nav_Settings" xml:space="preserve"><value>الإعدادات</value></data>
+  <data name="Nav_Update" xml:space="preserve"><value>تحديث</value></data>
+
+  <data name="PinnedWindow_Close" xml:space="preserve"><value>إغلاق</value></data>
+  <data name="PinnedWindow_Open" xml:space="preserve"><value>إظهار في المستكشف</value></data>
+
+  <data name="Preview_Discard" xml:space="preserve"><value>تجاهل</value></data>
+  <data name="Preview_ExtractText" xml:space="preserve"><value>استخراج النص (OCR)</value></data>
+  <data name="Preview_Prompt" xml:space="preserve"><value>حفظ هذا الالتقاط؟</value></data>
+  <data name="Preview_Save" xml:space="preserve"><value>حفظ</value></data>
+  <data name="Preview_Title" xml:space="preserve"><value>معاينة</value></data>
+
+  <data name="Profiles_Add" xml:space="preserve"><value>إضافة ملف تعريف</value></data>
+  <data name="Profiles_AutoArm" xml:space="preserve"><value>التفعيل تلقائيًا</value></data>
+  <data name="Profiles_AutoArmBadge" xml:space="preserve"><value>تفعيل تلقائي</value></data>
+  <data name="Profiles_AutoArmHint" xml:space="preserve"><value>فعّل مفاتيح الاختصار عندما تصبح هذه اللعبة في المقدمة.</value></data>
+  <data name="Profiles_AutomationSection" xml:space="preserve"><value>الأتمتة</value></data>
+  <data name="Profiles_Delete" xml:space="preserve"><value>حذف</value></data>
+  <data name="Profiles_DeleteMessage" xml:space="preserve"><value>هل تريد حذف ملف التعريف "{0}"؟ تبقى اللقطات المحفوظة كما هي.</value></data>
+  <data name="Profiles_DeleteTitle" xml:space="preserve"><value>حذف ملف التعريف</value></data>
+  <data name="Profiles_DisabledBadge" xml:space="preserve"><value>متوقف</value></data>
+  <data name="Profiles_Empty" xml:space="preserve"><value>لا توجد ملفات تعريف بعد. أضف واحدًا هنا، أو استخدم «إنشاء ملف تعريف» في لوحة التحكم أثناء تشغيل اللعبة.</value></data>
+  <data name="Profiles_Enabled" xml:space="preserve"><value>ملف التعريف مُفعّل</value></data>
+  <data name="Profiles_ExecutableName" xml:space="preserve"><value>اسم الملف التنفيذي</value></data>
+  <data name="Profiles_ExecutableNameHint" xml:space="preserve"><value>يطابق اللعبة أينما كانت مثبّتة.</value></data>
+  <data name="Profiles_ExecutablePath" xml:space="preserve"><value>مسار الملف التنفيذي</value></data>
+  <data name="Profiles_ExecutablePathHint" xml:space="preserve"><value>المطابقة الأكثر تحديدًا.</value></data>
+  <data name="Profiles_LockTarget" xml:space="preserve"><value>تثبيت نافذة اللعبة</value></data>
+  <data name="Profiles_LockTargetHint" xml:space="preserve"><value>عندها يلتقط مفتاح اختصار النافذة اللعبة حتى لو كانت نافذة أخرى في المقدمة.</value></data>
+  <data name="Profiles_MatchesNothing" xml:space="preserve"><value>حدّد مسار الملف التنفيذي أو اسمه أو Steam AppId.</value></data>
+  <data name="Profiles_MatchesNothingTitle" xml:space="preserve"><value>لا يطابق ملف التعريف هذا أي لعبة بعد</value></data>
+  <data name="Profiles_MatchSection" xml:space="preserve"><value>أي لعبة</value></data>
+  <data name="Profiles_Name" xml:space="preserve"><value>الاسم</value></data>
+  <data name="Profiles_NewProfile" xml:space="preserve"><value>ملف تعريف جديد</value></data>
+  <data name="Profiles_OutputFolder" xml:space="preserve"><value>مجلد الإخراج</value></data>
+  <data name="Profiles_OutputSection" xml:space="preserve"><value>الإخراج</value></data>
+  <data name="Profiles_PickExecutable" xml:space="preserve"><value>اختر الملف التنفيذي للعبة</value></data>
+  <data name="Profiles_SteamAppId" xml:space="preserve"><value>Steam AppId</value></data>
+  <data name="Profiles_SteamAppIdInvalid" xml:space="preserve"><value>أدخل رقمًا، مثل 1245620.</value></data>
+  <data name="Profiles_Subtitle" xml:space="preserve"><value>مجلد إخراج وتنسيق واسم ملف لكل لعبة. ويمكن لملف التعريف أيضًا تفعيل مفاتيح الاختصار عند تشغيل لعبته.</value></data>
+  <data name="Profiles_Title" xml:space="preserve"><value>ملفات تعريف الألعاب</value></data>
+  <data name="Profiles_UseGlobal" xml:space="preserve"><value>استخدام الإعداد العام</value></data>
+  <data name="Profiles_UseGlobalButton" xml:space="preserve"><value>استخدام العام</value></data>
+
+  <data name="Region_DragHint" xml:space="preserve"><value>اسحب لتحديد منطقة · انقر لالتقاط الشاشة كاملة · Esc للإلغاء</value></data>
+
+  <data name="Settings_AdvancedSection" xml:space="preserve"><value>متقدم</value></data>
+  <data name="Settings_AppearanceSection" xml:space="preserve"><value>المظهر</value></data>
+  <data name="Settings_ArmOnStartup" xml:space="preserve"><value>التفعيل عند بدء CaptureImage</value></data>
+  <data name="Settings_ArmOnStartupHint" xml:space="preserve"><value>أثناء التفعيل، لا تستقبل التطبيقات الأخرى مجموعات المفاتيح هذه.</value></data>
+  <data name="Settings_AutoPinAfterCapture" xml:space="preserve"><value>تثبيت صورة مصغرة عائمة بعد كل لقطة</value></data>
+  <data name="Settings_BackupSettings" xml:space="preserve"><value>النسخ الاحتياطي للإعدادات واستعادتها</value></data>
+  <data name="Settings_BehaviorSection" xml:space="preserve"><value>السلوك</value></data>
+  <data name="Settings_CaptureSection" xml:space="preserve"><value>الالتقاط</value></data>
+  <data name="Settings_Clipboard" xml:space="preserve"><value>وضع الحافظة</value></data>
+  <data name="Settings_ClipboardCopy" xml:space="preserve"><value>نسخ فقط (بدون ملف)</value></data>
+  <data name="Settings_ClipboardCopyAndSave" xml:space="preserve"><value>نسخ + حفظ الملف</value></data>
+  <data name="Settings_ClipboardNone" xml:space="preserve"><value>إيقاف (ملف فقط)</value></data>
+  <data name="Settings_Countdown" xml:space="preserve"><value>العد التنازلي قبل الالتقاط</value></data>
+  <data name="Settings_Countdown10s" xml:space="preserve"><value>10 ثوانٍ</value></data>
+  <data name="Settings_Countdown3s" xml:space="preserve"><value>3 ثوانٍ</value></data>
+  <data name="Settings_Countdown5s" xml:space="preserve"><value>5 ثوانٍ</value></data>
+  <data name="Settings_CountdownOff" xml:space="preserve"><value>إيقاف (بدون تأخير)</value></data>
+  <data name="Settings_DataFolder" xml:space="preserve"><value>مجلد البيانات</value></data>
+  <data name="Settings_DiagnosticsExported" xml:space="preserve"><value>تم تصدير بيانات التشخيص</value></data>
+  <data name="Settings_Export" xml:space="preserve"><value>تصدير…</value></data>
+  <data name="Settings_ExportDiagnostics" xml:space="preserve"><value>تصدير بيانات التشخيص</value></data>
+  <data name="Settings_ExportDiagnosticsButton" xml:space="preserve"><value>تصدير…</value></data>
+  <data name="Settings_ExportDiagnosticsHint" xml:space="preserve"><value>ملف مضغوط يحتوي على أحدث السجلات وإعداداتك ومعلومات النظام (مع إزالة مسارات المستخدم) لإرفاقه ببلاغ الخطأ.</value></data>
+  <data name="Settings_ExportFailed" xml:space="preserve"><value>فشل التصدير.</value></data>
+  <data name="Settings_ExportSettings" xml:space="preserve"><value>تصدير الإعدادات</value></data>
+  <data name="Settings_FileNamePreview" xml:space="preserve"><value>مثال:</value></data>
+  <data name="Settings_FileNameTemplate" xml:space="preserve"><value>قالب اسم الملف</value></data>
+  <data name="Settings_FileNameTokens" xml:space="preserve"><value>المتغيرات: {Game} {Process} {Mode} {yyyy} {MM} {dd} {HH} {mm} {ss} {counter}</value></data>
+  <data name="Settings_Format" xml:space="preserve"><value>التنسيق الافتراضي</value></data>
+  <data name="Settings_HdrAuto" xml:space="preserve"><value>تلقائي (HDR على شاشات HDR)</value></data>
+  <data name="Settings_HdrMode" xml:space="preserve"><value>التقاط HDR</value></data>
+  <data name="Settings_HdrModeHint" xml:space="preserve"><value>على شاشات HDR تُلتقط الصورة بكامل نطاق HDR ثم تُحوَّل ألوانها إلى صورة عادية.</value></data>
+  <data name="Settings_HdrOff" xml:space="preserve"><value>متوقف (SDR دائمًا)</value></data>
+  <data name="Settings_HdrSection" xml:space="preserve"><value>HDR</value></data>
+  <data name="Settings_HotkeyClear" xml:space="preserve"><value>مسح</value></data>
+  <data name="Settings_HotkeyHint" xml:space="preserve"><value>انقر على مفتاح اختصار ثم اضغط المجموعة الجديدة. Esc للإلغاء، وBackspace للمسح. تعمل مفاتيح الاختصار فقط أثناء التفعيل.</value></data>
+  <data name="Settings_HotkeyMonitorDescription" xml:space="preserve"><value>يلتقط الشاشة الموجودة أسفل مؤشر الماوس.</value></data>
+  <data name="Settings_HotkeyRecord" xml:space="preserve"><value>تسجيل…</value></data>
+  <data name="Settings_HotkeyRegionDescription" xml:space="preserve"><value>يجمّد كل الشاشات ويتيح لك سحب منطقة.</value></data>
+  <data name="Settings_HotkeyReset" xml:space="preserve"><value>إعادة تعيين</value></data>
+  <data name="Settings_HotkeysSection" xml:space="preserve"><value>مفاتيح الاختصار</value></data>
+  <data name="Settings_HotkeyWindowDescription" xml:space="preserve"><value>يلتقط النافذة المثبّتة، أو النافذة الموجودة في المقدمة.</value></data>
+  <data name="Settings_Import" xml:space="preserve"><value>استيراد…</value></data>
+  <data name="Settings_ImportFailed" xml:space="preserve"><value>تعذّر استيراد هذه الإعدادات.</value></data>
+  <data name="Settings_ImportSettings" xml:space="preserve"><value>استيراد الإعدادات</value></data>
+  <data name="Settings_IncludeCursor" xml:space="preserve"><value>تضمين مؤشر الماوس</value></data>
+  <data name="Settings_IncludeWindowFrame" xml:space="preserve"><value>تضمين إطار النافذة</value></data>
+  <data name="Settings_IncludeWindowFrameHint" xml:space="preserve"><value>يحتفظ بشريط العنوان والحواف عند التقاط النوافذ.</value></data>
+  <data name="Settings_JpegQuality" xml:space="preserve"><value>جودة JPEG</value></data>
+  <data name="Settings_Language" xml:space="preserve"><value>اللغة</value></data>
+  <data name="Settings_LanguageHint" xml:space="preserve"><value>تُطبَّق التغييرات فورًا.</value></data>
+  <data name="Settings_LogLevel" xml:space="preserve"><value>الحد الأدنى لمستوى السجل</value></data>
+  <data name="Settings_LogLevelDebug" xml:space="preserve"><value>تصحيح الأخطاء</value></data>
+  <data name="Settings_LogLevelError" xml:space="preserve"><value>الأخطاء فقط</value></data>
+  <data name="Settings_LogLevelHint" xml:space="preserve"><value>يُصفّي ملف السجل المتدوّر وعارض السجل. اختر Debug للتشخيص، Information للاستخدام اليومي، Warning أو Error لتقليل الضوضاء.</value></data>
+  <data name="Settings_LogLevelInformation" xml:space="preserve"><value>معلومات</value></data>
+  <data name="Settings_LogLevelWarning" xml:space="preserve"><value>التحذيرات</value></data>
+  <data name="Settings_MinimizeToTray" xml:space="preserve"><value>زر الإغلاق يصغر إلى علبة النظام</value></data>
+  <data name="Settings_OpenFolder" xml:space="preserve"><value>فتح المجلد</value></data>
+  <data name="Settings_OpenFolderAfterSave" xml:space="preserve"><value>فتح مجلد الإخراج بعد الحفظ</value></data>
+  <data name="Settings_OutputFolder" xml:space="preserve"><value>مجلد الإخراج</value></data>
+  <data name="Settings_OutputFolderUnavailable" xml:space="preserve"><value>يتعذّر فتح مجلد الإخراج.</value></data>
+  <data name="Settings_OutputSection" xml:space="preserve"><value>الإخراج</value></data>
+  <data name="Settings_PngBalanced" xml:space="preserve"><value>متوازن</value></data>
+  <data name="Settings_PngCompression" xml:space="preserve"><value>ضغط PNG</value></data>
+  <data name="Settings_PngCompressionHint" xml:space="preserve"><value>تستغرق الملفات الأصغر وقتًا أطول في الحفظ.</value></data>
+  <data name="Settings_PngFast" xml:space="preserve"><value>سريع (ملفات أكبر)</value></data>
+  <data name="Settings_PngSmallest" xml:space="preserve"><value>الأصغر (أبطأ)</value></data>
+  <data name="Settings_PreviewBeforeSave" xml:space="preserve"><value>معاينة كل التقاط قبل الحفظ</value></data>
+  <data name="Settings_Reset" xml:space="preserve"><value>إعادة التعيين</value></data>
+  <data name="Settings_ResetDone" xml:space="preserve"><value>تمت استعادة الإعدادات الافتراضية</value></data>
+  <data name="Settings_ResetMessage" xml:space="preserve"><value>هل تريد استعادة كل الإعدادات إلى قيمها الافتراضية؟ يُنسخ الملف الحالي احتياطيًا أولًا، وتبقى لغتك كما هي.</value></data>
+  <data name="Settings_ResetSettings" xml:space="preserve"><value>إعادة تعيين كل الإعدادات</value></data>
+  <data name="Settings_ResetSettingsHint" xml:space="preserve"><value>تُحفظ نسخة احتياطية من الملف الحالي في مجلد البيانات.</value></data>
+  <data name="Settings_ResetTitle" xml:space="preserve"><value>إعادة تعيين الإعدادات</value></data>
+  <data name="Settings_ResetToDefault" xml:space="preserve"><value>إعادة إلى الافتراضي</value></data>
+  <data name="Settings_SaveHdrSidecar" xml:space="preserve"><value>الاحتفاظ بصورة HDR الأصلية</value></data>
+  <data name="Settings_SaveHdrSidecarHint" xml:space="preserve"><value>يحفظ ملف JPEG XR (.jxr) بجوار كل لقطة HDR.</value></data>
+  <data name="Settings_ShowNotifications" xml:space="preserve"><value>إظهار الإشعارات</value></data>
+  <data name="Settings_SoundEnabled" xml:space="preserve"><value>تشغيل صوت الالتقاط</value></data>
+  <data name="Settings_StartMinimized" xml:space="preserve"><value>البدء مصغّرًا في علبة النظام</value></data>
+  <data name="Settings_StartupSection" xml:space="preserve"><value>بدء التشغيل</value></data>
+  <data name="Settings_StartWithWindows" xml:space="preserve"><value>التشغيل مع Windows</value></data>
+  <data name="Settings_StartWithWindowsFailed" xml:space="preserve"><value>تعذّر تغيير التشغيل مع Windows.</value></data>
+  <data name="Settings_Subtitle" xml:space="preserve"><value>تُحفظ التغييرات تلقائيًا.</value></data>
+  <data name="Settings_Theme" xml:space="preserve"><value>السمة</value></data>
+  <data name="Settings_ThemeDark" xml:space="preserve"><value>داكن</value></data>
+  <data name="Settings_ThemeHighContrast" xml:space="preserve"><value>تباين عالٍ</value></data>
+  <data name="Settings_ThemeLight" xml:space="preserve"><value>فاتح</value></data>
+  <data name="Settings_ThemeSystem" xml:space="preserve"><value>حسب النظام</value></data>
+  <data name="Settings_Title" xml:space="preserve"><value>الإعدادات</value></data>
+  <data name="Settings_WebpQuality" xml:space="preserve"><value>جودة WebP</value></data>
+
+  <data name="Status_Armed" xml:space="preserve"><value>مُفعّل — اضغط مفتاح اختصار للالتقاط.</value></data>
+  <data name="Status_ArmedLocked" xml:space="preserve"><value>مُفعّل — مفتاح اختصار النافذة يلتقط {0}.</value></data>
+  <data name="Status_Capturing" xml:space="preserve"><value>جارٍ الالتقاط…</value></data>
+  <data name="Status_Idle" xml:space="preserve"><value>غير مُفعّل — مفاتيح اختصار الالتقاط متوقفة.</value></data>
+  <data name="Status_Saving" xml:space="preserve"><value>جارٍ الحفظ…</value></data>
+  <data name="Status_Selecting" xml:space="preserve"><value>اسحب لتحديد منطقة (Esc للإلغاء).</value></data>
+
+  <data name="Toast_AutoArmed" xml:space="preserve"><value>تم تفعيل مفاتيح الاختصار لهذه اللعبة</value></data>
+  <data name="Toast_CaptureFailed" xml:space="preserve"><value>فشل الالتقاط</value></data>
+  <data name="Toast_CaptureSaved" xml:space="preserve"><value>تم حفظ الالتقاط</value></data>
+  <data name="Toast_CaptureSavedCopied" xml:space="preserve"><value>{0} (ونُسخ أيضًا إلى الحافظة)</value></data>
+  <data name="Toast_ClipboardCopied" xml:space="preserve"><value>تم النسخ إلى الحافظة</value></data>
+  <data name="Toast_Countdown" xml:space="preserve"><value>الالتقاط خلال {0}…</value></data>
+  <data name="Toast_CountdownTitle" xml:space="preserve"><value>العد التنازلي للالتقاط</value></data>
+  <data name="Toast_Error" xml:space="preserve"><value>خطأ</value></data>
+  <data name="Toast_OcrEmpty" xml:space="preserve"><value>لم يُعثر على نص في الصورة</value></data>
+  <data name="Toast_OcrFailed" xml:space="preserve"><value>فشل التعرف على النص.</value></data>
+  <data name="Toast_OcrSuccess" xml:space="preserve"><value>تم نسخ {0} كلمة</value></data>
+  <data name="Toast_OcrUnavailable" xml:space="preserve"><value>محرك OCR غير متوفر لهذه اللغة</value></data>
+  <data name="Toast_PathCopied" xml:space="preserve"><value>تم نسخ المسار</value></data>
+  <data name="Toast_SettingsExported" xml:space="preserve"><value>تم تصدير الإعدادات</value></data>
+  <data name="Toast_SettingsImported" xml:space="preserve"><value>تم استيراد الإعدادات</value></data>
+
+  <data name="Tray_Arm" xml:space="preserve"><value>تفعيل مفاتيح الاختصار</value></data>
+  <data name="Tray_CaptureMonitor" xml:space="preserve"><value>التقاط الشاشة</value></data>
+  <data name="Tray_CaptureRegion" xml:space="preserve"><value>التقاط منطقة</value></data>
+  <data name="Tray_CaptureWindow" xml:space="preserve"><value>التقاط النافذة</value></data>
+  <data name="Tray_Disarm" xml:space="preserve"><value>إلغاء تفعيل مفاتيح الاختصار</value></data>
+  <data name="Tray_Exit" xml:space="preserve"><value>خروج</value></data>
+  <data name="Tray_OpenFolder" xml:space="preserve"><value>فتح مجلد اللقطات</value></data>
+  <data name="Tray_ShowWindow" xml:space="preserve"><value>عرض CaptureImage</value></data>
+
+  <data name="Update_Check" xml:space="preserve"><value>التحقق من التحديثات</value></data>
+  <data name="Update_CurrentVersion" xml:space="preserve"><value>الإصدار المثبّت:</value></data>
+  <data name="Update_Download" xml:space="preserve"><value>تنزيل</value></data>
+  <data name="Update_Install" xml:space="preserve"><value>تثبيت وإعادة تشغيل</value></data>
+  <data name="Update_Log" xml:space="preserve"><value>السجل</value></data>
+  <data name="Update_OpenReleases" xml:space="preserve"><value>صفحة الإصدارات</value></data>
+  <data name="Update_Progress" xml:space="preserve"><value>تقدم التحديث</value></data>
+  <data name="Update_ReleaseNotes" xml:space="preserve"><value>ملاحظات الإصدار</value></data>
+  <data name="Update_Status_Checking" xml:space="preserve"><value>جارٍ البحث عن تحديثات…</value></data>
+  <data name="Update_Status_Downloading" xml:space="preserve"><value>جارٍ تنزيل التحديث…</value></data>
+  <data name="Update_Status_Failed" xml:space="preserve"><value>حدث خطأ ما. التفاصيل في السجل أدناه.</value></data>
+  <data name="Update_Status_Idle" xml:space="preserve"><value>تحقق من وجود إصدار أحدث على GitHub.</value></data>
+  <data name="Update_Status_Installing" xml:space="preserve"><value>جارٍ التثبيت — سيُعاد تشغيل CaptureImage بعد قليل…</value></data>
+  <data name="Update_Status_Ready" xml:space="preserve"><value>التحديث جاهز. أعد التشغيل لتثبيته.</value></data>
+  <data name="Update_Status_Unavailable" xml:space="preserve"><value>التحديثات متاحة فقط في التطبيق المثبّت (وليس في النسخة المحمولة أو نسخة مبنية من المصدر).</value></data>
+  <data name="Update_Status_UpdateAvailable" xml:space="preserve"><value>الإصدار {0} متاح.</value></data>
+  <data name="Update_Status_UpToDate" xml:space="preserve"><value>لديك أحدث إصدار.</value></data>
+  <data name="Update_Subtitle" xml:space="preserve"><value>تأتي التحديثات من GitHub Releases وتُثبَّت عند إعادة تشغيل CaptureImage.</value></data>
+  <data name="Update_Title" xml:space="preserve"><value>تحديث</value></data>
+
+</root>

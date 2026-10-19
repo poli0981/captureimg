@@ -1,199 +1,133 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 // Copyright (c) CaptureImage Contributors
 
-using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System.Reflection;
+using System.Runtime.InteropServices;
 using CaptureImage.Core.Abstractions;
+using CaptureImage.ViewModels.Services;
 using CommunityToolkit.Mvvm.Input;
-using Microsoft.Extensions.Logging;
 
 namespace CaptureImage.ViewModels.About;
 
+/// <summary>A library CaptureImage ships, with its license.</summary>
+public sealed record ThirdPartyItem(string Name, string License, Uri Url);
+
+/// <summary>A sponsor / donation destination (mirror of <c>.github/FUNDING.yml</c>).</summary>
+public sealed record SponsorLink(string Name, Uri Url);
+
 /// <summary>
-/// About tab. Shows app metadata, developer info, the AI assistance disclosure, the
-/// capture / translation / liability disclaimers, and links to the shipped legal files
-/// (DISCLAIMER, PRIVACY, TERMS, THIRD_PARTY_NOTICES, LICENSE, NOTICE, CONTRIBUTORS).
+/// About page: version, contact, links, sponsors, legal documents and third-party notices.
 /// </summary>
 public sealed partial class AboutViewModel : ViewModelBase
 {
-    private readonly ILogger<AboutViewModel> _logger;
+    public const string RepositoryUrl = "https://github.com/poli0981/captureimg";
+    public const string ContactEmail = "contact@poli0981.dev";
+    public const string SponsorEmail = "sponsor@poli0981.dev";
+    public const string LinksPageUrl = "https://poli0981.dev/links";
+
+    private readonly IShellService _shell;
+
+    public AboutViewModel(IShellService shell, ILocalizationService localization, AppInfo appInfo)
+    {
+        _shell = shell;
+        Localization = localization;
+        AppInfo = appInfo;
+    }
 
     public ILocalizationService Localization { get; }
 
-    public AboutViewModel(ILocalizationService localization, ILogger<AboutViewModel> logger)
-    {
-        Localization = localization;
-        _logger = logger;
-
-        // About view binds every label through `{Binding Localization[About_*]}`. Push an
-        // explicit PropertyChanged on culture switch so the compiled indexer bindings
-        // re-resolve their path — the Localization service's own Item[] notification
-        // isn't picked up through the intermediate property in every case.
-        //
-        // Disclaimer bodies are computed properties reading through Localization[...] but
-        // the view binds them by property name (`{Binding TranslationDisclaimer}`), so the
-        // indexer refresh alone won't wake those bindings — raise each disclaimer property
-        // explicitly so their bound TextBlocks retranslate in place.
-        //
-        // AboutViewModel is a DI singleton with process-long lifetime (nav owns it), so we
-        // skip IDisposable and rely on the container tearing the subscription down on app
-        // exit — adding IDisposable here would be cosmetic and the leak is theoretical.
-        Localization.PropertyChanged += OnLocalizationChanged;
-
-        var asm = typeof(AboutViewModel).Assembly;
-        AppVersion = asm.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion
-            ?? asm.GetName().Version?.ToString()
-            ?? "0.0.0";
-
-        ThirdPartyItems = new ObservableCollection<ThirdPartyItem>
-        {
-            new("Windows App SDK / WinUI 3",  "MIT",        "https://github.com/microsoft/WindowsAppSDK"),
-            new("H.NotifyIcon.WinUI",         "MIT",        "https://github.com/HavenDV/H.NotifyIcon"),
-            new("SkiaSharp",                  "MIT",        "https://github.com/mono/SkiaSharp"),
-            new("CommunityToolkit.Mvvm",      "MIT",        "https://github.com/CommunityToolkit/dotnet"),
-            new("Microsoft.Extensions.*",     "MIT",        "https://github.com/dotnet/runtime"),
-            new("Serilog",                    "Apache-2.0", "https://github.com/serilog/serilog"),
-            new("Vortice.Direct3D11 / DXGI",  "MIT",        "https://github.com/amerkoleci/Vortice.Windows"),
-            new("SharpHook",                  "MIT",        "https://github.com/TolikPylypchuk/SharpHook"),
-            new("libuiohook",                 "GPL-3.0",    "https://github.com/kwhat/libuiohook"),
-            new("Stateless",                  "Apache-2.0", "https://github.com/dotnet-state-machine/stateless"),
-            new("Velopack",                   "MIT",        "https://github.com/velopack/velopack"),
-        };
-
-        // Public-handle scope only — see v1.5.1 hotfix plan. Personal email and
-        // PayPal real-name link are intentionally not surfaced here.
-        SocialLinks = new ObservableCollection<SocialLink>
-        {
-            new("X (Twitter) · @SkullMute0011",                  new Uri("https://x.com/SkullMute0011")),
-            new("YouTube · @SkullMute",                          new Uri("https://youtube.com/@SkullMute")),
-            new("Discord (repo) · #general",                     new Uri("https://discord.gg/2aNR3aVt")),
-            new("Discord (game) · #general",                     new Uri("https://discord.gg/kDM9GMu5vm")),
-            new("Steam · profile",                               new Uri("https://steamcommunity.com/profiles/76561199544666292/")),
-            new("Bluesky · @skullmute0011.bsky.social",          new Uri("https://bsky.app/profile/skullmute0011.bsky.social")),
-            new("Mastodon · @skullmute1122@mastodon.social",     new Uri("https://mastodon.social/@skullmute1122")),
-            new("Telegram · @SkullMute0011",                     new Uri("https://t.me/SkullMute0011")),
-        };
-    }
-
-    private void OnLocalizationChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
-    {
-        if (e.PropertyName is "Item[]" or nameof(ILocalizationService.CurrentCulture))
-        {
-            OnPropertyChanged(nameof(Localization));
-            OnPropertyChanged(nameof(TranslationDisclaimer));
-            OnPropertyChanged(nameof(CaptureLimitationDisclaimer));
-            OnPropertyChanged(nameof(LiabilityDisclaimer));
-        }
-    }
+    public AppInfo AppInfo { get; }
 
     public string AppName => "CaptureImage";
 
-    public string AppVersion { get; }
+    public string Version => AppInfo.DisplayVersion;
+
+    public string Runtime => RuntimeInformation.FrameworkDescription;
+
+    public string OperatingSystem => RuntimeInformation.OSDescription;
 
     public string License => "GPL-3.0-or-later";
 
     public string Developer => "poli0981";
 
-    public string RepositoryUrl => "https://github.com/poli0981/captureimg";
+    public string Contact => ContactEmail;
 
-    /// <summary>
-    /// Plain-text dev disclosure about AI involvement — kept in code (not resx) because
-    /// the content describes the development process, not the user-facing functionality.
-    /// </summary>
-    public string AiAssistanceNotice =>
-        "Development of CaptureImage was carried out with significant assistance from the " +
-        "Claude Opus 4.6 large language model (Anthropic), used through Claude Code. AI " +
-        "assistance included code generation, unit tests, P/Invoke signatures, XAML layouts, " +
-        "commit messages, and documentation. Every change was reviewed, accepted, and tested " +
-        "by the human maintainer before landing. Commits that involve meaningful AI authorship " +
-        "carry a Co-Authored-By trailer naming the model. See docs/CONTRIBUTORS.md for details.";
+    public string LinksPage => LinksPageUrl;
 
-    public string TranslationDisclaimer => Localization["About_TranslationDisclaimerBody"];
+    /// <summary>Libraries in the shipped app (build-only tools are not listed).</summary>
+    public IReadOnlyList<ThirdPartyItem> ThirdPartyItems { get; } =
+    [
+        new(".NET (WPF, runtime)", "MIT", new Uri("https://github.com/dotnet/runtime")),
+        new("WPF UI", "MIT", new Uri("https://github.com/lepoco/wpfui")),
+        new("H.NotifyIcon", "MIT", new Uri("https://github.com/HavenDV/H.NotifyIcon")),
+        new("CommunityToolkit.Mvvm", "MIT", new Uri("https://github.com/CommunityToolkit/dotnet")),
+        new("Microsoft.Extensions.*", "MIT", new Uri("https://github.com/dotnet/runtime")),
+        new("Serilog", "Apache-2.0", new Uri("https://github.com/serilog/serilog")),
+        new("SkiaSharp", "MIT", new Uri("https://github.com/mono/SkiaSharp")),
+        new("Vortice.Windows", "MIT", new Uri("https://github.com/amerkoleci/Vortice.Windows")),
+        new("Velopack", "MIT", new Uri("https://github.com/velopack/velopack")),
+    ];
 
-    public string CaptureLimitationDisclaimer => Localization["About_CaptureLimitationDisclaimerBody"];
-
-    public string LiabilityDisclaimer => Localization["About_LiabilityDisclaimerBody"];
-
-    public ObservableCollection<ThirdPartyItem> ThirdPartyItems { get; }
-
-    public ObservableCollection<SocialLink> SocialLinks { get; }
-
-    // -- legal document open commands ---------------------------------------
-
-    [RelayCommand]
-    private void OpenDisclaimer() => OpenDocument("docs/legal/DISCLAIMER.md");
+    public IReadOnlyList<SponsorLink> SponsorLinks { get; } =
+    [
+        new("GitHub Sponsors", new Uri("https://github.com/sponsors/poli0981")),
+        new("Ko-fi", new Uri("https://ko-fi.com/skullmute")),
+        new("Buy Me a Coffee", new Uri("https://buymeacoffee.com/skullmute")),
+        new("Patreon", new Uri("https://patreon.com/skullmute")),
+    ];
 
     [RelayCommand]
-    private void OpenPrivacy() => OpenDocument("docs/legal/PRIVACY.md");
+    private void OpenRepository() => _shell.OpenUrl(new Uri(RepositoryUrl));
 
     [RelayCommand]
-    private void OpenTerms() => OpenDocument("docs/legal/TERMS.md");
+    private void OpenReleaseNotes() => _shell.OpenUrl(new Uri(RepositoryUrl + "/releases"));
 
     [RelayCommand]
-    private void OpenThirdParty() => OpenDocument("docs/legal/THIRD_PARTY_NOTICES.md");
+    private void ReportBug() => _shell.OpenUrl(new Uri(RepositoryUrl + "/issues/new?template=bug_report.yml"));
 
     [RelayCommand]
-    private void OpenContributors() => OpenDocument("docs/CONTRIBUTORS.md");
+    private void RequestFeature() => _shell.OpenUrl(new Uri(RepositoryUrl + "/issues/new?template=feature_request.yml"));
 
     [RelayCommand]
-    private void OpenLicense() => OpenDocument("LICENSE");
+    private void OpenDiscussions() => _shell.OpenUrl(new Uri(RepositoryUrl + "/discussions"));
 
     [RelayCommand]
-    private void OpenRepository() => OpenUrl(RepositoryUrl);
-
-    // -- donate / report commands -------------------------------------------
-    // URLs hardcoded here to match the existing Developer / RepositoryUrl
-    // pattern (line ~80). Mirror of .github/FUNDING.yml — keep in sync.
+    private void EmailContact() => _shell.OpenUrl(new Uri("mailto:" + ContactEmail));
 
     [RelayCommand]
-    private void OpenGitHubSponsors() => OpenUrl("https://github.com/sponsors/poli0981");
+    private void EmailSponsor() => _shell.OpenUrl(new Uri("mailto:" + SponsorEmail));
 
     [RelayCommand]
-    private void OpenKoFi() => OpenUrl("https://ko-fi.com/skullmute");
+    private void OpenLinksPage() => _shell.OpenUrl(new Uri(LinksPageUrl));
 
     [RelayCommand]
-    private void OpenBuyMeACoffee() => OpenUrl("https://buymeacoffee.com/skullmute");
-
-    [RelayCommand]
-    private void OpenPatreon() => OpenUrl("https://patreon.com/skullmute");
-
-    [RelayCommand]
-    private void OpenBugReport() => OpenUrl("https://github.com/poli0981/captureimg/issues/new?template=bug_report.yml");
-
-    /// <summary>
-    /// Resolve a doc path relative to the app's base directory and open it with the OS
-    /// default handler (Markdown files open in whichever editor the user has associated,
-    /// plain LICENSE opens in Notepad or similar).
-    /// </summary>
-    private void OpenDocument(string relativePath)
+    private void OpenLink(Uri? url)
     {
-        try
+        if (url is not null && (url.Scheme == Uri.UriSchemeHttps || url.Scheme == Uri.UriSchemeMailto))
         {
-            var basePath = AppContext.BaseDirectory;
-            var full = Path.Combine(basePath, relativePath);
-            if (!File.Exists(full))
-            {
-                _logger.LogWarning("Document not found at {Path}.", full);
-                return;
-            }
-            Process.Start(new ProcessStartInfo(full) { UseShellExecute = true });
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Couldn't open the document at {Path}.", relativePath);
+            _shell.OpenUrl(url);
         }
     }
 
-    private void OpenUrl(string url)
+    /// <summary>
+    /// Open a document shipped next to the executable (<c>LICENSE</c>, <c>docs/legal/PRIVACY.md</c>…);
+    /// when running from source and the file is missing, open it on GitHub instead.
+    /// </summary>
+    [RelayCommand]
+    private void OpenDocument(string? relativePath)
     {
-        try
+        if (string.IsNullOrWhiteSpace(relativePath) || relativePath.Contains("..", StringComparison.Ordinal) || Path.IsPathRooted(relativePath))
         {
-            Process.Start(new ProcessStartInfo(url) { UseShellExecute = true });
+            return;
         }
-        catch (Exception ex)
+
+        var local = Path.Combine(AppContext.BaseDirectory, relativePath.Replace('/', Path.DirectorySeparatorChar));
+        if (File.Exists(local))
         {
-            _logger.LogError(ex, "Couldn't open the link {Url}.", url);
+            _shell.Open(local);
+        }
+        else
+        {
+            _shell.OpenUrl(new Uri($"{RepositoryUrl}/blob/main/{relativePath.Replace('\\', '/')}"));
         }
     }
 }

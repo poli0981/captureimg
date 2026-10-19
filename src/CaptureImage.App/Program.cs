@@ -1,176 +1,130 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 // Copyright (c) CaptureImage Contributors
 
-using CaptureImage.App.SingleInstance;
+using System.Globalization;
+using System.IO;
+using System.Windows.Threading;
+using CaptureImage.App.Composition;
 using CaptureImage.Core.Abstractions;
+using CaptureImage.Core.Paths;
+using CaptureImage.Infrastructure.Logging;
+using CaptureImage.Infrastructure.Platform;
+using CaptureImage.UI;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.UI.Dispatching;
-using Microsoft.UI.Xaml;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Serilog;
+using Serilog.Core;
+using Serilog.Events;
 using Velopack;
 
 namespace CaptureImage.App;
 
-internal static class Program
+/// <summary>Entry point: Velopack hooks, single instance, logging, container, then the WPF app.</summary>
+public static class Program
 {
-    /// <summary>
-    /// Entry point.
-    /// </summary>
-    /// <remarks>
-    /// <see cref="VelopackApp.Build"/> MUST be the very first thing <see cref="Main"/> does.
-    /// The Velopack installer passes command-line arguments like <c>--squirrel-install</c>,
-    /// <c>--squirrel-firstrun</c>, and <c>--squirrel-uninstall</c> on the first launch after an
-    /// install/update/uninstall event; these need to be handled before WinUI 3 boots,
-    /// otherwise the installer will hang waiting for the previous instance to exit.
-    /// </remarks>
+    private static readonly TimeSpan ShutdownTimeout = TimeSpan.FromSeconds(5);
+
     [STAThread]
     public static int Main(string[] args)
     {
-        VelopackApp.Build().Run();
+        // Velopack's install / update / uninstall hooks must run before anything else.
+        VelopackApp.Build()
+            .OnBeforeUninstallFastCallback(_ => AutostartService.RemoveForUninstall())
+            .Run();
 
-        // Single-instance guard runs AFTER Velopack hooks so installer/uninstaller
-        // launches (--squirrel-*) aren't blocked. If another instance owns the
-        // mutex, we ping it via named pipe (ActivationListener restores its
-        // window) and exit immediately without bringing up our own UI.
-        if (!SingleInstanceGuard.TryAcquire(out var instanceReleaser))
+        var options = StartupOptions.Parse(args);
+        var paths = AppPaths.FromCommandLine(args);
+        paths.EnsureCreated();
+
+        using var instance = new SingleInstance(options.InstanceId);
+        if (!instance.TryAcquire())
         {
+            instance.SignalExisting();
             return 0;
         }
 
-        using var _instanceReleaser = instanceReleaser;
+        var levelSwitch = new LoggingLevelSwitch(LogEventLevel.Information);
+        var logBuffer = new InMemorySink();
+        Log.Logger = CreateLogger(paths, levelSwitch, logBuffer);
+        var log = Log.ForContext(typeof(Program));
+        AppDomain.CurrentDomain.UnhandledException += (_, e) =>
+            log.Fatal(e.ExceptionObject as Exception, "Unhandled exception; CaptureImage is terminating.");
+        TaskScheduler.UnobservedTaskException += (_, e) =>
+        {
+            log.Error(e.Exception, "Unobserved task exception.");
+            e.SetObserved();
+        };
 
-        var (inMemorySink, loggingLevelSwitch) = LoggingSetup.Initialize();
-
-        RegisterGlobalExceptionHandlers();
-
-        var shutdownReason = "Normal";
         try
         {
-            Log.Information(
-                "CaptureImage starting. Version={Version} OS={OS} Culture={Culture} Args={Args}",
-                System.Reflection.Assembly.GetExecutingAssembly().GetName().Version?.ToString() ?? "0.0.0-dev",
-                System.Runtime.InteropServices.RuntimeInformation.OSDescription,
-                System.Globalization.CultureInfo.CurrentUICulture.Name,
-                args);
-
-            var services = CompositionRoot.BuildServices(inMemorySink, loggingLevelSwitch);
-            App.Services = services;
-
-            var settingsStore = services.GetRequiredService<ISettingsStore>();
-            settingsStore.LoadAsync().GetAwaiter().GetResult();
-
-            var configuredLevel = LoggingSetup.ParseLevel(settingsStore.Current.LogLevel);
-            loggingLevelSwitch.MinimumLevel = configuredLevel;
-            Log.Information("Log level set to {Level} from settings.", configuredLevel);
-
-            var localization = services.GetRequiredService<ILocalizationService>();
-            var cultureName = settingsStore.Current.Culture;
-            if (!string.IsNullOrWhiteSpace(cultureName))
-            {
-                try
-                {
-                    var culture = System.Globalization.CultureInfo.GetCultureInfo(cultureName);
-                    var supported = false;
-                    foreach (var shipped in localization.SupportedCultures)
-                    {
-                        if (shipped.Name.Equals(culture.Name, StringComparison.OrdinalIgnoreCase))
-                        {
-                            supported = true;
-                            break;
-                        }
-                    }
-
-                    if (supported)
-                    {
-                        localization.SetCulture(culture);
-                    }
-                    else
-                    {
-                        Log.Warning(
-                            "Persisted culture {Culture} is not a shipped language; falling back to default.",
-                            cultureName);
-                    }
-                }
-                catch (System.Globalization.CultureNotFoundException)
-                {
-                    Log.Warning("Persisted culture {Culture} is unknown; falling back to default.", cultureName);
-                }
-            }
-
-            // WinUI 3 entry point. Application.Start blocks until the dispatcher exits. The
-            // callback runs once on the freshly-minted UI thread before any Window is shown
-            // — install a SynchronizationContext that flows back to that thread so async
-            // continuations land where bindings can see them.
-            Application.Start(p =>
-            {
-                var ctx = new DispatcherQueueSynchronizationContext(
-                    DispatcherQueue.GetForCurrentThread());
-                SynchronizationContext.SetSynchronizationContext(ctx);
-                _ = new App();
-            });
-
-            return 0;
-        }
-        catch (Exception ex)
-        {
-            shutdownReason = "StartupCrash";
-            Log.Fatal(ex, "CaptureImage crashed during startup.");
-            return -1;
+            log.Information("CaptureImage {Version} starting (data: {DataDir}).", AppVersion(), paths.DataDirectory);
+            return Run(args, options, paths, levelSwitch, logBuffer, instance);
         }
         finally
         {
-            try
-            {
-                if (App.Services is not null)
-                {
-                    var store = App.Services.GetService<ISettingsStore>();
-                    if (store is not null)
-                    {
-                        store.FlushAsync().GetAwaiter().GetResult();
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Log.Warning(ex, "Failed to flush settings on shutdown.");
-            }
-            // Dispose the DI container so every IDisposable singleton runs its cleanup —
-            // most importantly WmiProcessWatcher (WMI subscriptions on non-background
-            // threads), Win32ForegroundWindowWatcher (WinEventHook), and TrayIconHost.
-            // Without this, the process can't fully exit and Task Manager accumulates one
-            // zombie CaptureImage.exe per launch.
-            try
-            {
-                (App.Services as IDisposable)?.Dispose();
-            }
-            catch (Exception ex)
-            {
-                Log.Warning(ex, "Failed to dispose service provider on shutdown.");
-            }
-            Log.Information("CaptureImage shutting down. Reason={Reason}", shutdownReason);
+            log.Information("CaptureImage exited.");
             Log.CloseAndFlush();
         }
     }
 
-    private static void RegisterGlobalExceptionHandlers()
+    private static int Run(
+        string[] args,
+        StartupOptions options,
+        AppPaths paths,
+        LoggingLevelSwitch levelSwitch,
+        InMemorySink logBuffer,
+        SingleInstance instance)
     {
-        AppDomain.CurrentDomain.UnhandledException += (_, e) =>
+        var builder = Host.CreateEmptyApplicationBuilder(new HostApplicationBuilderSettings
         {
-            var ex = e.ExceptionObject as Exception;
-            Log.Fatal(
-                ex,
-                "Unhandled AppDomain exception. IsTerminating={IsTerminating}",
-                e.IsTerminating);
-            if (e.IsTerminating)
-            {
-                Log.CloseAndFlush();
-            }
-        };
+            Args = args,
+            ContentRootPath = AppContext.BaseDirectory,
+        });
+        builder.Logging.SetMinimumLevel(Microsoft.Extensions.Logging.LogLevel.Trace);
+        builder.Logging.AddSerilog(Log.Logger, dispose: false);
+        builder.Services.AddCaptureImageCore(paths, levelSwitch, logBuffer);
+        builder.Services.AddCaptureImageUi(Dispatcher.CurrentDispatcher);
+        builder.ConfigureContainer(new DefaultServiceProviderFactory(new ServiceProviderOptions
+        {
+            ValidateOnBuild = true,
+            ValidateScopes = true,
+        }));
 
-        TaskScheduler.UnobservedTaskException += (_, e) =>
-        {
-            Log.Error(e.Exception, "Unobserved task exception.");
-            e.SetObserved();
-        };
+        using var host = builder.Build();
+        var settings = host.Services.GetRequiredService<ISettingsStore>();
+        settings.LoadAsync().GetAwaiter().GetResult();
+        levelSwitch.MinimumLevel = SerilogLogLevelSwitcher.Parse(settings.Current.LogLevel);
+        host.StartAsync().GetAwaiter().GetResult();
+
+        var app = new UI.App(host.Services, new UiStartupOptions(options.StartMinimized, options.SmokeTest, options.ScreenshotDirectory));
+        instance.ShowRequested += (_, _) => app.Dispatcher.BeginInvoke(app.ShowMainWindow);
+        instance.StartListening();
+
+        var exitCode = app.Run();
+
+        host.StopAsync(ShutdownTimeout).GetAwaiter().GetResult();
+        settings.FlushAsync().GetAwaiter().GetResult();
+        return exitCode;
     }
+
+    private static Logger CreateLogger(AppPaths paths, LoggingLevelSwitch levelSwitch, InMemorySink logBuffer) =>
+        new LoggerConfiguration()
+            .MinimumLevel.ControlledBy(levelSwitch)
+            .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
+            .MinimumLevel.Override("System", LogEventLevel.Warning)
+            .Enrich.FromLogContext()
+            .Enrich.With(new UserPathRedactionEnricher())
+            .WriteTo.Async(sink => sink.File(
+                Path.Combine(paths.LogsDirectory, "captureimage-.log"),
+                formatProvider: CultureInfo.InvariantCulture,
+                outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] {SourceContext}: {Message:l}{NewLine}{Exception}",
+                fileSizeLimitBytes: 10L * 1024 * 1024,
+                rollingInterval: RollingInterval.Day,
+                rollOnFileSizeLimit: true,
+                retainedFileCountLimit: 14))
+            .WriteTo.Sink(logBuffer)
+            .CreateLogger();
+
+    private static string AppVersion() => ViewModels.Services.AppInfo.FromAssembly(typeof(Program).Assembly).DisplayVersion;
 }

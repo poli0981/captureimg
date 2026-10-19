@@ -1,102 +1,105 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 // Copyright (c) CaptureImage Contributors
 
+using System.Globalization;
 using System.Text;
+using CaptureImage.Core.Capture;
 using CaptureImage.Core.Models;
 
 namespace CaptureImage.Core.Pipeline;
 
 /// <summary>
-/// Builds the output file name for a capture, expanding tokens in a template and resolving
-/// collisions with a counter suffix.
+/// Builds output file names from a template and keeps them safe for Windows.
 /// </summary>
 /// <remarks>
-/// <para>Supported tokens (case-sensitive):</para>
-/// <list type="bullet">
-///   <item><c>{Game}</c> — display name of the target (<see cref="GameTarget.DisplayName"/>), sanitized.</item>
-///   <item><c>{Process}</c> — short process name, sanitized.</item>
-///   <item><c>{yyyy}</c>, <c>{MM}</c>, <c>{dd}</c>, <c>{HH}</c>, <c>{mm}</c>, <c>{ss}</c> — zero-padded date/time parts.</item>
-///   <item><c>{counter}</c> — replaced with "_1", "_2", … only if the file already exists. If present, the token is the anchor for the disambiguating suffix; if absent, the suffix is appended at the end.</item>
-/// </list>
-/// <para>
-/// The strategy is injected with a <see cref="Func{T, TResult}"/> for existence checks so unit
-/// tests can drive collision logic with an in-memory fake.
-/// </para>
+/// <para>Tokens (case-sensitive): <c>{Game}</c> (window title or process), <c>{Process}</c>,
+/// <c>{Mode}</c> (Window / Region / Monitor), <c>{yyyy}</c> <c>{MM}</c> <c>{dd}</c> <c>{HH}</c>
+/// <c>{mm}</c> <c>{ss}</c>, and <c>{counter}</c> — empty for the first file, <c>_1</c>,
+/// <c>_2</c>… on a name collision. Without <c>{counter}</c> the suffix is appended.</para>
+/// <para>Sanitizing: Windows-invalid characters, control and invisible formatting characters
+/// (bidi overrides, zero-width joiners — they can disguise a file name) become <c>_</c>;
+/// reserved device names (CON, NUL, COM1…) get a trailing <c>_</c>; the name is capped at
+/// <see cref="MaxNameLength"/> characters.</para>
 /// </remarks>
 public sealed class FileNameStrategy
 {
-    private readonly Func<string, bool> _fileExists;
-
-    /// <summary>
-    /// Default template used when settings haven't been loaded yet:
-    /// <c>{Game}_{yyyy}-{MM}-{dd}_{HH}-{mm}-{ss}</c>.
-    /// </summary>
+    /// <summary>Default template: <c>{Game}_{yyyy}-{MM}-{dd}_{HH}-{mm}-{ss}</c>.</summary>
     public const string DefaultTemplate = "{Game}_{yyyy}-{MM}-{dd}_{HH}-{mm}-{ss}";
 
+    /// <summary>Maximum length of the generated name (without counter and extension).</summary>
+    public const int MaxNameLength = 120;
+
+    private const string CounterToken = "{counter}";
+    private const int MaxCounter = 10_000;
+
+    private static readonly char[] InvalidChars = ['<', '>', ':', '"', '/', '\\', '|', '?', '*'];
+
+    private static readonly HashSet<string> ReservedNames = new(StringComparer.OrdinalIgnoreCase)
+    {
+        "CON", "PRN", "AUX", "NUL",
+        "COM0", "COM1", "COM2", "COM3", "COM4", "COM5", "COM6", "COM7", "COM8", "COM9",
+        "LPT0", "LPT1", "LPT2", "LPT3", "LPT4", "LPT5", "LPT6", "LPT7", "LPT8", "LPT9",
+        "COM¹", "COM²", "COM³", "LPT¹", "LPT²", "LPT³",
+    };
+
+    private readonly Func<string, bool> _fileExists;
+
+    /// <param name="fileExists">Existence check (injected so tests can fake collisions).</param>
     public FileNameStrategy(Func<string, bool> fileExists)
     {
         _fileExists = fileExists;
     }
 
     /// <summary>
-    /// Build a full path under <paramref name="directory"/> that does not collide with an
-    /// existing file. Template tokens are expanded using <paramref name="target"/> and
-    /// <paramref name="captureTime"/>.
+    /// A full path under <paramref name="directory"/> that does not collide with an existing
+    /// file. The final rename still uses no-overwrite semantics, so a race that steals the name
+    /// is detected by the caller and retried.
     /// </summary>
     public string BuildFilePath(
         string directory,
         string template,
-        GameTarget target,
+        GameTarget? target,
+        CaptureMode mode,
         DateTimeOffset captureTime,
         ImageFormat format)
     {
-        var expanded = ExpandTokens(template, target, captureTime);
-        var sanitized = Sanitize(expanded);
-        var extension = format.Extension();
+        var effectiveTemplate = string.IsNullOrWhiteSpace(template) ? DefaultTemplate : template;
+        var extension = "." + format.Extension();
+        var hasCounterToken = effectiveTemplate.Contains(CounterToken, StringComparison.Ordinal);
 
-        // Fast path: no collision.
-        var candidate = Path.Combine(directory, sanitized + "." + extension);
-        if (!_fileExists(candidate))
+        for (var counter = 0; counter <= MaxCounter; counter++)
         {
-            return candidate;
-        }
+            var suffix = counter == 0 ? string.Empty : "_" + counter.ToString(CultureInfo.InvariantCulture);
+            var expanded = ExpandTokens(effectiveTemplate, target, mode, captureTime, hasCounterToken ? suffix : string.Empty);
+            var name = Sanitize(expanded);
+            if (!hasCounterToken)
+            {
+                name += suffix;
+            }
 
-        // Collision: increment a counter until we find a free slot. Cap at 10_000 to avoid
-        // runaway loops if the directory is completely full of matching files.
-        for (var counter = 1; counter <= 10_000; counter++)
-        {
-            var withCounter = sanitized + "_" + counter;
-            candidate = Path.Combine(directory, withCounter + "." + extension);
+            var candidate = Path.Combine(directory, name + extension);
             if (!_fileExists(candidate))
             {
                 return candidate;
             }
         }
 
-        // Fall back to a timestamp-based suffix. Extremely unlikely, but correct.
-        var fallback = sanitized + "_" + captureTime.ToUnixTimeMilliseconds();
-        return Path.Combine(directory, fallback + "." + extension);
+        // Directory packed with matching names — fall back to a millisecond timestamp.
+        var fallback = Sanitize(ExpandTokens(effectiveTemplate, target, mode, captureTime, string.Empty))
+            + "_" + captureTime.ToUnixTimeMilliseconds().ToString(CultureInfo.InvariantCulture);
+        return Path.Combine(directory, fallback + extension);
     }
 
-    /// <summary>
-    /// Expand all tokens in <paramref name="template"/>. Unknown tokens are left verbatim.
-    /// Visible for testing.
-    /// </summary>
-    internal static string ExpandTokens(string template, GameTarget target, DateTimeOffset captureTime)
+    /// <summary>Expand tokens; unknown tokens stay verbatim. Visible for testing.</summary>
+    internal static string ExpandTokens(
+        string template,
+        GameTarget? target,
+        CaptureMode mode,
+        DateTimeOffset captureTime,
+        string counterSuffix)
     {
-        var tokens = new Dictionary<string, string>(StringComparer.Ordinal)
-        {
-            ["{Game}"] = target.DisplayName,
-            ["{Process}"] = target.ProcessName,
-            ["{yyyy}"] = captureTime.Year.ToString("D4"),
-            ["{MM}"] = captureTime.Month.ToString("D2"),
-            ["{dd}"] = captureTime.Day.ToString("D2"),
-            ["{HH}"] = captureTime.Hour.ToString("D2"),
-            ["{mm}"] = captureTime.Minute.ToString("D2"),
-            ["{ss}"] = captureTime.Second.ToString("D2"),
-            ["{counter}"] = string.Empty, // stripped here; collision logic handles it
-        };
-
+        var game = target?.DisplayName ?? mode.ToString();
+        var process = target?.ProcessName ?? mode.ToString();
         var sb = new StringBuilder(template.Length + 32);
         var i = 0;
         while (i < template.Length)
@@ -106,8 +109,21 @@ public sealed class FileNameStrategy
                 var end = template.IndexOf('}', i + 1);
                 if (end > 0)
                 {
-                    var token = template.Substring(i, end - i + 1);
-                    if (tokens.TryGetValue(token, out var replacement))
+                    var replacement = template.Substring(i, end - i + 1) switch
+                    {
+                        "{Game}" => game,
+                        "{Process}" => process,
+                        "{Mode}" => mode.ToString(),
+                        "{yyyy}" => captureTime.Year.ToString("D4", CultureInfo.InvariantCulture),
+                        "{MM}" => captureTime.Month.ToString("D2", CultureInfo.InvariantCulture),
+                        "{dd}" => captureTime.Day.ToString("D2", CultureInfo.InvariantCulture),
+                        "{HH}" => captureTime.Hour.ToString("D2", CultureInfo.InvariantCulture),
+                        "{mm}" => captureTime.Minute.ToString("D2", CultureInfo.InvariantCulture),
+                        "{ss}" => captureTime.Second.ToString("D2", CultureInfo.InvariantCulture),
+                        CounterToken => counterSuffix,
+                        _ => null,
+                    };
+                    if (replacement is not null)
                     {
                         sb.Append(replacement);
                         i = end + 1;
@@ -121,9 +137,7 @@ public sealed class FileNameStrategy
         return sb.ToString();
     }
 
-    /// <summary>
-    /// Strip characters that are illegal on NTFS/FAT32 and collapse runs of whitespace.
-    /// </summary>
+    /// <summary>Make <paramref name="raw"/> a safe Windows file name (without extension). Visible for testing.</summary>
     internal static string Sanitize(string raw)
     {
         if (string.IsNullOrWhiteSpace(raw))
@@ -131,13 +145,10 @@ public sealed class FileNameStrategy
             return "capture";
         }
 
-        var invalid = Path.GetInvalidFileNameChars();
         var sb = new StringBuilder(raw.Length);
         var lastWasSeparator = false;
         foreach (var c in raw)
         {
-            // Whitespace wins over the illegal check so that tabs, newlines, etc. collapse
-            // into a single space rather than becoming '_'.
             if (char.IsWhiteSpace(c))
             {
                 if (!lastWasSeparator)
@@ -147,7 +158,9 @@ public sealed class FileNameStrategy
                 }
                 continue;
             }
-            if (Array.IndexOf(invalid, c) >= 0 || c < 0x20)
+
+            if (c < 0x20 || c == 0x7F || Array.IndexOf(InvalidChars, c) >= 0
+                || CharUnicodeInfo.GetUnicodeCategory(c) is UnicodeCategory.Format or UnicodeCategory.Control)
             {
                 if (!lastWasSeparator)
                 {
@@ -156,11 +169,28 @@ public sealed class FileNameStrategy
                 }
                 continue;
             }
+
             sb.Append(c);
             lastWasSeparator = false;
         }
 
-        var trimmed = sb.ToString().Trim(' ', '_', '.');
-        return trimmed.Length == 0 ? "capture" : trimmed;
+        var name = sb.ToString().Trim(' ', '_', '.');
+        if (name.Length > MaxNameLength)
+        {
+            name = name[..MaxNameLength].TrimEnd(' ', '_', '.');
+            if (name.Length > 0 && char.IsHighSurrogate(name[^1]))
+            {
+                name = name[..^1];
+            }
+        }
+
+        if (name.Length == 0)
+        {
+            return "capture";
+        }
+
+        // "CON", "con.txt" and "NUL " are all device names to Windows.
+        var stem = name.Split('.')[0].TrimEnd(' ');
+        return ReservedNames.Contains(stem) ? name + "_" : name;
     }
 }

@@ -142,11 +142,7 @@ jobs:
 
       - name: Gate on dead / redundant code
         shell: pwsh
-        # The WinUI projects are excluded until they are replaced in v2.0 (their XAML
-        # x:Name fields and handlers produce false positives).
-        run: >
-          ./.github/scripts/inspectcode-gate.ps1 -Sarif inspectcode.sarif
-          -ExcludePath "src/CaptureImage.UI/;src/CaptureImage.App/;tests/CaptureImage.UI.Tests/"
+        run: ./.github/scripts/inspectcode-gate.ps1 -Sarif inspectcode.sarif
 
       - name: Upload InspectCode report
         if: always()
@@ -156,9 +152,11 @@ jobs:
           path: inspectcode.sarif
           retention-days: 14
 
+  # audit and license restore on Windows like the build: NuGet prunes the WPF projects'
+  # Windows Desktop packages only there, so a Linux restore can't match the lock files.
   audit:
     name: audit
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     timeout-minutes: 15
     permissions:
       contents: read
@@ -193,7 +191,7 @@ jobs:
 
   license:
     name: license
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     timeout-minutes: 15
     permissions:
       contents: read
@@ -208,10 +206,11 @@ jobs:
         with:
           global-json-file: global.json
 
-      - name: Restore
-        run: |
-          dotnet restore CaptureImage.sln --locked-mode
-          dotnet tool restore
+      - name: Restore (locked)
+        run: dotnet restore CaptureImage.sln --locked-mode
+
+      - name: Restore tools
+        run: dotnet tool restore
 
       # Only the shipped app's dependency closure is checked against the allowlist —
       # build/test-only tooling never reaches users.
@@ -251,25 +250,88 @@ jobs:
           cache-dependency-path: "**/packages.lock.json"
 
       - name: Publish app (same switches as the release workflow)
-        # WinUI's targets add RIDs during a Platform=x64 publish restore, which locked
-        # mode rejects; the solution-wide restores in the other jobs stay locked.
         run: >
           dotnet publish src/CaptureImage.App/CaptureImage.App.csproj
-          -c Release -r win-x64 --self-contained
-          /p:Platform=x64 /p:WindowsPackageType=None
-          /p:RestoreLockedMode=false
+          -c Release -r win-x64 --self-contained false
           -o publish
 
       - name: Verify published payload
         shell: pwsh
         run: |
           $required = @(
-            'CaptureImage.App.exe', 'CaptureImage.App.pri', 'LICENSE', 'NOTICE',
+            'CaptureImage.App.exe', 'CaptureImage.App.dll', 'CaptureImage.App.runtimeconfig.json',
+            'Wpf.Ui.dll', 'LICENSE', 'NOTICE',
             'docs/legal/DISCLAIMER.md', 'docs/legal/PRIVACY.md', 'docs/legal/TERMS.md',
-            'docs/legal/THIRD_PARTY_NOTICES.md', 'docs/CONTRIBUTORS.md'
+            'docs/legal/THIRD_PARTY_NOTICES.md', 'docs/CONTRIBUTORS.md',
+            'vi/CaptureImage.ViewModels.resources.dll', 'ar/CaptureImage.ViewModels.resources.dll'
           )
           $missing = $required | Where-Object { -not (Test-Path (Join-Path publish $_)) }
-          $xbf = @(Get-ChildItem publish -Recurse -Filter *.xbf).Count
-          if ($xbf -eq 0) { $missing += '*.xbf (compiled XAML)' }
           if ($missing) { $missing | ForEach-Object { "::error title=publish-smoke::missing $_" }; exit 1 }
-          "publish-smoke: payload OK ($xbf compiled XAML files)"
+          $size = (Get-ChildItem publish -Recurse -File | Measure-Object Length -Sum).Sum / 1MB
+          "publish-smoke: payload OK ({0:N1} MB)" -f $size
+
+      # Starts the published app with a throwaway data folder, opens every page,
+      # saves a screenshot of each and exits 0 (non-zero on any failure).
+      - name: Smoke test the published app
+        shell: pwsh
+        run: |
+          $data = Join-Path $env:RUNNER_TEMP 'smoke-data'
+          $shots = Join-Path $env:RUNNER_TEMP 'screenshots'
+          $app = Start-Process -FilePath publish/CaptureImage.App.exe -PassThru `
+            -ArgumentList @('--screenshots', $shots, '--data-dir', $data, '--instance-id', 'ci')
+          if (-not $app.WaitForExit(180000)) { $app.Kill(); "::error title=publish-smoke::the app did not exit within 3 minutes"; exit 1 }
+          Get-ChildItem (Join-Path $data 'logs') -Filter *.log | Get-Content
+          if ($app.ExitCode -ne 0) { "::error title=publish-smoke::smoke test exited with $($app.ExitCode)"; exit 1 }
+          $pages = @(Get-ChildItem $shots -Filter *.png).Count
+          if ($pages -lt 7) { "::error title=publish-smoke::expected 7 page screenshots, got $pages"; exit 1 }
+          "smoke test OK: $pages pages"
+
+      - name: Upload page screenshots
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: screenshots
+          path: ${{ runner.temp }}/screenshots
+          retention-days: 14
+          if-no-files-found: ignore
+
+  # End-to-end UI tests (FlaUI) against the real app. Not a required check yet.
+  ui-tests:
+    name: ui-tests
+    runs-on: windows-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
+        with:
+          global-json-file: global.json
+          cache: true
+          cache-dependency-path: "**/packages.lock.json"
+
+      - name: Restore + build
+        run: |
+          dotnet restore CaptureImage.sln --locked-mode
+          dotnet build tests/CaptureImage.App.UiTests/CaptureImage.App.UiTests.csproj -c Release --no-restore
+
+      - name: UI tests (FlaUI)
+        env:
+          CAPTUREIMAGE_UI_TESTS: "1"
+        run: >
+          dotnet test --project tests/CaptureImage.App.UiTests/CaptureImage.App.UiTests.csproj
+          -c Release --no-build --results-directory TestResults-ui --report-xunit-trx
+
+      - name: Upload UI test results
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: ui-test-results
+          path: TestResults-ui/**
+          retention-days: 14
+          if-no-files-found: ignore

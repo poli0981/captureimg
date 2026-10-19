@@ -2,774 +2,383 @@
 // Copyright (c) CaptureImage Contributors
 
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using CaptureImage.Core.Abstractions;
+using CaptureImage.Core.Capture;
 using CaptureImage.Core.Models;
 using CaptureImage.Core.Pipeline;
-using CaptureImage.Core.StateMachine;
+using CaptureImage.Core.Profiles;
+using CaptureImage.ViewModels.Services;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.Extensions.Logging;
 
 namespace CaptureImage.ViewModels.Dashboard;
 
+/// <summary>Status of one capture hotkey, as shown on the Dashboard.</summary>
+/// <param name="Mode">Capture mode.</param>
+/// <param name="ModeName">Localized mode name.</param>
+/// <param name="Binding">Display form of the key combination (empty when unbound).</param>
+/// <param name="StatusText">Localized registration status.</param>
+/// <param name="IsProblem">The key is armed but could not be registered.</param>
+public sealed record HotkeyStatusItem(CaptureMode Mode, string ModeName, string Binding, string StatusText, bool IsProblem);
+
 /// <summary>
-/// Dashboard tab. Ties together the live process list, the capture state machine,
-/// settings, hotkey triggers, the capture engine, the preview gate, and toast feedback.
+/// Dashboard: the window list (refreshed by WinEvent notifications only while the page is
+/// visible, and updated in place so selection and scroll position survive), arming, target
+/// locking and per-hotkey status.
 /// </summary>
 public sealed partial class DashboardViewModel : ViewModelBase, IDisposable
 {
-    private static readonly TimeSpan RefreshDebounce = TimeSpan.FromMilliseconds(500);
-    private static readonly TimeSpan AutoResetDelay = TimeSpan.FromMilliseconds(800);
-
-    private readonly IProcessDetector _detector;
-    private readonly IProcessWatcher _watcher;
-    private readonly IForegroundWindowWatcher _foregroundWatcher;
-    private readonly IHotkeyService _hotkeys;
-    private readonly ICaptureEngine _captureEngine;
-    private readonly IReadOnlyList<IImageEncoder> _encoders;
-    private readonly FileNameStrategy _fileNameStrategy;
-    private readonly IPreviewPresenter _previewPresenter;
+    private readonly CaptureCoordinator _coordinator;
+    private readonly ITargetCatalog _catalog;
+    private readonly IWindowWatcher _watcher;
     private readonly ISettingsStore _settings;
-    private readonly IToastService _toasts;
-    private readonly IClipboardService _clipboard;
-    private readonly IPinnedThumbnailHost _pinnedThumbnail;
-    private readonly IRegionCaptureService _regionCapture;
     private readonly IUIThreadDispatcher _dispatcher;
+    private readonly IMessenger _messenger;
     private readonly ILogger<DashboardViewModel> _logger;
-    private readonly CaptureStateMachine _stateMachine;
-
-    private CancellationTokenSource? _pendingRefresh;
+    private readonly List<TargetItemViewModel> _all = [];
+    private readonly SemaphoreSlim _refreshGate = new(1, 1);
+    private bool _isPageActive;
+    private bool _stale = true;
     private bool _disposed;
+
+    public DashboardViewModel(
+        CaptureCoordinator coordinator,
+        ITargetCatalog catalog,
+        IWindowWatcher watcher,
+        ISettingsStore settings,
+        IUIThreadDispatcher dispatcher,
+        ILocalizationService localization,
+        IMessenger messenger,
+        ILogger<DashboardViewModel> logger)
+    {
+        _coordinator = coordinator;
+        _catalog = catalog;
+        _watcher = watcher;
+        _settings = settings;
+        _dispatcher = dispatcher;
+        Localization = localization;
+        _messenger = messenger;
+        _logger = logger;
+
+        _coordinator.StateChanged += OnCoordinatorStateChanged;
+        _watcher.WindowsChanged += OnWindowsChanged;
+        _settings.Changed += OnSettingsChanged;
+        Localization.PropertyChanged += OnLocalizationChanged;
+        UpdateCoordinatorState();
+    }
 
     public ILocalizationService Localization { get; }
 
+    /// <summary>Windows matching <see cref="SearchText"/>.</summary>
+    public ObservableCollection<TargetItemViewModel> Targets { get; } = [];
+
+    public ObservableCollection<HotkeyStatusItem> Hotkeys { get; } = [];
+
     [ObservableProperty]
+    private string _searchText = string.Empty;
+
+    [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(CaptureSelectedCommand), nameof(LockSelectedCommand), nameof(CreateProfileCommand))]
+    private TargetItemViewModel? _selectedTarget;
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(HasNoTargets))]
     private bool _isLoading;
 
     [ObservableProperty]
-    private CaptureState _currentState = CaptureState.Idle;
+    private bool _isArmed;
 
     [ObservableProperty]
-    private GameTargetViewModel? _selectedTarget;
+    private bool _isBusy;
 
     [ObservableProperty]
-    private string _statusMessage = string.Empty;
+    private string _statusText = string.Empty;
 
     [ObservableProperty]
-    private string? _lastCapturePath;
+    private string? _lockedTargetName;
 
-    public ObservableCollection<GameTargetViewModel> Targets { get; } = new();
+    [ObservableProperty]
+    private bool _hasHotkeyProblem;
 
-    /// <summary>Localized "{0} target(s) visible" line at the bottom of the dashboard.</summary>
-    public string TargetsCountText =>
-        string.Format(Localization["Dashboard_TargetsCount"], Targets.Count);
+    public bool HasNoTargets => !IsLoading && Targets.Count == 0;
 
-    /// <summary>Localized "Loading…" hint shown while the process enumerator is running.</summary>
-    public string LoadingText => Localization["Dashboard_Loading"];
+    public string ArmButtonText => IsArmed ? Localization["Dashboard_Disarm"] : Localization["Dashboard_Arm"];
 
-    /// <summary>Localized hint shown when the target list is empty (no visible windows).</summary>
-    public string EmptyStateText => Localization["Dashboard_EmptyState"];
-
-    public bool HasNoTargets => Targets.Count == 0 && !IsLoading;
-
-    public bool IsArmed => CurrentState is CaptureState.Armed or CaptureState.Capturing
-                                         or CaptureState.Previewing or CaptureState.Saving
-                                         or CaptureState.Complete or CaptureState.Failed;
-
-    public bool IsCapturing => CurrentState is CaptureState.Capturing or CaptureState.Saving;
-
-    public DashboardViewModel(
-        IProcessDetector detector,
-        IProcessWatcher watcher,
-        IForegroundWindowWatcher foregroundWatcher,
-        IHotkeyService hotkeys,
-        ICaptureEngine captureEngine,
-        IEnumerable<IImageEncoder> encoders,
-        FileNameStrategy fileNameStrategy,
-        IPreviewPresenter previewPresenter,
-        ISettingsStore settings,
-        IToastService toasts,
-        IClipboardService clipboard,
-        IPinnedThumbnailHost pinnedThumbnail,
-        IRegionCaptureService regionCapture,
-        IUIThreadDispatcher dispatcher,
-        ILocalizationService localization,
-        ILogger<DashboardViewModel> logger)
+    /// <summary>Set by the view: list refreshes only run while the page is on screen.</summary>
+    public bool IsPageActive
     {
-        _detector = detector;
-        _watcher = watcher;
-        _foregroundWatcher = foregroundWatcher;
-        _hotkeys = hotkeys;
-        _captureEngine = captureEngine;
-        _encoders = new List<IImageEncoder>(encoders).AsReadOnly();
-        _fileNameStrategy = fileNameStrategy;
-        _previewPresenter = previewPresenter;
-        _settings = settings;
-        _toasts = toasts;
-        _clipboard = clipboard;
-        _pinnedThumbnail = pinnedThumbnail;
-        _regionCapture = regionCapture;
-        _dispatcher = dispatcher;
-        Localization = localization;
-        _logger = logger;
-
-        _stateMachine = new CaptureStateMachine(() => _settings.Current.Capture.PreviewBeforeSave);
-        _stateMachine.StateChanged += OnStateChanged;
-        StatusMessage = Localization["Dashboard_StatusIdle"];
-
-        _watcher.Changed += OnProcessChanged;
-        _watcher.Start();
-        _hotkeys.Triggered += OnHotkeyTriggered;
-        _settings.Changed += OnSettingsChanged;
-        _foregroundWatcher.ForegroundChanged += OnForegroundChanged;
-        ApplyAutoSwitchSetting();
-
-        Localization.PropertyChanged += OnLocalizationChanged;
-
-        // TargetsCountText depends on Targets.Count — refresh whenever the collection changes.
-        Targets.CollectionChanged += (_, _) =>
+        get => _isPageActive;
+        set
         {
-            OnPropertyChanged(nameof(TargetsCountText));
-            OnPropertyChanged(nameof(HasNoTargets));
-        };
-
-        // Fire the first refresh without blocking the constructor.
-        _ = RefreshAsync();
-    }
-
-    private void OnLocalizationChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
-    {
-        if (_disposed) return;
-        if (e.PropertyName is "Item[]" or nameof(ILocalizationService.CurrentCulture))
-        {
-            // StatusMessage is a stored [ObservableProperty], not a computed getter —
-            // re-raising PropertyChanged alone would hand the UI the same stale string.
-            // Re-derive it from the state machine so the new culture's template wins.
-            UpdateStatusForState();
-            OnPropertyChanged(nameof(TargetsCountText));
-            OnPropertyChanged(nameof(LoadingText));
-            OnPropertyChanged(nameof(EmptyStateText));
-            // Forces `{Binding Localization[Key]}` bindings on DashboardView to
-            // re-resolve the indexer path in-place (Title, Subtitle, Refresh / Arm /
-            // Disarm button labels). See v1.1.1 hotfix notes.
-            OnPropertyChanged(nameof(Localization));
+            _isPageActive = value;
+            if (value && _stale)
+            {
+                _ = RefreshAsync();
+            }
         }
     }
-
-    // HasNoTargets depends on IsLoading — refresh when the loading flag flips.
-    partial void OnIsLoadingChanged(bool value)
-    {
-        OnPropertyChanged(nameof(HasNoTargets));
-    }
-
-    // -- nav / refresh -------------------------------------------------------
 
     [RelayCommand]
-    public async Task RefreshAsync()
+    private async Task RefreshAsync()
     {
-        if (_disposed) return;
+        if (_disposed || !await _refreshGate.WaitAsync(0).ConfigureAwait(true))
+        {
+            return;
+        }
+
         try
         {
-            IsLoading = true;
-            var targets = await _detector.EnumerateTargetsAsync().ConfigureAwait(true);
-            ApplyTargets(targets);
+            IsLoading = _all.Count == 0;
+            var targets = await _catalog.EnumerateAsync().ConfigureAwait(true);
+            Apply(targets);
+            _stale = false;
         }
-        catch (Exception ex)
+        catch (Exception ex) when (ex is InvalidOperationException or IOException or UnauthorizedAccessException or System.ComponentModel.Win32Exception)
         {
-            _logger.LogError(ex, "Couldn't load the list of windows. Try clicking Refresh again.");
+            LogRefreshFailed(ex);
         }
         finally
         {
             IsLoading = false;
+            _refreshGate.Release();
         }
     }
 
-    private void ApplyTargets(IReadOnlyList<GameTarget> newTargets)
+    [RelayCommand]
+    private void ToggleArm()
     {
-        var previousPid = SelectedTarget?.ProcessId;
-
-        foreach (var stale in Targets)
+        if (_coordinator.IsArmed)
         {
-            stale.Dispose();
+            _coordinator.Disarm();
         }
-        Targets.Clear();
-        foreach (var target in newTargets)
+        else
         {
-            Targets.Add(new GameTargetViewModel(target, Localization));
+            _coordinator.Arm();
         }
+    }
 
-        if (previousPid is { } pid)
+    [RelayCommand(CanExecute = nameof(HasSelection))]
+    private async Task CaptureSelectedAsync()
+    {
+        if (SelectedTarget is { } selected)
         {
-            foreach (var vm in Targets)
+            await _coordinator.CaptureAsync(CaptureMode.Window, selected.Target).ConfigureAwait(true);
+        }
+    }
+
+    [RelayCommand]
+    private async Task CaptureRegionAsync() => await _coordinator.CaptureAsync(CaptureMode.Region).ConfigureAwait(true);
+
+    [RelayCommand]
+    private async Task CaptureMonitorAsync() => await _coordinator.CaptureAsync(CaptureMode.Monitor).ConfigureAwait(true);
+
+    [RelayCommand(CanExecute = nameof(HasSelection))]
+    private void LockSelected()
+    {
+        if (SelectedTarget is { } selected)
+        {
+            _coordinator.LockTarget(selected.Target);
+        }
+    }
+
+    [RelayCommand]
+    private void Unlock() => _coordinator.LockTarget(null);
+
+    [RelayCommand(CanExecute = nameof(HasSelection))]
+    private void CreateProfile()
+    {
+        if (SelectedTarget is { } selected)
+        {
+            _messenger.Send(new CreateProfileMessage(selected.Target));
+            _messenger.Send(new NavigateMessage(PageKeys.Profiles));
+        }
+    }
+
+    private bool HasSelection() => SelectedTarget is not null;
+
+    partial void OnSearchTextChanged(string value) => ApplyFilter();
+
+    partial void OnIsArmedChanged(bool value) => OnPropertyChanged(nameof(ArmButtonText));
+
+    /// <summary>Merge a fresh enumeration into the existing item view models.</summary>
+    private void Apply(IReadOnlyList<GameTarget> targets)
+    {
+        var byHandle = _all.ToDictionary(item => item.WindowHandle);
+        var next = new List<TargetItemViewModel>(targets.Count);
+        foreach (var target in targets)
+        {
+            if (byHandle.Remove(target.WindowHandle, out var existing))
             {
-                if (vm.ProcessId == pid)
+                if (existing.Target != target)
                 {
-                    SelectedTarget = vm;
-                    break;
+                    existing.Target = target;
                 }
-            }
-        }
-
-        TrySyncTargetState();
-        _logger.LogDebug("Dashboard reconciled to {Count} target(s).", Targets.Count);
-    }
-
-    /// <summary>
-    /// Drive <see cref="CaptureStateMachine"/> to reflect the current selection. Called on
-    /// SelectedTarget and Targets changes so state transitions happen at the right moment.
-    /// </summary>
-    private void TrySyncTargetState()
-    {
-        if (_disposed) return;
-
-        var hasTarget = SelectedTarget is not null;
-        switch (_stateMachine.CurrentState)
-        {
-            case CaptureState.Idle when hasTarget:
-                _stateMachine.Fire(CaptureTrigger.SelectTargets);
-                break;
-            case CaptureState.TargetsSelected when !hasTarget:
-                _stateMachine.Fire(CaptureTrigger.ClearTargets);
-                break;
-        }
-    }
-
-    // -- arm / disarm --------------------------------------------------------
-
-    [RelayCommand(CanExecute = nameof(CanArm))]
-    private void Arm()
-    {
-        if (!_stateMachine.CanFire(CaptureTrigger.Arm)) return;
-        _hotkeys.SetBinding(_settings.Current.CaptureHotkey);
-        _stateMachine.Fire(CaptureTrigger.Arm);
-    }
-
-    [RelayCommand(CanExecute = nameof(CanDisarm))]
-    private void Disarm()
-    {
-        if (!_stateMachine.CanFire(CaptureTrigger.Disarm)) return;
-        _hotkeys.Stop();
-        _stateMachine.Fire(CaptureTrigger.Disarm);
-    }
-
-    private bool CanArm() =>
-        SelectedTarget is not null && _stateMachine.CanFire(CaptureTrigger.Arm);
-
-    private bool CanDisarm() =>
-        _stateMachine.CanFire(CaptureTrigger.Disarm);
-
-    // -- state machine observer ---------------------------------------------
-
-    private void OnStateChanged(object? sender, CaptureStateChanged e)
-    {
-        _dispatcher.Post(() =>
-        {
-            CurrentState = e.To;
-            OnPropertyChanged(nameof(IsArmed));
-            OnPropertyChanged(nameof(IsCapturing));
-            UpdateStatusForState();
-            ArmCommand.NotifyCanExecuteChanged();
-            DisarmCommand.NotifyCanExecuteChanged();
-        });
-
-        // Schedule an auto-reset from Complete/Failed back to Armed.
-        if (e.To is CaptureState.Complete or CaptureState.Failed)
-        {
-            _ = AutoResetAsync();
-        }
-    }
-
-    private async Task AutoResetAsync()
-    {
-        try
-        {
-            await Task.Delay(AutoResetDelay).ConfigureAwait(false);
-            _dispatcher.Post(() =>
-            {
-                if (_stateMachine.CanFire(CaptureTrigger.Reset))
-                {
-                    _stateMachine.Fire(CaptureTrigger.Reset);
-                }
-            });
-        }
-        catch
-        {
-            // ignore
-        }
-    }
-
-    private void UpdateStatusForState()
-    {
-        StatusMessage = _stateMachine.CurrentState switch
-        {
-            CaptureState.Idle => Localization["Dashboard_StatusIdle"],
-            CaptureState.TargetsSelected => Localization["Dashboard_StatusDisarmed"],
-            CaptureState.Armed => string.Format(
-                Localization["Dashboard_StatusArmed"],
-                _settings.Current.CaptureHotkey,
-                SelectedTarget?.DisplayName ?? "?"),
-            CaptureState.Capturing => string.Format(
-                Localization["Dashboard_StatusCapturing"],
-                SelectedTarget?.DisplayName ?? "?"),
-            CaptureState.Previewing => Localization["Preview_Prompt"],
-            _ => StatusMessage,
-        };
-    }
-
-    // -- selection / property changed hooks ---------------------------------
-
-    partial void OnSelectedTargetChanged(GameTargetViewModel? value)
-    {
-        TrySyncTargetState();
-        ArmCommand.NotifyCanExecuteChanged();
-        DisarmCommand.NotifyCanExecuteChanged();
-
-        if (_stateMachine.CurrentState == CaptureState.Armed)
-        {
-            UpdateStatusForState();
-        }
-    }
-
-    // -- hotkey trigger ------------------------------------------------------
-
-    private void OnHotkeyTriggered(object? sender, EventArgs e)
-    {
-        _dispatcher.Post(async () => await CaptureOnceAsync().ConfigureAwait(true));
-    }
-
-    private async Task CaptureOnceAsync()
-    {
-        if (_disposed) return;
-        if (_stateMachine.CurrentState != CaptureState.Armed) return;
-
-        var settings = _settings.Current;
-        var isRegionMode = string.Equals(settings.Capture.Mode, "Region", StringComparison.OrdinalIgnoreCase);
-
-        // Window mode needs a selected target; Region mode does not.
-        if (!isRegionMode && SelectedTarget is null) return;
-        var target = isRegionMode
-            ? new GameTarget(
-                ProcessId: 0u,
-                WindowHandle: nint.Zero,
-                ProcessName: "Region",
-                WindowTitle: Localization["Region_TargetName"],
-                ExecutablePath: string.Empty,
-                IconBytes: null,
-                SteamInfo: null)
-            : SelectedTarget!.Target;
-
-        // Countdown gate — done BEFORE firing HotkeyPressed so the state machine still
-        // shows Armed during the wait. Only fires when the user opted in (>0 seconds).
-        var countdown = NormalizeCountdown(settings.Capture.CountdownSeconds);
-        if (countdown > 0)
-        {
-            for (var remaining = countdown; remaining > 0; remaining--)
-            {
-                if (_disposed) return;
-                StatusMessage = string.Format(
-                    Localization["Toast_Countdown"], remaining);
-                try
-                {
-                    await Task.Delay(TimeSpan.FromSeconds(1)).ConfigureAwait(true);
-                }
-                catch (TaskCanceledException) { return; }
-            }
-        }
-
-        _stateMachine.Fire(CaptureTrigger.HotkeyPressed);
-
-        CapturedFrame? frame;
-        try
-        {
-            if (isRegionMode)
-            {
-                frame = await _regionCapture.SelectAndCaptureAsync().ConfigureAwait(true);
-                if (frame is null)
-                {
-                    // User cancelled the region selection (Esc / micro-drag) — return to
-                    // Armed state without firing FrameCaptured.
-                    _stateMachine.Fire(CaptureTrigger.PreviewRejected);
-                    return;
-                }
+                next.Add(existing);
             }
             else
             {
-                frame = await _captureEngine.CaptureAsync(target).ConfigureAwait(true);
+                next.Add(new TargetItemViewModel(target, Localization));
             }
         }
-        catch (Exception ex)
+
+        _all.Clear();
+        _all.AddRange(next);
+        UpdateBadges();
+        ApplyFilter();
+        LogRefreshed(_all.Count);
+    }
+
+    private void ApplyFilter()
+    {
+        var query = SearchText.Trim();
+        var visible = string.IsNullOrEmpty(query)
+            ? _all
+            : _all.Where(t => t.DisplayName.Contains(query, StringComparison.CurrentCultureIgnoreCase)
+                || t.ProcessName.Contains(query, StringComparison.CurrentCultureIgnoreCase)).ToList();
+
+        // Remove what disappeared, then insert/move into the right order: the collection
+        // is edited in place so the list keeps its scroll position and selection.
+        for (var i = Targets.Count - 1; i >= 0; i--)
         {
-            _logger.LogError(ex, "Picture capture failed: the capture engine reported an error.");
-            _stateMachine.Fire(CaptureTrigger.ErrorOccurred);
-            _toasts.ShowError(Localization["Toast_CaptureFailed"], ex.Message);
+            if (!visible.Contains(Targets[i]))
+            {
+                Targets.RemoveAt(i);
+            }
+        }
+
+        for (var i = 0; i < visible.Count; i++)
+        {
+            var current = Targets.IndexOf(visible[i]);
+            if (current < 0)
+            {
+                Targets.Insert(i, visible[i]);
+            }
+            else if (current != i)
+            {
+                Targets.Move(current, i);
+            }
+        }
+
+        OnPropertyChanged(nameof(HasNoTargets));
+    }
+
+    private void UpdateBadges()
+    {
+        var profiles = _settings.Current.Profiles;
+        var locked = _coordinator.LockedTarget?.WindowHandle;
+        foreach (var item in _all)
+        {
+            item.ProfileName = ProfileResolver.Resolve(profiles, item.Target)?.Name;
+            item.IsLocked = locked == item.WindowHandle;
+        }
+    }
+
+    private void UpdateCoordinatorState()
+    {
+        IsArmed = _coordinator.IsArmed;
+        IsBusy = _coordinator.IsBusy;
+        LockedTargetName = _coordinator.LockedTarget?.DisplayName;
+        StatusText = BuildStatus();
+
+        Hotkeys.Clear();
+        var registrations = _coordinator.Registrations;
+        var settings = _settings.Current.Hotkeys;
+        foreach (var mode in Enum.GetValues<CaptureMode>())
+        {
+            var registration = registrations.FirstOrDefault(r => r.Mode == mode);
+            var binding = registration?.Binding ?? settings.Get(mode);
+            var status = registration?.Status;
+            var statusText = status switch
+            {
+                HotkeyRegistrationStatus.Registered => Localization["Hotkey_StatusActive"],
+                HotkeyRegistrationStatus.Conflict => Localization["Hotkey_StatusConflict"],
+                HotkeyRegistrationStatus.Invalid => Localization["Hotkey_StatusInvalid"],
+                _ when binding.IsUnbound => Localization["Hotkey_StatusUnbound"],
+                _ => Localization["Hotkey_StatusInactive"],
+            };
+            Hotkeys.Add(new HotkeyStatusItem(
+                mode,
+                Localization[$"Mode_{mode}"],
+                binding.IsUnbound ? Localization["Hotkey_None"] : binding.ToString(),
+                statusText,
+                status is HotkeyRegistrationStatus.Conflict or HotkeyRegistrationStatus.Invalid));
+        }
+        HasHotkeyProblem = Hotkeys.Any(h => h.IsProblem);
+        UpdateBadges();
+    }
+
+    private string BuildStatus() => _coordinator.Phase switch
+    {
+        CapturePhase.Countdown => Localization.Format("Toast_Countdown", _coordinator.CountdownRemaining),
+        CapturePhase.Selecting => Localization["Status_Selecting"],
+        CapturePhase.Capturing => Localization["Status_Capturing"],
+        CapturePhase.Previewing => Localization["Preview_Prompt"],
+        CapturePhase.Saving => Localization["Status_Saving"],
+        _ when _coordinator.IsArmed && _coordinator.LockedTarget is { } locked => Localization.Format("Status_ArmedLocked", locked.DisplayName),
+        _ when _coordinator.IsArmed => Localization["Status_Armed"],
+        _ => Localization["Status_Idle"],
+    };
+
+    private void OnCoordinatorStateChanged(object? sender, EventArgs e) => _dispatcher.Post(() =>
+    {
+        if (!_disposed)
+        {
+            UpdateCoordinatorState();
+        }
+    });
+
+    private void OnWindowsChanged(object? sender, EventArgs e) => _dispatcher.Post(() =>
+    {
+        _stale = true;
+        if (!_disposed && _isPageActive)
+        {
+            _ = RefreshAsync();
+        }
+    });
+
+    private void OnSettingsChanged(object? sender, EventArgs e) => _dispatcher.Post(() =>
+    {
+        if (!_disposed)
+        {
+            UpdateCoordinatorState();
+        }
+    });
+
+    private void OnLocalizationChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (_disposed || e.PropertyName != "Item[]")
+        {
             return;
         }
 
-        _stateMachine.Fire(CaptureTrigger.FrameCaptured);
-
-        // Preview gate — only runs if settings say so AND the state machine routed us there.
-        if (_stateMachine.CurrentState == CaptureState.Previewing)
+        UpdateCoordinatorState();
+        OnPropertyChanged(nameof(ArmButtonText));
+        foreach (var item in _all)
         {
-            var accepted = await _previewPresenter.ShowAsync(frame, target).ConfigureAwait(true);
-            if (!accepted)
-            {
-                _stateMachine.Fire(CaptureTrigger.PreviewRejected);
-                return;
-            }
-            _stateMachine.Fire(CaptureTrigger.PreviewAccepted);
-        }
-
-        var clipboardMode = settings.Capture.ClipboardMode;
-        var copyToClipboard = string.Equals(clipboardMode, "Copy", StringComparison.OrdinalIgnoreCase)
-            || string.Equals(clipboardMode, "CopyAndSave", StringComparison.OrdinalIgnoreCase);
-        var saveToFile = !string.Equals(clipboardMode, "Copy", StringComparison.OrdinalIgnoreCase);
-        var autoPin = settings.UI.AutoPinAfterCapture;
-        // PNG bytes are needed if either clipboard or auto-pin is on. Encode lazily to
-        // avoid re-encoding when the user wants neither.
-        byte[]? cachedPngBytes = null;
-        async Task<byte[]?> EnsurePngAsync()
-            => cachedPngBytes ??= await EncodePngBytesAsync(frame).ConfigureAwait(true);
-
-        // Saving ------------------------------------------------------------
-        try
-        {
-            CaptureResult.Success? successResult = null;
-            CaptureResult.Failure? failureResult = null;
-
-            if (saveToFile)
-            {
-                var result = await SaveAsync(frame, target, settings).ConfigureAwait(true);
-                switch (result)
-                {
-                    case CaptureResult.Success ok:
-                        successResult = ok;
-                        LastCapturePath = ok.FilePath;
-                        StatusMessage = string.Format(
-                            Localization["Dashboard_StatusSaved"],
-                            Path.GetFileName(ok.FilePath),
-                            ok.Width, ok.Height, (int)ok.Duration.TotalMilliseconds);
-                        _toasts.ShowSuccess(
-                            Localization["Toast_CaptureSaved"],
-                            Path.GetFileName(ok.FilePath));
-                        break;
-                    case CaptureResult.Failure fail:
-                        failureResult = fail;
-                        break;
-                }
-            }
-
-            if (copyToClipboard && failureResult is null)
-            {
-                var pngBytes = await EnsurePngAsync().ConfigureAwait(true);
-                if (pngBytes is not null)
-                {
-                    var copied = await _clipboard.CopyImageAsync(pngBytes).ConfigureAwait(true);
-                    if (copied)
-                    {
-                        _toasts.ShowInfo(
-                            Localization["Toast_ClipboardCopied"],
-                            string.Empty);
-                        if (!saveToFile)
-                        {
-                            // Copy-only mode — synthesise a status update mirroring StatusSaved
-                            // so the dashboard tells the user something happened.
-                            StatusMessage = Localization["Toast_ClipboardCopied"];
-                        }
-                    }
-                }
-            }
-
-            if (failureResult is not null)
-            {
-                _stateMachine.Fire(CaptureTrigger.ErrorOccurred);
-                StatusMessage = string.Format(
-                    Localization["Dashboard_StatusFailed"],
-                    failureResult.ErrorCode, failureResult.DeveloperMessage);
-                _toasts.ShowError(
-                    Localization["Toast_CaptureFailed"],
-                    failureResult.DeveloperMessage);
-            }
-            else
-            {
-                _stateMachine.Fire(CaptureTrigger.Saved);
-                PlayCaptureSoundIfEnabled();
-
-                if (settings.UI.OpenFolderAfterSave && successResult is not null)
-                {
-                    TryOpenContainingFolder(successResult.FilePath);
-                }
-
-                if (autoPin)
-                {
-                    var pngBytes = await EnsurePngAsync().ConfigureAwait(true);
-                    if (pngBytes is not null)
-                    {
-                        _pinnedThumbnail.Show(pngBytes, successResult?.FilePath, target.DisplayName);
-                    }
-                }
-            }
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Picture capture failed while saving: {Reason}", ex.Message);
-            _stateMachine.Fire(CaptureTrigger.ErrorOccurred);
-            _toasts.ShowError(Localization["Toast_CaptureFailed"], ex.Message);
-        }
-    }
-
-    /// <summary>Snap the persisted countdown to one of the supported tiers (0/3/5/10).</summary>
-    private static int NormalizeCountdown(int raw) => raw switch
-    {
-        3 or 5 or 10 => raw,
-        _ => 0,
-    };
-
-    private async Task<byte[]?> EncodePngBytesAsync(CapturedFrame frame)
-    {
-        var encoder = ResolveEncoder(ImageFormat.Png);
-        if (encoder is null)
-        {
-            _logger.LogWarning("No PNG encoder registered; clipboard copy skipped.");
-            return null;
-        }
-        try
-        {
-            using var ms = new MemoryStream();
-            await encoder.EncodeAsync(frame, ImageFormat.Png, jpegQuality: 100, webpQuality: 100, ms)
-                .ConfigureAwait(true);
-            return ms.ToArray();
-        }
-        catch (Exception ex)
-        {
-            _logger.LogWarning(ex, "Failed to encode capture as PNG for clipboard.");
-            return null;
-        }
-    }
-
-    private void TryOpenContainingFolder(string filePath)
-    {
-        try
-        {
-            var folder = Path.GetDirectoryName(filePath);
-            if (string.IsNullOrWhiteSpace(folder)) return;
-            System.Diagnostics.Process.Start(
-                new System.Diagnostics.ProcessStartInfo(folder) { UseShellExecute = true });
-        }
-        catch (Exception ex)
-        {
-            _logger.LogDebug(ex, "Failed to open output folder after save.");
-        }
-    }
-
-    /// <summary>
-    /// Run the orchestrator-equivalent save path inline: pick an encoder, write to a tmp
-    /// file, atomically rename, return a CaptureResult. We don't reuse CaptureOrchestrator
-    /// directly because preview has already consumed the capture and we want to feed its
-    /// frame back in.
-    /// </summary>
-    private async Task<CaptureResult> SaveAsync(CapturedFrame frame, GameTarget target, AppSettings settings)
-    {
-        var format = settings.Capture.DefaultFormat;
-        var encoder = ResolveEncoder(format);
-        if (encoder is null)
-        {
-            return new CaptureResult.Failure(
-                Core.Errors.CaptureError.EncodingFailure,
-                $"No encoder registered for format {format}.");
-        }
-
-        var outputDir = string.IsNullOrWhiteSpace(settings.Capture.OutputDirectory)
-            ? Path.Combine(
-                Environment.GetFolderPath(Environment.SpecialFolder.MyPictures),
-                "CaptureImage")
-            : settings.Capture.OutputDirectory;
-        Directory.CreateDirectory(outputDir);
-
-        var finalPath = _fileNameStrategy.BuildFilePath(
-            outputDir,
-            settings.Capture.FileNameTemplate,
-            target,
-            DateTimeOffset.Now,
-            format);
-
-        var tempPath = finalPath + ".tmp";
-        long fileSize;
-        var stopwatch = System.Diagnostics.Stopwatch.StartNew();
-        try
-        {
-            await using (var fs = new FileStream(
-                tempPath, FileMode.Create, FileAccess.Write, FileShare.None,
-                bufferSize: 81920, useAsync: true))
-            {
-                await encoder.EncodeAsync(
-                    frame, format,
-                    settings.Capture.JpegQuality,
-                    settings.Capture.WebpQuality,
-                    fs).ConfigureAwait(false);
-                await fs.FlushAsync().ConfigureAwait(false);
-                fileSize = fs.Length;
-            }
-            if (File.Exists(finalPath)) File.Delete(finalPath);
-            File.Move(tempPath, finalPath);
-        }
-        catch (Exception ex)
-        {
-            if (File.Exists(tempPath))
-            {
-                try { File.Delete(tempPath); } catch { /* best-effort */ }
-            }
-            return new CaptureResult.Failure(Core.Errors.CaptureError.FileWriteFailure, ex.Message, ex);
-        }
-        stopwatch.Stop();
-
-        return new CaptureResult.Success(finalPath, frame.Width, frame.Height, fileSize, stopwatch.Elapsed);
-    }
-
-    private IImageEncoder? ResolveEncoder(ImageFormat format)
-    {
-        foreach (var e in _encoders)
-        {
-            if (e.Supports(format)) return e;
-        }
-        return null;
-    }
-
-    // -- process watch ------------------------------------------------------
-
-    private void OnProcessChanged(object? sender, ProcessChange e)
-    {
-        _pendingRefresh?.Cancel();
-        var cts = new CancellationTokenSource();
-        _pendingRefresh = cts;
-        var token = cts.Token;
-
-        _dispatcher.Post(async () =>
-        {
-            try
-            {
-                await Task.Delay(RefreshDebounce, token).ConfigureAwait(true);
-                if (token.IsCancellationRequested) return;
-
-                // Suppress refresh while a preview modal is up — rebuilding Targets
-                // would replace the GameTargetViewModel instances and the user-visible
-                // SelectedTarget would shuffle out from under the preview decision.
-                // The next process event after the preview closes triggers a fresh
-                // debounce, so nothing's lost.
-                if (_stateMachine.CurrentState is CaptureState.Previewing or CaptureState.Saving)
-                {
-                    _logger.LogDebug(
-                        "Suppressed dashboard refresh while in {State} state.",
-                        _stateMachine.CurrentState);
-                    return;
-                }
-
-                await RefreshAsync().ConfigureAwait(true);
-            }
-            catch (TaskCanceledException)
-            {
-                // Superseded by a newer event — expected.
-            }
-        });
-    }
-
-    private void OnSettingsChanged(object? sender, EventArgs e)
-    {
-        if (_stateMachine.CurrentState == CaptureState.Armed)
-        {
-            UpdateStatusForState();
-        }
-
-        ApplyAutoSwitchSetting();
-    }
-
-    private void ApplyAutoSwitchSetting()
-    {
-        var enabled = _settings.Current.Capture.AutoSwitchOnAltTab;
-        if (enabled && !_foregroundWatcher.IsRunning)
-        {
-            _foregroundWatcher.Start();
-        }
-        else if (!enabled && _foregroundWatcher.IsRunning)
-        {
-            _foregroundWatcher.Stop();
-        }
-    }
-
-    private void OnForegroundChanged(object? sender, nint hwnd)
-    {
-        // Watcher runs on a thread-pool timer; marshal to the UI thread before touching
-        // SelectedTarget so binding updates land on the dispatcher.
-        _dispatcher.Post(() =>
-        {
-            if (_disposed) return;
-            if (!_settings.Current.Capture.AutoSwitchOnAltTab) return;
-
-            foreach (var vm in Targets)
-            {
-                if (vm.Target.WindowHandle == hwnd)
-                {
-                    if (!ReferenceEquals(SelectedTarget, vm))
-                    {
-                        SelectedTarget = vm;
-                        _logger.LogDebug(
-                            "Auto-switched target to PID {Pid} ({Name}).",
-                            vm.ProcessId, vm.DisplayName);
-                    }
-                    return;
-                }
-            }
-            // No match — keep the current selection. Clearing it would surprise users
-            // who Alt-Tab to apps that are filtered out of the target list (Explorer,
-            // Settings, etc.).
-        });
-    }
-
-    /// <summary>
-    /// Play the standard Windows "SystemAsterisk" notification sound on a successful
-    /// capture when <c>UI.SoundEnabled</c> is on. The setting has lived in
-    /// <c>AppSettings</c> since v1.0 but had no consumer until v1.3-M7a — this hooks it
-    /// up. Uses Win32 PlaySound directly (via P/Invoke) instead of
-    /// <c>System.Media.SystemSounds</c> because the latter lives in
-    /// <c>System.Windows.Extensions</c> which only ships for Windows TFMs, and the
-    /// ViewModels project is intentionally TFM-portable. Failures are non-fatal: the
-    /// capture has already succeeded; missing audio devices just get logged.
-    /// </summary>
-    [System.Runtime.InteropServices.DllImport("winmm.dll", CharSet = System.Runtime.InteropServices.CharSet.Unicode)]
-    private static extern bool PlaySound(string? pszSound, IntPtr hmod, uint fdwSound);
-
-    private const uint SND_ASYNC = 0x0001;
-    private const uint SND_ALIAS = 0x00010000;
-
-    private void PlayCaptureSoundIfEnabled()
-    {
-        if (!_settings.Current.UI.SoundEnabled) return;
-        try
-        {
-            PlaySound("SystemAsterisk", IntPtr.Zero, SND_ASYNC | SND_ALIAS);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogDebug(ex, "Failed to play capture sound.");
+            item.RefreshText();
         }
     }
 
     public void Dispose()
     {
-        if (_disposed) return;
+        if (_disposed)
+        {
+            return;
+        }
         _disposed = true;
-        _hotkeys.Triggered -= OnHotkeyTriggered;
-        _watcher.Changed -= OnProcessChanged;
+        _coordinator.StateChanged -= OnCoordinatorStateChanged;
+        _watcher.WindowsChanged -= OnWindowsChanged;
         _settings.Changed -= OnSettingsChanged;
-        _foregroundWatcher.ForegroundChanged -= OnForegroundChanged;
-        _foregroundWatcher.Stop();
-        // The WMI watcher's ManagementEventWatcher subscriptions run on non-background
-        // threads. If these aren't stopped, the CLR can't tear down on app exit and the
-        // process becomes a zombie — every subsequent launch then accumulates a duplicate
-        // CaptureImage.exe in Task Manager. Symmetric with the Start() call in the ctor.
-        _watcher.Stop();
-        _stateMachine.StateChanged -= OnStateChanged;
         Localization.PropertyChanged -= OnLocalizationChanged;
-        _pendingRefresh?.Cancel();
-        _pendingRefresh?.Dispose();
+        _refreshGate.Dispose();
     }
+
+    [LoggerMessage(Level = LogLevel.Debug, Message = "Dashboard shows {Count} windows.")]
+    private partial void LogRefreshed(int count);
+
+    [LoggerMessage(Level = LogLevel.Warning, Message = "Could not list the open windows.")]
+    private partial void LogRefreshFailed(Exception exception);
 }

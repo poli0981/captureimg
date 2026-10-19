@@ -10,169 +10,122 @@ using Velopack.Sources;
 namespace CaptureImage.Infrastructure.Update;
 
 /// <summary>
-/// <see cref="IUpdateService"/> backed by <see cref="Velopack.UpdateManager"/> pointed at a
-/// GitHub Releases repository. When the executing binary is not a Velopack-installed app
-/// (e.g. <c>dotnet run</c> during development), the service reports
-/// <see cref="UpdateStatus.Unavailable"/> and disables itself gracefully.
+/// In-app updates from GitHub Releases through Velopack. When the running binary is not a
+/// Velopack install (<c>dotnet run</c>, portable zip, tests) the service reports
+/// <see cref="UpdateStatus.Unavailable"/>.
 /// </summary>
-public sealed class VelopackUpdateService : IUpdateService
+/// <remarks>
+/// Applying an update hands the package to Velopack's updater, which waits for this process
+/// to exit; the app then shuts down normally, so settings are flushed, the tray icon is
+/// removed and logs are closed (v1 called <c>ApplyUpdatesAndRestart</c>, which killed the
+/// process without any of that).
+/// </remarks>
+public sealed partial class VelopackUpdateService : IUpdateService
 {
-    /// <summary>
-    /// Default GitHub repository URL the updater points at. Can be overridden via
-    /// settings in a future milestone.
-    /// </summary>
-    private const string DefaultRepositoryUrl = "https://github.com/poli0981/captureimg";
+    private const string RepositoryUrl = "https://github.com/poli0981/captureimg";
 
     private readonly ILogger<VelopackUpdateService> _logger;
     private readonly UpdateManager? _manager;
-    private UpdateInfo? _pendingUpdate;
+    private UpdateInfo? _pending;
 
     public VelopackUpdateService(ILogger<VelopackUpdateService> logger)
     {
         _logger = logger;
-
         try
         {
-            var source = new GithubSource(
-                repoUrl: DefaultRepositoryUrl,
-                accessToken: null,
-                prerelease: false);
-
-            _manager = new UpdateManager(source);
-            _logger.LogInformation(
-                "Velopack update service initialized: current={Version}, installed={IsInstalled}, repo={Repo}",
-                _manager.CurrentVersion, _manager.IsInstalled, DefaultRepositoryUrl);
+            _manager = new UpdateManager(new GithubSource(RepositoryUrl, accessToken: null, prerelease: false));
+            LogInitialized(_manager.CurrentVersion?.ToString() ?? "dev", _manager.IsInstalled);
         }
-        catch (Exception ex)
+        catch (Exception ex) when (ex is not OutOfMemoryException)
         {
-            _logger.LogWarning(ex, "Velopack UpdateManager could not be constructed; updates disabled.");
+            LogInitFailed(ex);
             _manager = null;
         }
     }
 
-    public string CurrentVersion => _manager?.CurrentVersion?.ToString() ?? "0.0.0-dev";
+    public event EventHandler<string>? LogEmitted;
+
+    public string CurrentVersion => _manager?.CurrentVersion?.ToString() ?? "dev";
 
     public bool IsAvailable => _manager?.IsInstalled == true;
 
-    public event EventHandler<string>? LogEmitted;
-
     public async Task<UpdateCheckResult> CheckAsync(CancellationToken cancellationToken = default)
     {
-        EmitLog($"Current version: {CurrentVersion}");
-
         if (!IsAvailable || _manager is null)
         {
-            EmitLog("Update service is unavailable (not a Velopack-installed binary). Running from source?");
-            return new UpdateCheckResult(
-                Status: UpdateStatus.Unavailable,
-                CurrentVersion: CurrentVersion,
-                AvailableVersion: null,
-                ReleaseNotes: null);
+            Emit("Updates are only available in the installed app (not when running from source or the portable zip).");
+            return new UpdateCheckResult(UpdateStatus.Unavailable, CurrentVersion, null, null);
         }
 
-        EmitLog("Checking GitHub for updates…");
+        Emit($"Current version {CurrentVersion}. Checking GitHub Releases…");
         try
         {
             var info = await _manager.CheckForUpdatesAsync().WaitAsync(cancellationToken).ConfigureAwait(false);
+            _pending = info;
             if (info is null)
             {
-                EmitLog("No update available. You are on the latest release.");
-                _pendingUpdate = null;
-                return new UpdateCheckResult(
-                    Status: UpdateStatus.UpToDate,
-                    CurrentVersion: CurrentVersion,
-                    AvailableVersion: null,
-                    ReleaseNotes: null);
+                Emit("You are on the latest version.");
+                return new UpdateCheckResult(UpdateStatus.UpToDate, CurrentVersion, null, null);
             }
 
-            _pendingUpdate = info;
             var target = info.TargetFullRelease;
-            EmitLog($"Update available: {target.Version} ({target.FileName}, {target.Size / 1024} KB)");
-
-            return new UpdateCheckResult(
-                Status: UpdateStatus.UpdateAvailable,
-                CurrentVersion: CurrentVersion,
-                AvailableVersion: target.Version?.ToString(),
-                ReleaseNotes: target.NotesMarkdown);
+            Emit($"Version {target.Version} is available ({target.Size / 1024 / 1024.0:0.0} MB).");
+            return new UpdateCheckResult(UpdateStatus.UpdateAvailable, CurrentVersion, target.Version?.ToString(), target.NotesMarkdown);
         }
-        catch (Exception ex)
+        catch (OperationCanceledException)
         {
-            _logger.LogError(ex, "Update check failed.");
-            EmitLog($"Check failed: {ex.Message}");
-            return new UpdateCheckResult(
-                Status: UpdateStatus.Failed,
-                CurrentVersion: CurrentVersion,
-                AvailableVersion: null,
-                ReleaseNotes: null);
-        }
-    }
-
-    public async Task DownloadAsync(
-        IProgress<int>? progress = null,
-        CancellationToken cancellationToken = default)
-    {
-        if (_manager is null || _pendingUpdate is null)
-        {
-            throw new InvalidOperationException(
-                "No pending update to download. Call CheckAsync first and ensure it returned UpdateAvailable.");
-        }
-
-        EmitLog("Downloading update…");
-        try
-        {
-            await _manager.DownloadUpdatesAsync(
-                _pendingUpdate,
-                percent =>
-                {
-                    progress?.Report(percent);
-                    if (percent is 25 or 50 or 75 or 100)
-                    {
-                        EmitLog($"Download progress: {percent}%");
-                    }
-                },
-                cancellationToken).ConfigureAwait(false);
-
-            EmitLog("Download complete. Ready to install.");
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Update download failed.");
-            EmitLog($"Download failed: {ex.Message}");
             throw;
         }
-    }
-
-    public void ApplyAndRestart()
-    {
-        if (_manager is null || _pendingUpdate is null)
+        catch (Exception ex) when (ex is HttpRequestException or IOException or InvalidOperationException or System.Text.Json.JsonException)
         {
-            _logger.LogWarning(
-                "ApplyAndRestart invoked with no pending update (manager={HasManager}, pending={HasPending}).",
-                _manager is not null,
-                _pendingUpdate is not null);
-            throw new InvalidOperationException(
-                "No pending update to install. Call CheckAsync + DownloadAsync first.");
-        }
-
-        _logger.LogInformation(
-            "Applying update {Version} and restarting.",
-            _pendingUpdate.TargetFullRelease.Version);
-        EmitLog("Applying update and restarting…");
-        try
-        {
-            _manager.ApplyUpdatesAndRestart(_pendingUpdate.TargetFullRelease);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "ApplyUpdatesAndRestart failed.");
-            EmitLog($"Apply failed: {ex.Message}");
-            throw;
+            LogCheckFailed(ex);
+            Emit($"Update check failed: {ex.Message}");
+            return new UpdateCheckResult(UpdateStatus.Failed, CurrentVersion, null, null);
         }
     }
 
-    private void EmitLog(string line)
+    public async Task DownloadAsync(IProgress<int>? progress = null, CancellationToken cancellationToken = default)
     {
-        _logger.LogInformation("{Line}", line);
+        if (_manager is null || _pending is null)
+        {
+            throw new InvalidOperationException("Check for updates first.");
+        }
+
+        Emit("Downloading…");
+        await _manager.DownloadUpdatesAsync(_pending, percent => progress?.Report(percent), cancellationToken).ConfigureAwait(false);
+        Emit("Download complete. Restart to install.");
+    }
+
+    public void ApplyOnExit()
+    {
+        if (_manager is null || _pending is null)
+        {
+            throw new InvalidOperationException("Download the update first.");
+        }
+
+        LogApplying(_pending.TargetFullRelease.Version?.ToString() ?? "?");
+        Emit("Installing — CaptureImage restarts in a moment…");
+        _manager.WaitExitThenApplyUpdates(_pending.TargetFullRelease, silent: false, restart: true);
+    }
+
+    private void Emit(string line)
+    {
+        LogLine(line);
         LogEmitted?.Invoke(this, line);
     }
+
+    [LoggerMessage(Level = LogLevel.Information, Message = "Velopack ready (version {Version}, installed: {Installed}).")]
+    private partial void LogInitialized(string version, bool installed);
+
+    [LoggerMessage(Level = LogLevel.Warning, Message = "Velopack could not be initialized; updates are disabled.")]
+    private partial void LogInitFailed(Exception exception);
+
+    [LoggerMessage(Level = LogLevel.Warning, Message = "Update check failed.")]
+    private partial void LogCheckFailed(Exception exception);
+
+    [LoggerMessage(Level = LogLevel.Information, Message = "Applying update {Version} after exit.")]
+    private partial void LogApplying(string version);
+
+    [LoggerMessage(Level = LogLevel.Debug, Message = "Updater: {Line}")]
+    private partial void LogLine(string line);
 }

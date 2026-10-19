@@ -1,0 +1,300 @@
+<Page
+    x:Class="CaptureImage.UI.Pages.DashboardPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:loc="clr-namespace:CaptureImage.UI.Localization"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+    xmlns:vm="clr-namespace:CaptureImage.ViewModels.Dashboard;assembly=CaptureImage.ViewModels"
+    Title="{loc:Tr Nav_Dashboard}"
+    d:DataContext="{d:DesignInstance Type=vm:DashboardViewModel}"
+    ScrollViewer.CanContentScroll="False"
+    AutomationProperties.AutomationId="DashboardPage"
+    mc:Ignorable="d">
+    <Grid Margin="24,12,24,16">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0">
+            <TextBlock Style="{StaticResource PageTitle}" Text="{loc:Tr Dashboard_Title}" />
+            <TextBlock Style="{StaticResource PageSubtitle}" Text="{loc:Tr Dashboard_Subtitle}" />
+        </StackPanel>
+
+        <!--  Armed state, locked target and per-mode hotkeys  -->
+        <ui:Card Grid.Row="1" Margin="0,0,0,8" Padding="16">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <Ellipse
+                    Grid.Column="0"
+                    Width="12"
+                    Height="12"
+                    Margin="0,4,14,0"
+                    VerticalAlignment="Top">
+                    <Ellipse.Style>
+                        <Style TargetType="Ellipse">
+                            <Setter Property="Fill" Value="{DynamicResource TextFillColorDisabledBrush}" />
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsArmed}" Value="True">
+                                    <Setter Property="Fill" Value="{DynamicResource SystemFillColorSuccessBrush}" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding IsBusy}" Value="True">
+                                    <Setter Property="Fill" Value="{DynamicResource SystemFillColorCautionBrush}" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Ellipse.Style>
+                </Ellipse>
+                <StackPanel Grid.Column="1">
+                    <TextBlock
+                        AutomationProperties.AutomationId="Dashboard_Status"
+                        AutomationProperties.LiveSetting="Polite"
+                        FontSize="15"
+                        FontWeight="SemiBold"
+                        Text="{Binding StatusText}"
+                        TextWrapping="Wrap" />
+                    <StackPanel
+                        Margin="0,6,0,0"
+                        Orientation="Horizontal"
+                        Visibility="{Binding LockedTargetName, Converter={StaticResource HasValueToVisibility}}">
+                        <ui:SymbolIcon
+                            Margin="0,0,6,0"
+                            FontSize="14"
+                            Symbol="LockClosed24" />
+                        <TextBlock Style="{StaticResource SecondaryText}" Text="{loc:Tr Dashboard_LockedLabel}" />
+                        <TextBlock
+                            Margin="4,0,8,0"
+                            FontWeight="SemiBold"
+                            Text="{Binding LockedTargetName}"
+                            TextTrimming="CharacterEllipsis" />
+                        <ui:Button
+                            Padding="8,2"
+                            AutomationProperties.AutomationId="Dashboard_Unlock"
+                            Command="{Binding UnlockCommand}"
+                            Content="{loc:Tr Dashboard_Unlock}" />
+                    </StackPanel>
+                    <ItemsControl
+                        Margin="0,10,0,0"
+                        AutomationProperties.Name="{loc:Tr Dashboard_Hotkeys}"
+                        Focusable="False"
+                        ItemsSource="{Binding Hotkeys}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate DataType="{x:Type vm:HotkeyStatusItem}">
+                                <Border Margin="0,0,8,4" ToolTip="{Binding StatusText}">
+                                    <Border.Style>
+                                        <Style BasedOn="{StaticResource Badge}" TargetType="Border">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding IsProblem}" Value="True">
+                                                    <Setter Property="BorderBrush" Value="{DynamicResource SystemFillColorCriticalBrush}" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Border.Style>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock FontSize="12" Text="{Binding ModeName}" />
+                                        <TextBlock
+                                            Margin="6,0,0,0"
+                                            FontSize="12"
+                                            FontWeight="SemiBold"
+                                            Text="{Binding Binding}" />
+                                        <TextBlock
+                                            Margin="6,0,0,0"
+                                            FontSize="12"
+                                            Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                            Text="{Binding StatusText}" />
+                                    </StackPanel>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+                <ui:Button
+                    Grid.Column="2"
+                    MinWidth="130"
+                    VerticalAlignment="Top"
+                    Appearance="Primary"
+                    AutomationProperties.AutomationId="Dashboard_ToggleArm"
+                    Command="{Binding ToggleArmCommand}"
+                    Content="{Binding ArmButtonText}"
+                    Icon="{ui:SymbolIcon Keyboard24}" />
+            </Grid>
+        </ui:Card>
+
+        <ui:InfoBar
+            Title="{loc:Tr Hotkey_ProblemTitle}"
+            Grid.Row="2"
+            Margin="0,0,0,8"
+            IsClosable="False"
+            IsOpen="{Binding HasHotkeyProblem}"
+            Message="{loc:Tr Hotkey_ProblemMessage}"
+            Severity="Warning" />
+
+        <!--  Quick capture  -->
+        <WrapPanel Grid.Row="3" Margin="0,4,0,8">
+            <ui:Button
+                Margin="0,0,8,4"
+                AutomationProperties.AutomationId="Dashboard_CaptureRegion"
+                Command="{Binding CaptureRegionCommand}"
+                Content="{loc:Tr Dashboard_CaptureRegion}"
+                Icon="{ui:SymbolIcon Crop24}" />
+            <ui:Button
+                Margin="0,0,8,4"
+                AutomationProperties.AutomationId="Dashboard_CaptureMonitor"
+                Command="{Binding CaptureMonitorCommand}"
+                Content="{loc:Tr Dashboard_CaptureMonitor}"
+                Icon="{ui:SymbolIcon Desktop24}" />
+        </WrapPanel>
+
+        <!--  Window list  -->
+        <Grid Grid.Row="4" Margin="0,8,0,8">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <TextBlock
+                Margin="0"
+                VerticalAlignment="Center"
+                Style="{StaticResource SectionHeader}"
+                Text="{loc:Tr Dashboard_Windows}" />
+            <ui:TextBox
+                Grid.Column="1"
+                Width="280"
+                AutomationProperties.AutomationId="Dashboard_Search"
+                AutomationProperties.Name="{loc:Tr Dashboard_Search}"
+                ClearButtonEnabled="True"
+                Icon="{ui:SymbolIcon Search24}"
+                PlaceholderText="{loc:Tr Dashboard_Search}"
+                Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" />
+            <ui:Button
+                Grid.Column="2"
+                Margin="8,0,0,0"
+                AutomationProperties.AutomationId="Dashboard_Refresh"
+                AutomationProperties.Name="{loc:Tr Dashboard_Refresh}"
+                Command="{Binding RefreshCommand}"
+                Icon="{ui:SymbolIcon ArrowClockwise24}"
+                ToolTip="{loc:Tr Dashboard_Refresh}" />
+        </Grid>
+
+        <Grid Grid.Row="5">
+            <ui:ListView
+                AutomationProperties.AutomationId="Dashboard_Targets"
+                AutomationProperties.Name="{loc:Tr Dashboard_Windows}"
+                ItemsSource="{Binding Targets}"
+                ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                SelectedItem="{Binding SelectedTarget}"
+                SelectionMode="Single"
+                VirtualizingPanel.IsVirtualizing="True"
+                VirtualizingPanel.VirtualizationMode="Recycling">
+                <ui:ListView.ItemTemplate>
+                    <DataTemplate DataType="{x:Type vm:TargetItemViewModel}">
+                        <Grid Margin="4,6">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <Image
+                                Width="28"
+                                Height="28"
+                                Margin="0,0,12,0"
+                                VerticalAlignment="Center"
+                                RenderOptions.BitmapScalingMode="HighQuality"
+                                Source="{Binding IconBytes, Converter={StaticResource BytesToImage}}" />
+                            <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                <TextBlock
+                                    FontWeight="Medium"
+                                    Text="{Binding DisplayName}"
+                                    TextTrimming="CharacterEllipsis" />
+                                <TextBlock Style="{StaticResource CaptionText}" Text="{Binding ProcessName}" />
+                            </StackPanel>
+                            <StackPanel
+                                Grid.Column="2"
+                                VerticalAlignment="Center"
+                                Orientation="Horizontal">
+                                <Border Style="{StaticResource Badge}" Visibility="{Binding IsLocked, Converter={StaticResource BoolToVisibility}}">
+                                    <StackPanel Orientation="Horizontal">
+                                        <ui:SymbolIcon
+                                            Margin="0,0,4,0"
+                                            FontSize="11"
+                                            Symbol="LockClosed24" />
+                                        <TextBlock Style="{StaticResource BadgeText}" Text="{loc:Tr Dashboard_Locked}" />
+                                    </StackPanel>
+                                </Border>
+                                <Border Style="{StaticResource Badge}" Visibility="{Binding HasProfile, Converter={StaticResource BoolToVisibility}}">
+                                    <StackPanel Orientation="Horizontal">
+                                        <ui:SymbolIcon
+                                            Margin="0,0,4,0"
+                                            FontSize="11"
+                                            Symbol="Games24" />
+                                        <TextBlock Style="{StaticResource BadgeText}" Text="{Binding ProfileName}" />
+                                    </StackPanel>
+                                </Border>
+                                <Border Style="{StaticResource Badge}" Visibility="{Binding IsMinimized, Converter={StaticResource BoolToVisibility}}">
+                                    <TextBlock Style="{StaticResource BadgeText}" Text="{loc:Tr Dashboard_Minimized}" />
+                                </Border>
+                                <Border
+                                    Style="{StaticResource Badge}"
+                                    ToolTip="{Binding SteamTooltip}"
+                                    Visibility="{Binding IsSteamGame, Converter={StaticResource BoolToVisibility}}">
+                                    <TextBlock Style="{StaticResource BadgeText}" Text="{loc:Tr Dashboard_SteamBadge}" />
+                                </Border>
+                            </StackPanel>
+                        </Grid>
+                    </DataTemplate>
+                </ui:ListView.ItemTemplate>
+            </ui:ListView>
+            <ui:ProgressRing
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                IsIndeterminate="True"
+                Visibility="{Binding IsLoading, Converter={StaticResource BoolToVisibility}}" />
+            <TextBlock
+                MaxWidth="420"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Style="{StaticResource SecondaryText}"
+                Text="{loc:Tr Dashboard_EmptyState}"
+                TextAlignment="Center"
+                Visibility="{Binding HasNoTargets, Converter={StaticResource BoolToVisibility}}" />
+        </Grid>
+
+        <WrapPanel Grid.Row="6" Margin="0,12,0,0">
+            <ui:Button
+                Margin="0,0,8,4"
+                Appearance="Primary"
+                AutomationProperties.AutomationId="Dashboard_CaptureSelected"
+                Command="{Binding CaptureSelectedCommand}"
+                Content="{loc:Tr Dashboard_CaptureSelected}"
+                Icon="{ui:SymbolIcon Camera24}" />
+            <ui:Button
+                Margin="0,0,8,4"
+                AutomationProperties.AutomationId="Dashboard_LockSelected"
+                Command="{Binding LockSelectedCommand}"
+                Content="{loc:Tr Dashboard_LockSelected}"
+                Icon="{ui:SymbolIcon LockClosed24}" />
+            <ui:Button
+                Margin="0,0,8,4"
+                AutomationProperties.AutomationId="Dashboard_CreateProfile"
+                Command="{Binding CreateProfileCommand}"
+                Content="{loc:Tr Dashboard_CreateProfile}"
+                Icon="{ui:SymbolIcon Games24}" />
+        </WrapPanel>
+    </Grid>
+</Page>

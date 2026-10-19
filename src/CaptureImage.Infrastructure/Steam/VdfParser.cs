@@ -39,7 +39,7 @@ public static class VdfParser
             throw new VdfParseException("Empty document.", reader.Position);
         }
 
-        var first = ParseNode(reader);
+        var first = ParseNode(reader, depth: 0);
         reader.SkipTrivia();
 
         if (reader.Eof)
@@ -54,15 +54,24 @@ public static class VdfParser
         };
         while (!reader.Eof)
         {
-            var node = ParseNode(reader);
+            var node = ParseNode(reader, depth: 0);
             children[node.Key] = node;
             reader.SkipTrivia();
         }
         return VdfNode.Branch("<root>", children);
     }
 
-    private static VdfNode ParseNode(VdfReader reader)
+    /// <summary>Real Steam files nest a handful of levels; anything deeper is rejected
+    /// instead of overflowing the stack on a crafted file.</summary>
+    private const int MaxDepth = 64;
+
+    private static VdfNode ParseNode(VdfReader reader, int depth)
     {
+        if (depth > MaxDepth)
+        {
+            throw new VdfParseException($"Nesting deeper than {MaxDepth} levels.", reader.Position);
+        }
+
         reader.SkipTrivia();
         var key = reader.ReadQuotedString();
         reader.SkipTrivia();
@@ -98,7 +107,7 @@ public static class VdfParser
                     reader.Advance();
                     break;
                 }
-                var child = ParseNode(reader);
+                var child = ParseNode(reader, depth + 1);
                 children[child.Key] = child;
             }
             return VdfNode.Branch(key, children);
@@ -204,7 +213,7 @@ public static class VdfParser
 }
 
 /// <summary>Thrown when a VDF document fails to parse.</summary>
-public sealed class VdfParseException : Exception
+public sealed class VdfParseException : FormatException
 {
     public int Position { get; }
 

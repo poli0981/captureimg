@@ -1,105 +1,100 @@
 # Third-party Notices
 
-_Last updated: 2026-04-15_
+_Last updated: 2026-10-19 (CaptureImage 2.0)_
 
-CaptureImage is built on top of several open-source components. This file
-lists every runtime and build dependency together with its upstream license
-and project URL. A shorter version is in the repository root [`NOTICE`](../../NOTICE) file.
+CaptureImage is built on open-source components. This file lists every package that ships with
+the app, with its license and upstream project; the short form is the repository root
+[`NOTICE`](../../NOTICE). The list is generated from the app's dependency graph with
+[nuget-license](https://github.com/sensslen/nuget-license), and the `license` CI check keeps it
+within licenses compatible with **GPL-3.0-or-later**.
 
-All listed licenses are **compatible with distribution under the
-GNU General Public License v3.0 or later**, which is the license the
-CaptureImage binary is distributed under.
+## User interface
 
-## Runtime dependencies
+| Package | Version | License | Project |
+|---|---|---|---|
+| CommunityToolkit.Mvvm | 8.4.2 | MIT | <https://github.com/CommunityToolkit/dotnet> |
+| H.GeneratedIcons.System.Drawing | 2.4.1 | MIT | <https://github.com/HavenDV/H.NotifyIcon> |
+| H.NotifyIcon | 2.4.1 | MIT | <https://github.com/HavenDV/H.NotifyIcon> |
+| H.NotifyIcon.Wpf | 2.4.1 | MIT | <https://github.com/HavenDV/H.NotifyIcon> |
+| WPF-UI | 4.3.0 | MIT | <https://github.com/lepoco/wpfui> |
+| WPF-UI.Abstractions | 4.3.0 | MIT | <https://github.com/lepoco/wpfui> |
 
-### UI framework
+## Capture, imaging and Windows interop
 
-| Package | License | Upstream |
+| Package | Version | License | Project |
+|---|---|---|---|
+| SharpGen.Runtime | 2.4.2-beta | MIT | <https://github.com/SharpGenTools/SharpGenTools> |
+| SharpGen.Runtime.COM | 2.4.2-beta | MIT | <https://github.com/SharpGenTools/SharpGenTools> |
+| SkiaSharp | 4.153.1 | MIT | <https://github.com/mono/SkiaSharp> |
+| SkiaSharp.NativeAssets.Win32 | 4.153.1 | MIT | <https://github.com/mono/SkiaSharp> |
+| Vortice.Direct2D1 | 3.8.3 | MIT | <https://github.com/amerkoleci/Vortice.Windows> |
+| Vortice.Direct3D11 | 3.8.3 | MIT | <https://github.com/amerkoleci/Vortice.Windows> |
+| Vortice.DirectX | 3.8.3 | MIT | <https://github.com/amerkoleci/Vortice.Windows> |
+| Vortice.DXGI | 3.8.3 | MIT | <https://github.com/amerkoleci/Vortice.Windows> |
+| Vortice.Mathematics | 2.1.0 | MIT | <https://github.com/amerkoleci/Vortice.Mathematics> |
+
+## Hosting, dependency injection and configuration
+
+| Package | Version | License | Project |
+|---|---|---|---|
+| Microsoft.Extensions.Configuration | 10.0.13 | MIT | <https://github.com/dotnet/runtime> |
+| Microsoft.Extensions.Configuration.Abstractions | 10.0.13 | MIT | <https://github.com/dotnet/runtime> |
+| Microsoft.Extensions.Configuration.Binder | 10.0.13 | MIT | <https://github.com/dotnet/runtime> |
+| Microsoft.Extensions.Configuration.CommandLine | 10.0.13 | MIT | <https://github.com/dotnet/runtime> |
+| Microsoft.Extensions.Configuration.EnvironmentVariables | 10.0.13 | MIT | <https://github.com/dotnet/runtime> |
+| Microsoft.Extensions.Configuration.FileExtensions | 10.0.13 | MIT | <https://github.com/dotnet/runtime> |
+| Microsoft.Extensions.Configuration.Json | 10.0.13 | MIT | <https://github.com/dotnet/runtime> |
+| Microsoft.Extensions.Configuration.UserSecrets | 10.0.13 | MIT | <https://github.com/dotnet/runtime> |
+| Microsoft.Extensions.DependencyInjection | 10.0.13 | MIT | <https://github.com/dotnet/runtime> |
+| Microsoft.Extensions.DependencyInjection.Abstractions | 10.0.13 | MIT | <https://github.com/dotnet/runtime> |
+| Microsoft.Extensions.Diagnostics | 10.0.13 | MIT | <https://github.com/dotnet/runtime> |
+| Microsoft.Extensions.Diagnostics.Abstractions | 10.0.13 | MIT | <https://github.com/dotnet/runtime> |
+| Microsoft.Extensions.FileProviders.Abstractions | 10.0.13 | MIT | <https://github.com/dotnet/runtime> |
+| Microsoft.Extensions.FileProviders.Physical | 10.0.13 | MIT | <https://github.com/dotnet/runtime> |
+| Microsoft.Extensions.FileSystemGlobbing | 10.0.13 | MIT | <https://github.com/dotnet/runtime> |
+| Microsoft.Extensions.Hosting | 10.0.13 | MIT | <https://github.com/dotnet/runtime> |
+| Microsoft.Extensions.Hosting.Abstractions | 10.0.13 | MIT | <https://github.com/dotnet/runtime> |
+| Microsoft.Extensions.Logging | 10.0.13 | MIT | <https://github.com/dotnet/runtime> |
+| Microsoft.Extensions.Logging.Abstractions | 10.0.13 | MIT | <https://github.com/dotnet/runtime> |
+| Microsoft.Extensions.Logging.Configuration | 10.0.13 | MIT | <https://github.com/dotnet/runtime> |
+| Microsoft.Extensions.Logging.Console | 10.0.13 | MIT | <https://github.com/dotnet/runtime> |
+| Microsoft.Extensions.Logging.Debug | 10.0.13 | MIT | <https://github.com/dotnet/runtime> |
+| Microsoft.Extensions.Logging.EventLog | 10.0.13 | MIT | <https://github.com/dotnet/runtime> |
+| Microsoft.Extensions.Logging.EventSource | 10.0.13 | MIT | <https://github.com/dotnet/runtime> |
+| Microsoft.Extensions.Options | 10.0.13 | MIT | <https://github.com/dotnet/runtime> |
+| Microsoft.Extensions.Options.ConfigurationExtensions | 10.0.13 | MIT | <https://github.com/dotnet/runtime> |
+| Microsoft.Extensions.Primitives | 10.0.13 | MIT | <https://github.com/dotnet/runtime> |
+
+## Logging
+
+| Package | Version | License | Project |
+|---|---|---|---|
+| Serilog | 4.4.0 | Apache-2.0 | <https://serilog.net/> |
+| Serilog.Extensions.Logging | 10.0.0 | Apache-2.0 | <https://github.com/serilog/serilog-extensions-logging> |
+| Serilog.Sinks.Async | 2.1.0 | Apache-2.0 | <https://serilog.net/> |
+| Serilog.Sinks.File | 7.0.0 | Apache-2.0 | <https://github.com/serilog/serilog-sinks-file> |
+
+## Updates
+
+| Package | Version | License | Project |
+|---|---|---|---|
+| Velopack | 1.2.161 | MIT | <https://github.com/velopack/velopack> |
+
+## Platform components
+
+| Component | License | Project |
 |---|---|---|
-| Microsoft.WindowsAppSDK (WinUI 3) | MIT | <https://github.com/microsoft/WindowsAppSDK> |
-| Microsoft.WindowsAppSDK.WinUI | MIT | <https://github.com/microsoft/WindowsAppSDK> |
-| Microsoft.Windows.SDK.BuildTools | MIT | <https://github.com/microsoft/Windows.SDK.BuildTools> |
-| H.NotifyIcon.WinUI | MIT | <https://github.com/HavenDV/H.NotifyIcon> |
-| SkiaSharp | MIT | <https://github.com/mono/SkiaSharp> |
-| SkiaSharp.NativeAssets.Win32 | MIT | <https://github.com/mono/SkiaSharp> |
-| System.Drawing.Common | MIT | <https://github.com/dotnet/runtime> |
+| .NET 10 Desktop Runtime (installed separately by Setup when missing) | MIT | <https://github.com/dotnet/runtime> |
+| Windows SDK projection for .NET (`Microsoft.Windows.SDK.NET`, C#/WinRT) | MIT | <https://github.com/microsoft/CsWinRT> |
+| Fluent System Icons (font embedded in WPF UI) | MIT | <https://github.com/microsoft/fluentui-system-icons> |
 
-### MVVM + DI + logging
+Build and test tools (CsWin32, xUnit, AwesomeAssertions, NSubstitute, FlaUI, JetBrains
+InspectCode, ReportGenerator, CycloneDX, Velopack's `vpk`) are not distributed with the app.
 
-| Package | License | Upstream |
-|---|---|---|
-| CommunityToolkit.Mvvm | MIT | <https://github.com/CommunityToolkit/dotnet> |
-| Microsoft.Extensions.DependencyInjection | MIT | <https://github.com/dotnet/runtime> |
-| Microsoft.Extensions.Hosting | MIT | <https://github.com/dotnet/runtime> |
-| Microsoft.Extensions.Localization | MIT | <https://github.com/dotnet/runtime> |
-| Microsoft.Extensions.Logging | MIT | <https://github.com/dotnet/runtime> |
-| Microsoft.Extensions.Options | MIT | <https://github.com/dotnet/runtime> |
-| Serilog | Apache 2.0 | <https://github.com/serilog/serilog> |
-| Serilog.Extensions.Hosting | Apache 2.0 | <https://github.com/serilog/serilog-extensions-hosting> |
-| Serilog.Extensions.Logging | Apache 2.0 | <https://github.com/serilog/serilog-extensions-logging> |
-| Serilog.Sinks.Console | Apache 2.0 | <https://github.com/serilog/serilog-sinks-console> |
-| Serilog.Sinks.File | Apache 2.0 | <https://github.com/serilog/serilog-sinks-file> |
-| Serilog.Sinks.Async | Apache 2.0 | <https://github.com/serilog/serilog-sinks-async> |
+## License texts
 
-### Capture pipeline (Windows)
+- MIT: <https://opensource.org/license/mit>
+- Apache-2.0: <https://www.apache.org/licenses/LICENSE-2.0>
 
-| Package | License | Upstream |
-|---|---|---|
-| Vortice.Direct3D11 | MIT | <https://github.com/amerkoleci/Vortice.Windows> |
-| Vortice.DXGI | MIT | <https://github.com/amerkoleci/Vortice.Windows> |
-| Microsoft.Windows.CsWinRT (runtime only) | MIT | <https://github.com/microsoft/CsWinRT> |
-| SixLabors.ImageSharp (>= 3.1) | Apache 2.0 | <https://github.com/SixLabors/ImageSharp> |
-| System.Drawing.Common | MIT | <https://github.com/dotnet/runtime> |
-| System.Management | MIT | <https://github.com/dotnet/runtime> |
-| Microsoft.Win32.Registry | MIT | <https://github.com/dotnet/runtime> |
-| System.IO.Abstractions | MIT | <https://github.com/TestableIO/System.IO.Abstractions> |
-
-### Hotkeys + state machine + updater
-
-| Package | License | Upstream |
-|---|---|---|
-| SharpHook | MIT | <https://github.com/TolikPylypchuk/SharpHook> |
-| libuiohook (bundled with SharpHook) | GPL-3.0 / LGPL-3.0 | <https://github.com/kwhat/libuiohook> |
-| Stateless | Apache 2.0 | <https://github.com/dotnet-state-machine/stateless> |
-| Velopack | MIT | <https://github.com/velopack/velopack> |
-
-### Test-only (not redistributed)
-
-| Package | License |
-|---|---|
-| xUnit | Apache 2.0 |
-| xunit.runner.visualstudio | Apache 2.0 |
-| Microsoft.NET.Test.Sdk | MIT |
-| FluentAssertions (version 6.x) | Apache 2.0 |
-| NSubstitute | BSD-3-Clause |
-| System.IO.Abstractions.TestingHelpers | MIT |
-| coverlet.collector | MIT |
-
-## libuiohook + GPL compatibility note
-
-SharpHook wraps the native `libuiohook` library, which is dual-licensed
-under GPL-3.0 and LGPL-3.0. CaptureImage is itself distributed under
-GPL-3.0-or-later, so this is compatible. Downstream redistributors of
-CaptureImage must therefore also respect the libuiohook license terms
-when redistributing the compiled binary.
-
-## Full license texts
-
-The full text of every license referenced above is available from:
-
-- GNU GPL v3.0: <https://www.gnu.org/licenses/gpl-3.0.txt> — shipped as [`LICENSE`](../../LICENSE) in this repository.
-- GNU LGPL v3.0: <https://www.gnu.org/licenses/lgpl-3.0.txt>
-- Apache License 2.0: <https://www.apache.org/licenses/LICENSE-2.0.txt>
-- MIT License: <https://opensource.org/licenses/MIT>
-- BSD 3-Clause: <https://opensource.org/licenses/BSD-3-Clause>
-- SIL Open Font License 1.1: <https://openfontlicense.org/open-font-license-official-text/>
-
-Per the Apache 2.0 license terms (Section 4), this file serves as the
-required notice for Apache-licensed components.
-
-## Reporting a missing attribution
-
-If you ship a downstream copy of CaptureImage and discover that a
-dependency is missing from this list, please open a pull request or issue
-with the package name, version, and upstream license. We aim to keep this
-list complete at every tagged release.
+Each package's own license file and copyright notice are available from its project page and
+inside the NuGet package.

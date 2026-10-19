@@ -2,14 +2,13 @@
 // Copyright (c) CaptureImage Contributors
 
 using CaptureImage.Core.Abstractions;
+using CaptureImage.Core.Models;
 using Serilog.Core;
 using Serilog.Events;
 
 namespace CaptureImage.Infrastructure.Logging;
 
-/// <summary>
-/// <see cref="ILogLevelSwitcher"/> backed by Serilog's <see cref="LoggingLevelSwitch"/>.
-/// </summary>
+/// <summary>Changes the live Serilog minimum level (no restart needed).</summary>
 public sealed class SerilogLogLevelSwitcher : ILogLevelSwitcher
 {
     private readonly LoggingLevelSwitch _levelSwitch;
@@ -21,26 +20,20 @@ public sealed class SerilogLogLevelSwitcher : ILogLevelSwitcher
 
     public string CurrentLevel => _levelSwitch.MinimumLevel switch
     {
-        LogEventLevel.Verbose => "Debug",
-        LogEventLevel.Debug => "Debug",
-        LogEventLevel.Information => "Information",
+        LogEventLevel.Verbose or LogEventLevel.Debug => "Debug",
         LogEventLevel.Warning => "Warning",
-        LogEventLevel.Error => "Error",
-        LogEventLevel.Fatal => "Error",
+        LogEventLevel.Error or LogEventLevel.Fatal => "Error",
         _ => "Information",
     };
 
-    public void SetLevel(string level)
+    public void SetLevel(string level) => _levelSwitch.MinimumLevel = Parse(level);
+
+    /// <summary>Settings value ("Debug", "Information", …; case-insensitive) to a Serilog level.</summary>
+    public static LogEventLevel Parse(string? level) => SettingValues.NormalizeLogLevel(level) switch
     {
-        _levelSwitch.MinimumLevel = level?.Trim().ToLowerInvariant() switch
-        {
-            "debug" => LogEventLevel.Debug,
-            "information" => LogEventLevel.Information,
-            "info" => LogEventLevel.Information,
-            "warning" => LogEventLevel.Warning,
-            "warn" => LogEventLevel.Warning,
-            "error" => LogEventLevel.Error,
-            _ => LogEventLevel.Information,
-        };
-    }
+        "Debug" => LogEventLevel.Debug,
+        "Warning" => LogEventLevel.Warning,
+        "Error" => LogEventLevel.Error,
+        _ => LogEventLevel.Information,
+    };
 }

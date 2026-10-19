@@ -1,177 +1,113 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 // Copyright (c) CaptureImage Contributors
 
+using System.Collections.Concurrent;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Diagnostics;
+using System.Globalization;
 using System.Text;
 using CaptureImage.Core.Abstractions;
-using CaptureImage.Core.Logging;
 using CaptureImage.Core.Models;
+using CaptureImage.Core.Paths;
+using CaptureImage.ViewModels.Services;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.Logging;
-// Disambiguate — `LogLevel` here means the one in LogEntry (Serilog-derived severity),
-// not MEL's `Microsoft.Extensions.Logging.LogLevel` used by the `_logger` field.
-using LogLevel = CaptureImage.Core.Models.LogLevel;
 
 namespace CaptureImage.ViewModels.Logs;
 
 /// <summary>
-/// Live log viewer for the drawer pane. Hydrates from the ring buffer on first show,
-/// appends new entries as they fire, and supports pause/resume/clear/export plus a
-/// view-side level filter and a button to open the rolling-file folder in Explorer.
+/// Logs page: the in-memory log buffer with level filter, search and pause. New entries are
+/// batched onto the UI thread, and only while the page is visible.
 /// </summary>
 public sealed partial class LogViewerViewModel : ViewModelBase, IDisposable
 {
-    /// <summary>UI cap — the sink buffer holds more, but rendering 2000 rows is already
-    /// the budget; we don't push them all into <see cref="Entries"/>.</summary>
-    private const int MaxVisibleEntries = 500;
+    private const int MaxVisible = 2000;
+    private const string ZipFilter = "Zip (*.zip)|*.zip";
 
-    private readonly ILogBufferSource _source;
-    private readonly IUIThreadDispatcher _dispatcher;
-    private readonly ILogger<LogViewerViewModel> _logger;
+    private readonly ILogBufferSource _buffer;
+    private readonly IClipboardService _clipboard;
+    private readonly IShellService _shell;
+    private readonly IDialogService _dialogs;
+    private readonly IDiagnosticsExporter _diagnostics;
     private readonly IToastService _toasts;
-    private bool _hydrated;
+    private readonly IUIThreadDispatcher _dispatcher;
+    private readonly AppPaths _paths;
+    private readonly ILogger<LogViewerViewModel> _logger;
+    private readonly ConcurrentQueue<LogEntry> _pending = new();
+    private int _flushScheduled;
+    private bool _isPageActive;
     private bool _disposed;
+
+    public LogViewerViewModel(
+        ILogBufferSource buffer,
+        IClipboardService clipboard,
+        IShellService shell,
+        IDialogService dialogs,
+        IDiagnosticsExporter diagnostics,
+        IToastService toasts,
+        IUIThreadDispatcher dispatcher,
+        ILocalizationService localization,
+        AppPaths paths,
+        ILogger<LogViewerViewModel> logger)
+    {
+        _buffer = buffer;
+        _clipboard = clipboard;
+        _shell = shell;
+        _dialogs = dialogs;
+        _diagnostics = diagnostics;
+        _toasts = toasts;
+        _dispatcher = dispatcher;
+        Localization = localization;
+        _paths = paths;
+        _logger = logger;
+
+        LevelOptions =
+        [
+            LocalizedOption.Create(LogEntryLevel.Verbose, localization, "Logs_LevelAll"),
+            LocalizedOption.Create(LogEntryLevel.Debug, localization, "Settings_LogLevelDebug"),
+            LocalizedOption.Create(LogEntryLevel.Information, localization, "Settings_LogLevelInformation"),
+            LocalizedOption.Create(LogEntryLevel.Warning, localization, "Settings_LogLevelWarning"),
+            LocalizedOption.Create(LogEntryLevel.Error, localization, "Settings_LogLevelError"),
+        ];
+
+        _buffer.Emitted += OnEmitted;
+        Localization.PropertyChanged += OnLocalizationChanged;
+    }
 
     public ILocalizationService Localization { get; }
 
-    public ObservableCollection<LogEntry> Entries { get; } = new();
+    public ObservableCollection<LogEntry> Entries { get; } = [];
 
-    /// <summary>Options shown in the level-filter dropdown. Order matters: lowest to highest.</summary>
-    public IReadOnlyList<LogLevel> FilterLevels { get; } = new[]
-    {
-        LogLevel.Verbose,
-        LogLevel.Debug,
-        LogLevel.Information,
-        LogLevel.Warning,
-        LogLevel.Error,
-    };
+    public IReadOnlyList<LocalizedOption<LogEntryLevel>> LevelOptions { get; }
+
+    [ObservableProperty]
+    private LogEntryLevel _minimumLevel = LogEntryLevel.Verbose;
+
+    [ObservableProperty]
+    private string _searchText = string.Empty;
+
+    [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(CopySelectedCommand))]
+    private LogEntry? _selectedEntry;
 
     [ObservableProperty]
     private bool _isPaused;
 
-    [ObservableProperty]
-    private bool _isVisible;
-
-    /// <summary>
-    /// Minimum level the viewer displays. Entries below this get hidden from
-    /// <see cref="Entries"/> but still live in the sink buffer, so Export always carries
-    /// the full history regardless of this filter.
-    /// </summary>
-    [ObservableProperty]
-    private LogLevel _selectedFilterLevel = LogLevel.Verbose;
-
-    public LogViewerViewModel(
-        ILogBufferSource source,
-        IUIThreadDispatcher dispatcher,
-        ILocalizationService localization,
-        ILogger<LogViewerViewModel> logger,
-        IToastService toasts)
+    /// <summary>Set by the view; the list only tracks the buffer while the page is visible.</summary>
+    public bool IsPageActive
     {
-        _source = source;
-        _dispatcher = dispatcher;
-        Localization = localization;
-        _logger = logger;
-        _toasts = toasts;
-
-        _source.Emitted += OnEmitted;
-        Localization.PropertyChanged += OnLocalizationChanged;
-
-        Entries.CollectionChanged += (_, _) =>
+        get => _isPageActive;
+        set
         {
-            OnPropertyChanged(nameof(EventsCountText));
-            OnPropertyChanged(nameof(HasNoEntries));
-        };
-    }
-
-    private void OnLocalizationChanged(object? sender, PropertyChangedEventArgs e)
-    {
-        if (_disposed) return;
-        if (e.PropertyName is "Item[]" or nameof(ILocalizationService.CurrentCulture))
-        {
-            OnPropertyChanged(nameof(TogglePauseLabel));
-            OnPropertyChanged(nameof(EventsCountText));
-            OnPropertyChanged(nameof(EmptyStateText));
-            OnPropertyChanged(nameof(FilterLabel));
-            OnPropertyChanged(nameof(RevealFolderLabel));
-            // Refresh the `{Binding Localization[Log_Title]}` / `[Log_Clear]` direct
-            // indexer bindings in the header. v1.1.1 hotfix — the service's own
-            // Item[] notification alone doesn't reliably re-resolve the path.
-            OnPropertyChanged(nameof(Localization));
-        }
-    }
-
-    public void Dispose()
-    {
-        if (_disposed) return;
-        _disposed = true;
-        _source.Emitted -= OnEmitted;
-        Localization.PropertyChanged -= OnLocalizationChanged;
-    }
-
-    /// <summary>
-    /// Label shown on the Pause/Resume button. Flips on <see cref="IsPaused"/> so one
-    /// button drives both states, and re-localizes on culture change.
-    /// </summary>
-    public string TogglePauseLabel =>
-        IsPaused ? Localization["Log_Resume"] : Localization["Log_Pause"];
-
-    /// <summary>Localized "{0} events" line at the right edge of the log header.</summary>
-    public string EventsCountText =>
-        string.Format(Localization["Log_EventsCount"], Entries.Count);
-
-    /// <summary>Localized hint shown inside the drawer when no log events have fired yet.</summary>
-    public string EmptyStateText => Localization["Log_EmptyState"];
-
-    /// <summary>Localized label for the minimum-level filter dropdown.</summary>
-    public string FilterLabel => Localization["Log_Filter"];
-
-    /// <summary>Localized button label that opens the rolling-file folder in Explorer.</summary>
-    public string RevealFolderLabel => Localization["Log_RevealFolder"];
-
-    public bool HasNoEntries => Entries.Count == 0;
-
-    partial void OnIsPausedChanged(bool value)
-    {
-        _source.Paused = value;
-        OnPropertyChanged(nameof(TogglePauseLabel));
-    }
-
-    partial void OnSelectedFilterLevelChanged(LogLevel value)
-    {
-        // Rebuild the visible list from the sink snapshot whenever the filter moves.
-        // O(2000) — trivial and only runs on user input.
-        Entries.Clear();
-        var snapshot = _source.Snapshot();
-        var start = Math.Max(0, snapshot.Count - MaxVisibleEntries);
-        for (var i = start; i < snapshot.Count; i++)
-        {
-            if (PassesFilter(snapshot[i]))
+            if (_isPageActive == value)
             {
-                Entries.Add(snapshot[i]);
+                return;
             }
-        }
-    }
-
-    private bool PassesFilter(LogEntry entry) => entry.Level >= SelectedFilterLevel;
-
-    /// <summary>
-    /// Called the first time the drawer is shown. Fills the ObservableCollection from the
-    /// sink's snapshot so the user sees historical log events too.
-    /// </summary>
-    public void EnsureHydrated()
-    {
-        if (_hydrated) return;
-        _hydrated = true;
-        var snapshot = _source.Snapshot();
-        var start = Math.Max(0, snapshot.Count - MaxVisibleEntries);
-        for (var i = start; i < snapshot.Count; i++)
-        {
-            if (PassesFilter(snapshot[i]))
+            _isPageActive = value;
+            if (value)
             {
-                Entries.Add(snapshot[i]);
+                Reload();
             }
         }
     }
@@ -179,68 +115,181 @@ public sealed partial class LogViewerViewModel : ViewModelBase, IDisposable
     [RelayCommand]
     private void Clear()
     {
-        _source.Clear();
+        _buffer.Clear();
+        _pending.Clear();
         Entries.Clear();
     }
 
-    [RelayCommand]
-    private void TogglePause() => IsPaused = !IsPaused;
-
-    [RelayCommand]
-    private void RevealLogsFolder()
+    [RelayCommand(CanExecute = nameof(HasSelection))]
+    private async Task CopySelectedAsync()
     {
-        var folder = LogPaths.GetLogsDirectory();
-        try
+        if (SelectedEntry is { } entry && await _clipboard.CopyTextAsync(Format(entry)).ConfigureAwait(true))
         {
-            Process.Start(new ProcessStartInfo(folder) { UseShellExecute = true });
-        }
-        catch (Exception ex)
-        {
-            _logger.LogWarning(ex, "Couldn't open the logs folder at {Path}.", folder);
-            _toasts.ShowError(Localization["Toast_Error"], ex.Message);
+            _toasts.ShowSuccess(Localization["Toast_ClipboardCopied"], string.Empty);
         }
     }
 
     [RelayCommand]
-    private async Task ExportAsync(string filePath)
+    private async Task CopyAllAsync()
     {
-        if (string.IsNullOrWhiteSpace(filePath)) return;
-
-        var snapshot = _source.Snapshot();
-        var sb = new StringBuilder(snapshot.Count * 120);
-        foreach (var entry in snapshot)
+        var sb = new StringBuilder();
+        foreach (var entry in Entries)
         {
-            sb.Append('[').Append(entry.Timestamp.ToString("yyyy-MM-dd HH:mm:ss.fff"));
-            sb.Append(' ').Append(entry.Level.ToString().ToUpperInvariant().Substring(0, 3)).Append("] ");
-            var fileLine = entry.FileLineText;
-            if (!string.IsNullOrEmpty(fileLine))
-            {
-                sb.Append('(').Append(fileLine).Append(") ");
-            }
-            if (!string.IsNullOrEmpty(entry.SourceContext))
-            {
-                sb.Append(entry.SourceContext).Append(": ");
-            }
-            sb.AppendLine(entry.Message);
-            if (!string.IsNullOrEmpty(entry.Exception))
-            {
-                sb.AppendLine(entry.Exception);
-            }
+            sb.AppendLine(Format(entry));
         }
-        await File.WriteAllTextAsync(filePath, sb.ToString()).ConfigureAwait(false);
+
+        if (sb.Length > 0 && await _clipboard.CopyTextAsync(sb.ToString()).ConfigureAwait(true))
+        {
+            _toasts.ShowSuccess(Localization["Toast_ClipboardCopied"], string.Empty);
+        }
+    }
+
+    [RelayCommand]
+    private void OpenLogsFolder()
+    {
+        Directory.CreateDirectory(_paths.LogsDirectory);
+        _shell.Open(_paths.LogsDirectory);
+    }
+
+    [RelayCommand]
+    private async Task ExportDiagnosticsAsync()
+    {
+        var path = await _dialogs.SaveFileAsync(Localization["Settings_ExportDiagnostics"], _diagnostics.SuggestFileName(), ZipFilter).ConfigureAwait(true);
+        if (path is null)
+        {
+            return;
+        }
+
+        try
+        {
+            var written = await _diagnostics.ExportAsync(path).ConfigureAwait(true);
+            _toasts.ShowSuccess(Localization["Settings_DiagnosticsExported"], Path.GetFileName(written));
+            _shell.RevealInExplorer(written);
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or InvalidDataException)
+        {
+            LogExportFailed(ex);
+            _toasts.ShowError(Localization["Toast_Error"], Localization["Settings_ExportFailed"]);
+        }
+    }
+
+    private bool HasSelection() => SelectedEntry is not null;
+
+    partial void OnMinimumLevelChanged(LogEntryLevel value) => Reload();
+
+    partial void OnSearchTextChanged(string value) => Reload();
+
+    partial void OnIsPausedChanged(bool value)
+    {
+        _buffer.Paused = value;
+        if (!value)
+        {
+            Reload();
+        }
+    }
+
+    /// <summary>Plain-text form used for copy.</summary>
+    public static string Format(LogEntry entry)
+    {
+        ArgumentNullException.ThrowIfNull(entry);
+        var line = string.Create(
+            CultureInfo.InvariantCulture,
+            $"{entry.Timestamp:yyyy-MM-dd HH:mm:ss.fff} [{entry.Level}] {entry.SourceContext}: {entry.Message}");
+        return entry.Exception is null ? line : line + Environment.NewLine + entry.Exception;
+    }
+
+    private bool Matches(LogEntry entry)
+    {
+        if (entry.Level < MinimumLevel)
+        {
+            return false;
+        }
+
+        var query = SearchText.Trim();
+        return query.Length == 0
+            || entry.Message.Contains(query, StringComparison.CurrentCultureIgnoreCase)
+            || entry.SourceContext.Contains(query, StringComparison.OrdinalIgnoreCase)
+            || (entry.Exception?.Contains(query, StringComparison.OrdinalIgnoreCase) ?? false);
+    }
+
+    private void Reload()
+    {
+        if (_disposed)
+        {
+            return;
+        }
+
+        _pending.Clear();
+        Entries.Clear();
+        var snapshot = _buffer.Snapshot();
+        var start = 0;
+        var matches = snapshot.Where(Matches).ToList();
+        if (matches.Count > MaxVisible)
+        {
+            start = matches.Count - MaxVisible;
+        }
+        for (var i = start; i < matches.Count; i++)
+        {
+            Entries.Add(matches[i]);
+        }
     }
 
     private void OnEmitted(object? sender, LogEntry entry)
     {
-        // Marshal to UI thread before mutating the ObservableCollection.
-        _dispatcher.Post(() =>
+        if (_disposed || !_isPageActive)
         {
-            if (!PassesFilter(entry)) return;
-            Entries.Add(entry);
-            while (Entries.Count > MaxVisibleEntries)
-            {
-                Entries.RemoveAt(0);
-            }
-        });
+            return;
+        }
+
+        _pending.Enqueue(entry);
+        if (Interlocked.Exchange(ref _flushScheduled, 1) == 0)
+        {
+            _dispatcher.Post(Flush);
+        }
     }
+
+    private void Flush()
+    {
+        Volatile.Write(ref _flushScheduled, 0);
+        if (_disposed || !_isPageActive)
+        {
+            _pending.Clear();
+            return;
+        }
+
+        while (_pending.TryDequeue(out var entry))
+        {
+            if (Matches(entry))
+            {
+                Entries.Add(entry);
+            }
+        }
+
+        while (Entries.Count > MaxVisible)
+        {
+            Entries.RemoveAt(0);
+        }
+    }
+
+    private void OnLocalizationChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (!_disposed && e.PropertyName == "Item[]")
+        {
+            LocalizedOption.RefreshAll(LevelOptions);
+        }
+    }
+
+    public void Dispose()
+    {
+        if (_disposed)
+        {
+            return;
+        }
+        _disposed = true;
+        _buffer.Emitted -= OnEmitted;
+        Localization.PropertyChanged -= OnLocalizationChanged;
+    }
+
+    [LoggerMessage(Level = LogLevel.Warning, Message = "Diagnostics export failed.")]
+    private partial void LogExportFailed(Exception exception);
 }

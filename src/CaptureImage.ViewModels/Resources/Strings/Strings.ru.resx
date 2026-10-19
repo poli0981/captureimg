@@ -1,0 +1,360 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="xml:space" type="xsd:string" msdata:Ordinal="4" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+
+  <!-- Navigation -->
+  <data name="About_AiNotice" xml:space="preserve"><value>CaptureImage разрабатывается при значительной помощи ИИ-ассистента для программирования (Claude от Anthropic через Claude Code) — для кода, тестов и документации. Сопровождающий проверяет и тестирует каждое изменение перед выпуском.</value></data>
+  <data name="About_AiSection" xml:space="preserve"><value>Разработка с помощью ИИ</value></data>
+  <data name="About_CaptureDisclaimer" xml:space="preserve"><value>Поддержка захвата</value></data>
+  <data name="About_CaptureLimitationDisclaimerBody" xml:space="preserve"><value>CaptureImage может захватывать большинство оконных и безрамочных игр через Windows.Graphics.Capture, но не каждый тайтл. Поверхности с DRM, эксклюзивный полноэкранный Direct3D 9 и игры с анти-чит хуками могут возвращать чёрные кадры или отказывать в захвате. Для устаревших приложений используется резервный механизм GDI PrintWindow. Полный список — docs/legal/DISCLAIMER.md §2.</value></data>
+  <data name="About_ContactSection" xml:space="preserve"><value>Связаться с разработчиком</value></data>
+  <data name="About_DeveloperLabel" xml:space="preserve"><value>Разработчик</value></data>
+  <data name="About_DisclaimersSection" xml:space="preserve"><value>Примечания</value></data>
+  <data name="About_Discussions" xml:space="preserve"><value>Обсуждения</value></data>
+  <data name="About_DonateBody" xml:space="preserve"><value>CaptureImage — бесплатное программное обеспечение с открытым исходным кодом. Если оно вам помогает, рассмотрите возможность поддержки разработки одним из следующих способов:</value></data>
+  <data name="About_DonateSection" xml:space="preserve"><value>Поддержать проект</value></data>
+  <data name="About_Email" xml:space="preserve"><value>Эл. почта</value></data>
+  <data name="About_FeedbackSection" xml:space="preserve"><value>Обратная связь</value></data>
+  <data name="About_LegalSection" xml:space="preserve"><value>Юридические документы</value></data>
+  <data name="About_LiabilityDisclaimer" xml:space="preserve"><value>Без гарантии</value></data>
+  <data name="About_LiabilityDisclaimerBody" xml:space="preserve"><value>CaptureImage распространяется по GPL-3.0-or-later КАК ЕСТЬ, без каких-либо гарантий. Авторы не несут ответственности за потерянные скриншоты, сбои игр, санкции анти-читов или потерю данных. Используйте на свой риск. Полный текст — docs/legal/DISCLAIMER.md.</value></data>
+  <data name="About_LicenseLabel" xml:space="preserve"><value>Лицензия</value></data>
+  <data name="About_OpenBugReport" xml:space="preserve"><value>Сообщить об ошибке</value></data>
+  <data name="About_OpenBugReportHint" xml:space="preserve"><value>Открывает трекер задач GitHub с предзаполненным шаблоном отчета об ошибке.</value></data>
+  <data name="About_OpenContributors" xml:space="preserve"><value>Соавторы</value></data>
+  <data name="About_OpenDisclaimer" xml:space="preserve"><value>Отказ от ответственности</value></data>
+  <data name="About_OpenLicense" xml:space="preserve"><value>Лицензия (GPL-3.0)</value></data>
+  <data name="About_OpenNotice" xml:space="preserve"><value>Уведомление об авторских правах</value></data>
+  <data name="About_OpenPrivacy" xml:space="preserve"><value>Конфиденциальность</value></data>
+  <data name="About_OpenTerms" xml:space="preserve"><value>Условия</value></data>
+  <data name="About_OpenThirdParty" xml:space="preserve"><value>Уведомления о сторонних компонентах</value></data>
+  <data name="About_OtherChannels" xml:space="preserve"><value>Другие каналы</value></data>
+  <data name="About_ReleaseNotes" xml:space="preserve"><value>Примечания к выпуску</value></data>
+  <data name="About_RepositoryLabel" xml:space="preserve"><value>Репозиторий</value></data>
+  <data name="About_RequestFeature" xml:space="preserve"><value>Предложить функцию</value></data>
+  <data name="About_SponsorEmail" xml:space="preserve"><value>Вопросы спонсорства</value></data>
+  <data name="About_Tagline" xml:space="preserve"><value>Лёгкая утилита захвата экрана Windows для игр без встроенной клавиши скриншота.</value></data>
+  <data name="About_ThirdPartySection" xml:space="preserve"><value>Сторонние компоненты</value></data>
+  <data name="About_TranslationDisclaimer" xml:space="preserve"><value>Переводы</value></data>
+  <data name="About_TranslationDisclaimerBody" xml:space="preserve"><value>Языковые пакеты вьетнамский, арабский, японский, упрощённый китайский, корейский, испанский, французский, немецкий, бразильский португальский и русский подготовлены при помощи машинного перевода. Терминология может отличаться от привычной носителям, а некоторые технические слова (hotkey, toast, frame и т.п.) намеренно оставлены на английском. Носители языка, готовые проверить переводы, приглашаются открыть pull request к файлам .resx в src/CaptureImage.UI/Resources/Strings/.</value></data>
+  <data name="About_VersionLabel" xml:space="preserve"><value>Версия</value></data>
+
+  <data name="Common_Browse" xml:space="preserve"><value>Обзор…</value></data>
+  <data name="Common_Cancel" xml:space="preserve"><value>Отмена</value></data>
+  <data name="Common_Close" xml:space="preserve"><value>Закрыть</value></data>
+  <data name="Common_CopyImage" xml:space="preserve"><value>Копировать изображение</value></data>
+
+  <data name="Dashboard_Arm" xml:space="preserve"><value>Активировать</value></data>
+  <data name="Dashboard_CaptureMonitor" xml:space="preserve"><value>Снимок экрана</value></data>
+  <data name="Dashboard_CaptureRegion" xml:space="preserve"><value>Снимок области</value></data>
+  <data name="Dashboard_CaptureSelected" xml:space="preserve"><value>Снимок окна</value></data>
+  <data name="Dashboard_CreateProfile" xml:space="preserve"><value>Создать профиль</value></data>
+  <data name="Dashboard_Disarm" xml:space="preserve"><value>Деактивировать</value></data>
+  <data name="Dashboard_EmptyState" xml:space="preserve"><value>Нет видимых окон для захвата — запустите игру или приложение и нажмите Обновить.</value></data>
+  <data name="Dashboard_Hotkeys" xml:space="preserve"><value>Горячие клавиши снимков</value></data>
+  <data name="Dashboard_Locked" xml:space="preserve"><value>Закреплено</value></data>
+  <data name="Dashboard_LockedLabel" xml:space="preserve"><value>Клавиша «Окно» снимает:</value></data>
+  <data name="Dashboard_LockSelected" xml:space="preserve"><value>Закрепить как цель</value></data>
+  <data name="Dashboard_Minimized" xml:space="preserve"><value>Свёрнуто</value></data>
+  <data name="Dashboard_ProfileBadge" xml:space="preserve"><value>Профиль: {0}</value></data>
+  <data name="Dashboard_Refresh" xml:space="preserve"><value>Обновить</value></data>
+  <data name="Dashboard_Search" xml:space="preserve"><value>Поиск окон</value></data>
+  <data name="Dashboard_SteamBadge" xml:space="preserve"><value>STEAM</value></data>
+  <data name="Dashboard_SteamBadgeTooltip" xml:space="preserve"><value>Игра Steam: {0} (AppId {1}). Скриншоты по F12 доступны через Steam Overlay. Игры с защитой от читов могут блокировать внешний захват.</value></data>
+  <data name="Dashboard_Subtitle" xml:space="preserve"><value>Активируйте горячие клавиши и нажмите одну из них в игре. Закрепите окно, чтобы всегда снимать именно его.</value></data>
+  <data name="Dashboard_Title" xml:space="preserve"><value>Панель</value></data>
+  <data name="Dashboard_Unlock" xml:space="preserve"><value>Открепить</value></data>
+  <data name="Dashboard_Windows" xml:space="preserve"><value>Открытые окна</value></data>
+
+  <data name="Error_Cancelled" xml:space="preserve"><value>Снимок отменён.</value></data>
+  <data name="Error_EncodingFailure" xml:space="preserve"><value>Не удалось закодировать изображение.</value></data>
+  <data name="Error_FileWriteFailure" xml:space="preserve"><value>Не удалось сохранить файл. Проверьте папку вывода и свободное место на диске.</value></data>
+  <data name="Error_GraphicsDeviceFailure" xml:space="preserve"><value>Графический драйвер перестал отвечать. Повторите попытку чуть позже.</value></data>
+  <data name="Error_NoFrameArrived" xml:space="preserve"><value>Windows не передал изображение. Убедитесь, что окно видно, и повторите попытку.</value></data>
+  <data name="Error_NoTarget" xml:space="preserve"><value>Нет окна для снимка. Выведите игру на передний план или закрепите окно на панели.</value></data>
+  <data name="Error_NotSupported" xml:space="preserve"><value>Снимки экрана не поддерживаются в этой системе.</value></data>
+  <data name="Error_ProcessExited" xml:space="preserve"><value>Игра или приложение завершили работу.</value></data>
+  <data name="Error_ProtectedContent" xml:space="preserve"><value>Это окно запрещает снимки экрана (защищённое содержимое).</value></data>
+  <data name="Error_TargetGone" xml:space="preserve"><value>Окно было закрыто.</value></data>
+  <data name="Error_TargetMinimized" xml:space="preserve"><value>Окно свёрнуто. Разверните его и повторите попытку.</value></data>
+  <data name="Error_Unknown" xml:space="preserve"><value>Что-то пошло не так. Подробности в журнале.</value></data>
+
+  <data name="Hotkey_None" xml:space="preserve"><value>Не задано</value></data>
+  <data name="Hotkey_PressKeys" xml:space="preserve"><value>Нажмите клавиши…</value></data>
+  <data name="Hotkey_ProblemMessage" xml:space="preserve"><value>Другое приложение использует одну из горячих клавиш снимков, или сочетание недопустимо. Выберите другое в настройках.</value></data>
+  <data name="Hotkey_ProblemTitle" xml:space="preserve"><value>Одна из горячих клавиш не работает</value></data>
+  <data name="Hotkey_StatusActive" xml:space="preserve"><value>Активна</value></data>
+  <data name="Hotkey_StatusConflict" xml:space="preserve"><value>Занята другим приложением</value></data>
+  <data name="Hotkey_StatusInactive" xml:space="preserve"><value>Выкл. до активации</value></data>
+  <data name="Hotkey_StatusInvalid" xml:space="preserve"><value>Недопустимое сочетание</value></data>
+  <data name="Hotkey_StatusUnbound" xml:space="preserve"><value>Не задано</value></data>
+  <data name="Hotkey_TakenByOtherApp" xml:space="preserve"><value>Это сочетание уже использует другое приложение. Выберите другое.</value></data>
+  <data name="Hotkey_UsedByMode" xml:space="preserve"><value>Уже используется для режима «{0}».</value></data>
+  <data name="Hotkey_Validation_ModifierOnlyKey" xml:space="preserve"><value>Одной модификаторной клавиши недостаточно — добавьте букву или F-клавишу.</value></data>
+  <data name="Hotkey_Validation_NoPrimaryKey" xml:space="preserve"><value>Выберите основную клавишу (например букву или функциональную клавишу).</value></data>
+  <data name="Hotkey_Validation_RequiresModifier" xml:space="preserve"><value>Обычным буквам и цифрам нужен хотя бы один модификатор (Ctrl/Alt/Shift/Win).</value></data>
+  <data name="Hotkey_Validation_ReservedByWindows" xml:space="preserve"><value>Эта комбинация зарезервирована Windows и не может быть захвачена.</value></data>
+
+  <data name="Library_AllGames" xml:space="preserve"><value>Все игры</value></data>
+  <data name="Library_CopyFailed" xml:space="preserve"><value>Не удалось прочитать изображение.</value></data>
+  <data name="Library_CopyPath" xml:space="preserve"><value>Копировать путь</value></data>
+  <data name="Library_Delete" xml:space="preserve"><value>Удалить</value></data>
+  <data name="Library_Deleted" xml:space="preserve"><value>Перемещено в корзину</value></data>
+  <data name="Library_DeleteFailed" xml:space="preserve"><value>Не удалось переместить файл в корзину.</value></data>
+  <data name="Library_DeleteMessage" xml:space="preserve"><value>Переместить {0} в корзину?</value></data>
+  <data name="Library_DeleteTitle" xml:space="preserve"><value>Удаление снимка</value></data>
+  <data name="Library_Empty" xml:space="preserve"><value>Снимков пока нет. Активируйте горячие клавиши и сделайте первый снимок экрана.</value></data>
+  <data name="Library_GameFilter" xml:space="preserve"><value>Фильтр по игре</value></data>
+  <data name="Library_HdrOnly" xml:space="preserve"><value>Только HDR</value></data>
+  <data name="Library_Open" xml:space="preserve"><value>Открыть</value></data>
+  <data name="Library_OpenHdr" xml:space="preserve"><value>Открыть HDR</value></data>
+  <data name="Library_Pin" xml:space="preserve"><value>Закрепить на экране</value></data>
+  <data name="Library_Reveal" xml:space="preserve"><value>Показать в папке</value></data>
+  <data name="Library_Search" xml:space="preserve"><value>Поиск снимков</value></data>
+  <data name="Library_SelectHint" xml:space="preserve"><value>Выберите снимок, чтобы увидеть подробности.</value></data>
+  <data name="Library_Summary" xml:space="preserve"><value>Снимков: {0} из {1}</value></data>
+  <data name="Library_Title" xml:space="preserve"><value>Библиотека снимков</value></data>
+
+  <data name="Log_Clear" xml:space="preserve"><value>Очистить</value></data>
+  <data name="Log_EmptyState" xml:space="preserve"><value>Записей журнала пока нет. Здесь появятся события движка захвата в реальном времени.</value></data>
+  <data name="Log_Pause" xml:space="preserve"><value>Пауза</value></data>
+  <data name="Log_RevealFolder" xml:space="preserve"><value>Открыть папку</value></data>
+
+  <data name="Logs_CopyAll" xml:space="preserve"><value>Копировать всё</value></data>
+  <data name="Logs_CopySelected" xml:space="preserve"><value>Копировать выбранную строку</value></data>
+  <data name="Logs_Level" xml:space="preserve"><value>Мин. уровень</value></data>
+  <data name="Logs_LevelAll" xml:space="preserve"><value>Все уровни</value></data>
+  <data name="Logs_Search" xml:space="preserve"><value>Поиск по журналу</value></data>
+  <data name="Logs_Subtitle" xml:space="preserve"><value>Последние события этого сеанса. Сообщая о проблеме, используйте «Экспорт диагностики».</value></data>
+  <data name="Logs_Title" xml:space="preserve"><value>Журнал в реальном времени</value></data>
+
+  <data name="Mode_Monitor" xml:space="preserve"><value>Экран</value></data>
+  <data name="Mode_Region" xml:space="preserve"><value>Область</value></data>
+  <data name="Mode_Window" xml:space="preserve"><value>Окно</value></data>
+
+  <data name="Nav_About" xml:space="preserve"><value>О программе</value></data>
+  <data name="Nav_Dashboard" xml:space="preserve"><value>Панель</value></data>
+  <data name="Nav_Library" xml:space="preserve"><value>Библиотека</value></data>
+  <data name="Nav_Logs" xml:space="preserve"><value>Журнал</value></data>
+  <data name="Nav_Profiles" xml:space="preserve"><value>Профили</value></data>
+  <data name="Nav_Settings" xml:space="preserve"><value>Настройки</value></data>
+  <data name="Nav_Update" xml:space="preserve"><value>Обновление</value></data>
+
+  <data name="PinnedWindow_Close" xml:space="preserve"><value>Закрыть</value></data>
+  <data name="PinnedWindow_Open" xml:space="preserve"><value>Показать в Проводнике</value></data>
+
+  <data name="Preview_Discard" xml:space="preserve"><value>Отбросить</value></data>
+  <data name="Preview_ExtractText" xml:space="preserve"><value>Извлечь текст (OCR)</value></data>
+  <data name="Preview_Prompt" xml:space="preserve"><value>Сохранить этот снимок?</value></data>
+  <data name="Preview_Save" xml:space="preserve"><value>Сохранить</value></data>
+  <data name="Preview_Title" xml:space="preserve"><value>Предпросмотр</value></data>
+
+  <data name="Profiles_Add" xml:space="preserve"><value>Добавить профиль</value></data>
+  <data name="Profiles_AutoArm" xml:space="preserve"><value>Активировать автоматически</value></data>
+  <data name="Profiles_AutoArmBadge" xml:space="preserve"><value>Авто</value></data>
+  <data name="Profiles_AutoArmHint" xml:space="preserve"><value>Активирует горячие клавиши, когда игра выходит на передний план.</value></data>
+  <data name="Profiles_AutomationSection" xml:space="preserve"><value>Автоматизация</value></data>
+  <data name="Profiles_Delete" xml:space="preserve"><value>Удалить</value></data>
+  <data name="Profiles_DeleteMessage" xml:space="preserve"><value>Удалить профиль «{0}»? Уже сохранённые снимки останутся.</value></data>
+  <data name="Profiles_DeleteTitle" xml:space="preserve"><value>Удаление профиля</value></data>
+  <data name="Profiles_DisabledBadge" xml:space="preserve"><value>Выкл.</value></data>
+  <data name="Profiles_Empty" xml:space="preserve"><value>Профилей пока нет. Добавьте профиль здесь или нажмите «Создать профиль» на панели, пока игра запущена.</value></data>
+  <data name="Profiles_Enabled" xml:space="preserve"><value>Профиль включён</value></data>
+  <data name="Profiles_ExecutableName" xml:space="preserve"><value>Имя исполняемого файла</value></data>
+  <data name="Profiles_ExecutableNameHint" xml:space="preserve"><value>Подходит независимо от места установки игры.</value></data>
+  <data name="Profiles_ExecutablePath" xml:space="preserve"><value>Путь к исполняемому файлу</value></data>
+  <data name="Profiles_ExecutablePathHint" xml:space="preserve"><value>Самое точное совпадение.</value></data>
+  <data name="Profiles_LockTarget" xml:space="preserve"><value>Закрепить окно игры</value></data>
+  <data name="Profiles_LockTargetHint" xml:space="preserve"><value>Тогда клавиша «Окно» снимает игру, даже если впереди другое окно.</value></data>
+  <data name="Profiles_MatchesNothing" xml:space="preserve"><value>Укажите путь к исполняемому файлу, его имя или Steam AppId.</value></data>
+  <data name="Profiles_MatchesNothingTitle" xml:space="preserve"><value>Этот профиль пока не подходит ни к одной игре</value></data>
+  <data name="Profiles_MatchSection" xml:space="preserve"><value>Какая игра</value></data>
+  <data name="Profiles_Name" xml:space="preserve"><value>Название</value></data>
+  <data name="Profiles_NewProfile" xml:space="preserve"><value>Новый профиль</value></data>
+  <data name="Profiles_OutputFolder" xml:space="preserve"><value>Папка вывода</value></data>
+  <data name="Profiles_OutputSection" xml:space="preserve"><value>Вывод</value></data>
+  <data name="Profiles_PickExecutable" xml:space="preserve"><value>Выберите исполняемый файл игры</value></data>
+  <data name="Profiles_SteamAppId" xml:space="preserve"><value>Steam AppId</value></data>
+  <data name="Profiles_SteamAppIdInvalid" xml:space="preserve"><value>Введите число, например 1245620.</value></data>
+  <data name="Profiles_Subtitle" xml:space="preserve"><value>Папка, формат и имя файла для каждой игры. Профиль также может активировать горячие клавиши при запуске игры.</value></data>
+  <data name="Profiles_Title" xml:space="preserve"><value>Профили игр</value></data>
+  <data name="Profiles_UseGlobal" xml:space="preserve"><value>Использовать общую настройку</value></data>
+  <data name="Profiles_UseGlobalButton" xml:space="preserve"><value>Общая</value></data>
+
+  <data name="Region_DragHint" xml:space="preserve"><value>Выделите область · Щелчок — весь экран · Esc — отмена</value></data>
+
+  <data name="Settings_AdvancedSection" xml:space="preserve"><value>Дополнительно</value></data>
+  <data name="Settings_AppearanceSection" xml:space="preserve"><value>Оформление</value></data>
+  <data name="Settings_ArmOnStartup" xml:space="preserve"><value>Активировать при запуске CaptureImage</value></data>
+  <data name="Settings_ArmOnStartupHint" xml:space="preserve"><value>Пока клавиши активны, другие приложения не получают эти сочетания.</value></data>
+  <data name="Settings_AutoPinAfterCapture" xml:space="preserve"><value>Закреплять плавающую миниатюру после каждого захвата</value></data>
+  <data name="Settings_BackupSettings" xml:space="preserve"><value>Резервная копия настроек</value></data>
+  <data name="Settings_BehaviorSection" xml:space="preserve"><value>Поведение</value></data>
+  <data name="Settings_CaptureSection" xml:space="preserve"><value>Съёмка</value></data>
+  <data name="Settings_Clipboard" xml:space="preserve"><value>Режим буфера обмена</value></data>
+  <data name="Settings_ClipboardCopy" xml:space="preserve"><value>Только копирование (без файла)</value></data>
+  <data name="Settings_ClipboardCopyAndSave" xml:space="preserve"><value>Копирование + сохранение файла</value></data>
+  <data name="Settings_ClipboardNone" xml:space="preserve"><value>Выключено (только файл)</value></data>
+  <data name="Settings_Countdown" xml:space="preserve"><value>Обратный отсчёт перед захватом</value></data>
+  <data name="Settings_Countdown10s" xml:space="preserve"><value>10 секунд</value></data>
+  <data name="Settings_Countdown3s" xml:space="preserve"><value>3 секунды</value></data>
+  <data name="Settings_Countdown5s" xml:space="preserve"><value>5 секунд</value></data>
+  <data name="Settings_CountdownOff" xml:space="preserve"><value>Выключено (без задержки)</value></data>
+  <data name="Settings_DataFolder" xml:space="preserve"><value>Папка данных</value></data>
+  <data name="Settings_DiagnosticsExported" xml:space="preserve"><value>Диагностика экспортирована</value></data>
+  <data name="Settings_Export" xml:space="preserve"><value>Экспорт…</value></data>
+  <data name="Settings_ExportDiagnostics" xml:space="preserve"><value>Экспорт диагностики</value></data>
+  <data name="Settings_ExportDiagnosticsButton" xml:space="preserve"><value>Экспорт…</value></data>
+  <data name="Settings_ExportDiagnosticsHint" xml:space="preserve"><value>ZIP-архив с последними журналами, настройками и сведениями о системе (без путей пользователя) для отчёта об ошибке.</value></data>
+  <data name="Settings_ExportFailed" xml:space="preserve"><value>Не удалось выполнить экспорт.</value></data>
+  <data name="Settings_ExportSettings" xml:space="preserve"><value>Экспорт настроек</value></data>
+  <data name="Settings_FileNamePreview" xml:space="preserve"><value>Пример:</value></data>
+  <data name="Settings_FileNameTemplate" xml:space="preserve"><value>Шаблон имени файла</value></data>
+  <data name="Settings_FileNameTokens" xml:space="preserve"><value>Подстановки: {Game} {Process} {Mode} {yyyy} {MM} {dd} {HH} {mm} {ss} {counter}</value></data>
+  <data name="Settings_Format" xml:space="preserve"><value>Формат по умолчанию</value></data>
+  <data name="Settings_HdrAuto" xml:space="preserve"><value>Авто (HDR на HDR-дисплеях)</value></data>
+  <data name="Settings_HdrMode" xml:space="preserve"><value>Съёмка HDR</value></data>
+  <data name="Settings_HdrModeHint" xml:space="preserve"><value>На HDR-дисплеях снимается полный HDR-кадр и тонально отображается в обычное изображение.</value></data>
+  <data name="Settings_HdrOff" xml:space="preserve"><value>Выкл. (всегда SDR)</value></data>
+  <data name="Settings_HdrSection" xml:space="preserve"><value>HDR</value></data>
+  <data name="Settings_HotkeyClear" xml:space="preserve"><value>Очистить</value></data>
+  <data name="Settings_HotkeyHint" xml:space="preserve"><value>Нажмите на горячую клавишу, затем введите новое сочетание. Esc — отмена, Backspace — очистить. Горячие клавиши работают только после активации.</value></data>
+  <data name="Settings_HotkeyMonitorDescription" xml:space="preserve"><value>Снимает экран, на котором находится указатель мыши.</value></data>
+  <data name="Settings_HotkeyRecord" xml:space="preserve"><value>Записать…</value></data>
+  <data name="Settings_HotkeyRegionDescription" xml:space="preserve"><value>Замораживает все экраны и позволяет выделить область.</value></data>
+  <data name="Settings_HotkeyReset" xml:space="preserve"><value>Сброс</value></data>
+  <data name="Settings_HotkeysSection" xml:space="preserve"><value>Горячие клавиши</value></data>
+  <data name="Settings_HotkeyWindowDescription" xml:space="preserve"><value>Снимает закреплённое окно или окно на переднем плане.</value></data>
+  <data name="Settings_Import" xml:space="preserve"><value>Импорт…</value></data>
+  <data name="Settings_ImportFailed" xml:space="preserve"><value>Не удалось импортировать эти настройки.</value></data>
+  <data name="Settings_ImportSettings" xml:space="preserve"><value>Импорт настроек</value></data>
+  <data name="Settings_IncludeCursor" xml:space="preserve"><value>Показывать указатель мыши</value></data>
+  <data name="Settings_IncludeWindowFrame" xml:space="preserve"><value>Включать рамку окна</value></data>
+  <data name="Settings_IncludeWindowFrameHint" xml:space="preserve"><value>Сохраняет заголовок и рамку при снимке окна.</value></data>
+  <data name="Settings_JpegQuality" xml:space="preserve"><value>Качество JPEG</value></data>
+  <data name="Settings_Language" xml:space="preserve"><value>Язык</value></data>
+  <data name="Settings_LanguageHint" xml:space="preserve"><value>Изменения применяются сразу.</value></data>
+  <data name="Settings_LogLevel" xml:space="preserve"><value>Минимальный уровень журнала</value></data>
+  <data name="Settings_LogLevelDebug" xml:space="preserve"><value>Отладка</value></data>
+  <data name="Settings_LogLevelError" xml:space="preserve"><value>Только ошибки</value></data>
+  <data name="Settings_LogLevelHint" xml:space="preserve"><value>Фильтрует файл журнала и панель просмотра. Debug — для диагностики, Information — для обычной работы, Warning или Error — чтобы свести шум к минимуму.</value></data>
+  <data name="Settings_LogLevelInformation" xml:space="preserve"><value>Информация</value></data>
+  <data name="Settings_LogLevelWarning" xml:space="preserve"><value>Предупреждения</value></data>
+  <data name="Settings_MinimizeToTray" xml:space="preserve"><value>Кнопка закрытия сворачивает в трей</value></data>
+  <data name="Settings_OpenFolder" xml:space="preserve"><value>Открыть папку</value></data>
+  <data name="Settings_OpenFolderAfterSave" xml:space="preserve"><value>Открывать папку вывода после сохранения</value></data>
+  <data name="Settings_OutputFolder" xml:space="preserve"><value>Папка вывода</value></data>
+  <data name="Settings_OutputFolderUnavailable" xml:space="preserve"><value>Не удаётся открыть папку вывода.</value></data>
+  <data name="Settings_OutputSection" xml:space="preserve"><value>Вывод</value></data>
+  <data name="Settings_PngBalanced" xml:space="preserve"><value>Сбалансированное</value></data>
+  <data name="Settings_PngCompression" xml:space="preserve"><value>Сжатие PNG</value></data>
+  <data name="Settings_PngCompressionHint" xml:space="preserve"><value>Чем меньше файл, тем дольше сохранение.</value></data>
+  <data name="Settings_PngFast" xml:space="preserve"><value>Быстрое (файлы больше)</value></data>
+  <data name="Settings_PngSmallest" xml:space="preserve"><value>Минимальный размер (медленнее)</value></data>
+  <data name="Settings_PreviewBeforeSave" xml:space="preserve"><value>Показывать каждый снимок перед сохранением</value></data>
+  <data name="Settings_Reset" xml:space="preserve"><value>Сбросить</value></data>
+  <data name="Settings_ResetDone" xml:space="preserve"><value>Настройки сброшены</value></data>
+  <data name="Settings_ResetMessage" xml:space="preserve"><value>Сбросить все настройки по умолчанию? Текущий файл сначала будет сохранён в резервную копию, язык останется прежним.</value></data>
+  <data name="Settings_ResetSettings" xml:space="preserve"><value>Сбросить все настройки</value></data>
+  <data name="Settings_ResetSettingsHint" xml:space="preserve"><value>Резервная копия текущего файла сохраняется в папке данных.</value></data>
+  <data name="Settings_ResetTitle" xml:space="preserve"><value>Сброс настроек</value></data>
+  <data name="Settings_ResetToDefault" xml:space="preserve"><value>Вернуть по умолчанию</value></data>
+  <data name="Settings_SaveHdrSidecar" xml:space="preserve"><value>Сохранять исходное HDR-изображение</value></data>
+  <data name="Settings_SaveHdrSidecarHint" xml:space="preserve"><value>Сохраняет рядом с каждым HDR-снимком файл JPEG XR (.jxr).</value></data>
+  <data name="Settings_ShowNotifications" xml:space="preserve"><value>Показывать уведомления</value></data>
+  <data name="Settings_SoundEnabled" xml:space="preserve"><value>Воспроизводить звук захвата</value></data>
+  <data name="Settings_StartMinimized" xml:space="preserve"><value>Запускать свёрнутым в трей</value></data>
+  <data name="Settings_StartupSection" xml:space="preserve"><value>Запуск</value></data>
+  <data name="Settings_StartWithWindows" xml:space="preserve"><value>Запускать вместе с Windows</value></data>
+  <data name="Settings_StartWithWindowsFailed" xml:space="preserve"><value>Не удалось изменить автозапуск Windows.</value></data>
+  <data name="Settings_Subtitle" xml:space="preserve"><value>Изменения сохраняются автоматически.</value></data>
+  <data name="Settings_Theme" xml:space="preserve"><value>Тема</value></data>
+  <data name="Settings_ThemeDark" xml:space="preserve"><value>Тёмная</value></data>
+  <data name="Settings_ThemeHighContrast" xml:space="preserve"><value>Высокая контрастность</value></data>
+  <data name="Settings_ThemeLight" xml:space="preserve"><value>Светлая</value></data>
+  <data name="Settings_ThemeSystem" xml:space="preserve"><value>Системная</value></data>
+  <data name="Settings_Title" xml:space="preserve"><value>Настройки</value></data>
+  <data name="Settings_WebpQuality" xml:space="preserve"><value>Качество WebP</value></data>
+
+  <data name="Status_Armed" xml:space="preserve"><value>Активно — нажмите горячую клавишу снимка.</value></data>
+  <data name="Status_ArmedLocked" xml:space="preserve"><value>Активно — клавиша «Окно» снимает {0}.</value></data>
+  <data name="Status_Capturing" xml:space="preserve"><value>Съёмка…</value></data>
+  <data name="Status_Idle" xml:space="preserve"><value>Не активно — горячие клавиши снимков выключены.</value></data>
+  <data name="Status_Saving" xml:space="preserve"><value>Сохранение…</value></data>
+  <data name="Status_Selecting" xml:space="preserve"><value>Выделите область (Esc — отмена).</value></data>
+
+  <data name="Toast_AutoArmed" xml:space="preserve"><value>Горячие клавиши активированы для этой игры</value></data>
+  <data name="Toast_CaptureFailed" xml:space="preserve"><value>Ошибка захвата</value></data>
+  <data name="Toast_CaptureSaved" xml:space="preserve"><value>Снимок сохранён</value></data>
+  <data name="Toast_CaptureSavedCopied" xml:space="preserve"><value>{0} (также скопировано в буфер обмена)</value></data>
+  <data name="Toast_ClipboardCopied" xml:space="preserve"><value>Скопировано в буфер обмена</value></data>
+  <data name="Toast_Countdown" xml:space="preserve"><value>Захват через {0}…</value></data>
+  <data name="Toast_CountdownTitle" xml:space="preserve"><value>Обратный отсчёт</value></data>
+  <data name="Toast_Error" xml:space="preserve"><value>Ошибка</value></data>
+  <data name="Toast_OcrEmpty" xml:space="preserve"><value>В изображении не найдено текста</value></data>
+  <data name="Toast_OcrFailed" xml:space="preserve"><value>Не удалось распознать текст.</value></data>
+  <data name="Toast_OcrSuccess" xml:space="preserve"><value>Скопировано слов: {0}</value></data>
+  <data name="Toast_OcrUnavailable" xml:space="preserve"><value>OCR-движок недоступен для этого языка</value></data>
+  <data name="Toast_PathCopied" xml:space="preserve"><value>Путь скопирован</value></data>
+  <data name="Toast_SettingsExported" xml:space="preserve"><value>Настройки экспортированы</value></data>
+  <data name="Toast_SettingsImported" xml:space="preserve"><value>Настройки импортированы</value></data>
+
+  <data name="Tray_Arm" xml:space="preserve"><value>Активировать горячие клавиши</value></data>
+  <data name="Tray_CaptureMonitor" xml:space="preserve"><value>Снимок экрана</value></data>
+  <data name="Tray_CaptureRegion" xml:space="preserve"><value>Снимок области</value></data>
+  <data name="Tray_CaptureWindow" xml:space="preserve"><value>Снимок окна</value></data>
+  <data name="Tray_Disarm" xml:space="preserve"><value>Деактивировать горячие клавиши</value></data>
+  <data name="Tray_Exit" xml:space="preserve"><value>Выход</value></data>
+  <data name="Tray_OpenFolder" xml:space="preserve"><value>Открыть папку снимков</value></data>
+  <data name="Tray_ShowWindow" xml:space="preserve"><value>Показать CaptureImage</value></data>
+
+  <data name="Update_Check" xml:space="preserve"><value>Проверить обновления</value></data>
+  <data name="Update_CurrentVersion" xml:space="preserve"><value>Установленная версия:</value></data>
+  <data name="Update_Download" xml:space="preserve"><value>Скачать</value></data>
+  <data name="Update_Install" xml:space="preserve"><value>Установить и перезапустить</value></data>
+  <data name="Update_Log" xml:space="preserve"><value>Журнал</value></data>
+  <data name="Update_OpenReleases" xml:space="preserve"><value>Страница выпусков</value></data>
+  <data name="Update_Progress" xml:space="preserve"><value>Ход обновления</value></data>
+  <data name="Update_ReleaseNotes" xml:space="preserve"><value>Примечания к выпуску</value></data>
+  <data name="Update_Status_Checking" xml:space="preserve"><value>Проверка обновлений…</value></data>
+  <data name="Update_Status_Downloading" xml:space="preserve"><value>Загрузка обновления…</value></data>
+  <data name="Update_Status_Failed" xml:space="preserve"><value>Что-то пошло не так. Подробности в журнале ниже.</value></data>
+  <data name="Update_Status_Idle" xml:space="preserve"><value>Проверьте наличие новой версии на GitHub.</value></data>
+  <data name="Update_Status_Installing" xml:space="preserve"><value>Установка — CaptureImage сейчас перезапустится…</value></data>
+  <data name="Update_Status_Ready" xml:space="preserve"><value>Обновление готово. Перезапустите, чтобы установить его.</value></data>
+  <data name="Update_Status_Unavailable" xml:space="preserve"><value>Обновления доступны только в установленной версии (не в портативном ZIP и не в сборке из исходников).</value></data>
+  <data name="Update_Status_UpdateAvailable" xml:space="preserve"><value>Доступна версия {0}.</value></data>
+  <data name="Update_Status_UpToDate" xml:space="preserve"><value>У вас последняя версия.</value></data>
+  <data name="Update_Subtitle" xml:space="preserve"><value>Обновления загружаются из GitHub Releases и устанавливаются при перезапуске CaptureImage.</value></data>
+  <data name="Update_Title" xml:space="preserve"><value>Обновление</value></data>
+
+</root>
