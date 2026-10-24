@@ -52,10 +52,10 @@ public sealed class DiagnosticsExporterTests : IDisposable
     [Fact]
     public async Task ExportAsync_BundlesSystemInfoSettingsAndLogs()
     {
-        File.WriteAllText(_paths.SettingsFile, """{"version":3,"culture":"vi-VN"}""");
+        await File.WriteAllTextAsync(_paths.SettingsFile, """{"version":3,"culture":"vi-VN"}""", Ct);
         WriteLog("captureimage-20261018.log", "yesterday", hoursAgo: 24);
         WriteLog("captureimage-20261019.log", "today", hoursAgo: 1);
-        File.WriteAllText(Path.Combine(_paths.LogsDirectory, "readme.txt"), "not a log");
+        await File.WriteAllTextAsync(Path.Combine(_paths.LogsDirectory, "readme.txt"), "not a log", Ct);
         var destination = _temp.Combine("diagnostics.zip");
 
         var result = await CreateExporter().ExportAsync(destination, Ct);
@@ -89,7 +89,7 @@ public sealed class DiagnosticsExporterTests : IDisposable
             });
             await store.FlushAsync(Ct);
         }
-        File.ReadAllText(_paths.SettingsFile).Should().Contain(JsonEncodedText.Encode(Profile).ToString(), "the test needs the escaped form on disk");
+        (await File.ReadAllTextAsync(_paths.SettingsFile, Ct)).Should().Contain(JsonEncodedText.Encode(Profile).ToString(), "the test needs the escaped form on disk");
         WriteLog("captureimage-20261019.log", $"Saved {Path.Combine(Profile, "Pictures", "a.png")}\nOpened {Profile.ToUpperInvariant()}\\Desktop\n", hoursAgo: 0);
         var destination = _temp.Combine("diagnostics.zip");
 
@@ -154,7 +154,7 @@ public sealed class DiagnosticsExporterTests : IDisposable
     public async Task ExportAsync_ReplacesAnExistingFile()
     {
         var destination = _temp.Combine("diagnostics.zip");
-        File.WriteAllText(destination, "an older export");
+        await File.WriteAllTextAsync(destination, "an older export", Ct);
 
         await CreateExporter().ExportAsync(destination, Ct);
 
@@ -165,7 +165,7 @@ public sealed class DiagnosticsExporterTests : IDisposable
     public async Task ExportAsync_LeftoverTempFileFromAnInterruptedExport_DoesNotBlockTheNextOne()
     {
         var destination = _temp.Combine("diagnostics.zip");
-        File.WriteAllText(destination + ".tmp", "half-written zip from a crash");
+        await File.WriteAllTextAsync(destination + ".tmp", "half-written zip from a crash", Ct);
 
         await CreateExporter().ExportAsync(destination, Ct);
 

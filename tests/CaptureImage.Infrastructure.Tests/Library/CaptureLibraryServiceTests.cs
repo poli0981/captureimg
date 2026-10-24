@@ -56,7 +56,7 @@ public sealed class CaptureLibraryServiceTests : IDisposable
         var records = await library.GetAllAsync(Ct);
 
         records.Should().BeEmpty();
-        File.ReadAllText(_paths.LibraryIndexFile).Trim().Should().Be("[]");
+        (await File.ReadAllTextAsync(_paths.LibraryIndexFile, Ct)).Trim().Should().Be("[]");
     }
 
     [Fact]
@@ -116,13 +116,13 @@ public sealed class CaptureLibraryServiceTests : IDisposable
             .Select(i => new CaptureRecord(Path.Combine(_output, $"old-{i}.png"), Noon.AddMinutes(-i), 1, 1, ImageFormat.Png, 1, CaptureMode.Window, null))
             .ToList();
         Directory.CreateDirectory(_paths.DataDirectory);
-        File.WriteAllText(_paths.LibraryIndexFile, JsonSerializer.Serialize(existing, SettingsJsonContext.Default.ListCaptureRecord));
+        await File.WriteAllTextAsync(_paths.LibraryIndexFile, JsonSerializer.Serialize(existing, SettingsJsonContext.Default.ListCaptureRecord), Ct);
         using var library = CreateLibrary();
         var newest = await SaveCaptureAsync("newest.png", 10, 10, Noon.AddDays(1));
 
         await library.AddAsync(newest, Ct);
 
-        using var index = JsonDocument.Parse(File.ReadAllText(_paths.LibraryIndexFile));
+        using var index = JsonDocument.Parse(await File.ReadAllTextAsync(_paths.LibraryIndexFile, Ct));
         var paths = index.RootElement.EnumerateArray().Select(r => r.GetProperty("filePath").GetString()).ToList();
         paths.Should().HaveCount(2000);
         paths[0].Should().Be(newest.FilePath);
@@ -144,7 +144,7 @@ public sealed class CaptureLibraryServiceTests : IDisposable
             (await library.GetAllAsync(Ct)).Should().ContainSingle().Which.FilePath.Should().Be(kept.FilePath);
         }
 
-        File.ReadAllText(_paths.LibraryIndexFile).Should().NotContain("deleted.png");
+        (await File.ReadAllTextAsync(_paths.LibraryIndexFile, Ct)).Should().NotContain("deleted.png");
     }
 
     [Fact]
@@ -152,13 +152,13 @@ public sealed class CaptureLibraryServiceTests : IDisposable
     {
         await SaveCaptureAsync("on-disk.png", 12, 8, Noon);
         Directory.CreateDirectory(_paths.DataDirectory);
-        File.WriteAllText(_paths.LibraryIndexFile, "{ definitely not a list");
+        await File.WriteAllTextAsync(_paths.LibraryIndexFile, "{ definitely not a list", Ct);
         using var library = CreateLibrary();
 
         var records = await library.GetAllAsync(Ct);
 
         records.Should().ContainSingle().Which.FileName.Should().Be("on-disk.png");
-        File.ReadAllText(_paths.LibraryIndexFile).Should().Contain("on-disk.png");
+        (await File.ReadAllTextAsync(_paths.LibraryIndexFile, Ct)).Should().Contain("on-disk.png");
     }
 
     // ---- First-run seeding ---------------------------------------------------------------
@@ -176,9 +176,9 @@ public sealed class CaptureLibraryServiceTests : IDisposable
         var jpeg = await WriteImageAsync(Path.Combine(_output, "mid.jpg"), 50, 20, ImageFormat.Jpeg, Noon.AddHours(-2));
         var hdr = await WriteImageAsync(Path.Combine(_output, "hdr.png"), 64, 48, ImageFormat.Png, Noon.AddHours(-1));
         var sidecar = Path.Combine(_output, "hdr.jxr");
-        File.WriteAllBytes(sidecar, [0x49, 0x49, 0xBC, 0x01]);
+        await File.WriteAllBytesAsync(sidecar, [0x49, 0x49, 0xBC, 0x01], Ct);
         var fromProfile = await WriteImageAsync(Path.Combine(profileFolder, "profile.png"), 16, 9, ImageFormat.Png, Noon.AddMinutes(-30));
-        File.WriteAllText(Path.Combine(_output, "notes.txt"), "not an image");
+        await File.WriteAllTextAsync(Path.Combine(_output, "notes.txt"), "not an image", Ct);
         await WriteImageAsync(Path.Combine(_temp.CreateDirectory("Captures", "nested"), "nested.png"), 8, 8, ImageFormat.Png, Noon);
         using var library = CreateLibrary();
 
@@ -194,7 +194,7 @@ public sealed class CaptureLibraryServiceTests : IDisposable
     [Fact]
     public async Task GetAllAsync_FirstRun_ListsAnUnreadableImageWithZeroSize()
     {
-        File.WriteAllText(Path.Combine(_output, "broken.png"), "not really a png");
+        await File.WriteAllTextAsync(Path.Combine(_output, "broken.png"), "not really a png", Ct);
         using var library = CreateLibrary();
 
         var record = (await library.GetAllAsync(Ct)).Should().ContainSingle().Subject;
@@ -226,7 +226,7 @@ public sealed class CaptureLibraryServiceTests : IDisposable
         using var library = CreateLibrary();
         var record = await SaveCaptureAsync("hdr.png", 10, 10, Noon);
         var sidecar = Path.ChangeExtension(record.FilePath, ".jxr");
-        File.WriteAllBytes(sidecar, [0x49, 0x49, 0xBC, 0x01]);
+        await File.WriteAllBytesAsync(sidecar, [0x49, 0x49, 0xBC, 0x01], Ct);
         record = record with { HdrFilePath = sidecar };
         await library.AddAsync(record, Ct);
         var changed = 0;
@@ -240,7 +240,7 @@ public sealed class CaptureLibraryServiceTests : IDisposable
         changed.Should().Be(1);
         // The substitute does not delete anything, so the record must be gone from the index itself.
         (await library.GetAllAsync(Ct)).Should().BeEmpty();
-        File.ReadAllText(_paths.LibraryIndexFile).Should().NotContain("hdr.png");
+        (await File.ReadAllTextAsync(_paths.LibraryIndexFile, Ct)).Should().NotContain("hdr.png");
     }
 
     [Fact]
@@ -250,7 +250,7 @@ public sealed class CaptureLibraryServiceTests : IDisposable
         using var library = CreateLibrary();
         var record = await SaveCaptureAsync("locked.png", 10, 10, Noon);
         var sidecar = Path.ChangeExtension(record.FilePath, ".jxr");
-        File.WriteAllBytes(sidecar, [0x49, 0x49, 0xBC, 0x01]);
+        await File.WriteAllBytesAsync(sidecar, [0x49, 0x49, 0xBC, 0x01], Ct);
         record = record with { HdrFilePath = sidecar };
         await library.AddAsync(record, Ct);
         var changed = 0;
@@ -276,7 +276,7 @@ public sealed class CaptureLibraryServiceTests : IDisposable
 
         deleted.Should().BeTrue();
         _shell.DidNotReceive().MoveToRecycleBin(Arg.Any<string>());
-        File.ReadAllText(_paths.LibraryIndexFile).Should().NotContain("gone.png");
+        (await File.ReadAllTextAsync(_paths.LibraryIndexFile, Ct)).Should().NotContain("gone.png");
     }
 
     // ---- Thumbnails ------------------------------------------------------------------------
@@ -293,7 +293,7 @@ public sealed class CaptureLibraryServiceTests : IDisposable
         thumbnail.Should().NotBeNull();
         Path.GetDirectoryName(thumbnail).Should().Be(_paths.ThumbnailCacheDirectory);
         thumbnail.Should().EndWith("_64.jpg");
-        File.ReadAllBytes(thumbnail)[..3].Should().Equal(0xFF, 0xD8, 0xFF);
+        (await File.ReadAllBytesAsync(thumbnail, Ct))[..3].Should().Equal(0xFF, 0xD8, 0xFF);
         var image = await decoder.LoadAsync(thumbnail, cancellationToken: Ct);
         image.Should().NotBeNull();
         image.Width.Should().Be(64);
@@ -302,9 +302,9 @@ public sealed class CaptureLibraryServiceTests : IDisposable
         Directory.GetFiles(_paths.ThumbnailCacheDirectory, "*.tmp").Should().BeEmpty();
 
         // A cached thumbnail is served as is, not regenerated.
-        File.WriteAllBytes(thumbnail, [1, 2, 3]);
+        await File.WriteAllBytesAsync(thumbnail, [1, 2, 3], Ct);
         (await library.GetThumbnailAsync(record, 64, Ct)).Should().Be(thumbnail);
-        File.ReadAllBytes(thumbnail).Should().Equal(1, 2, 3);
+        (await File.ReadAllBytesAsync(thumbnail, Ct)).Should().Equal(1, 2, 3);
     }
 
     [Fact]
@@ -357,7 +357,7 @@ public sealed class CaptureLibraryServiceTests : IDisposable
         using var library = CreateLibrary();
         var missing = new CaptureRecord(Path.Combine(_output, "missing.png"), Noon, 1, 1, ImageFormat.Png, 1, CaptureMode.Window, null);
         var broken = missing with { FilePath = Path.Combine(_output, "broken.png") };
-        File.WriteAllText(broken.FilePath, "not a png");
+        await File.WriteAllTextAsync(broken.FilePath, "not a png", Ct);
 
         (await library.GetThumbnailAsync(missing, 64, Ct)).Should().BeNull();
         (await library.GetThumbnailAsync(broken, 64, Ct)).Should().BeNull();

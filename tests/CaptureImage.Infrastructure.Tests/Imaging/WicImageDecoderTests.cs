@@ -163,7 +163,7 @@ public sealed class WicImageDecoderTests : IDisposable
     {
         var complete = await WriteAsync(TestFrames.Bgra(64, 64, TestFrames.Gradient), ImageFormat.Png);
         var truncated = _temp.Combine("truncated.png");
-        await File.WriteAllBytesAsync(truncated, File.ReadAllBytes(complete)[..40], Ct);
+        await File.WriteAllBytesAsync(truncated, (await File.ReadAllBytesAsync(complete, Ct))[..40], Ct);
 
         (await _decoder.LoadAsync(truncated, cancellationToken: Ct)).Should().BeNull();
     }

@@ -65,7 +65,8 @@ targets rather than guarantees.
 ## Supply chain
 
 - Dependencies are pinned centrally with lock files; Dependabot proposes updates after a cooldown,
-  and every pull request is checked for known-vulnerable and incompatibly licensed packages.
+  and every pull request is checked for known-vulnerable packages and build tools and for
+  incompatibly licensed packages.
 - GitHub Actions are pinned to full commit SHAs and linted with actionlint and zizmor; CodeQL,
   OpenSSF Scorecard and SonarCloud review the code.
 - Releases are built by GitHub Actions from signed tags and ship with SHA-256 checksums, a CycloneDX

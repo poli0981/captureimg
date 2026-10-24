@@ -42,10 +42,15 @@ Every pull request must pass the required checks before it can be merged (squash
 - **build** — warnings are errors, the recommended .NET analyzers are on for `src/`, all tests pass.
 - **format** — `dotnet format whitespace` and the style rules below.
 - **deadcode** — JetBrains InspectCode finds no unused or redundant code.
-- **audit** / **license** — no vulnerable packages; shipped dependencies use a GPL-compatible
-  license.
+- **audit** / **license** — no vulnerable packages or .NET tools; shipped dependencies use a
+  GPL-compatible license.
 - **publish-smoke** — the published app starts and opens every page.
 - **ui-tests** — end-to-end tests drive the built app through UI Automation (FlaUI).
+- **sonarcloud** — the [SonarQube Cloud](https://sonarcloud.io/project/overview?id=poli0981_captureimg)
+  quality gate: no new issues and at least 80 % test coverage on new code (the WPF shell in
+  `CaptureImage.UI` and the `CaptureImage.App` host are left out of coverage; the UI tests cover
+  them). Pull requests from forks are analysed after they are merged, because the analysis needs a
+  repository secret.
 - **pr-title** — the title follows [Conventional Commits](https://www.conventionalcommits.org/), e.g.
   `fix(capture): keep alpha opaque` or `feat(ui)!: …` for breaking changes.
 - **dependency-review**, **workflow-lint**, **docs**.

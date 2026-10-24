@@ -65,7 +65,7 @@ public sealed class WicImageEncoderTests : IDisposable
 
         var path = await EncodeToFileAsync(frame, ImageFormat.Tiff);
 
-        File.ReadAllBytes(path)[..4].Should().Equal(0x49, 0x49, 0x2A, 0x00); // "II*\0", little-endian TIFF
+        (await File.ReadAllBytesAsync(path, Ct))[..4].Should().Equal(0x49, 0x49, 0x2A, 0x00); // "II*\0", little-endian TIFF
         var decoded = await _decoder.LoadAsync(path, cancellationToken: Ct);
         decoded.Should().NotBeNull();
         decoded.ShouldHaveSamePixelsAs(frame);
@@ -85,7 +85,7 @@ public sealed class WicImageEncoderTests : IDisposable
 
         var path = await EncodeToFileAsync(frame, ImageFormat.Jxr);
 
-        File.ReadAllBytes(path)[..4].Should().Equal(0x49, 0x49, 0xBC, 0x01); // JPEG XR "II\xBC\x01"
+        (await File.ReadAllBytesAsync(path, Ct))[..4].Should().Equal(0x49, 0x49, 0xBC, 0x01); // JPEG XR "II\xBC\x01"
         var decoded = await _decoder.LoadAsync(path, cancellationToken: Ct);
         decoded.Should().NotBeNull();
         decoded.Width.Should().Be(32);

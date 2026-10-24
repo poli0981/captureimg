@@ -77,6 +77,103 @@ jobs:
             coverage-report/**
           retention-days: 14
 
+  # SonarQube Cloud, CI-based analysis (automatic analysis is off in the project settings).
+  # Its own build: `begin` turns TreatWarningsAsErrors off, which `build` must keep. The job
+  # fails when the quality gate fails. Fork and Dependabot pull requests get no SONAR_TOKEN;
+  # the job then passes without analysing, and main is analysed after the merge.
+  sonarcloud:
+    name: sonarcloud
+    runs-on: windows-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read
+    steps:
+      - name: Check for SONAR_TOKEN
+        id: token
+        shell: pwsh
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: |
+          $available = -not [string]::IsNullOrEmpty($env:SONAR_TOKEN)
+          "available=$($available.ToString().ToLowerInvariant())" | Out-File $env:GITHUB_OUTPUT -Append -Encoding utf8
+          if (-not $available) { "::notice title=sonarcloud::No SONAR_TOKEN in this run (fork or Dependabot pull request); analysis skipped." }
+
+      - name: Checkout
+        if: steps.token.outputs.available == 'true'
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0 # full history: new code is found with git blame
+          persist-credentials: false
+
+      - name: Setup .NET
+        if: steps.token.outputs.available == 'true'
+        uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
+        with:
+          global-json-file: global.json
+          cache: true
+          cache-dependency-path: "**/packages.lock.json"
+
+      # The scanner downloads its engine, a JRE and the analyzers from SonarQube Cloud.
+      - name: Cache SonarQube Cloud downloads
+        if: steps.token.outputs.available == 'true'
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ~/.sonar/cache
+          key: sonar-${{ runner.os }}-${{ hashFiles('.config/dotnet-tools.json') }}
+          restore-keys: sonar-${{ runner.os }}-
+
+      - name: Restore (locked)
+        if: steps.token.outputs.available == 'true'
+        run: dotnet restore CaptureImage.sln --locked-mode
+
+      - name: Restore tools
+        if: steps.token.outputs.available == 'true'
+        run: dotnet tool restore
+
+      - name: Project version
+        id: version
+        if: steps.token.outputs.available == 'true'
+        shell: pwsh
+        run: |
+          [xml]$props = Get-Content Directory.Build.props
+          $version = @($props.Project.PropertyGroup | ForEach-Object { $_.Version } | Where-Object { $_ })[0]
+          if (-not $version) { throw 'Directory.Build.props has no <Version>.' }
+          "version=$version" | Out-File $env:GITHUB_OUTPUT -Append -Encoding utf8
+
+      # The project version marks where new code starts (new code = since the previous version).
+      # CaptureImage.UI (the WPF shell) and CaptureImage.App (the host) are exercised by the
+      # FlaUI tests and the published-app smoke test, out of process, so they report no coverage.
+      - name: SonarScanner begin
+        if: steps.token.outputs.available == 'true'
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          VERSION: ${{ steps.version.outputs.version }}
+        run: >
+          dotnet sonarscanner begin /k:poli0981_captureimg /o:poli0981 "/v:$env:VERSION"
+          "/d:sonar.token=$env:SONAR_TOKEN"
+          "/d:sonar.cs.cobertura.reportsPaths=TestResults/*.cobertura.xml"
+          "/d:sonar.cs.vstest.reportsPaths=TestResults/*.trx"
+          "/d:sonar.coverage.exclusions=src/CaptureImage.UI/**,src/CaptureImage.App/**"
+          /d:sonar.qualitygate.wait=true
+
+      - name: Build
+        if: steps.token.outputs.available == 'true'
+        run: dotnet build CaptureImage.sln -c Release --no-restore --no-incremental --disable-build-servers
+
+      - name: Test with coverage
+        if: steps.token.outputs.available == 'true'
+        run: >
+          dotnet test --solution CaptureImage.sln -c Release --no-build
+          --results-directory TestResults
+          --coverage --coverage-output-format cobertura
+          --report-xunit-trx
+
+      - name: SonarScanner end (waits for the quality gate)
+        if: steps.token.outputs.available == 'true'
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: dotnet sonarscanner end "/d:sonar.token=$env:SONAR_TOKEN"
+
   format:
     name: format
     runs-on: windows-latest
@@ -183,6 +280,12 @@ jobs:
         run: |
           dotnet list CaptureImage.sln package --vulnerable --include-transitive --format json --output-version 1 > vulnerable.json
           ./.github/scripts/vulnerability-gate.ps1 -Report vulnerable.json
+
+      # The local tools (vpk, the Sonar scanner, …) are neither package references nor in the
+      # dependency graph, so neither NuGet's audit nor Dependabot alerts cover them.
+      - name: Vulnerable tools (.config/dotnet-tools.json)
+        shell: pwsh
+        run: ./.github/scripts/tool-audit.ps1 -Manifest .config/dotnet-tools.json
 
       - name: Deprecated / outdated packages (report only)
         if: always()

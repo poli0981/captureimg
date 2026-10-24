@@ -29,7 +29,7 @@ dotnet run --project src/CaptureImage.App -c Release -- --data-dir .\.devdata --
 - UI tests (`tests/CaptureImage.App.UiTests`, FlaUI) move the mouse and type; they skip unless
   `CAPTUREIMAGE_UI_TESTS=1`. Don't run them on the maintainer's desktop.
 - Local tools (`dotnet tool restore`): `vpk`, `jb` (InspectCode), `nuget-license`,
-  `reportgenerator`, `dotnet-CycloneDX`.
+  `reportgenerator`, `dotnet-CycloneDX`, `dotnet-sonarscanner` (CI only; needs `SONAR_TOKEN`).
 
 ## Layout and layering rules
 
@@ -80,15 +80,20 @@ tests/*                          Core, Infrastructure, ViewModels tests + App.Ui
 - `main` is protected by a ruleset: PR required, signed commits, linear history, squash merge only
   (PR title = commit subject, Conventional Commits), branch up to date, no bypass. Release tags `v*`
   can't be moved or deleted.
-- Required checks: `build`, `format`, `deadcode` (InspectCode, file-local rules), `audit`,
-  `license` (shipped dependencies vs `.github/license/allowed-licenses.json`), `publish-smoke`
-  (publish + `--smoke-test` + page screenshots artifact), `pr-title`, `dependency-review`,
-  `workflow-lint` (actionlint + zizmor), `docs` (markdownlint + offline lychee), `ui-tests` (FlaUI
-  against the built app), plus CodeQL via the code-scanning rule.
+- Required checks: `build`, `format`, `deadcode` (InspectCode, file-local rules), `audit`
+  (NuGet packages + the local tools in `.config/dotnet-tools.json`), `license` (shipped
+  dependencies vs `.github/license/allowed-licenses.json`), `publish-smoke` (publish +
+  `--smoke-test` + page screenshots artifact), `pr-title`, `dependency-review`, `workflow-lint`
+  (actionlint + zizmor), `docs` (markdownlint + offline lychee), `ui-tests` (FlaUI against the
+  built app), `sonarcloud`, plus CodeQL via the code-scanning rule.
 - Never add `paths:` filters to a workflow that provides a required check. Actions are pinned to
   full commit SHAs with a `# vX.Y.Z` comment.
-- SonarCloud (automatic analysis, project `poli0981_captureimg`) comments on PRs — fix what it
-  reports.
+- SonarQube Cloud (project `poli0981_captureimg`, org `poli0981`) runs as CI-based analysis in the
+  `sonarcloud` job (automatic analysis is off): `dotnet sonarscanner` begin → build → tests with
+  Cobertura coverage + TRX → end, which waits for the quality gate ("Sonar way": no new issues,
+  ≥ 80 % coverage on new code). `CaptureImage.UI` and `CaptureImage.App` are excluded from coverage
+  (tested out of process by `ui-tests`/`publish-smoke`). The `SONAR_TOKEN` secret is missing in
+  fork and Dependabot PRs, so the job passes without analysing them. Fix what it reports.
 - Dependabot NuGet updates rely on `EnableWindowsTargeting=true` in `Directory.Build.props` (the
   updater runs on Linux).
 - NuGet prunes the WPF projects' Windows Desktop packages (System.Drawing.Common, EventLog, …) only

@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Project
+
+- SonarQube Cloud analyses every pull request and `main` in CI (SonarScanner for .NET 12) instead
+  of automatic analysis, with test coverage and test results imported; its quality gate is a
+  required check.
+- The dependency audit also checks the .NET tools used to build and release the app.
+
 ## [2.0.1] - 2026-10-19
 
 ### Fixed
