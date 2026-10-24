@@ -79,8 +79,9 @@ jobs:
 
   # SonarQube Cloud, CI-based analysis (automatic analysis is off in the project settings).
   # Its own build: `begin` turns TreatWarningsAsErrors off, which `build` must keep. The job
-  # fails when the quality gate fails. Fork and Dependabot pull requests get no SONAR_TOKEN;
-  # the job then passes without analysing, and main is analysed after the merge.
+  # fails when the quality gate fails. Runs that can't be analysed pass without analysing:
+  # fork and Dependabot pull requests get no SONAR_TOKEN (main is analysed after the merge),
+  # and the free plan analyses only main and pull requests, not other branches.
   sonarcloud:
     name: sonarcloud
     runs-on: windows-latest
@@ -88,25 +89,29 @@ jobs:
     permissions:
       contents: read
     steps:
-      - name: Check for SONAR_TOKEN
-        id: token
+      - name: Analyse this run?
+        id: sonar
         shell: pwsh
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          EVENT_NAME: ${{ github.event_name }}
+          REF: ${{ github.ref }}
         run: |
-          $available = -not [string]::IsNullOrEmpty($env:SONAR_TOKEN)
-          "available=$($available.ToString().ToLowerInvariant())" | Out-File $env:GITHUB_OUTPUT -Append -Encoding utf8
-          if (-not $available) { "::notice title=sonarcloud::No SONAR_TOKEN in this run (fork or Dependabot pull request); analysis skipped." }
+          $skip = ''
+          if ([string]::IsNullOrEmpty($env:SONAR_TOKEN)) { $skip = 'no SONAR_TOKEN (fork or Dependabot pull request)' }
+          elseif ($env:EVENT_NAME -ne 'pull_request' -and $env:REF -ne 'refs/heads/main') { $skip = "only main and pull requests are analysed, not $env:REF" }
+          "analyse=$(([string]::IsNullOrEmpty($skip)).ToString().ToLowerInvariant())" | Out-File $env:GITHUB_OUTPUT -Append -Encoding utf8
+          if ($skip) { "::notice title=sonarcloud::Analysis skipped: $skip." }
 
       - name: Checkout
-        if: steps.token.outputs.available == 'true'
+        if: steps.sonar.outputs.analyse == 'true'
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0 # full history: new code is found with git blame
           persist-credentials: false
 
       - name: Setup .NET
-        if: steps.token.outputs.available == 'true'
+        if: steps.sonar.outputs.analyse == 'true'
         uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
         with:
           global-json-file: global.json
@@ -115,7 +120,7 @@ jobs:
 
       # The scanner downloads its engine, a JRE and the analyzers from SonarQube Cloud.
       - name: Cache SonarQube Cloud downloads
-        if: steps.token.outputs.available == 'true'
+        if: steps.sonar.outputs.analyse == 'true'
         uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: ~/.sonar/cache
@@ -123,16 +128,16 @@ jobs:
           restore-keys: sonar-${{ runner.os }}-
 
       - name: Restore (locked)
-        if: steps.token.outputs.available == 'true'
+        if: steps.sonar.outputs.analyse == 'true'
         run: dotnet restore CaptureImage.sln --locked-mode
 
       - name: Restore tools
-        if: steps.token.outputs.available == 'true'
+        if: steps.sonar.outputs.analyse == 'true'
         run: dotnet tool restore
 
       - name: Project version
         id: version
-        if: steps.token.outputs.available == 'true'
+        if: steps.sonar.outputs.analyse == 'true'
         shell: pwsh
         run: |
           [xml]$props = Get-Content Directory.Build.props
@@ -141,10 +146,11 @@ jobs:
           "version=$version" | Out-File $env:GITHUB_OUTPUT -Append -Encoding utf8
 
       # The project version marks where new code starts (new code = since the previous version).
-      # CaptureImage.UI (the WPF shell) and CaptureImage.App (the host) are exercised by the
-      # FlaUI tests and the published-app smoke test, out of process, so they report no coverage.
+      # Not counted for coverage: CaptureImage.UI (the WPF shell) and CaptureImage.App (the host),
+      # which the FlaUI tests and the published-app smoke test exercise out of process, and the
+      # CI scripts under .github. Icons and images are project items but not text.
       - name: SonarScanner begin
-        if: steps.token.outputs.available == 'true'
+        if: steps.sonar.outputs.analyse == 'true'
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           VERSION: ${{ steps.version.outputs.version }}
@@ -153,15 +159,16 @@ jobs:
           "/d:sonar.token=$env:SONAR_TOKEN"
           "/d:sonar.cs.cobertura.reportsPaths=TestResults/*.cobertura.xml"
           "/d:sonar.cs.vstest.reportsPaths=TestResults/*.trx"
-          "/d:sonar.coverage.exclusions=src/CaptureImage.UI/**,src/CaptureImage.App/**"
+          "/d:sonar.coverage.exclusions=src/CaptureImage.UI/**,src/CaptureImage.App/**,.github/**"
+          "/d:sonar.exclusions=**/*.ico,**/*.png"
           /d:sonar.qualitygate.wait=true
 
       - name: Build
-        if: steps.token.outputs.available == 'true'
+        if: steps.sonar.outputs.analyse == 'true'
         run: dotnet build CaptureImage.sln -c Release --no-restore --no-incremental --disable-build-servers
 
       - name: Test with coverage
-        if: steps.token.outputs.available == 'true'
+        if: steps.sonar.outputs.analyse == 'true'
         run: >
           dotnet test --solution CaptureImage.sln -c Release --no-build
           --results-directory TestResults
@@ -169,7 +176,7 @@ jobs:
           --report-xunit-trx
 
       - name: SonarScanner end (waits for the quality gate)
-        if: steps.token.outputs.available == 'true'
+        if: steps.sonar.outputs.analyse == 'true'
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: dotnet sonarscanner end "/d:sonar.token=$env:SONAR_TOKEN"

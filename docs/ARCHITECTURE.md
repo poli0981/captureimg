@@ -193,7 +193,7 @@ Every pull request runs: build with warnings as errors and the recommended .NET 
 view-model and integration tests with coverage; formatting and SPDX headers; JetBrains InspectCode
 (dead and redundant code); vulnerable dependencies and .NET tools, and incompatibly licensed
 dependencies; a publish of the app followed by a smoke test that opens every page; end-to-end UI
-tests (FlaUI); the SonarQube Cloud quality gate (CI-based analysis with test coverage: no new issues,
-at least 80 % coverage on new code outside the WPF shell and the host); PR title; dependency
-review; workflow lint (actionlint, zizmor); Markdown lint and link check. CodeQL and OpenSSF
-Scorecard run as well.
+tests (FlaUI); the SonarQube Cloud quality gate (CI-based analysis with test coverage: no new
+issues, at least 80 % coverage on new code outside the WPF shell, the host and the CI scripts); PR
+title; dependency review; workflow lint (actionlint, zizmor); Markdown lint and link check. CodeQL
+and OpenSSF Scorecard run as well.

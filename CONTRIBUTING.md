@@ -48,9 +48,9 @@ Every pull request must pass the required checks before it can be merged (squash
 - **ui-tests** — end-to-end tests drive the built app through UI Automation (FlaUI).
 - **sonarcloud** — the [SonarQube Cloud](https://sonarcloud.io/project/overview?id=poli0981_captureimg)
   quality gate: no new issues and at least 80 % test coverage on new code (the WPF shell in
-  `CaptureImage.UI` and the `CaptureImage.App` host are left out of coverage; the UI tests cover
-  them). Pull requests from forks are analysed after they are merged, because the analysis needs a
-  repository secret.
+  `CaptureImage.UI`, the `CaptureImage.App` host and the CI scripts are left out of coverage; the
+  UI tests cover the first two). Pull requests from forks are analysed after they are merged,
+  because the analysis needs a repository secret.
 - **pr-title** — the title follows [Conventional Commits](https://www.conventionalcommits.org/), e.g.
   `fix(capture): keep alpha opaque` or `feat(ui)!: …` for breaking changes.
 - **dependency-review**, **workflow-lint**, **docs**.

@@ -91,9 +91,11 @@ tests/*                          Core, Infrastructure, ViewModels tests + App.Ui
 - SonarQube Cloud (project `poli0981_captureimg`, org `poli0981`) runs as CI-based analysis in the
   `sonarcloud` job (automatic analysis is off): `dotnet sonarscanner` begin → build → tests with
   Cobertura coverage + TRX → end, which waits for the quality gate ("Sonar way": no new issues,
-  ≥ 80 % coverage on new code). `CaptureImage.UI` and `CaptureImage.App` are excluded from coverage
-  (tested out of process by `ui-tests`/`publish-smoke`). The `SONAR_TOKEN` secret is missing in
-  fork and Dependabot PRs, so the job passes without analysing them. Fix what it reports.
+  ≥ 80 % coverage on new code). `CaptureImage.UI`, `CaptureImage.App` (tested out of process by
+  `ui-tests`/`publish-smoke`) and `.github/**` scripts are excluded from coverage. The job passes
+  without analysing when it can't analyse: no `SONAR_TOKEN` in fork and Dependabot PRs, and the free
+  plan analyses only `main` and PRs (a non-PR run on another branch fails "not allowed to access
+  data from non main branches"). Fix what it reports.
 - Dependabot NuGet updates rely on `EnableWindowsTargeting=true` in `Directory.Build.props` (the
   updater runs on Linux).
 - NuGet prunes the WPF projects' Windows Desktop packages (System.Drawing.Common, EventLog, …) only
