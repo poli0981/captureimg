@@ -136,46 +136,46 @@ public sealed partial class SettingsViewModel : ViewModelBase, IDisposable
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(IsJpeg), nameof(IsWebp), nameof(IsPng), nameof(FileNamePreview))]
-    private ImageFormat _defaultFormat;
+    public partial ImageFormat DefaultFormat { get; set; }
 
     [ObservableProperty]
-    private int _jpegQuality;
+    public partial int JpegQuality { get; set; }
 
     [ObservableProperty]
-    private int _webpQuality;
+    public partial int WebpQuality { get; set; }
 
     [ObservableProperty]
-    private string _pngCompression = "Balanced";
+    public partial string PngCompression { get; set; } = "Balanced";
 
     /// <summary>Configured folder; empty means <see cref="DefaultOutputDirectory"/>.</summary>
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(EffectiveOutputDirectory), nameof(HasCustomOutputDirectory))]
-    private string _outputDirectory = string.Empty;
+    public partial string OutputDirectory { get; set; } = string.Empty;
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(FileNamePreview))]
-    private string _fileNameTemplate = FileNameStrategy.DefaultTemplate;
+    public partial string FileNameTemplate { get; set; } = FileNameStrategy.DefaultTemplate;
 
     [ObservableProperty]
-    private bool _previewBeforeSave;
+    public partial bool PreviewBeforeSave { get; set; }
 
     [ObservableProperty]
-    private int _countdownSeconds;
+    public partial int CountdownSeconds { get; set; }
 
     [ObservableProperty]
-    private string _clipboardMode = "None";
+    public partial string ClipboardMode { get; set; } = "None";
 
     [ObservableProperty]
-    private bool _includeCursor;
+    public partial bool IncludeCursor { get; set; }
 
     [ObservableProperty]
-    private bool _includeWindowFrame;
+    public partial bool IncludeWindowFrame { get; set; }
 
     [ObservableProperty]
-    private string _hdrMode = "Auto";
+    public partial string HdrMode { get; set; } = "Auto";
 
     [ObservableProperty]
-    private bool _saveHdrSidecar;
+    public partial bool SaveHdrSidecar { get; set; }
 
     public bool IsJpeg => DefaultFormat == ImageFormat.Jpeg;
 
@@ -202,37 +202,37 @@ public sealed partial class SettingsViewModel : ViewModelBase, IDisposable
     // ---- Behaviour, startup, appearance ---------------------------------------------
 
     [ObservableProperty]
-    private bool _minimizeToTray;
+    public partial bool MinimizeToTray { get; set; }
 
     [ObservableProperty]
-    private bool _startMinimized;
+    public partial bool StartMinimized { get; set; }
 
     [ObservableProperty]
-    private bool _soundEnabled;
+    public partial bool SoundEnabled { get; set; }
 
     [ObservableProperty]
-    private bool _openFolderAfterSave;
+    public partial bool OpenFolderAfterSave { get; set; }
 
     [ObservableProperty]
-    private bool _autoPinAfterCapture;
+    public partial bool AutoPinAfterCapture { get; set; }
 
     [ObservableProperty]
-    private bool _showNotifications;
+    public partial bool ShowNotifications { get; set; }
 
     [ObservableProperty]
-    private bool _armOnStartup;
+    public partial bool ArmOnStartup { get; set; }
 
     [ObservableProperty]
-    private bool _startWithWindows;
+    public partial bool StartWithWindows { get; set; }
 
     [ObservableProperty]
-    private string _theme = "System";
+    public partial string Theme { get; set; } = "System";
 
     [ObservableProperty]
-    private string _language = "en-US";
+    public partial string Language { get; set; } = "en-US";
 
     [ObservableProperty]
-    private string _logLevel = "Information";
+    public partial string LogLevel { get; set; } = "Information";
 
     // ---- Commands ---------------------------------------------------------------------
 

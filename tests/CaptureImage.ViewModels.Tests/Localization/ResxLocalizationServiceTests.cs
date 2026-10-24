@@ -16,7 +16,7 @@ namespace CaptureImage.ViewModels.Tests.Localization;
 /// test doesn't leak into the next one running on the same test runner thread.
 /// </summary>
 [Collection(LocalizationTestCollection.Name)]
-public class ResxLocalizationServiceTests : IDisposable
+public sealed class ResxLocalizationServiceTests : IDisposable
 {
     private readonly CultureInfo _savedUICulture;
     private readonly CultureInfo _savedCulture;

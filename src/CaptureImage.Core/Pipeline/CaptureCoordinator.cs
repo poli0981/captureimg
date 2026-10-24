@@ -166,7 +166,7 @@ public sealed partial class CaptureCoordinator : IDisposable
         }
 
         // While suspended (hotkey recorder open) only remember the request; resuming registers.
-        IReadOnlyList<HotkeyRegistration> registrations = suspended ? [] : _hotkeys.Activate(hotkeys);
+        var registrations = suspended ? [] : _hotkeys.Activate(hotkeys);
         lock (_gate)
         {
             _armed = true;

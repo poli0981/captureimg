@@ -15,7 +15,7 @@ namespace CaptureImage.Infrastructure.Capture;
 /// vtable function pointers so no runtime-callable wrapper is created (v1 leaked one per
 /// capture and kept full-size GPU textures alive until the next garbage collection).
 /// </summary>
-internal static unsafe class WinRtCaptureInterop
+internal static unsafe partial class WinRtCaptureInterop
 {
     private const string GraphicsCaptureItemClass = "Windows.Graphics.Capture.GraphicsCaptureItem";
 
@@ -85,6 +85,6 @@ internal static unsafe class WinRtCaptureInterop
         }
     }
 
-    [DllImport("d3d11.dll", ExactSpelling = true)]
-    private static extern int CreateDirect3D11DeviceFromDXGIDevice(nint dxgiDevice, out nint graphicsDevice);
+    [LibraryImport("d3d11.dll")]
+    private static partial int CreateDirect3D11DeviceFromDXGIDevice(nint dxgiDevice, out nint graphicsDevice);
 }

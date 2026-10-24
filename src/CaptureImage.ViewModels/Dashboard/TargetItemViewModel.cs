@@ -8,24 +8,18 @@ using CommunityToolkit.Mvvm.ComponentModel;
 namespace CaptureImage.ViewModels.Dashboard;
 
 /// <summary>One capturable window in the Dashboard list. Updated in place on refresh.</summary>
-public sealed partial class TargetItemViewModel : ViewModelBase
+public sealed partial class TargetItemViewModel(GameTarget target, ILocalizationService localization) : ViewModelBase
 {
-    private readonly ILocalizationService _localization;
+    private readonly ILocalizationService _localization = localization;
 
     [ObservableProperty]
-    private GameTarget _target;
+    public partial GameTarget Target { get; set; } = target;
 
     [ObservableProperty]
-    private string? _profileName;
+    public partial string? ProfileName { get; set; }
 
     [ObservableProperty]
-    private bool _isLocked;
-
-    public TargetItemViewModel(GameTarget target, ILocalizationService localization)
-    {
-        _target = target;
-        _localization = localization;
-    }
+    public partial bool IsLocked { get; set; }
 
     public nint WindowHandle => Target.WindowHandle;
 

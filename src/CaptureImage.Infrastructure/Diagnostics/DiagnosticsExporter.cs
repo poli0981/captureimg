@@ -18,23 +18,19 @@ namespace CaptureImage.Infrastructure.Diagnostics;
 /// system summary (Windows build, .NET, GPUs, monitors with DPI and HDR state). The user's
 /// profile path is replaced with <c>%USERPROFILE%</c> in every text file.
 /// </summary>
-public sealed partial class DiagnosticsExporter : IDiagnosticsExporter
+public sealed partial class DiagnosticsExporter(
+    AppPaths paths,
+    IDisplayService displays,
+    IUpdateService updates,
+    ILogger<DiagnosticsExporter> logger) : IDiagnosticsExporter
 {
     private const int MaxLogFiles = 5;
 
-    private readonly AppPaths _paths;
-    private readonly IDisplayService _displays;
-    private readonly IUpdateService _updates;
-    private readonly ILogger<DiagnosticsExporter> _logger;
+    private readonly AppPaths _paths = paths;
+    private readonly IDisplayService _displays = displays;
+    private readonly IUpdateService _updates = updates;
+    private readonly ILogger<DiagnosticsExporter> _logger = logger;
     private readonly UserPathRedactionEnricher _redactor = new();
-
-    public DiagnosticsExporter(AppPaths paths, IDisplayService displays, IUpdateService updates, ILogger<DiagnosticsExporter> logger)
-    {
-        _paths = paths;
-        _displays = displays;
-        _updates = updates;
-        _logger = logger;
-    }
 
     public string SuggestFileName() =>
         $"CaptureImage-diagnostics-{DateTime.Now.ToString("yyyyMMdd-HHmmss", CultureInfo.InvariantCulture)}.zip";

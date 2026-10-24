@@ -46,7 +46,7 @@ public sealed partial class UpdateViewModel : ViewModelBase, IDisposable
         Localization = localization;
         AppInfo = appInfo;
         _logger = logger;
-        _status = updates.IsAvailable ? UpdateStatus.Idle : UpdateStatus.Unavailable;
+        Status = updates.IsAvailable ? UpdateStatus.Idle : UpdateStatus.Unavailable;
 
         _updates.LogEmitted += OnLogEmitted;
         Localization.PropertyChanged += OnLocalizationChanged;
@@ -61,19 +61,19 @@ public sealed partial class UpdateViewModel : ViewModelBase, IDisposable
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(StatusText), nameof(IsWorking), nameof(ShowProgress), nameof(IsUpdateAvailable), nameof(IsReady), nameof(HasFailed))]
     [NotifyCanExecuteChangedFor(nameof(CheckCommand), nameof(DownloadCommand), nameof(InstallAndRestartCommand), nameof(CancelCommand))]
-    private UpdateStatus _status;
+    public partial UpdateStatus Status { get; set; }
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(StatusText))]
-    private string? _availableVersion;
+    public partial string? AvailableVersion { get; set; }
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(HasReleaseNotes))]
-    private string? _releaseNotes;
+    public partial string? ReleaseNotes { get; set; }
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(IsProgressIndeterminate))]
-    private int _progress;
+    public partial int Progress { get; set; }
 
     public string StatusText => Status == UpdateStatus.UpdateAvailable
         ? Localization.Format("Update_Status_UpdateAvailable", AvailableVersion ?? "?")

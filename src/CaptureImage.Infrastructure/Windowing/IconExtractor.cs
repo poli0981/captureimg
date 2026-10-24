@@ -16,21 +16,16 @@ namespace CaptureImage.Infrastructure.Windowing;
 /// file when it has none. Results (including failures) are cached per path in a bounded
 /// least-recently-used cache, so long sessions don't grow without limit.
 /// </summary>
-public sealed partial class IconExtractor : IDisposable
+public sealed partial class IconExtractor(ILogger<IconExtractor> logger) : IDisposable
 {
     private const int Capacity = 256;
     private const uint IconSize = 48;
 
-    private readonly ILogger<IconExtractor> _logger;
+    private readonly ILogger<IconExtractor> _logger = logger;
     private readonly Lock _gate = new();
     private readonly Dictionary<string, LinkedListNode<(string Path, byte[]? Png)>> _index = new(StringComparer.OrdinalIgnoreCase);
     private readonly LinkedList<(string Path, byte[]? Png)> _order = new();
     private readonly Lazy<IWICImagingFactory> _factory = new(() => new IWICImagingFactory(), LazyThreadSafetyMode.ExecutionAndPublication);
-
-    public IconExtractor(ILogger<IconExtractor> logger)
-    {
-        _logger = logger;
-    }
 
     public byte[]? TryGetIconPngBytes(string executablePath)
     {

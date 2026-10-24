@@ -22,17 +22,12 @@ public sealed class SoundService : ISoundService
 /// Windows 11 efficiency mode: EcoQoS plus below-normal priority while the app idles in the
 /// tray. <see cref="BeginForegroundWork"/> lifts it for the duration of a capture.
 /// </summary>
-public sealed partial class PerformanceModeService : IPerformanceModeService
+public sealed partial class PerformanceModeService(ILogger<PerformanceModeService> logger) : IPerformanceModeService
 {
-    private readonly ILogger<PerformanceModeService> _logger;
+    private readonly ILogger<PerformanceModeService> _logger = logger;
     private readonly Lock _gate = new();
     private bool _background;
     private int _foregroundWork;
-
-    public PerformanceModeService(ILogger<PerformanceModeService> logger)
-    {
-        _logger = logger;
-    }
 
     public void SetBackground(bool isBackground)
     {
@@ -112,17 +107,12 @@ public sealed partial class PerformanceModeService : IPerformanceModeService
 /// "Start with Windows" via the per-user Run key. Points at the Velopack launcher in the
 /// install root (stable across updates) when present, otherwise at the running executable.
 /// </summary>
-public sealed partial class AutostartService : IAutostartService
+public sealed partial class AutostartService(ILogger<AutostartService> logger) : IAutostartService
 {
     private const string RunKey = @"Software\Microsoft\Windows\CurrentVersion\Run";
     private const string ValueName = "CaptureImage";
 
-    private readonly ILogger<AutostartService> _logger;
-
-    public AutostartService(ILogger<AutostartService> logger)
-    {
-        _logger = logger;
-    }
+    private readonly ILogger<AutostartService> _logger = logger;
 
     public bool IsEnabled
     {

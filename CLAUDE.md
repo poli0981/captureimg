@@ -60,7 +60,13 @@ tests/*                          Core, Infrastructure, ViewModels tests + App.Ui
   `dotnet format style --diagnostics IDE0073 IDE0161 IDE0065 IDE0005`. A plain `dotnet format`
   deletes XAML event handlers.
 - Pass `CancellationToken`s through (SonarCloud S8949); tests use
-  `TestContext.Current.CancellationToken` (xUnit1051).
+  `TestContext.Current.CancellationToken` (xUnit1051), and async tests await the async `File`
+  APIs (S6966).
+- SonarQube Cloud imports the build's info-level analyzer suggestions as issues, so follow them:
+  primary constructors that keep `readonly` fields (IDE0290), `var` (IDE0007),
+  `[ObservableProperty]` on `public partial` properties rather than fields (MVVMTK0042),
+  `[LibraryImport]` rather than `[DllImport]` (SYSLIB1054). Fixers for one diagnostic at a time are
+  safe: `dotnet format style|analyzers --diagnostics <ID> --severity info`.
 
 ## Pitfalls already hit
 

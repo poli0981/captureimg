@@ -15,31 +15,21 @@ namespace CaptureImage.ViewModels.Settings;
 /// capture hotkeys are released while recording so the combination reaches the recorder),
 /// and rejects invalid, duplicate or already-taken combinations with a message.
 /// </summary>
-public sealed partial class HotkeyBindingViewModel : ViewModelBase
+public sealed partial class HotkeyBindingViewModel(
+    CaptureMode mode,
+    ISettingsStore settings,
+    CaptureCoordinator coordinator,
+    IHotkeyService hotkeys,
+    ILocalizationService localization) : ViewModelBase
 {
-    private readonly ISettingsStore _settings;
-    private readonly CaptureCoordinator _coordinator;
-    private readonly IHotkeyService _hotkeys;
+    private readonly ISettingsStore _settings = settings;
+    private readonly CaptureCoordinator _coordinator = coordinator;
+    private readonly IHotkeyService _hotkeys = hotkeys;
     private IDisposable? _suspension;
 
-    public HotkeyBindingViewModel(
-        CaptureMode mode,
-        ISettingsStore settings,
-        CaptureCoordinator coordinator,
-        IHotkeyService hotkeys,
-        ILocalizationService localization)
-    {
-        Mode = mode;
-        _settings = settings;
-        _coordinator = coordinator;
-        _hotkeys = hotkeys;
-        Localization = localization;
-        _binding = settings.Current.Hotkeys.Get(mode);
-    }
+    public ILocalizationService Localization { get; } = localization;
 
-    public ILocalizationService Localization { get; }
-
-    public CaptureMode Mode { get; }
+    public CaptureMode Mode { get; } = mode;
 
     public string ModeName => Localization[$"Mode_{Mode}"];
 
@@ -47,17 +37,17 @@ public sealed partial class HotkeyBindingViewModel : ViewModelBase
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(DisplayText), nameof(IsDefault))]
-    private HotkeyBinding _binding;
+    public partial HotkeyBinding Binding { get; set; } = settings.Current.Hotkeys.Get(mode);
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(DisplayText))]
-    private bool _isRecording;
+    public partial bool IsRecording { get; set; }
 
     [ObservableProperty]
-    private string _message = string.Empty;
+    public partial string Message { get; set; } = string.Empty;
 
     [ObservableProperty]
-    private bool _hasError;
+    public partial bool HasError { get; set; }
 
     public string DisplayText => IsRecording
         ? Localization["Hotkey_PressKeys"]

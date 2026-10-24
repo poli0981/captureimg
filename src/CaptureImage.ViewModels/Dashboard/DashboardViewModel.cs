@@ -78,30 +78,30 @@ public sealed partial class DashboardViewModel : ViewModelBase, IDisposable
     public ObservableCollection<HotkeyStatusItem> Hotkeys { get; } = [];
 
     [ObservableProperty]
-    private string _searchText = string.Empty;
+    public partial string SearchText { get; set; } = string.Empty;
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(CaptureSelectedCommand), nameof(LockSelectedCommand), nameof(CreateProfileCommand))]
-    private TargetItemViewModel? _selectedTarget;
+    public partial TargetItemViewModel? SelectedTarget { get; set; }
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(HasNoTargets))]
-    private bool _isLoading;
+    public partial bool IsLoading { get; set; }
 
     [ObservableProperty]
-    private bool _isArmed;
+    public partial bool IsArmed { get; set; }
 
     [ObservableProperty]
-    private bool _isBusy;
+    public partial bool IsBusy { get; set; }
 
     [ObservableProperty]
-    private string _statusText = string.Empty;
+    public partial string StatusText { get; set; } = string.Empty;
 
     [ObservableProperty]
-    private string? _lockedTargetName;
+    public partial string? LockedTargetName { get; set; }
 
     [ObservableProperty]
-    private bool _hasHotkeyProblem;
+    public partial bool HasHotkeyProblem { get; set; }
 
     public bool HasNoTargets => !IsLoading && Targets.Count == 0;
 

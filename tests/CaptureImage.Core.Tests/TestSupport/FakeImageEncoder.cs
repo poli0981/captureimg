@@ -20,16 +20,13 @@ internal sealed record EncodeCall(CapturedFrame Frame, ImageFormat Format, Encod
 /// two halves with <see cref="Midway"/> in between, so a failure there leaves a partially
 /// written file behind — exactly what the writer has to clean up.
 /// </summary>
-internal sealed class FakeImageEncoder : IImageEncoder
+/// <param name="supported">Format/pixel-format pairs to accept; empty means <see cref="DefaultSupport"/>.</param>
+internal sealed class FakeImageEncoder(
+    params (ImageFormat Format, FramePixelFormat PixelFormat)[] supported) : IImageEncoder
 {
     private readonly ConcurrentQueue<EncodeCall> _calls = new();
-    private readonly HashSet<(ImageFormat, FramePixelFormat)> _supported;
-
-    /// <param name="supported">Format/pixel-format pairs to accept; empty means <see cref="DefaultSupport"/>.</param>
-    public FakeImageEncoder(params (ImageFormat Format, FramePixelFormat PixelFormat)[] supported)
-    {
-        _supported = supported.Length > 0 ? [.. supported] : [.. DefaultSupport];
-    }
+    private readonly HashSet<(ImageFormat, FramePixelFormat)> _supported =
+        supported.Length > 0 ? [.. supported] : [.. DefaultSupport];
 
     /// <summary>Every 8-bit output format, plus the JPEG XR sidecar from FP16.</summary>
     public static IReadOnlyList<(ImageFormat Format, FramePixelFormat PixelFormat)> DefaultSupport { get; } =

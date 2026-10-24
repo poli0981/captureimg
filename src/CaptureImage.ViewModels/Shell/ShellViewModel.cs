@@ -59,13 +59,13 @@ public sealed partial class ShellViewModel : ViewModelBase, IDisposable
     public string Subtitle => AppInfo.DisplayVersion;
 
     [ObservableProperty]
-    private bool _isArmed;
+    public partial bool IsArmed { get; set; }
 
     [ObservableProperty]
-    private bool _isBusy;
+    public partial bool IsBusy { get; set; }
 
     [ObservableProperty]
-    private string _trayToolTip = "CaptureImage";
+    public partial string TrayToolTip { get; set; } = "CaptureImage";
 
     public string ArmMenuText => IsArmed ? Localization["Tray_Disarm"] : Localization["Tray_Arm"];
 

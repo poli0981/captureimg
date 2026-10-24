@@ -12,14 +12,9 @@ using NSubstitute;
 namespace CaptureImage.ViewModels.Tests;
 
 /// <summary>In-memory <see cref="ISettingsStore"/> that applies updates synchronously.</summary>
-internal sealed class FakeSettingsStore : ISettingsStore
+internal sealed class FakeSettingsStore(AppSettings? initial = null) : ISettingsStore
 {
-    public FakeSettingsStore(AppSettings? initial = null)
-    {
-        Current = initial ?? new AppSettings();
-    }
-
-    public AppSettings Current { get; private set; }
+    public AppSettings Current { get; private set; } = initial ?? new AppSettings();
 
     public event EventHandler? Changed;
 

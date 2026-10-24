@@ -21,24 +21,20 @@ namespace CaptureImage.Infrastructure.Windowing;
 /// also works for elevated processes (v1 used <c>Process.MainModule</c>, which throws for
 /// games running as administrator and left them without icon or Steam badge).
 /// </summary>
-public sealed unsafe partial class TargetCatalog : ITargetCatalog
+public sealed unsafe partial class TargetCatalog(
+    IconExtractor icons,
+    ISteamDetector steam,
+    ILogger<TargetCatalog> logger) : ITargetCatalog
 {
     private static readonly HashSet<string> ShellWindowClasses = new(StringComparer.Ordinal)
     {
         "Progman", "WorkerW", "Shell_TrayWnd", "Shell_SecondaryTrayWnd", "Windows.UI.Core.CoreWindow",
     };
 
-    private readonly IconExtractor _icons;
-    private readonly ISteamDetector _steam;
-    private readonly ILogger<TargetCatalog> _logger;
+    private readonly IconExtractor _icons = icons;
+    private readonly ISteamDetector _steam = steam;
+    private readonly ILogger<TargetCatalog> _logger = logger;
     private readonly uint _ownProcessId = (uint)Environment.ProcessId;
-
-    public TargetCatalog(IconExtractor icons, ISteamDetector steam, ILogger<TargetCatalog> logger)
-    {
-        _icons = icons;
-        _steam = steam;
-        _logger = logger;
-    }
 
     public Task<IReadOnlyList<GameTarget>> EnumerateAsync(CancellationToken cancellationToken = default) =>
         Task.Run<IReadOnlyList<GameTarget>>(() =>

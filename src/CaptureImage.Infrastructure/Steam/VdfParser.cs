@@ -119,12 +119,10 @@ public static class VdfParser
     }
 
     /// <summary>Cursor over the input text with helpers for quoted strings and trivia.</summary>
-    private sealed class VdfReader
+    private sealed class VdfReader(string text)
     {
-        private readonly string _text;
+        private readonly string _text = text;
         private int _pos;
-
-        public VdfReader(string text) { _text = text; _pos = 0; }
 
         public int Position => _pos;
         public bool Eof => _pos >= _text.Length;
@@ -213,12 +211,7 @@ public static class VdfParser
 }
 
 /// <summary>Thrown when a VDF document fails to parse.</summary>
-public sealed class VdfParseException : FormatException
+public sealed class VdfParseException(string message, int position) : FormatException(message)
 {
-    public int Position { get; }
-
-    public VdfParseException(string message, int position) : base(message)
-    {
-        Position = position;
-    }
+    public int Position { get; } = position;
 }

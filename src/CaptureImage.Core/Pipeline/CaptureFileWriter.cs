@@ -36,20 +36,16 @@ public sealed record SaveRequest(
 /// overwriting an existing file (a name stolen by a concurrent write is retried).
 /// Encoding runs on the thread pool so callers on the UI thread never block.
 /// </summary>
-public sealed partial class CaptureFileWriter
+public sealed partial class CaptureFileWriter(
+    IEnumerable<IImageEncoder> encoders,
+    FileNameStrategy fileNames,
+    ILogger<CaptureFileWriter> logger)
 {
     private const int MaxNameAttempts = 8;
 
-    private readonly IReadOnlyList<IImageEncoder> _encoders;
-    private readonly FileNameStrategy _fileNames;
-    private readonly ILogger<CaptureFileWriter> _logger;
-
-    public CaptureFileWriter(IEnumerable<IImageEncoder> encoders, FileNameStrategy fileNames, ILogger<CaptureFileWriter> logger)
-    {
-        _encoders = [.. encoders];
-        _fileNames = fileNames;
-        _logger = logger;
-    }
+    private readonly IReadOnlyList<IImageEncoder> _encoders = [.. encoders];
+    private readonly FileNameStrategy _fileNames = fileNames;
+    private readonly ILogger<CaptureFileWriter> _logger = logger;
 
     public async Task<CaptureRecord> SaveAsync(SaveRequest request, CancellationToken cancellationToken = default)
     {

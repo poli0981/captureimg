@@ -20,15 +20,10 @@ namespace CaptureImage.Infrastructure.Ocr;
 /// the engine limit are downscaled, engines are cached per language, and failures are
 /// reported as failures instead of "no text found".
 /// </summary>
-public sealed partial class WindowsOcrService : IOcrService
+public sealed partial class WindowsOcrService(ILogger<WindowsOcrService> logger) : IOcrService
 {
-    private readonly ILogger<WindowsOcrService> _logger;
+    private readonly ILogger<WindowsOcrService> _logger = logger;
     private readonly ConcurrentDictionary<string, OcrEngine?> _engines = new(StringComparer.OrdinalIgnoreCase);
-
-    public WindowsOcrService(ILogger<WindowsOcrService> logger)
-    {
-        _logger = logger;
-    }
 
     public async Task<OcrResult> RecognizeAsync(CapturedFrame frame, string? languageTag, CancellationToken cancellationToken = default)
     {

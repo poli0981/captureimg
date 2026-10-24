@@ -19,18 +19,13 @@ namespace CaptureImage.Infrastructure.Windowing;
 /// DXGI adapter (hybrid-GPU laptops attach outputs to different adapters) and recreates the
 /// DXGI factory when Windows reports it stale (HDR toggled, display plugged in).
 /// </summary>
-public sealed partial class DisplayService : IDisplayService, IDisposable
+public sealed partial class DisplayService(ILogger<DisplayService> logger) : IDisplayService, IDisposable
 {
     private const uint MonitorDefaultToNearest = 2;
 
-    private readonly ILogger<DisplayService> _logger;
+    private readonly ILogger<DisplayService> _logger = logger;
     private readonly Lock _gate = new();
     private IDXGIFactory1? _factory;
-
-    public DisplayService(ILogger<DisplayService> logger)
-    {
-        _logger = logger;
-    }
 
     public IReadOnlyList<MonitorInfo> GetMonitors()
     {

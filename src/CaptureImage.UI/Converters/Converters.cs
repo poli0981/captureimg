@@ -72,7 +72,7 @@ public sealed class InverseBoolConverter : IValueConverter
 /// <summary>PNG bytes (window icons) → image, cached per byte array.</summary>
 public sealed class BytesToImageConverter : IValueConverter
 {
-    private static readonly ConditionalWeakTable<byte[], BitmapImage> Cache = new();
+    private static readonly ConditionalWeakTable<byte[], BitmapImage> Cache = [];
 
     public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
