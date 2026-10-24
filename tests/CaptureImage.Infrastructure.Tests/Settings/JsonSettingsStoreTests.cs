@@ -77,7 +77,7 @@ public sealed class JsonSettingsStoreTests : IDisposable
         using var store = await LoadStoreAsync(legacy);
 
         // The v1 file is only read: v1.5.1 keeps working if the user goes back to it.
-        File.ReadAllText(legacy).Should().Be(V151SettingsJson);
+        (await File.ReadAllTextAsync(legacy, Ct)).Should().Be(V151SettingsJson);
         File.GetLastWriteTimeUtc(legacy).Should().Be(legacyWrittenAt);
 
         var s = store.Current;
@@ -107,7 +107,7 @@ public sealed class JsonSettingsStoreTests : IDisposable
         s.UI.ShowLogViewer.Should().BeNull();
 
         // The pre-migration document is kept next to the migrated one.
-        File.ReadAllText(Backups("v2").Should().ContainSingle().Subject).Should().Be(V151SettingsJson);
+        (await File.ReadAllTextAsync(Backups("v2").Should().ContainSingle().Subject, Ct)).Should().Be(V151SettingsJson);
 
         // settings.json now holds a v3 document without the retired v2 fields.
         var json = ReadSettingsFile();
@@ -187,7 +187,7 @@ public sealed class JsonSettingsStoreTests : IDisposable
         using var store = await LoadStoreAsync(legacy);
 
         store.Current.Culture.Should().Be("vi-VN");
-        File.ReadAllText(legacy).Should().Be(V151SettingsJson);
+        (await File.ReadAllTextAsync(legacy, Ct)).Should().Be(V151SettingsJson);
     }
 
     [Fact]
@@ -214,7 +214,7 @@ public sealed class JsonSettingsStoreTests : IDisposable
         using var store = await LoadStoreAsync();
 
         store.Current.Should().BeEquivalentTo(new AppSettings());
-        File.ReadAllText(Backups("corrupt").Should().ContainSingle().Subject).Should().Be(content);
+        (await File.ReadAllTextAsync(Backups("corrupt").Should().ContainSingle().Subject, Ct)).Should().Be(content);
         ReadSettingsFile().GetProperty("version").GetInt32().Should().Be(AppSettings.CurrentVersion);
     }
 
@@ -237,7 +237,7 @@ public sealed class JsonSettingsStoreTests : IDisposable
 
         using var store = await LoadStoreAsync();
 
-        File.ReadAllText(Backups("v7").Should().ContainSingle().Subject).Should().Be(future);
+        (await File.ReadAllTextAsync(Backups("v7").Should().ContainSingle().Subject, Ct)).Should().Be(future);
         store.Current.Version.Should().Be(AppSettings.CurrentVersion);
         store.Current.Culture.Should().Be("fr-FR");
         store.Current.Theme.Should().Be("Dark");
@@ -612,7 +612,7 @@ public sealed class JsonSettingsStoreTests : IDisposable
 
         store.Current.Should().BeEquivalentTo(new AppSettings { Culture = "vi-VN" });
         changed.Should().Be(1);
-        using (var backup = JsonDocument.Parse(File.ReadAllText(Backups("reset").Should().ContainSingle().Subject)))
+        using (var backup = JsonDocument.Parse(await File.ReadAllTextAsync(Backups("reset").Should().ContainSingle().Subject, Ct)))
         {
             backup.RootElement.GetProperty("theme").GetString().Should().Be("Dark");
             backup.RootElement.GetProperty("capture").GetProperty("jpegQuality").GetInt32().Should().Be(40);
@@ -670,7 +670,7 @@ public sealed class JsonSettingsStoreTests : IDisposable
     private async Task ShouldRejectImportAsync(JsonSettingsStore store, string importPath)
     {
         var before = store.Current;
-        var fileBefore = File.ReadAllText(_paths.SettingsFile);
+        var fileBefore = await File.ReadAllTextAsync(_paths.SettingsFile, Ct);
         var changed = 0;
         store.Changed += (_, _) => changed++;
 
@@ -678,7 +678,7 @@ public sealed class JsonSettingsStoreTests : IDisposable
 
         await act.Should().ThrowAsync<InvalidDataException>();
         store.Current.Should().BeSameAs(before);
-        File.ReadAllText(_paths.SettingsFile).Should().Be(fileBefore);
+        (await File.ReadAllTextAsync(_paths.SettingsFile, Ct)).Should().Be(fileBefore);
         changed.Should().Be(0);
     }
 

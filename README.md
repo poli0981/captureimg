@@ -5,6 +5,8 @@
 [![License: GPL-3.0](https://img.shields.io/badge/License-GPL--3.0--or--later-blue.svg)](LICENSE)
 [![.NET 10](https://img.shields.io/badge/.NET-10.0-512BD4.svg)](https://dotnet.microsoft.com/download/dotnet/10.0)
 [![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/poli0981/captureimg/badge)](https://securityscorecards.dev/viewer/?uri=github.com/poli0981/captureimg)
+[![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=poli0981_captureimg&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=poli0981_captureimg)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=poli0981_captureimg&metric=coverage)](https://sonarcloud.io/component_measures?id=poli0981_captureimg&metric=coverage)
 
 A lightweight Windows screenshot tool for games that don't have their own screenshot key.
 It sits in the tray, stays out of the way, and takes a clean capture when you press a hotkey.

@@ -8,6 +8,9 @@ version: 2
 # Desktop packages differently: if a PR fails `restore --locked-mode`, run
 # `dotnet restore CaptureImage.sln --force-evaluate` on Windows and push the
 # lock files.
+#
+# Dependabot pull requests get no repository secrets, so the `sonarcloud` check
+# passes without analysing them; main is analysed after the merge.
 
 updates:
   - package-ecosystem: nuget
@@ -64,6 +67,7 @@ updates:
           - "nuget-license"
           - "dotnet-reportgenerator-globaltool"
           - "cyclonedx"
+          - "dotnet-sonarscanner"
 
   - package-ecosystem: github-actions
     directory: "/"

@@ -68,7 +68,7 @@ public sealed class SkiaImageEncoderTests : IDisposable
 
         var path = await EncodeToFileAsync(frame, ImageFormat.Png, new EncoderSettings());
 
-        File.ReadAllBytes(path)[..8].Should().Equal(PngSignature);
+        (await File.ReadAllBytesAsync(path, Ct))[..8].Should().Equal(PngSignature);
         var decoded = await _decoder.LoadAsync(path, cancellationToken: Ct);
         decoded.Should().NotBeNull();
         decoded.ShouldHaveSamePixelsAs(frame);
@@ -83,7 +83,7 @@ public sealed class SkiaImageEncoderTests : IDisposable
         var path = await EncodeToFileAsync(frame, ImageFormat.Png, new EncoderSettings());
 
         // IHDR colour type (byte 25): 2 = truecolour without alpha.
-        File.ReadAllBytes(path)[25].Should().Be(2);
+        (await File.ReadAllBytesAsync(path, Ct))[25].Should().Be(2);
         var decoded = await _decoder.LoadAsync(path, cancellationToken: Ct);
         decoded.Should().NotBeNull();
         decoded.ShouldHaveSamePixelsAs(frame);
@@ -115,7 +115,7 @@ public sealed class SkiaImageEncoderTests : IDisposable
 
         var path = await EncodeToFileAsync(frame, ImageFormat.Jpeg, new EncoderSettings(JpegQuality: quality));
 
-        File.ReadAllBytes(path)[..3].Should().Equal(0xFF, 0xD8, 0xFF);
+        (await File.ReadAllBytesAsync(path, Ct))[..3].Should().Equal(0xFF, 0xD8, 0xFF);
         var decoded = await _decoder.LoadAsync(path, cancellationToken: Ct);
         decoded.Should().NotBeNull();
         decoded.Width.Should().Be(32);
@@ -144,7 +144,7 @@ public sealed class SkiaImageEncoderTests : IDisposable
 
         var path = await EncodeToFileAsync(frame, ImageFormat.Webp, new EncoderSettings(WebpQuality: 90));
 
-        var bytes = File.ReadAllBytes(path);
+        var bytes = await File.ReadAllBytesAsync(path, Ct);
         Encoding.ASCII.GetString(bytes, 0, 4).Should().Be("RIFF");
         Encoding.ASCII.GetString(bytes, 8, 4).Should().Be("WEBP");
         // Skia decodes WebP everywhere; WIC needs an optional Windows codec (see WicImageDecoderTests).

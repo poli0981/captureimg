@@ -50,6 +50,9 @@ _Pvt_Extensions/
 packages/
 !packages/build/
 
+# SonarScanner for .NET working folder
+.sonarqube/
+
 # Test results / coverage / build logs
 TestResults/
 coverage*.xml
