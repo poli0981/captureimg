@@ -176,7 +176,7 @@ public sealed class WgcIntegrationTests : IDisposable
     {
         SkipUnlessCaptureIsSupported();
         var monitors = _displays.GetMonitors();
-        var monitor = monitors.FirstOrDefault(m => m.IsPrimary) ?? monitors.FirstOrDefault();
+        var monitor = monitors.FirstOrDefault(m => m.IsPrimary) ?? (monitors.Count > 0 ? monitors[0] : null);
         if (monitor is null)
         {
             Assert.Skip("No monitor is attached to this session.");

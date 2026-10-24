@@ -15,7 +15,7 @@ namespace CaptureImage.ViewModels.Localization;
 /// this assembly. Drives live culture switching: XAML binds to the indexer, and every
 /// change raises <c>PropertyChanged("Item[]")</c> so all bindings refresh in place.
 /// </summary>
-public sealed partial class ResxLocalizationService : ILocalizationService
+public sealed partial class ResxLocalizationService(ILogger<ResxLocalizationService> logger) : ILocalizationService
 {
     private const string ResourceBaseName = "CaptureImage.ViewModels.Resources.Strings.Strings";
 
@@ -34,8 +34,8 @@ public sealed partial class ResxLocalizationService : ILocalizationService
         new("ru-RU"),
     };
 
-    private readonly ResourceManager _resourceManager;
-    private readonly ILogger<ResxLocalizationService> _logger;
+    private readonly ResourceManager _resourceManager = new(ResourceBaseName, typeof(ResxLocalizationService).Assembly);
+    private readonly ILogger<ResxLocalizationService> _logger = logger;
 
     /// <summary>
     /// Tracks <c>(culture, key)</c> pairs we've already logged a "missing string" warning for.
@@ -44,14 +44,7 @@ public sealed partial class ResxLocalizationService : ILocalizationService
     /// </summary>
     private readonly ConcurrentDictionary<string, byte> _loggedMissingKeys = new();
 
-    private CultureInfo _currentCulture;
-
-    public ResxLocalizationService(ILogger<ResxLocalizationService> logger)
-    {
-        _resourceManager = new ResourceManager(ResourceBaseName, typeof(ResxLocalizationService).Assembly);
-        _currentCulture = CultureInfo.GetCultureInfo("en-US");
-        _logger = logger;
-    }
+    private CultureInfo _currentCulture = CultureInfo.GetCultureInfo("en-US");
 
     public event PropertyChangedEventHandler? PropertyChanged;
     public event EventHandler? CultureChanged;

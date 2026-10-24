@@ -15,20 +15,14 @@ using Microsoft.Extensions.Logging;
 namespace CaptureImage.ViewModels.Library;
 
 /// <summary>One saved capture in the Library grid. The thumbnail loads the first time the view asks for it.</summary>
-public sealed partial class CaptureItemViewModel : ViewModelBase
+public sealed partial class CaptureItemViewModel(CaptureRecord record, ICaptureLibrary library) : ViewModelBase
 {
     private const int ThumbnailSize = 320;
-    private readonly ICaptureLibrary _library;
+    private readonly ICaptureLibrary _library = library;
     private bool _thumbnailRequested;
     private string? _thumbnailPath;
 
-    public CaptureItemViewModel(CaptureRecord record, ICaptureLibrary library)
-    {
-        Record = record;
-        _library = library;
-    }
-
-    public CaptureRecord Record { get; }
+    public CaptureRecord Record { get; } = record;
 
     public string FileName => Record.FileName;
 
@@ -130,25 +124,25 @@ public sealed partial class LibraryViewModel : ViewModelBase, IDisposable
     public ObservableCollection<string> Games { get; } = [];
 
     [ObservableProperty]
-    private string _searchText = string.Empty;
+    public partial string SearchText { get; set; } = string.Empty;
 
     [ObservableProperty]
-    private string? _selectedGame;
+    public partial string? SelectedGame { get; set; }
 
     [ObservableProperty]
-    private bool _hdrOnly;
+    public partial bool HdrOnly { get; set; }
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(OpenCommand), nameof(RevealCommand), nameof(CopyImageCommand), nameof(CopyPathCommand),
         nameof(ExtractTextCommand), nameof(PinCommand), nameof(DeleteCommand), nameof(OpenHdrCommand))]
-    private CaptureItemViewModel? _selectedItem;
+    public partial CaptureItemViewModel? SelectedItem { get; set; }
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(IsEmpty))]
-    private bool _isLoading;
+    public partial bool IsLoading { get; set; }
 
     [ObservableProperty]
-    private string _summaryText = string.Empty;
+    public partial string SummaryText { get; set; } = string.Empty;
 
     public bool IsEmpty => !IsLoading && Items.Count == 0;
 

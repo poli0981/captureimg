@@ -10,16 +10,11 @@ namespace CaptureImage.Core.Tests.TestSupport;
 /// wait until code under test is really blocked on <c>Task.Delay(…, timeProvider, …)</c>
 /// before advancing the clock, so no advance is ever lost to a race.
 /// </summary>
-internal sealed class SignalingTimeProvider : TimeProvider, IDisposable
+internal sealed class SignalingTimeProvider(DateTimeOffset start) : TimeProvider, IDisposable
 {
     private readonly SemaphoreSlim _timerCreated = new(0);
 
-    public SignalingTimeProvider(DateTimeOffset start)
-    {
-        Fake = new FakeTimeProvider(start);
-    }
-
-    public FakeTimeProvider Fake { get; }
+    public FakeTimeProvider Fake { get; } = new(start);
 
     public override TimeZoneInfo LocalTimeZone => Fake.LocalTimeZone;
 

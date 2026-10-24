@@ -13,17 +13,12 @@ namespace CaptureImage.Infrastructure.Capture;
 /// GPU reset or driver update the engine calls <see cref="Invalidate"/> and the next capture
 /// gets a fresh device (v1 never recreated it, so every capture failed until restart).
 /// </summary>
-public sealed partial class D3D11DeviceManager : IDisposable
+public sealed partial class D3D11DeviceManager(ILogger<D3D11DeviceManager> logger) : IDisposable
 {
-    private readonly ILogger<D3D11DeviceManager> _logger;
+    private readonly ILogger<D3D11DeviceManager> _logger = logger;
     private readonly Lock _gate = new();
     private Session? _session;
     private bool _disposed;
-
-    public D3D11DeviceManager(ILogger<D3D11DeviceManager> logger)
-    {
-        _logger = logger;
-    }
 
     /// <summary>The device, its immediate context and the WinRT wrapper WGC needs.</summary>
     internal sealed record Session(ID3D11Device Device, ID3D11DeviceContext Context, IDirect3DDevice WinRtDevice) : IDisposable
@@ -76,7 +71,7 @@ public sealed partial class D3D11DeviceManager : IDisposable
         // usable GPU driver (virtual machines, CI runners).
         FeatureLevel[] levels = [FeatureLevel.Level_11_1, FeatureLevel.Level_11_0];
         var driver = DriverType.Hardware;
-        var result = D3D11.D3D11CreateDevice(null, driver, DeviceCreationFlags.BgraSupport, levels, out ID3D11Device device, out ID3D11DeviceContext context);
+        var result = D3D11.D3D11CreateDevice(null, driver, DeviceCreationFlags.BgraSupport, levels, out var device, out ID3D11DeviceContext context);
         if (result.Failure)
         {
             driver = DriverType.Warp;

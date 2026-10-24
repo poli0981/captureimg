@@ -9,14 +9,9 @@ using Serilog.Events;
 namespace CaptureImage.Infrastructure.Logging;
 
 /// <summary>Changes the live Serilog minimum level (no restart needed).</summary>
-public sealed class SerilogLogLevelSwitcher : ILogLevelSwitcher
+public sealed class SerilogLogLevelSwitcher(LoggingLevelSwitch levelSwitch) : ILogLevelSwitcher
 {
-    private readonly LoggingLevelSwitch _levelSwitch;
-
-    public SerilogLogLevelSwitcher(LoggingLevelSwitch levelSwitch)
-    {
-        _levelSwitch = levelSwitch;
-    }
+    private readonly LoggingLevelSwitch _levelSwitch = levelSwitch;
 
     public string CurrentLevel => _levelSwitch.MinimumLevel switch
     {

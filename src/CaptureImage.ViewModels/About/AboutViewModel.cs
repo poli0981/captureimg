@@ -17,25 +17,21 @@ public sealed record SponsorLink(string Name, Uri Url);
 /// <summary>
 /// About page: version, contact, links, sponsors, legal documents and third-party notices.
 /// </summary>
-public sealed partial class AboutViewModel : ViewModelBase
+public sealed partial class AboutViewModel(
+    IShellService shell,
+    ILocalizationService localization,
+    AppInfo appInfo) : ViewModelBase
 {
     public const string RepositoryUrl = "https://github.com/poli0981/captureimg";
     public const string ContactEmail = "contact@poli0981.dev";
     public const string SponsorEmail = "sponsor@poli0981.dev";
     public const string LinksPageUrl = "https://poli0981.dev/links";
 
-    private readonly IShellService _shell;
+    private readonly IShellService _shell = shell;
 
-    public AboutViewModel(IShellService shell, ILocalizationService localization, AppInfo appInfo)
-    {
-        _shell = shell;
-        Localization = localization;
-        AppInfo = appInfo;
-    }
+    public ILocalizationService Localization { get; } = localization;
 
-    public ILocalizationService Localization { get; }
-
-    public AppInfo AppInfo { get; }
+    public AppInfo AppInfo { get; } = appInfo;
 
     public string AppName => "CaptureImage";
 

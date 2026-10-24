@@ -15,16 +15,11 @@ using CommunityToolkit.Mvvm.Messaging;
 namespace CaptureImage.ViewModels.Profiles;
 
 /// <summary>One game profile in the list.</summary>
-public sealed partial class ProfileItemViewModel : ViewModelBase
+public sealed partial class ProfileItemViewModel(GameProfile profile) : ViewModelBase
 {
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(Name), nameof(MatchSummary), nameof(Enabled), nameof(AutoArm))]
-    private GameProfile _profile;
-
-    public ProfileItemViewModel(GameProfile profile)
-    {
-        _profile = profile;
-    }
+    public partial GameProfile Profile { get; set; } = profile;
 
     public string Id => Profile.Id;
 
@@ -104,43 +99,43 @@ public sealed partial class ProfilesViewModel : ViewModelBase, IRecipient<Create
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(HasSelection))]
     [NotifyCanExecuteChangedFor(nameof(DeleteCommand), nameof(BrowseExecutableCommand), nameof(BrowseOutputFolderCommand), nameof(ClearOutputFolderCommand))]
-    private ProfileItemViewModel? _selectedProfile;
+    public partial ProfileItemViewModel? SelectedProfile { get; set; }
 
     [ObservableProperty]
-    private string _name = string.Empty;
+    public partial string Name { get; set; } = string.Empty;
 
     [ObservableProperty]
-    private bool _enabled = true;
-
-    [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(MatchesNothing))]
-    private string _executablePath = string.Empty;
+    public partial bool Enabled { get; set; } = true;
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(MatchesNothing))]
-    private string _executableName = string.Empty;
+    public partial string ExecutablePath { get; set; } = string.Empty;
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(MatchesNothing))]
+    public partial string ExecutableName { get; set; } = string.Empty;
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(MatchesNothing), nameof(SteamAppIdInvalid))]
-    private string _steamAppId = string.Empty;
+    public partial string SteamAppId { get; set; } = string.Empty;
 
     [ObservableProperty]
-    private string _outputDirectory = string.Empty;
+    public partial string OutputDirectory { get; set; } = string.Empty;
 
     [ObservableProperty]
-    private string _format = string.Empty;
+    public partial string Format { get; set; } = string.Empty;
 
     [ObservableProperty]
-    private string _fileNameTemplate = string.Empty;
+    public partial string FileNameTemplate { get; set; } = string.Empty;
 
     [ObservableProperty]
-    private string _hdrMode = string.Empty;
+    public partial string HdrMode { get; set; } = string.Empty;
 
     [ObservableProperty]
-    private bool _autoArm;
+    public partial bool AutoArm { get; set; }
 
     [ObservableProperty]
-    private bool _lockTarget = true;
+    public partial bool LockTarget { get; set; } = true;
 
     public bool HasSelection => SelectedProfile is not null;
 

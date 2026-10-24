@@ -33,19 +33,15 @@ namespace CaptureImage.Infrastructure.Capture;
 ///   <item>8-bit frames are forced opaque so saved images are never see-through.</item>
 /// </list>
 /// </remarks>
-public sealed partial class WgcCaptureEngine : ICaptureEngine, IDisposable
+public sealed partial class WgcCaptureEngine(
+    D3D11DeviceManager devices,
+    ILogger<WgcCaptureEngine> logger) : ICaptureEngine, IDisposable
 {
     private static readonly TimeSpan FrameTimeout = TimeSpan.FromSeconds(3);
 
-    private readonly D3D11DeviceManager _devices;
-    private readonly ILogger<WgcCaptureEngine> _logger;
+    private readonly D3D11DeviceManager _devices = devices;
+    private readonly ILogger<WgcCaptureEngine> _logger = logger;
     private readonly SemaphoreSlim _gate = new(1, 1);
-
-    public WgcCaptureEngine(D3D11DeviceManager devices, ILogger<WgcCaptureEngine> logger)
-    {
-        _devices = devices;
-        _logger = logger;
-    }
 
     public async Task<CapturedFrame> CaptureAsync(CaptureSource source, CaptureOptions options, CancellationToken cancellationToken = default)
     {

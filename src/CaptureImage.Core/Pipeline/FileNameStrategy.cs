@@ -21,7 +21,8 @@ namespace CaptureImage.Core.Pipeline;
 /// reserved device names (CON, NUL, COM1…) get a trailing <c>_</c>; the name is capped at
 /// <see cref="MaxNameLength"/> characters.</para>
 /// </remarks>
-public sealed class FileNameStrategy
+/// <param name="fileExists">Existence check (injected so tests can fake collisions).</param>
+public sealed class FileNameStrategy(Func<string, bool> fileExists)
 {
     /// <summary>Default template: <c>{Game}_{yyyy}-{MM}-{dd}_{HH}-{mm}-{ss}</c>.</summary>
     public const string DefaultTemplate = "{Game}_{yyyy}-{MM}-{dd}_{HH}-{mm}-{ss}";
@@ -42,13 +43,7 @@ public sealed class FileNameStrategy
         "COM¹", "COM²", "COM³", "LPT¹", "LPT²", "LPT³",
     };
 
-    private readonly Func<string, bool> _fileExists;
-
-    /// <param name="fileExists">Existence check (injected so tests can fake collisions).</param>
-    public FileNameStrategy(Func<string, bool> fileExists)
-    {
-        _fileExists = fileExists;
-    }
+    private readonly Func<string, bool> _fileExists = fileExists;
 
     /// <summary>
     /// A full path under <paramref name="directory"/> that does not collide with an existing

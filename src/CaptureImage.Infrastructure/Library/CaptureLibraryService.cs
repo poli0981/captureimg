@@ -21,26 +21,22 @@ namespace CaptureImage.Infrastructure.Library;
 /// JPEG thumbnails. Files deleted outside the app drop out on the next read. The first time
 /// the index is created, the output folders are scanned so captures made by v1 show up too.
 /// </summary>
-public sealed partial class CaptureLibraryService : ICaptureLibrary, IDisposable
+public sealed partial class CaptureLibraryService(
+    AppPaths paths,
+    ISettingsStore settings,
+    IShellService shell,
+    ILogger<CaptureLibraryService> logger) : ICaptureLibrary, IDisposable
 {
     private const int MaxRecords = 2000;
     private const int MaxSeededFiles = 500;
 
-    private readonly AppPaths _paths;
-    private readonly ISettingsStore _settings;
-    private readonly IShellService _shell;
-    private readonly ILogger<CaptureLibraryService> _logger;
+    private readonly AppPaths _paths = paths;
+    private readonly ISettingsStore _settings = settings;
+    private readonly IShellService _shell = shell;
+    private readonly ILogger<CaptureLibraryService> _logger = logger;
     private readonly SemaphoreSlim _indexLock = new(1, 1);
     private readonly Lazy<IWICImagingFactory> _wic = new(() => new IWICImagingFactory(), LazyThreadSafetyMode.ExecutionAndPublication);
     private List<CaptureRecord>? _records;
-
-    public CaptureLibraryService(AppPaths paths, ISettingsStore settings, IShellService shell, ILogger<CaptureLibraryService> logger)
-    {
-        _paths = paths;
-        _settings = settings;
-        _shell = shell;
-        _logger = logger;
-    }
 
     public event EventHandler? Changed;
 

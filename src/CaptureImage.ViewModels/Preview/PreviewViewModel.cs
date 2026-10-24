@@ -13,34 +13,24 @@ namespace CaptureImage.ViewModels.Preview;
 /// "Save this capture?" window. <see cref="Result"/> completes with <c>true</c> (save) or
 /// <c>false</c> (discard — also when the window is closed).
 /// </summary>
-public sealed partial class PreviewViewModel : ViewModelBase
+public sealed partial class PreviewViewModel(
+    CapturedFrame frame,
+    string title,
+    IOcrService ocr,
+    IClipboardService clipboard,
+    IToastService toasts,
+    ILocalizationService localization) : ViewModelBase
 {
-    private readonly IOcrService _ocr;
-    private readonly IClipboardService _clipboard;
-    private readonly IToastService _toasts;
+    private readonly IOcrService _ocr = ocr;
+    private readonly IClipboardService _clipboard = clipboard;
+    private readonly IToastService _toasts = toasts;
     private readonly TaskCompletionSource<bool> _result = new(TaskCreationOptions.RunContinuationsAsynchronously);
 
-    public PreviewViewModel(
-        CapturedFrame frame,
-        string title,
-        IOcrService ocr,
-        IClipboardService clipboard,
-        IToastService toasts,
-        ILocalizationService localization)
-    {
-        Frame = frame;
-        Title = title;
-        _ocr = ocr;
-        _clipboard = clipboard;
-        _toasts = toasts;
-        Localization = localization;
-    }
+    public ILocalizationService Localization { get; } = localization;
 
-    public ILocalizationService Localization { get; }
+    public CapturedFrame Frame { get; } = frame;
 
-    public CapturedFrame Frame { get; }
-
-    public string Title { get; }
+    public string Title { get; } = title;
 
     public string Dimensions => $"{Frame.Width} × {Frame.Height}";
 
@@ -48,7 +38,7 @@ public sealed partial class PreviewViewModel : ViewModelBase
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(ExtractTextCommand))]
-    private bool _isRecognizing;
+    public partial bool IsRecognizing { get; set; }
 
     [RelayCommand]
     private void Save() => _result.TrySetResult(true);

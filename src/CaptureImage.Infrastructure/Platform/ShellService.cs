@@ -11,7 +11,7 @@ using Windows.Win32.UI.Shell;
 namespace CaptureImage.Infrastructure.Platform;
 
 /// <summary>Explorer, default-program and Recycle Bin integration.</summary>
-public sealed partial class ShellService : IShellService
+public sealed partial class ShellService(ILogger<ShellService> logger) : IShellService
 {
     private const uint FoDelete = 0x0003;
     private const ushort FofSilent = 0x0004;
@@ -22,12 +22,7 @@ public sealed partial class ShellService : IShellService
     private static readonly string ExplorerPath =
         Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Windows), "explorer.exe");
 
-    private readonly ILogger<ShellService> _logger;
-
-    public ShellService(ILogger<ShellService> logger)
-    {
-        _logger = logger;
-    }
+    private readonly ILogger<ShellService> _logger = logger;
 
     public bool Open(string path)
     {

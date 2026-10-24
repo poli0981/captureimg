@@ -13,13 +13,19 @@ namespace CaptureImage.Infrastructure.Steam;
 /// <c>appmanifest_*.acf</c> files of every library. Scanned once, lazily, thread-safe; a scan that
 /// fails is retried a minute later rather than failing every lookup from then on.
 /// </summary>
-public sealed partial class SteamLibraryScanner : ISteamDetector
+/// <param name="steamRoot">Returns Steam's install folder, or <c>null</c> when Steam isn't installed.</param>
+/// <param name="logger">Logger.</param>
+/// <param name="timeProvider">Clock for the retry delay (tests); the system clock by default.</param>
+public sealed partial class SteamLibraryScanner(
+    Func<string?> steamRoot,
+    ILogger<SteamLibraryScanner> logger,
+    TimeProvider? timeProvider = null) : ISteamDetector
 {
     private static readonly TimeSpan RetryDelay = TimeSpan.FromMinutes(1);
 
-    private readonly Func<string?> _steamRoot;
-    private readonly ILogger<SteamLibraryScanner> _logger;
-    private readonly TimeProvider _time;
+    private readonly Func<string?> _steamRoot = steamRoot;
+    private readonly ILogger<SteamLibraryScanner> _logger = logger;
+    private readonly TimeProvider _time = timeProvider ?? TimeProvider.System;
     private readonly Lock _gate = new();
     private IReadOnlyList<SteamLibrary>? _libraries;
     private DateTimeOffset _retryAt = DateTimeOffset.MinValue;
@@ -28,16 +34,6 @@ public sealed partial class SteamLibraryScanner : ISteamDetector
     public SteamLibraryScanner(ILogger<SteamLibraryScanner> logger)
         : this(FindSteamRootInRegistry, logger)
     {
-    }
-
-    /// <param name="steamRoot">Returns Steam's install folder, or <c>null</c> when Steam isn't installed.</param>
-    /// <param name="logger">Logger.</param>
-    /// <param name="timeProvider">Clock for the retry delay (tests); the system clock by default.</param>
-    public SteamLibraryScanner(Func<string?> steamRoot, ILogger<SteamLibraryScanner> logger, TimeProvider? timeProvider = null)
-    {
-        _steamRoot = steamRoot;
-        _logger = logger;
-        _time = timeProvider ?? TimeProvider.System;
     }
 
     /// <summary>The scanned libraries, or none while a failed scan waits for its retry.</summary>

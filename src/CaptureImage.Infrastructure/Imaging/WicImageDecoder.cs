@@ -10,15 +10,10 @@ using Vortice.WIC;
 namespace CaptureImage.Infrastructure.Imaging;
 
 /// <summary>Decodes PNG / JPEG / WebP / TIFF / JPEG XR files into BGRA frames with WIC.</summary>
-public sealed partial class WicImageDecoder : IImageDecoder, IDisposable
+public sealed partial class WicImageDecoder(ILogger<WicImageDecoder> logger) : IImageDecoder, IDisposable
 {
-    private readonly ILogger<WicImageDecoder> _logger;
+    private readonly ILogger<WicImageDecoder> _logger = logger;
     private readonly Lazy<IWICImagingFactory> _factory = new(() => new IWICImagingFactory(), LazyThreadSafetyMode.ExecutionAndPublication);
-
-    public WicImageDecoder(ILogger<WicImageDecoder> logger)
-    {
-        _logger = logger;
-    }
 
     public Task<CapturedFrame?> LoadAsync(string path, int maxDimension = 0, CancellationToken cancellationToken = default) =>
         Task.Run(() => Load(path, maxDimension), cancellationToken);

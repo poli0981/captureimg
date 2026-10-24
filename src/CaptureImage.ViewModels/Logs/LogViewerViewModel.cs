@@ -82,17 +82,17 @@ public sealed partial class LogViewerViewModel : ViewModelBase, IDisposable
     public IReadOnlyList<LocalizedOption<LogEntryLevel>> LevelOptions { get; }
 
     [ObservableProperty]
-    private LogEntryLevel _minimumLevel = LogEntryLevel.Verbose;
+    public partial LogEntryLevel MinimumLevel { get; set; } = LogEntryLevel.Verbose;
 
     [ObservableProperty]
-    private string _searchText = string.Empty;
+    public partial string SearchText { get; set; } = string.Empty;
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(CopySelectedCommand))]
-    private LogEntry? _selectedEntry;
+    public partial LogEntry? SelectedEntry { get; set; }
 
     [ObservableProperty]
-    private bool _isPaused;
+    public partial bool IsPaused { get; set; }
 
     /// <summary>Set by the view; the list only tracks the buffer while the page is visible.</summary>
     public bool IsPageActive

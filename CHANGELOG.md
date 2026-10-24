@@ -13,6 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   of automatic analysis, with test coverage and test results imported; its quality gate is a
   required check.
 - The dependency audit also checks the .NET tools used to build and release the app.
+- Code follows the analyzer suggestions SonarQube Cloud reports: primary constructors, view-model
+  state as partial properties, source-generated P/Invoke.
 
 ## [2.0.1] - 2026-10-19
 
