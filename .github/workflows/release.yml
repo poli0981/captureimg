@@ -43,8 +43,10 @@ env:
   PACK_TITLE: CaptureImage
   MAIN_EXE: CaptureImage.App.exe
   CHANNEL: win
-  # Installed by Setup / the updater when missing (the app is framework-dependent).
-  RUNTIME: net10-x64-desktop
+  # The app is framework-dependent: Setup and the updater install the latest .NET 10 Desktop
+  # Runtime when none is installed or only one older than this patch. Raise it with .NET
+  # security releases (10.0.14: October 25, 2026 out-of-band update).
+  RUNTIME: net10.0.14-x64-desktop
 
 jobs:
   build:
@@ -182,8 +184,8 @@ jobs:
             "## CaptureImage v$env:VERSION", '',
             (Get-Content release-notes.md -Raw), '',
             '### Downloads',
-            '- **`CaptureImage-win-Setup.exe`** — installer (per-user). Windows 11 22H2 or later; installs the .NET 10 Desktop Runtime if it is missing.',
-            '- **`CaptureImage-win-Portable.zip`** — extract-and-run build without installer (needs the [.NET 10 Desktop Runtime](https://dotnet.microsoft.com/download/dotnet/10.0)).',
+            '- **`CaptureImage-win-Setup.exe`** — installer (per-user). Windows 11 22H2 or later; installs the .NET 10 Desktop Runtime (10.0.14 or later) if it is missing or older.',
+            '- **`CaptureImage-win-Portable.zip`** — extract-and-run build without installer (needs the [.NET 10 Desktop Runtime](https://dotnet.microsoft.com/download/dotnet/10.0) 10.0.14 or later).',
             '- **`*-full.nupkg`**, **`releases.win.json`** — update feed used by the in-app updater.',
             '- **`SHA256SUMS.txt`**, **`*-sbom.cdx.json`** — checksums and CycloneDX SBOM.', '',
             '### Verify the download',

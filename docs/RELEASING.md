@@ -36,7 +36,7 @@ The workflow then:
 3. publishes the app (framework-dependent, `win-x64`) and runs it with `--smoke-test`;
 4. packs it with Velopack (`vpk`, same version as the library): package id `CaptureImage`, main
    executable `CaptureImage.App.exe`, channel `win`, shortcuts on the desktop and Start menu, the
-   .NET 10 Desktop Runtime as a prerequisite, full packages only;
+   .NET 10 Desktop Runtime (minimum patch from `RUNTIME`) as a prerequisite, full packages only;
 5. adds a CycloneDX SBOM and `SHA256SUMS.txt`, attests build provenance, and creates or updates a
    **draft** release with all assets.
 

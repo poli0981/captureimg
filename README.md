@@ -70,8 +70,8 @@ small tray app that does nothing until you press a hotkey.
 ## Requirements
 
 - **Windows 11 22H2 or later** (build 22621+), 64-bit.
-- **.NET 10 Desktop Runtime** — installed automatically by Setup and by the in-app updater when it
-  is missing. The portable zip needs it installed
+- **.NET 10 Desktop Runtime 10.0.14 or later** — installed automatically by Setup and by the in-app
+  updater when it is missing or older. The portable zip needs it installed
   ([download](https://dotnet.microsoft.com/download/dotnet/10.0)).
 
 ## Install
