@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Security
+
+- CaptureImage now needs the .NET 10 Desktop Runtime **10.0.14 or later**, the .NET security update
+  of October 25, 2026. Setup and the in-app updater install it when your PC has an older one, so
+  this update may first ask to install it (Windows asks for administrator approval). With the
+  portable zip, install it yourself from <https://dotnet.microsoft.com/download/dotnet/10.0>.
+- The Microsoft.Extensions libraries that ship with the app are updated to 10.0.14 from the same
+  security update.
+
 ### Project
 
 - SonarQube Cloud analyses every pull request and `main` in CI (SonarScanner for .NET 12) instead
@@ -15,6 +24,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The dependency audit also checks the .NET tools used to build and release the app.
 - Code follows the analyzer suggestions SonarQube Cloud reports: primary constructors, view-model
   state as partial properties, source-generated P/Invoke.
+- Builds use the .NET 10.0.403 SDK and CsWin32 0.3.367; the markdownlint, CodeQL SARIF upload and
+  zizmor actions are updated.
+- A test keeps the third-party notices in step with the packages the app ships, and the `vpk`
+  release tool in step with the Velopack library.
 
 ## [2.0.1] - 2026-10-19
 

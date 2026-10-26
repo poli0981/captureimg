@@ -18,7 +18,7 @@ dotnet test --solution CaptureImage.sln -c Release --no-build   # Microsoft.Test
 dotnet run --project src/CaptureImage.App -c Release -- --data-dir .\.devdata --instance-id dev
 ```
 
-- SDK pinned in `global.json` (10.0.401, `latestFeature`). Tests are xunit.v3 on
+- SDK pinned in `global.json` (10.0.403, `latestFeature`). Tests are xunit.v3 on
   Microsoft.Testing.Platform: use `--report-xunit-trx` and
   `--coverage --coverage-output-format cobertura` (there is no `--logger trx`).
 - **Never run a dev build against real user data.** Always pass `--data-dir <temp>` and
@@ -118,7 +118,8 @@ tests/*                          Core, Infrastructure, ViewModels tests + App.Ui
 2. After the PR merges: `git tag -s vX.Y.Z -m "…"` and push the tag.
 3. `release.yml` builds, tests, publishes framework-dependent, smoke-tests, packs with Velopack
    (`packId CaptureImage`, `mainExe CaptureImage.App.exe`, channel `win`, `--framework
-   net10-x64-desktop` — never change the first three), attaches SBOM, SHA256SUMS and provenance
+   net10.0.14-x64-desktop` — never change the first three; the framework names the minimum runtime
+   patch, raised with .NET security releases), attaches SBOM, SHA256SUMS and provenance
    attestations, and creates a **draft** release.
 4. Verify the draft (see `docs/RELEASING.md`), then `gh release edit vX.Y.Z --draft=false`.
 

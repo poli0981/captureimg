@@ -19,27 +19,27 @@
       },
       "Microsoft.Extensions.DependencyInjection.Abstractions": {
         "type": "Direct",
-        "requested": "[10.0.13, )",
-        "resolved": "10.0.13",
-        "contentHash": "G2GrGWNAPZBsii2F6AU8n+JT2tC1/I0Ml/e9ZyNCgPjf3hZqronP7o0X91aAynCmVeae8KkSIUNXXeXCNRmdVQ=="
+        "requested": "[10.0.14, )",
+        "resolved": "10.0.14",
+        "contentHash": "QtpQzuSZVyTPCuHW058yCs9Nj0394uUkNyFHS813nOmK9UgUdBdaprJ5PPsBgsQIpxADTsTkbaMMonykem6qdw=="
       },
       "Microsoft.Extensions.Logging.Abstractions": {
         "type": "Direct",
-        "requested": "[10.0.13, )",
-        "resolved": "10.0.13",
-        "contentHash": "aSZEhEig4fvNiw2zs8Z6NyDlniKtq6YjcF3DyHuqTEHcZ2VKA/6itMPZ+dW+yWABWExlDcQwwdbqX1Rcb7W8WQ==",
+        "requested": "[10.0.14, )",
+        "resolved": "10.0.14",
+        "contentHash": "SwcbEBtkECq3D2oywvHkm46fyrX9Dd2JPWphDnHUc2+cUWR1Mdo41atAjh/9iZjgQxuvbKfZKXqostT/LZfefA==",
         "dependencies": {
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "10.0.13"
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "10.0.14"
         }
       },
       "Microsoft.Windows.CsWin32": {
         "type": "Direct",
-        "requested": "[0.3.363, )",
-        "resolved": "0.3.363",
-        "contentHash": "Fd1p6Fr5H6A+c4FO033CojR8jKsvYZm6vigrKvB/auI40KXb0Vb+ge0F6baGBZptc1yIKVxmh/Iu8/KvLVQ94A==",
+        "requested": "[0.3.367, )",
+        "resolved": "0.3.367",
+        "contentHash": "C4JVE3wmVjCvzpdBzC+HK/boVU6g4ZRDEZ7uDmMJHCkgjFHhiMb9vhe2+wffzWzyNNObpCsIAW4G1t+1CAIEWw==",
         "dependencies": {
           "Microsoft.Windows.SDK.Win32Docs": "0.1.42-alpha",
-          "Microsoft.Windows.SDK.Win32Metadata": "71.0.30-preview",
+          "Microsoft.Windows.SDK.Win32Metadata": "71.0.37-preview",
           "Microsoft.Windows.WDK.Win32Metadata": "0.13.25-experimental"
         }
       },
@@ -72,8 +72,8 @@
       },
       "Microsoft.Windows.SDK.Win32Metadata": {
         "type": "Transitive",
-        "resolved": "71.0.30-preview",
-        "contentHash": "h/FD+SrIlxgr+HD/WrJnLvpTdyWFAX7F0FCMPRxPJFTt4Qz70wGXKEBZvvIDX7om4hP0Tb7O0s1ND3aUvigL8g=="
+        "resolved": "71.0.37-preview",
+        "contentHash": "0y4uKnOzE+k2zUCxcTOJTOuRuOFiW01A+j1GpjyN11saEjkESLW9XrWkGYG/zdlAAb8oRk4oLdokkcx0X2z7yA=="
       },
       "Microsoft.Windows.WDK.Win32Metadata": {
         "type": "Transitive",
@@ -91,7 +91,7 @@
       "captureimage.core": {
         "type": "Project",
         "dependencies": {
-          "Microsoft.Extensions.Logging.Abstractions": "[10.0.13, )"
+          "Microsoft.Extensions.Logging.Abstractions": "[10.0.14, )"
         }
       },
       "captureimage.viewmodels": {
@@ -99,8 +99,8 @@
         "dependencies": {
           "CaptureImage.Core": "[2.0.1, )",
           "CommunityToolkit.Mvvm": "[8.4.2, )",
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.13, )",
-          "Microsoft.Extensions.Logging.Abstractions": "[10.0.13, )"
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.14, )",
+          "Microsoft.Extensions.Logging.Abstractions": "[10.0.14, )"
         }
       }
     },

@@ -1,6 +1,6 @@
 # Privacy Policy
 
-_Last updated: 2026-10-19 (CaptureImage 2.0)_
+_Last updated: 2026-10-26 (CaptureImage 2.0.2)_
 
 This policy describes what **CaptureImage** reads on your computer, what it stores, and what it
 sends over the network. It applies to the official builds published on the project's
@@ -79,7 +79,8 @@ No identifiers, cookies or system information are sent beyond what any HTTPS req
 IP address and a standard user agent). GitHub may log these requests under
 [its own privacy statement](https://docs.github.com/site-policy/privacy-policies/github-general-privacy-statement).
 
-When the .NET Desktop Runtime is missing, Setup and the updater download it from Microsoft.
+When the .NET Desktop Runtime is missing or older than the app needs, Setup and the updater
+download it from Microsoft.
 Links in the About page open in your browser; the app itself does not fetch them.
 
 CaptureImage does **not** send crash reports, contact analytics or license servers, upload
