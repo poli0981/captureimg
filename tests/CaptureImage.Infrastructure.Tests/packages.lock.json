@@ -232,7 +232,7 @@
       "captureimage.infrastructure": {
         "type": "Project",
         "dependencies": {
-          "CaptureImage.Core": "[2.0.1, )",
+          "CaptureImage.Core": "[2.0.2, )",
           "Microsoft.Extensions.Logging.Abstractions": "[10.0.14, )",
           "Serilog": "[4.4.0, )",
           "SkiaSharp": "[4.153.1, )",
