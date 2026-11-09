@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- The SkiaSharp image library that encodes PNG, JPEG and WebP captures is updated to 4.154.0 (Skia
+  milestone 154 with Chrome's upstream bug fixes).
+
+### Project
+
+- The InspectCode and ReportGenerator build tools, the setup-dotnet action and zizmor (1.32.0) are
+  updated. Dependabot can't update SkiaSharp, so `dependabot.yml` notes that it is bumped by hand.
+
 ## [2.0.2] - 2026-10-26
 
 ### Security
