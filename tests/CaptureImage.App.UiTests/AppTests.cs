@@ -16,6 +16,7 @@ namespace CaptureImage.App.UiTests;
 public sealed class AppTests
 {
     private static readonly string[] Pages = ["Dashboard", "Library", "Profiles", "Settings", "Logs", "Update", "About"];
+    private static readonly string[] CaptureModes = ["Window", "Region", "Monitor"];
 
     [Fact]
     public void Starts_WithTheMainWindowAndDashboard()
@@ -87,14 +88,12 @@ public sealed class AppTests
         var record = AppSession.Find(window, "Hotkey_Window_Record").AsButton();
 
         record.Name.Should().Contain("Ctrl+Shift+F12", "the name carries the current binding");
-        string[] names =
-        [
-            .. new[] { "Window", "Region", "Monitor" }.SelectMany(mode => new[]
-            {
-                AppSession.Find(window, $"Hotkey_{mode}_Clear").Name,
-                AppSession.Find(window, $"Hotkey_{mode}_Reset").Name,
-            }),
-        ];
+        var names = new List<string>();
+        foreach (var mode in CaptureModes)
+        {
+            names.Add(AppSession.Find(window, $"Hotkey_{mode}_Clear").Name);
+            names.Add(AppSession.Find(window, $"Hotkey_{mode}_Reset").Name);
+        }
         names.Should().OnlyHaveUniqueItems();
 
         record.Click();
