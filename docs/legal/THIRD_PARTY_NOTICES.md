@@ -1,6 +1,6 @@
 # Third-party Notices
 
-_Last updated: 2026-10-26 (CaptureImage 2.0.2)_
+_Last updated: 2026-11-09 (CaptureImage 2.0.3)_
 
 CaptureImage is built on open-source components. This file lists every package that ships with
 the app, with its license and upstream project; the short form is the repository root

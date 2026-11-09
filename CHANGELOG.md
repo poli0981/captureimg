@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.0.3] - 2026-11-09
+
 ### Changed
 
 - The SkiaSharp image library that encodes PNG, JPEG and WebP captures is updated to 4.154.0 (Skia
