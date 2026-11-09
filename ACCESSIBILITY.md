@@ -49,9 +49,9 @@ It is a statement of goals and of the current state, not a claim of conformance.
   - the update status
   - hotkey problems
   - an invalid Steam App ID
-- **Notifications are sent to screen readers** as UI Automation notification events. This happens
-  both from the main window and from the pop-up shown when the main window isn't in front. Errors
-  are marked as important.
+- **Notifications are read** through UI Automation notification events. This works both when the
+  main window is in front and when CaptureImage is in the tray, because the pop-up sends the event
+  too. Errors are marked as important.
 - **List items are read with the details shown next to them:**
   - Windows: title, process and the Steam, profile, minimized and locked badges.
   - Captures: file name, game, date and HDR.
@@ -131,10 +131,10 @@ overlay closes.
 | Date | Version | Environment | Method | Result |
 |---|---|---|---|---|
 | 2026-11-09 | 2.0.3 | Windows 11 (Insider build 29648) | Maintainer: keyboard only with the mouse disconnected, and Narrator, across the main window's pages | No blocking problems found |
+| 2026-11-09 | 2.1.0 | Windows 11 (Insider build 29648), real hardware | Maintainer: keyboard only and Narrator. Covered the new keyboard region selection with its size announcements; notifications with the window in front and in the tray; and the tray icon (Win+B, then Enter and Shift+F10) | All passed |
 
-Version 2.1.0 adds keyboard region selection, the announcements and the other changes listed in
-the [changelog](CHANGELOG.md). Unit tests and the UI tests cover them, but they have not yet been
-checked by hand with Narrator.
+The changes in 2.1.0 are listed in the [changelog](CHANGELOG.md). Besides the manual test above,
+unit tests and the UI tests cover them.
 
 On every pull request, CI checks that:
 
