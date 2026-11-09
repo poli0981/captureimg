@@ -6,8 +6,11 @@ using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Threading;
 using CaptureImage.Core.Abstractions;
+using CaptureImage.Core.Capture;
 using CaptureImage.Core.Models;
+using CaptureImage.UI.Accessibility;
 using CaptureImage.UI.Imaging;
+using CaptureImage.UI.Interop;
 using CaptureImage.UI.Windows;
 using CaptureImage.ViewModels.Preview;
 using CaptureImage.ViewModels.Services;
@@ -22,6 +25,8 @@ namespace CaptureImage.UI.Services;
 /// <summary>
 /// Notifications: a snackbar inside the main window while it has focus, otherwise a small
 /// non-activating pop-up above the taskbar (never steals focus from a game, never captured).
+/// Both are read to screen readers and stay up at least as long as Windows' "Dismiss
+/// notifications after" setting asks.
 /// </summary>
 public sealed class ToastService(Dispatcher dispatcher, ShellContext shell, ISnackbarService snackbar) : IToastService
 {
@@ -30,10 +35,14 @@ public sealed class ToastService(Dispatcher dispatcher, ShellContext shell, ISna
 
     public void Show(ToastKind kind, string title, string message, TimeSpan? duration = null) => dispatcher.BeginInvoke(() =>
     {
-        var timeout = duration ?? TimeSpan.FromSeconds(kind == ToastKind.Error ? 6 : 3.5);
+        var timeout = duration ?? DefaultTimeout(kind);
         if (shell.IsMainWindowActive && snackbar.GetSnackbarPresenter() is not null)
         {
             snackbar.Show(title, message, Appearance(kind), new SymbolIcon(Symbol(kind)), timeout);
+            if (shell.MainWindow is { } window)
+            {
+                Announcer.Announce(window, Announcer.Compose(title, message), important: kind == ToastKind.Error);
+            }
             return;
         }
 
@@ -52,6 +61,12 @@ public sealed class ToastService(Dispatcher dispatcher, ShellContext shell, ISna
         popup.Show();
         Arrange();
     });
+
+    private static TimeSpan DefaultTimeout(ToastKind kind)
+    {
+        var own = TimeSpan.FromSeconds(kind == ToastKind.Error ? 6 : 3.5);
+        return WindowInterop.NotificationDuration() is { } windows && windows > own ? windows : own;
+    }
 
     /// <summary>Stack the pop-ups upwards from the bottom-right corner of the primary work area.</summary>
     private void Arrange()
@@ -204,12 +219,13 @@ public sealed class PreviewPresenter(
         }).Task.Unwrap();
 }
 
-/// <summary>Region selection: one frozen full-screen overlay per monitor.</summary>
+/// <summary>
+/// Region selection: one frozen full-screen overlay per monitor, driven by the mouse or by the
+/// keys of <see cref="RegionKeyboard"/>. The keys are registered as temporary hotkeys while the
+/// overlays are up, so they work even when a full-screen game keeps the keyboard focus.
+/// </summary>
 public sealed class RegionSelector(Dispatcher dispatcher, IHotkeyService hotkeys) : IRegionSelector
 {
-    private static readonly HotkeyBinding EscapeKey = new(HotkeyModifiers.None, 0x1B);
-    private static readonly HotkeyBinding EnterKey = new(HotkeyModifiers.None, 0x0D);
-
     public Task<RegionSelection?> SelectAsync(IReadOnlyList<MonitorSnapshot> snapshots, CancellationToken cancellationToken = default) =>
         dispatcher.InvokeAsync(() => RunAsync(snapshots, cancellationToken)).Task.Unwrap();
 
@@ -222,37 +238,63 @@ public sealed class RegionSelector(Dispatcher dispatcher, IHotkeyService hotkeys
 
         var result = new TaskCompletionSource<RegionSelection?>(TaskCreationOptions.RunContinuationsAsynchronously);
         var overlays = snapshots.Select(s => new RegionOverlayWindow(s)).ToList();
-        foreach (var overlay in overlays)
+        var bounds = overlays.Select(o => o.MonitorBounds).ToList();
+        var active = 0;
+
+        void OnKey(HotkeyBinding key)
         {
+            var overlay = overlays[active];
+            switch (RegionKeyboard.Map(key, overlay.KeyboardStep))
+            {
+                case { Action: RegionKeyAction.Cancel }:
+                    result.TrySetResult(null);
+                    break;
+                case { Action: RegionKeyAction.Confirm }:
+                    result.TrySetResult(overlay.CurrentOrFullSelection());
+                    break;
+                case { Action: RegionKeyAction.NextMonitor or RegionKeyAction.PreviousMonitor } command:
+                    var next = RegionKeyboard.Cycle(bounds, active, backwards: command.Action == RegionKeyAction.PreviousMonitor);
+                    if (next != active)
+                    {
+                        active = next;
+                        overlays[active].Activate();
+                        overlays[active].ApplyKeyboard(command with { Action = RegionKeyAction.Move });
+                    }
+                    break;
+                case { } command:
+                    overlay.ApplyKeyboard(command);
+                    break;
+            }
+        }
+
+        for (var i = 0; i < overlays.Count; i++)
+        {
+            var index = i;
+            var overlay = overlays[i];
             overlay.Completed += (_, selection) => result.TrySetResult(selection);
             overlay.Cancelled += (_, _) => result.TrySetResult(null);
-            overlay.SelectionStarted += (sender, _) =>
+            overlay.KeyPressed += (_, key) => OnKey(key);
+            overlay.SelectionStarted += (_, _) =>
             {
-                foreach (var other in overlays.Where(o => !ReferenceEquals(o, sender)))
+                active = index;
+                foreach (var other in overlays.Where(o => !ReferenceEquals(o, overlay)))
                 {
                     other.ClearSelection();
                 }
             };
         }
 
-        // Esc / Enter work even when a full-screen game keeps the keyboard focus.
-        using var keys = hotkeys.RegisterTemporary([EscapeKey, EnterKey], key => dispatcher.BeginInvoke(() =>
-        {
-            if (key == EscapeKey)
-            {
-                result.TrySetResult(null);
-                return;
-            }
-            var active = overlays.FirstOrDefault(o => o.HasSelection) ?? overlays.FirstOrDefault(o => o.IsMouseOver) ?? overlays[0];
-            result.TrySetResult(active.CurrentOrFullSelection());
-        }));
+        void OnHotkey(HotkeyBinding key) => dispatcher.BeginInvoke(() => OnKey(key));
+        using var singleKeys = hotkeys.RegisterTemporary(RegionKeyboard.SingleKeys, OnHotkey);
+        using var repeatingKeys = hotkeys.RegisterTemporary(RegionKeyboard.RepeatingKeys, OnHotkey, repeat: true);
         await using var cancellation = cancellationToken.Register(() => result.TrySetResult(null));
 
         foreach (var overlay in overlays)
         {
             overlay.Show();
         }
-        (overlays.FirstOrDefault(o => o.IsMouseOver) ?? overlays[0]).Activate();
+        active = Math.Max(0, overlays.FindIndex(o => o.IsMouseOver));
+        overlays[active].Activate();
 
         try
         {

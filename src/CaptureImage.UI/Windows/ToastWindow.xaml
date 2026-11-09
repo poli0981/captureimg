@@ -47,7 +47,6 @@
                 <TextBlock
                     x:Name="MessageText"
                     Margin="0,2,0,0"
-                    AutomationProperties.LiveSetting="Polite"
                     Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                     TextWrapping="Wrap" />
             </StackPanel>

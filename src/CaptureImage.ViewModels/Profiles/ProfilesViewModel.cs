@@ -15,10 +15,12 @@ using CommunityToolkit.Mvvm.Messaging;
 namespace CaptureImage.ViewModels.Profiles;
 
 /// <summary>One game profile in the list.</summary>
-public sealed partial class ProfileItemViewModel(GameProfile profile) : ViewModelBase
+public sealed partial class ProfileItemViewModel(GameProfile profile, ILocalizationService localization) : ViewModelBase
 {
+    private readonly ILocalizationService _localization = localization;
+
     [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(Name), nameof(MatchSummary), nameof(Enabled), nameof(AutoArm))]
+    [NotifyPropertyChangedFor(nameof(Name), nameof(MatchSummary), nameof(Enabled), nameof(AutoArm), nameof(AutomationName))]
     public partial GameProfile Profile { get; set; } = profile;
 
     public string Id => Profile.Id;
@@ -38,7 +40,21 @@ public sealed partial class ProfileItemViewModel(GameProfile profile) : ViewMode
 
     public bool AutoArm => Profile.AutoArm;
 
+    /// <summary>Accessible name: the name, what it matches and the badges shown next to it.</summary>
+    public string AutomationName => string.Join(
+        ", ",
+        new[]
+        {
+            Name,
+            MatchSummary,
+            AutoArm ? _localization["Profiles_AutoArmBadge"] : null,
+            Enabled ? null : _localization["Profiles_DisabledBadge"],
+        }.Where(part => !string.IsNullOrEmpty(part)));
+
     public override string ToString() => Name;
+
+    /// <summary>Refresh localized text after a language switch.</summary>
+    public void RefreshText() => OnPropertyChanged(nameof(AutomationName));
 }
 
 /// <summary>
@@ -283,7 +299,7 @@ public sealed partial class ProfilesViewModel : ViewModelBase, IRecipient<Create
 
     private void AddProfile(GameProfile profile)
     {
-        var item = new ProfileItemViewModel(profile);
+        var item = new ProfileItemViewModel(profile, Localization);
         Profiles.Add(item);
         Persist();
         SelectedProfile = item;
@@ -316,7 +332,7 @@ public sealed partial class ProfilesViewModel : ViewModelBase, IRecipient<Create
         Profiles.Clear();
         foreach (var profile in profiles)
         {
-            Profiles.Add(new ProfileItemViewModel(profile));
+            Profiles.Add(new ProfileItemViewModel(profile, Localization));
         }
         SelectedProfile = Profiles.FirstOrDefault(p => p.Id == selectedId) ?? Profiles.FirstOrDefault();
         OnPropertyChanged(nameof(HasProfiles));
@@ -336,6 +352,10 @@ public sealed partial class ProfilesViewModel : ViewModelBase, IRecipient<Create
         {
             LocalizedOption.RefreshAll(FormatOptions);
             LocalizedOption.RefreshAll(HdrOptions);
+            foreach (var item in Profiles)
+            {
+                item.RefreshText();
+            }
         }
     }
 

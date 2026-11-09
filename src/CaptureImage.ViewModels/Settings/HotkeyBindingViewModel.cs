@@ -22,6 +22,7 @@ public sealed partial class HotkeyBindingViewModel(
     IHotkeyService hotkeys,
     ILocalizationService localization) : ViewModelBase
 {
+    private const uint VkTab = 0x09;
     private readonly ISettingsStore _settings = settings;
     private readonly CaptureCoordinator _coordinator = coordinator;
     private readonly IHotkeyService _hotkeys = hotkeys;
@@ -36,11 +37,11 @@ public sealed partial class HotkeyBindingViewModel(
     public string Description => Localization[$"Settings_Hotkey{Mode}Description"];
 
     [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(DisplayText), nameof(IsDefault))]
+    [NotifyPropertyChangedFor(nameof(DisplayText), nameof(AccessibleName), nameof(IsDefault))]
     public partial HotkeyBinding Binding { get; set; } = settings.Current.Hotkeys.Get(mode);
 
     [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(DisplayText))]
+    [NotifyPropertyChangedFor(nameof(DisplayText), nameof(AccessibleName))]
     public partial bool IsRecording { get; set; }
 
     [ObservableProperty]
@@ -52,6 +53,15 @@ public sealed partial class HotkeyBindingViewModel(
     public string DisplayText => IsRecording
         ? Localization["Hotkey_PressKeys"]
         : Binding.IsUnbound ? Localization["Hotkey_None"] : Binding.ToString();
+
+    /// <summary>What a screen reader announces for the record button: the mode and its binding.</summary>
+    public string AccessibleName => Localization.Format("Hotkey_AccessibleName", ModeName, DisplayText);
+
+    /// <summary>Accessible name of this row's Clear button (one per mode, so they differ).</summary>
+    public string ClearName => Localization.Format("Settings_HotkeyClearNamed", ModeName);
+
+    /// <summary>Accessible name of this row's Reset button.</summary>
+    public string ResetName => Localization.Format("Settings_HotkeyResetNamed", ModeName);
 
     public bool IsDefault => Binding == HotkeyBinding.DefaultFor(Mode);
 
@@ -119,6 +129,22 @@ public sealed partial class HotkeyBindingViewModel(
         return true;
     }
 
+    /// <summary>
+    /// Tab and Shift+Tab move the keyboard focus instead of being recorded: recording is
+    /// cancelled and <c>true</c> tells the recorder to let the key through. Without this a
+    /// keyboard user would be stuck on the button, and Shift+Tab would become the hotkey.
+    /// </summary>
+    public bool ReleaseFocus(HotkeyModifiers modifiers, uint virtualKey)
+    {
+        if (!IsRecording || virtualKey != VkTab || (modifiers & ~HotkeyModifiers.Shift) != 0)
+        {
+            return false;
+        }
+
+        StopRecording();
+        return true;
+    }
+
     /// <summary>Show the registration result while armed (conflicts appear after arming).</summary>
     public void ApplyRegistration(HotkeyRegistration? registration)
     {
@@ -159,6 +185,9 @@ public sealed partial class HotkeyBindingViewModel(
         OnPropertyChanged(nameof(ModeName));
         OnPropertyChanged(nameof(Description));
         OnPropertyChanged(nameof(DisplayText));
+        OnPropertyChanged(nameof(AccessibleName));
+        OnPropertyChanged(nameof(ClearName));
+        OnPropertyChanged(nameof(ResetName));
     }
 
     private bool TryCommit(HotkeyBinding candidate)

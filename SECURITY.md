@@ -53,7 +53,9 @@ targets rather than guarantees.
   described in the [README](README.md#unsigned-installer--smartscreen).
 - An anti-cheat system flags the app — CaptureImage doesn't inject into or read from games, but we
   can't control how anti-cheat software classifies capture tools.
-- Translation, documentation or accessibility issues, and feature requests.
+- Translation or documentation issues, and feature requests.
+- Accessibility barriers — please use the accessibility issue template described in
+  [`ACCESSIBILITY.md`](ACCESSIBILITY.md#reporting-accessibility-issues).
 
 ## After you report
 

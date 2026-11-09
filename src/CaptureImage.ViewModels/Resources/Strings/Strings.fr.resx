@@ -109,6 +109,7 @@
   <data name="Error_TargetMinimized" xml:space="preserve"><value>La fenêtre est réduite. Restaurez-la et réessayez.</value></data>
   <data name="Error_Unknown" xml:space="preserve"><value>Une erreur s'est produite. Le journal contient les détails.</value></data>
 
+  <data name="Hotkey_AccessibleName" xml:space="preserve"><value>{0}, {1}</value></data>
   <data name="Hotkey_None" xml:space="preserve"><value>Non défini</value></data>
   <data name="Hotkey_PressKeys" xml:space="preserve"><value>Appuyez sur les touches…</value></data>
   <data name="Hotkey_ProblemMessage" xml:space="preserve"><value>Une autre application utilise l'un des raccourcis de capture, ou la combinaison n'est pas valide. Choisissez-en une autre dans les paramètres.</value></data>
@@ -211,7 +212,8 @@
   <data name="Profiles_UseGlobal" xml:space="preserve"><value>Utiliser le paramètre global</value></data>
   <data name="Profiles_UseGlobalButton" xml:space="preserve"><value>Utiliser le global</value></data>
 
-  <data name="Region_DragHint" xml:space="preserve"><value>Faites glisser pour sélectionner une zone · Cliquez pour tout l'écran · Échap pour annuler</value></data>
+  <data name="Region_DragHint" xml:space="preserve"><value>Faites glisser ou utilisez les flèches pour sélectionner une zone · Maj+flèches pour redimensionner · Ctrl : pas de 1 pixel · Tab : écran suivant · Entrée pour capturer · Cliquez, ou appuyez sur Entrée sans sélection, pour tout l'écran · Échap pour annuler</value></data>
+  <data name="Region_Title" xml:space="preserve"><value>Sélectionnez une zone</value></data>
 
   <data name="Settings_AdvancedSection" xml:space="preserve"><value>Avancé</value></data>
   <data name="Settings_AppearanceSection" xml:space="preserve"><value>Apparence</value></data>
@@ -248,11 +250,13 @@
   <data name="Settings_HdrOff" xml:space="preserve"><value>Désactivé (toujours SDR)</value></data>
   <data name="Settings_HdrSection" xml:space="preserve"><value>HDR</value></data>
   <data name="Settings_HotkeyClear" xml:space="preserve"><value>Effacer</value></data>
+  <data name="Settings_HotkeyClearNamed" xml:space="preserve"><value>Effacer le raccourci « {0} »</value></data>
   <data name="Settings_HotkeyHint" xml:space="preserve"><value>Cliquez sur un raccourci, puis appuyez sur la nouvelle combinaison. Échap annule, Retour arrière efface. Les raccourcis ne fonctionnent que lorsqu'ils sont armés.</value></data>
   <data name="Settings_HotkeyMonitorDescription" xml:space="preserve"><value>Capture l'écran sous le pointeur de la souris.</value></data>
   <data name="Settings_HotkeyRecord" xml:space="preserve"><value>Enregistrer…</value></data>
   <data name="Settings_HotkeyRegionDescription" xml:space="preserve"><value>Fige tous les écrans et vous laisse faire glisser une zone.</value></data>
   <data name="Settings_HotkeyReset" xml:space="preserve"><value>Réinitialiser</value></data>
+  <data name="Settings_HotkeyResetNamed" xml:space="preserve"><value>Rétablir le raccourci « {0} » par défaut</value></data>
   <data name="Settings_HotkeysSection" xml:space="preserve"><value>Raccourcis</value></data>
   <data name="Settings_HotkeyWindowDescription" xml:space="preserve"><value>Capture la fenêtre verrouillée ou celle au premier plan.</value></data>
   <data name="Settings_Import" xml:space="preserve"><value>Importer…</value></data>

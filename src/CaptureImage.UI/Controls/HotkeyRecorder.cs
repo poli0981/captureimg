@@ -10,8 +10,9 @@ namespace CaptureImage.UI.Controls;
 
 /// <summary>
 /// Attached to the hotkey button in Settings: while its <see cref="HotkeyBindingViewModel"/>
-/// is recording, key presses are turned into a binding. Esc cancels, Backspace/Delete clear;
-/// Alt combinations arrive as <see cref="Key.System"/> and Print Screen only as a key-up.
+/// is recording, key presses are turned into a binding. Esc cancels, Backspace/Delete clear,
+/// Tab / Shift+Tab cancel and move the focus on; Alt combinations arrive as
+/// <see cref="Key.System"/> and Print Screen only as a key-up.
 /// </summary>
 public static class HotkeyRecorder
 {
@@ -63,9 +64,14 @@ public static class HotkeyRecorder
             return;
         }
 
+        var key = KeyInput.ActualKey(e);
+        var modifiers = KeyInput.CurrentModifiers();
+        if (vm.ReleaseFocus(modifiers, (uint)KeyInterop.VirtualKeyFromKey(key)))
+        {
+            return; // not handled: Tab moves the focus as usual
+        }
+
         e.Handled = true;
-        var key = ActualKey(e);
-        var modifiers = CurrentModifiers();
         if (modifiers == HotkeyModifiers.None && key == Key.Escape)
         {
             vm.CancelRecordingCommand.Execute(null);
@@ -83,44 +89,13 @@ public static class HotkeyRecorder
     private static void OnPreviewKeyUp(object sender, KeyEventArgs e)
     {
         // Windows never delivers a key-down for Print Screen.
-        if (Recording(sender) is { } vm && ActualKey(e) == Key.Snapshot)
+        if (Recording(sender) is { } vm && KeyInput.ActualKey(e) == Key.Snapshot)
         {
             e.Handled = true;
-            vm.Submit(CurrentModifiers(), VkSnapshot);
+            vm.Submit(KeyInput.CurrentModifiers(), VkSnapshot);
         }
     }
 
     private static void OnLostKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e) =>
         Recording(sender)?.CancelRecordingCommand.Execute(null);
-
-    private static Key ActualKey(KeyEventArgs e) => e.Key switch
-    {
-        Key.System => e.SystemKey,
-        Key.ImeProcessed => e.ImeProcessedKey,
-        Key.DeadCharProcessed => e.DeadCharProcessedKey,
-        _ => e.Key,
-    };
-
-    private static HotkeyModifiers CurrentModifiers()
-    {
-        var keyboard = Keyboard.Modifiers;
-        var modifiers = HotkeyModifiers.None;
-        if (keyboard.HasFlag(ModifierKeys.Control))
-        {
-            modifiers |= HotkeyModifiers.Control;
-        }
-        if (keyboard.HasFlag(ModifierKeys.Alt))
-        {
-            modifiers |= HotkeyModifiers.Alt;
-        }
-        if (keyboard.HasFlag(ModifierKeys.Shift))
-        {
-            modifiers |= HotkeyModifiers.Shift;
-        }
-        if (keyboard.HasFlag(ModifierKeys.Windows))
-        {
-            modifiers |= HotkeyModifiers.Win;
-        }
-        return modifiers;
-    }
 }

@@ -2,6 +2,7 @@
     x:Class="CaptureImage.UI.Pages.SettingsPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a11y="clr-namespace:CaptureImage.UI.Accessibility"
     xmlns:controls="clr-namespace:CaptureImage.UI.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:loc="clr-namespace:CaptureImage.UI.Localization"
@@ -35,9 +36,10 @@
                                     <TextBlock Style="{StaticResource CaptionText}" Text="{Binding Description}" />
                                     <TextBlock
                                         Margin="0,2,0,0"
+                                        a11y:LiveRegion.IsEnabled="True"
                                         AutomationProperties.LiveSetting="Assertive"
                                         Style="{StaticResource ErrorText}"
-                                        Text="{Binding Message}"
+                                        Text="{Binding Message, NotifyOnTargetUpdated=True}"
                                         Visibility="{Binding HasError, Converter={StaticResource BoolToVisibility}}" />
                                 </StackPanel>
                             </ui:CardControl.Header>
@@ -47,7 +49,7 @@
                                     controls:HotkeyRecorder.IsEnabled="True"
                                     Appearance="{Binding IsRecording, Converter={StaticResource RecordingAppearance}}"
                                     AutomationProperties.AutomationId="{Binding Mode, StringFormat=Hotkey_{0}_Record}"
-                                    AutomationProperties.Name="{Binding ModeName}"
+                                    AutomationProperties.Name="{Binding AccessibleName}"
                                     Command="{Binding StartRecordingCommand}"
                                     Content="{Binding DisplayText}"
                                     ToolTip="{loc:Tr Settings_HotkeyRecord}">
@@ -55,14 +57,14 @@
                                 <ui:Button
                                     Margin="8,0,0,0"
                                     AutomationProperties.AutomationId="{Binding Mode, StringFormat=Hotkey_{0}_Clear}"
-                                    AutomationProperties.Name="{loc:Tr Settings_HotkeyClear}"
+                                    AutomationProperties.Name="{Binding ClearName}"
                                     Command="{Binding ClearCommand}"
                                     Icon="{ui:SymbolIcon Dismiss24}"
                                     ToolTip="{loc:Tr Settings_HotkeyClear}" />
                                 <ui:Button
                                     Margin="8,0,0,0"
                                     AutomationProperties.AutomationId="{Binding Mode, StringFormat=Hotkey_{0}_Reset}"
-                                    AutomationProperties.Name="{loc:Tr Settings_HotkeyReset}"
+                                    AutomationProperties.Name="{Binding ResetName}"
                                     Command="{Binding ResetToDefaultCommand}"
                                     Icon="{ui:SymbolIcon ArrowReset24}"
                                     ToolTip="{loc:Tr Settings_HotkeyReset}" />
@@ -263,11 +265,13 @@
                 <StackPanel Orientation="Horizontal">
                     <ui:Button
                         AutomationProperties.AutomationId="Settings_BrowseOutput"
+                        AutomationProperties.HelpText="{loc:Tr Settings_OutputFolder}"
                         Command="{Binding BrowseOutputFolderCommand}"
                         Content="{loc:Tr Common_Browse}" />
                     <ui:Button
                         Margin="8,0,0,0"
                         AutomationProperties.AutomationId="Settings_OpenOutput"
+                        AutomationProperties.HelpText="{loc:Tr Settings_OutputFolder}"
                         AutomationProperties.Name="{loc:Tr Settings_OpenFolder}"
                         Command="{Binding OpenOutputFolderCommand}"
                         Icon="{ui:SymbolIcon FolderOpen24}"
@@ -275,6 +279,7 @@
                     <ui:Button
                         Margin="8,0,0,0"
                         AutomationProperties.AutomationId="Settings_ResetOutput"
+                        AutomationProperties.HelpText="{loc:Tr Settings_OutputFolder}"
                         AutomationProperties.Name="{loc:Tr Settings_ResetToDefault}"
                         Command="{Binding ResetOutputFolderCommand}"
                         Icon="{ui:SymbolIcon ArrowReset24}"
@@ -307,6 +312,7 @@
                     <ui:Button
                         Margin="8,0,0,0"
                         AutomationProperties.AutomationId="Settings_ResetTemplate"
+                        AutomationProperties.HelpText="{loc:Tr Settings_FileNameTemplate}"
                         AutomationProperties.Name="{loc:Tr Settings_ResetToDefault}"
                         Command="{Binding ResetFileNameTemplateCommand}"
                         Icon="{ui:SymbolIcon ArrowReset24}"
@@ -458,6 +464,7 @@
                 </ui:CardControl.Header>
                 <ui:Button
                     AutomationProperties.AutomationId="Settings_OpenDataFolder"
+                    AutomationProperties.HelpText="{loc:Tr Settings_DataFolder}"
                     Command="{Binding OpenDataFolderCommand}"
                     Content="{loc:Tr Settings_OpenFolder}" />
             </ui:CardControl>

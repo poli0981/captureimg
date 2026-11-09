@@ -19,7 +19,8 @@ namespace CaptureImage.Infrastructure.Win32;
 /// <remarks>
 /// A registered combination is consumed by Windows and never reaches other applications,
 /// which is why bindings are only registered while the coordinator is armed.
-/// <c>MOD_NOREPEAT</c> is always added so holding a key fires once.
+/// <c>MOD_NOREPEAT</c> is added so holding a capture key fires once; temporary keys can opt
+/// into auto-repeat (the region overlay's arrow keys).
 /// </remarks>
 public sealed partial class Win32HotkeyService : IHotkeyService
 {
@@ -34,6 +35,7 @@ public sealed partial class Win32HotkeyService : IHotkeyService
     private readonly Dictionary<int, (HotkeyBinding Binding, Action<HotkeyBinding> Callback)> _temporaryIds = [];
     private IReadOnlyList<HotkeyRegistration> _registrations = [];
     private int _nextTemporaryId = FirstTemporaryId;
+    private Task _temporaryQueue = Task.CompletedTask;
     private bool _disposed;
 
     public Win32HotkeyService(ILogger<Win32HotkeyService> logger)
@@ -134,7 +136,7 @@ public sealed partial class Win32HotkeyService : IHotkeyService
         });
     }
 
-    public IDisposable RegisterTemporary(IReadOnlyList<HotkeyBinding> bindings, Action<HotkeyBinding> callback)
+    public IDisposable RegisterTemporary(IReadOnlyList<HotkeyBinding> bindings, Action<HotkeyBinding> callback, bool repeat = false)
     {
         ArgumentNullException.ThrowIfNull(bindings);
         ArgumentNullException.ThrowIfNull(callback);
@@ -146,7 +148,7 @@ public sealed partial class Win32HotkeyService : IHotkeyService
             foreach (var binding in bindings)
             {
                 var id = _nextTemporaryId++;
-                if (PInvoke.RegisterHotKey(HWND.Null, id, ToModifiers(binding.Modifiers), binding.VirtualKey))
+                if (PInvoke.RegisterHotKey(HWND.Null, id, ToModifiers(binding.Modifiers, noRepeat: !repeat), binding.VirtualKey))
                 {
                     lock (_gate)
                     {
@@ -263,12 +265,20 @@ public sealed partial class Win32HotkeyService : IHotkeyService
         }
         else if (temporary is { } t)
         {
-            ThreadPool.QueueUserWorkItem(_ => t.Callback(t.Binding));
+            // One press at a time, in order: a held arrow key and the Enter after it must not overtake each other.
+            lock (_gate)
+            {
+                _temporaryQueue = _temporaryQueue.ContinueWith(
+                    _ => t.Callback(t.Binding),
+                    CancellationToken.None,
+                    TaskContinuationOptions.None,
+                    TaskScheduler.Default);
+            }
         }
     }
 
-    private static HOT_KEY_MODIFIERS ToModifiers(HotkeyModifiers modifiers) =>
-        (HOT_KEY_MODIFIERS)(uint)modifiers | HOT_KEY_MODIFIERS.MOD_NOREPEAT;
+    private static HOT_KEY_MODIFIERS ToModifiers(HotkeyModifiers modifiers, bool noRepeat = true) =>
+        noRepeat ? (HOT_KEY_MODIFIERS)(uint)modifiers | HOT_KEY_MODIFIERS.MOD_NOREPEAT : (HOT_KEY_MODIFIERS)(uint)modifiers;
 
     [LoggerMessage(Level = LogLevel.Warning, Message = "{Mode} hotkey {Binding} not registered: {Status}.")]
     private partial void LogNotRegistered(CaptureMode mode, string binding, HotkeyRegistrationStatus status);

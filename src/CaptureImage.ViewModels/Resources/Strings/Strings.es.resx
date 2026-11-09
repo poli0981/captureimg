@@ -109,6 +109,7 @@
   <data name="Error_TargetMinimized" xml:space="preserve"><value>La ventana está minimizada. Restáurala e inténtalo de nuevo.</value></data>
   <data name="Error_Unknown" xml:space="preserve"><value>Algo salió mal. Consulta el registro para ver los detalles.</value></data>
 
+  <data name="Hotkey_AccessibleName" xml:space="preserve"><value>{0}, {1}</value></data>
   <data name="Hotkey_None" xml:space="preserve"><value>Sin asignar</value></data>
   <data name="Hotkey_PressKeys" xml:space="preserve"><value>Pulsa las teclas…</value></data>
   <data name="Hotkey_ProblemMessage" xml:space="preserve"><value>Otra aplicación usa una de las teclas rápidas de captura, o la combinación no es válida. Elige otra en Configuración.</value></data>
@@ -211,7 +212,8 @@
   <data name="Profiles_UseGlobal" xml:space="preserve"><value>Usar la configuración general</value></data>
   <data name="Profiles_UseGlobalButton" xml:space="preserve"><value>Usar general</value></data>
 
-  <data name="Region_DragHint" xml:space="preserve"><value>Arrastra para seleccionar un área · Haz clic para toda la pantalla · Esc para cancelar</value></data>
+  <data name="Region_DragHint" xml:space="preserve"><value>Arrastra o usa las teclas de flecha para seleccionar un área · Shift+flechas cambian el tamaño · Ctrl: pasos de 1 píxel · Tab: siguiente pantalla · Enter para capturar · Haz clic, o pulsa Enter sin selección, para toda la pantalla · Esc para cancelar</value></data>
+  <data name="Region_Title" xml:space="preserve"><value>Selecciona un área</value></data>
 
   <data name="Settings_AdvancedSection" xml:space="preserve"><value>Avanzado</value></data>
   <data name="Settings_AppearanceSection" xml:space="preserve"><value>Apariencia</value></data>
@@ -248,11 +250,13 @@
   <data name="Settings_HdrOff" xml:space="preserve"><value>Desactivado (siempre SDR)</value></data>
   <data name="Settings_HdrSection" xml:space="preserve"><value>HDR</value></data>
   <data name="Settings_HotkeyClear" xml:space="preserve"><value>Borrar</value></data>
+  <data name="Settings_HotkeyClearNamed" xml:space="preserve"><value>Borrar la tecla rápida de {0}</value></data>
   <data name="Settings_HotkeyHint" xml:space="preserve"><value>Haz clic en una tecla rápida y pulsa la nueva combinación. Esc cancela y Retroceso la borra. Las teclas rápidas solo funcionan mientras están activadas.</value></data>
   <data name="Settings_HotkeyMonitorDescription" xml:space="preserve"><value>Captura la pantalla donde está el puntero del ratón.</value></data>
   <data name="Settings_HotkeyRecord" xml:space="preserve"><value>Grabar…</value></data>
   <data name="Settings_HotkeyRegionDescription" xml:space="preserve"><value>Congela todas las pantallas y te deja arrastrar un área.</value></data>
   <data name="Settings_HotkeyReset" xml:space="preserve"><value>Restablecer</value></data>
+  <data name="Settings_HotkeyResetNamed" xml:space="preserve"><value>Restablecer la tecla rápida de {0} al valor predeterminado</value></data>
   <data name="Settings_HotkeysSection" xml:space="preserve"><value>Teclas rápidas</value></data>
   <data name="Settings_HotkeyWindowDescription" xml:space="preserve"><value>Captura la ventana fijada o la que está en primer plano.</value></data>
   <data name="Settings_Import" xml:space="preserve"><value>Importar…</value></data>

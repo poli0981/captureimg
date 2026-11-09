@@ -3,11 +3,11 @@
 
 using System.Windows;
 using System.Windows.Automation;
-using System.Windows.Automation.Peers;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
 using CaptureImage.Core.Models;
+using CaptureImage.UI.Accessibility;
 using CaptureImage.UI.Interop;
 using CaptureImage.UI.Localization;
 using Wpf.Ui.Controls;
@@ -16,7 +16,8 @@ namespace CaptureImage.UI.Windows;
 
 /// <summary>
 /// A notification pop-up for when the main window isn't in front: never activated (a click
-/// doesn't steal focus from a game) and excluded from screen capture.
+/// doesn't steal focus from a game) and excluded from screen capture. Screen readers get the
+/// text as a UI Automation notification when it appears.
 /// </summary>
 public partial class ToastWindow : Window
 {
@@ -40,7 +41,8 @@ public partial class ToastWindow : Window
         {
             KindIcon.Foreground = accent;
         }
-        AutomationProperties.SetName(this, string.IsNullOrEmpty(message) ? title : $"{title}. {message}");
+        var announcement = Announcer.Compose(title, message);
+        AutomationProperties.SetName(this, announcement);
 
         _timer = new DispatcherTimer { Interval = timeout };
         _timer.Tick += (_, _) => Close();
@@ -52,7 +54,7 @@ public partial class ToastWindow : Window
         Loaded += (_, _) =>
         {
             _timer.Start();
-            UIElementAutomationPeer.FromElement(MessageText)?.RaiseAutomationEvent(AutomationEvents.LiveRegionChanged);
+            Announcer.Announce(this, announcement, important: kind == ToastKind.Error);
         };
         Closed += (_, _) => _timer.Stop();
     }

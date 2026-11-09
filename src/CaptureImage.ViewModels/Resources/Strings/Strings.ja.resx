@@ -109,6 +109,7 @@
   <data name="Error_TargetMinimized" xml:space="preserve"><value>ウィンドウが最小化されています。元に戻してからもう一度お試しください。</value></data>
   <data name="Error_Unknown" xml:space="preserve"><value>問題が発生しました。詳細はログを確認してください。</value></data>
 
+  <data name="Hotkey_AccessibleName" xml:space="preserve"><value>{0}、{1}</value></data>
   <data name="Hotkey_None" xml:space="preserve"><value>未設定</value></data>
   <data name="Hotkey_PressKeys" xml:space="preserve"><value>キーを押してください…</value></data>
   <data name="Hotkey_ProblemMessage" xml:space="preserve"><value>別のアプリがキャプチャ用ホットキーを使用しているか、組み合わせが無効です。設定で別の組み合わせを選んでください。</value></data>
@@ -211,7 +212,8 @@
   <data name="Profiles_UseGlobal" xml:space="preserve"><value>全体の設定を使用</value></data>
   <data name="Profiles_UseGlobalButton" xml:space="preserve"><value>全体設定に戻す</value></data>
 
-  <data name="Region_DragHint" xml:space="preserve"><value>ドラッグで範囲を選択 · クリックで画面全体 · Esc でキャンセル</value></data>
+  <data name="Region_DragHint" xml:space="preserve"><value>ドラッグまたは矢印キーで範囲を選択 · Shift+矢印でサイズ変更 · Ctrl で 1 ピクセルずつ · Tab で次の画面 · Enter でキャプチャ · クリック、または未選択で Enter を押すと画面全体 · Esc でキャンセル</value></data>
+  <data name="Region_Title" xml:space="preserve"><value>範囲を選択</value></data>
 
   <data name="Settings_AdvancedSection" xml:space="preserve"><value>詳細設定</value></data>
   <data name="Settings_AppearanceSection" xml:space="preserve"><value>外観</value></data>
@@ -248,11 +250,13 @@
   <data name="Settings_HdrOff" xml:space="preserve"><value>オフ（常に SDR）</value></data>
   <data name="Settings_HdrSection" xml:space="preserve"><value>HDR</value></data>
   <data name="Settings_HotkeyClear" xml:space="preserve"><value>解除</value></data>
+  <data name="Settings_HotkeyClearNamed" xml:space="preserve"><value>{0} のホットキーを解除</value></data>
   <data name="Settings_HotkeyHint" xml:space="preserve"><value>ホットキーをクリックして、新しい組み合わせを押します。Esc でキャンセル、Backspace で解除します。ホットキーは起動中のみ機能します。</value></data>
   <data name="Settings_HotkeyMonitorDescription" xml:space="preserve"><value>マウスポインターがある画面をキャプチャします。</value></data>
   <data name="Settings_HotkeyRecord" xml:space="preserve"><value>録音…</value></data>
   <data name="Settings_HotkeyRegionDescription" xml:space="preserve"><value>すべての画面を静止させ、範囲をドラッグして選択できます。</value></data>
   <data name="Settings_HotkeyReset" xml:space="preserve"><value>リセット</value></data>
+  <data name="Settings_HotkeyResetNamed" xml:space="preserve"><value>{0} のホットキーを既定に戻す</value></data>
   <data name="Settings_HotkeysSection" xml:space="preserve"><value>ホットキー</value></data>
   <data name="Settings_HotkeyWindowDescription" xml:space="preserve"><value>固定したウィンドウ、または前面のウィンドウをキャプチャします。</value></data>
   <data name="Settings_Import" xml:space="preserve"><value>インポート…</value></data>

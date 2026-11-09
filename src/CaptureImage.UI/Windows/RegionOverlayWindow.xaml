@@ -3,7 +3,10 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:loc="clr-namespace:CaptureImage.UI.Localization"
+    Title="{loc:Tr Region_Title}"
     AutomationProperties.AutomationId="RegionOverlay"
+    AutomationProperties.HelpText="{loc:Tr Region_DragHint}"
+    AutomationProperties.Name="{loc:Tr Region_Title}"
     Background="Black"
     Cursor="Cross"
     FlowDirection="LeftToRight"
@@ -37,13 +40,15 @@
                 Visibility="Collapsed">
                 <TextBlock
                     x:Name="SizeText"
+                    AutomationProperties.LiveSetting="Polite"
                     FontSize="12"
                     Foreground="White" />
             </Border>
         </Canvas>
         <Border
             x:Name="Hint"
-            Margin="0,32,0,0"
+            MaxWidth="900"
+            Margin="16,32,16,0"
             Padding="16,8"
             HorizontalAlignment="Center"
             VerticalAlignment="Top"
@@ -51,9 +56,12 @@
             CornerRadius="6"
             IsHitTestVisible="False">
             <TextBlock
+                x:Name="HintText"
                 FontSize="14"
                 Foreground="White"
-                Text="{loc:Tr Region_DragHint}" />
+                Text="{loc:Tr Region_DragHint}"
+                TextAlignment="Center"
+                TextWrapping="Wrap" />
         </Border>
     </Grid>
 </Window>

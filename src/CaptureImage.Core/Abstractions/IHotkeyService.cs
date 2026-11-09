@@ -49,8 +49,13 @@ public interface IHotkeyService : IDisposable
     bool IsTakenByAnotherApp(HotkeyBinding binding);
 
     /// <summary>
-    /// Register extra keys for a short time (Esc / Enter while the region overlay is up, so
-    /// they work even if the overlay never gets keyboard focus). Dispose to release them.
+    /// Register extra keys for a short time (the region overlay's keys, so they work even if
+    /// the overlay never gets keyboard focus). Keys another program holds are skipped. The
+    /// callback runs off the hotkey thread, one press at a time and in the order the keys were
+    /// pressed. Dispose to release the keys.
     /// </summary>
-    IDisposable RegisterTemporary(IReadOnlyList<HotkeyBinding> bindings, Action<HotkeyBinding> callback);
+    /// <param name="bindings">The keys to hold.</param>
+    /// <param name="callback">Called with the binding of each press.</param>
+    /// <param name="repeat">Whether holding a key down repeats it (arrow keys) instead of firing once.</param>
+    IDisposable RegisterTemporary(IReadOnlyList<HotkeyBinding> bindings, Action<HotkeyBinding> callback, bool repeat = false);
 }

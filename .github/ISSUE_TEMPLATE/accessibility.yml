@@ -1,0 +1,129 @@
+name: Accessibility barrier
+description: Something is hard or impossible to use with a keyboard, a screen reader, magnification, a contrast theme or other assistive technology.
+title: "[a11y] "
+labels: ["accessibility", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for reporting this. Accessibility barriers are handled before cosmetic issues;
+        see [ACCESSIBILITY.md](https://github.com/poli0981/captureimg/blob/main/ACCESSIBILITY.md)
+        for what is supported today and the known limitations.
+
+        You don't need to tell us about a disability or any other personal information. If you'd
+        rather not use GitHub, email `contact@poli0981.dev` instead.
+
+  - type: textarea
+    id: summary
+    attributes:
+      label: What were you trying to do?
+      description: The task, in a sentence or two.
+      placeholder: "Change the region hotkey in Settings using only the keyboard."
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: What happened?
+      description: What you heard, saw or couldn't do.
+      placeholder: "Narrator reads the button as 'Region' but doesn't say which keys are set."
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: What did you expect?
+    validations:
+      required: true
+
+  - type: textarea
+    id: repro
+    attributes:
+      label: Steps to reproduce
+      description: Starting from opening CaptureImage. Keys you pressed are especially helpful.
+      placeholder: |
+        1. Open Settings with Tab and Enter.
+        2. Tab to the Region hotkey.
+        3. …
+
+  - type: dropdown
+    id: technology
+    attributes:
+      label: Assistive technology or setting
+      multiple: true
+      options:
+        - Narrator
+        - NVDA
+        - JAWS
+        - Magnifier or another magnifier
+        - Voice access or speech recognition
+        - Keyboard only (no mouse)
+        - Contrast theme
+        - Large display scaling or text size
+        - Reduced motion (animation effects off)
+        - Other (please describe below)
+    validations:
+      required: true
+
+  - type: input
+    id: technology-version
+    attributes:
+      label: Assistive technology version
+      description: "For example `NVDA 2026.3`, or `built-in` for Narrator."
+
+  - type: input
+    id: version
+    attributes:
+      label: CaptureImage version
+      description: "Shown in the title bar and on the About page, e.g. `2.1.0 (abc1234)`."
+    validations:
+      required: true
+
+  - type: input
+    id: windows
+    attributes:
+      label: Windows version
+      description: "Run `winver`, e.g. `Windows 11 Pro 24H2 (26100.2454)`."
+    validations:
+      required: true
+
+  - type: input
+    id: language
+    attributes:
+      label: App language
+      description: "The language CaptureImage is shown in, e.g. English, Tiếng Việt, العربية."
+
+  - type: dropdown
+    id: impact
+    attributes:
+      label: How much does this affect you?
+      description: Your impression is enough; the maintainer assigns the final severity.
+      options:
+        - I can't complete the task at all
+        - I can complete it only with great difficulty or a workaround
+        - It is slower or confusing, but I can do it
+        - It is a small issue
+
+  - type: textarea
+    id: workaround
+    attributes:
+      label: Workaround
+      description: If you found a way around it, it may help others until it is fixed.
+
+  - type: textarea
+    id: attachments
+    attributes:
+      label: Screenshots, recordings or diagnostics (optional)
+      description: |
+        Only if you're comfortable sharing them. **Settings → Advanced → Export diagnostics**
+        creates a zip with your user paths removed.
+
+  - type: checkboxes
+    id: preflight
+    attributes:
+      label: Before submitting
+      options:
+        - label: I searched existing issues for a duplicate.
+          required: true

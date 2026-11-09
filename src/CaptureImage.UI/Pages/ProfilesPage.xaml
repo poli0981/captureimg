@@ -2,6 +2,7 @@
     x:Class="CaptureImage.UI.Pages.ProfilesPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a11y="clr-namespace:CaptureImage.UI.Accessibility"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:loc="clr-namespace:CaptureImage.UI.Localization"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -56,6 +57,11 @@
                         ItemsSource="{Binding Profiles}"
                         SelectedItem="{Binding SelectedProfile}"
                         SelectionMode="Single">
+                        <ui:ListView.ItemContainerStyle>
+                            <Style BasedOn="{StaticResource {x:Type ui:ListViewItem}}" TargetType="{x:Type ui:ListViewItem}">
+                                <Setter Property="AutomationProperties.Name" Value="{Binding AutomationName}" />
+                            </Style>
+                        </ui:ListView.ItemContainerStyle>
                         <ui:ListView.ItemTemplate>
                             <DataTemplate DataType="{x:Type vm:ProfileItemViewModel}">
                                 <StackPanel Margin="4,6">
@@ -139,6 +145,7 @@
                             <ui:Button
                                 Margin="8,0,0,0"
                                 AutomationProperties.AutomationId="Profiles_BrowseExecutable"
+                                AutomationProperties.HelpText="{loc:Tr Profiles_ExecutablePath}"
                                 Command="{Binding BrowseExecutableCommand}"
                                 Content="{loc:Tr Common_Browse}" />
                         </StackPanel>
@@ -162,6 +169,8 @@
                             <StackPanel>
                                 <TextBlock Text="{loc:Tr Profiles_SteamAppId}" />
                                 <TextBlock
+                                    a11y:LiveRegion.IsEnabled="True"
+                                    AutomationProperties.LiveSetting="Assertive"
                                     Style="{StaticResource ErrorText}"
                                     Text="{loc:Tr Profiles_SteamAppIdInvalid}"
                                     Visibility="{Binding SteamAppIdInvalid, Converter={StaticResource BoolToVisibility}}" />
@@ -202,6 +211,7 @@
                         <StackPanel Orientation="Horizontal">
                             <ui:Button
                                 AutomationProperties.AutomationId="Profiles_BrowseOutput"
+                                AutomationProperties.HelpText="{loc:Tr Profiles_OutputFolder}"
                                 Command="{Binding BrowseOutputFolderCommand}"
                                 Content="{loc:Tr Common_Browse}" />
                             <ui:Button

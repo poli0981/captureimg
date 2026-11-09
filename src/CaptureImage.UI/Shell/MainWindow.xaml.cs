@@ -14,13 +14,15 @@ using CaptureImage.ViewModels.Shell;
 using CommunityToolkit.Mvvm.Messaging;
 using Wpf.Ui;
 using Wpf.Ui.Abstractions;
+using Wpf.Ui.Animations;
 using Wpf.Ui.Controls;
 
 namespace CaptureImage.UI.Shell;
 
 /// <summary>
 /// The main window. Closing it hides to the tray (unless that option is off); its placement
-/// is remembered; only the visible page's view model does background refreshes.
+/// is remembered; only the visible page's view model does background refreshes. Page
+/// transitions follow Windows' "Animation effects" setting.
 /// </summary>
 public partial class MainWindow : FluentWindow, IRecipient<NavigateMessage>
 {
@@ -63,6 +65,9 @@ public partial class MainWindow : FluentWindow, IRecipient<NavigateMessage>
         snackbar.SetSnackbarPresenter(SnackbarPresenter);
         dialogs.SetDialogHost(DialogHost);
         messenger.Register(this);
+        ApplyMotionPreference();
+        SystemParameters.StaticPropertyChanged += OnSystemParametersChanged;
+        Closed += (_, _) => SystemParameters.StaticPropertyChanged -= OnSystemParametersChanged;
 
         Loaded += (_, _) => Navigation.Navigate(typeof(DashboardPage));
         IsVisibleChanged += (_, _) => UpdateActivity();
@@ -138,6 +143,18 @@ public partial class MainWindow : FluentWindow, IRecipient<NavigateMessage>
         _currentPage?.SetActive(false);
         _currentPage = next;
         UpdateActivity();
+    }
+
+    /// <summary>No sliding pages when the user turned animation effects off in Windows.</summary>
+    private void ApplyMotionPreference() =>
+        Navigation.Transition = SystemParameters.ClientAreaAnimation ? Transition.FadeInWithSlide : Transition.None;
+
+    private void OnSystemParametersChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(SystemParameters.ClientAreaAnimation))
+        {
+            Dispatcher.BeginInvoke(ApplyMotionPreference);
+        }
     }
 
     private void UpdateActivity()

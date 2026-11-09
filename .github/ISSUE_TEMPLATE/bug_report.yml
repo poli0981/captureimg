@@ -13,6 +13,9 @@ body:
         reproduce the problem, then use **Export diagnostics** and attach the zip below (user
         paths are removed automatically).
 
+        Something that is hard to use with a keyboard, a screen reader or another assistive
+        technology? Please use the **Accessibility barrier** template instead.
+
   - type: textarea
     id: summary
     attributes:

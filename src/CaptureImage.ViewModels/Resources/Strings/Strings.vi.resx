@@ -109,6 +109,7 @@
   <data name="Error_TargetMinimized" xml:space="preserve"><value>Cửa sổ đang thu nhỏ. Hãy mở lại cửa sổ rồi thử lại.</value></data>
   <data name="Error_Unknown" xml:space="preserve"><value>Đã xảy ra lỗi. Xem chi tiết trong nhật ký.</value></data>
 
+  <data name="Hotkey_AccessibleName" xml:space="preserve"><value>{0}, {1}</value></data>
   <data name="Hotkey_None" xml:space="preserve"><value>Chưa đặt</value></data>
   <data name="Hotkey_PressKeys" xml:space="preserve"><value>Nhấn phím…</value></data>
   <data name="Hotkey_ProblemMessage" xml:space="preserve"><value>Một ứng dụng khác đang dùng hotkey chụp, hoặc tổ hợp phím không hợp lệ. Hãy chọn tổ hợp khác trong Cài đặt.</value></data>
@@ -211,7 +212,8 @@
   <data name="Profiles_UseGlobal" xml:space="preserve"><value>Dùng cài đặt chung</value></data>
   <data name="Profiles_UseGlobalButton" xml:space="preserve"><value>Dùng chung</value></data>
 
-  <data name="Region_DragHint" xml:space="preserve"><value>Kéo để chọn vùng · Nhấp để chụp toàn màn hình · Esc để huỷ</value></data>
+  <data name="Region_DragHint" xml:space="preserve"><value>Kéo hoặc dùng phím mũi tên để chọn vùng · Shift+mũi tên để đổi kích thước · Ctrl: bước 1 điểm ảnh · Tab: màn hình kế tiếp · Enter để chụp · Nhấp, hoặc Enter khi chưa chọn, để chụp toàn màn hình · Esc để huỷ</value></data>
+  <data name="Region_Title" xml:space="preserve"><value>Chọn vùng</value></data>
 
   <data name="Settings_AdvancedSection" xml:space="preserve"><value>Nâng cao</value></data>
   <data name="Settings_AppearanceSection" xml:space="preserve"><value>Hiển thị</value></data>
@@ -248,11 +250,13 @@
   <data name="Settings_HdrOff" xml:space="preserve"><value>Tắt (luôn SDR)</value></data>
   <data name="Settings_HdrSection" xml:space="preserve"><value>HDR</value></data>
   <data name="Settings_HotkeyClear" xml:space="preserve"><value>Xoá</value></data>
+  <data name="Settings_HotkeyClearNamed" xml:space="preserve"><value>Xoá hotkey {0}</value></data>
   <data name="Settings_HotkeyHint" xml:space="preserve"><value>Nhấn vào một hotkey rồi nhấn tổ hợp phím mới. Esc để huỷ, Backspace để xoá. Hotkey chỉ hoạt động khi đang sẵn sàng.</value></data>
   <data name="Settings_HotkeyMonitorDescription" xml:space="preserve"><value>Chụp màn hình đang có con trỏ chuột.</value></data>
   <data name="Settings_HotkeyRecord" xml:space="preserve"><value>Ghi…</value></data>
   <data name="Settings_HotkeyRegionDescription" xml:space="preserve"><value>Đóng băng mọi màn hình để bạn kéo chọn một vùng.</value></data>
   <data name="Settings_HotkeyReset" xml:space="preserve"><value>Đặt lại</value></data>
+  <data name="Settings_HotkeyResetNamed" xml:space="preserve"><value>Đặt hotkey {0} về mặc định</value></data>
   <data name="Settings_HotkeysSection" xml:space="preserve"><value>Hotkey</value></data>
   <data name="Settings_HotkeyWindowDescription" xml:space="preserve"><value>Chụp cửa sổ đã khoá, hoặc cửa sổ đang ở phía trước.</value></data>
   <data name="Settings_Import" xml:space="preserve"><value>Nhập…</value></data>

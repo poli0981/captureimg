@@ -326,6 +326,70 @@ public sealed class Win32HotkeyServiceTests
     }
 
     [Fact]
+    public void RegisterTemporary_WithRepeat_HoldsTheKeysUntilDisposed()
+    {
+        var free = FreeBindings(2);
+        var service = CreateService();
+        try
+        {
+            using (service.RegisterTemporary(free, _ => { }, repeat: true))
+            {
+                free.Should().OnlyContain(binding => !FreeHotkeys.IsFree(binding));
+            }
+
+            free.Should().OnlyContain(binding => FreeHotkeys.IsFree(binding));
+        }
+        finally
+        {
+            service.Dispose();
+        }
+    }
+
+    [Fact]
+    public async Task RegisterTemporary_Callbacks_RunOneAtATimeInTheOrderOfThePresses()
+    {
+        var free = FreeBindings(2);
+        var service = CreateService();
+        try
+        {
+            const int presses = 12;
+            var received = new List<HotkeyBinding>();
+            var running = 0;
+            var overlapped = false;
+            var done = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+            using (service.RegisterTemporary(free, binding =>
+            {
+                overlapped |= Interlocked.Increment(ref running) > 1;
+                Thread.Sleep(received.Count == 0 ? 50 : 1); // the first press is slow; later ones must wait for it
+                lock (received)
+                {
+                    received.Add(binding);
+                    if (received.Count == presses)
+                    {
+                        done.TrySetResult();
+                    }
+                }
+                Interlocked.Decrement(ref running);
+            }, repeat: true))
+            {
+                for (var i = 0; i < presses; i++)
+                {
+                    SimulateKeyPress(service, FirstTemporaryHotkeyId + (i % 2));
+                }
+
+                await done.Task.WaitAsync(EventTimeout, Ct);
+            }
+
+            overlapped.Should().BeFalse();
+            received.Should().Equal(Enumerable.Range(0, presses).Select(i => free[i % 2]));
+        }
+        finally
+        {
+            service.Dispose();
+        }
+    }
+
+    [Fact]
     public void Dispose_ReleasesTemporaryKeys_AndMakesTheServiceInert()
     {
         var free = FreeBindings(2);

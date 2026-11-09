@@ -7,6 +7,59 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- **Region selection from the keyboard.**
+  - In the region overlay, the arrow keys move the selection. The first press selects a centred
+    area.
+  - Shift+arrows resize the selection. Holding Ctrl moves or resizes it one pixel at a time.
+  - Tab and Shift+Tab continue on the next or previous monitor, Enter captures and Esc cancels.
+  - The keys work even while a full-screen game keeps the keyboard focus. Holding an arrow key
+    repeats it. Mouse and keyboard can be combined, for example to drag an area and then
+    fine-tune it.
+- **Screen readers hear what changes.** Narrator and other UI Automation screen readers now
+  announce:
+  - capture notifications, sent as UI Automation notification events;
+  - the armed status;
+  - the update status;
+  - hotkey problems and an invalid Steam App ID.
+- **Tray icon from the keyboard.** After Win+B, Enter shows the CaptureImage window and Shift+F10
+  opens its menu.
+- [`ACCESSIBILITY.md`](https://github.com/poli0981/captureimg/blob/main/ACCESSIBILITY.md) describes what CaptureImage supports for keyboard, screen
+  reader, contrast and motion users. It lists every key, what has been tested, the known
+  limitations, and how to report a barrier.
+
+### Changed
+
+- Page transitions are turned off when Windows' **Animation effects** setting is off.
+- Notifications stay up at least as long as Windows' **Dismiss notifications after this amount of
+  time** setting.
+- In a Windows contrast theme, the region overlay draws its selection and labels in the theme's
+  colours. Its hint now lists the keyboard keys.
+- Screen readers read more detail:
+  - each hotkey button now includes its current combination;
+  - window, capture and profile list items include the badges shown next to them (Steam, profile,
+    minimized, locked, HDR, auto-arm, disabled);
+  - each hotkey row's Clear and Reset buttons, the About page's contact cards and repeated buttons
+    such as "Open folder" now say what they belong to;
+  - the disclaimer headings on the About page are headings.
+
+### Fixed
+
+- While recording a hotkey, Shift+Tab was saved as the new hotkey, and Tab left the keyboard focus
+  stuck on the button. Both keys now end recording without changing the hotkey and move the focus
+  on.
+- The announcement of a notification pop-up could be lost before a screen reader read it. Pop-ups
+  now send their text with the notification event itself.
+
+### Project
+
+- New **Accessibility barrier** issue template and `accessibility` label.
+- The pull request template has an accessibility checklist, and `CONTRIBUTING.md` points to the
+  rules for user-interface changes.
+- UI tests check the live-region announcement and the hotkey buttons' names, and that Tab leaves
+  the recorder.
+
 ## [2.0.3] - 2026-11-09
 
 ### Changed

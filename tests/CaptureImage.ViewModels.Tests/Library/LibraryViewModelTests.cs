@@ -157,6 +157,16 @@ public sealed class LibraryViewModelTests : IDisposable
         item.SizeText.Should().Contain("5").And.Contain("MB");
     }
 
+    [Fact]
+    public void Item_AutomationName_ListsFileGameDateAndHdr()
+    {
+        var hdr = new CaptureItemViewModel(Record(@"C:\Shots\elden.png", "Elden Ring", hdr: true), _library);
+        var plain = new CaptureItemViewModel(Record(@"C:\Shots\region.png", null), _library);
+
+        hdr.AutomationName.Should().Be($"elden.png, Elden Ring, {hdr.CapturedAtText}, HDR");
+        plain.AutomationName.Should().Be($"region.png, {plain.CapturedAtText}");
+    }
+
     private static CaptureRecord Record(string path, string? game, bool hdr = false) =>
         new(path, Now, 1920, 1080, ImageFormatExtensions.FromExtension(Path.GetExtension(path)) ?? ImageFormat.Png, 2048,
             CaptureMode.Window, game, hdr ? Path.ChangeExtension(path, ".jxr") : null);

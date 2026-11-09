@@ -45,6 +45,7 @@ body:
         - Preview / editing
         - Tray / hotkey
         - Localization
+        - Accessibility (keyboard, screen readers, contrast, motion)
         - Update / About / docs
         - Build / release / installer
         - Cloud upload (post-1.0)
