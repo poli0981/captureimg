@@ -25,8 +25,8 @@ within licenses compatible with **GPL-3.0-or-later**.
 |---|---|---|---|
 | SharpGen.Runtime | 2.4.2-beta | MIT | <https://github.com/SharpGenTools/SharpGenTools> |
 | SharpGen.Runtime.COM | 2.4.2-beta | MIT | <https://github.com/SharpGenTools/SharpGenTools> |
-| SkiaSharp | 4.153.1 | MIT | <https://github.com/mono/SkiaSharp> |
-| SkiaSharp.NativeAssets.Win32 | 4.153.1 | MIT | <https://github.com/mono/SkiaSharp> |
+| SkiaSharp | 4.154.0 | MIT | <https://github.com/mono/SkiaSharp> |
+| SkiaSharp.NativeAssets.Win32 | 4.154.0 | MIT | <https://github.com/mono/SkiaSharp> |
 | Vortice.Direct2D1 | 3.8.3 | MIT | <https://github.com/amerkoleci/Vortice.Windows> |
 | Vortice.Direct3D11 | 3.8.3 | MIT | <https://github.com/amerkoleci/Vortice.Windows> |
 | Vortice.DirectX | 3.8.3 | MIT | <https://github.com/amerkoleci/Vortice.Windows> |

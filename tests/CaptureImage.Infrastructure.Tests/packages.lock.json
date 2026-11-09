@@ -127,8 +127,8 @@
       },
       "SkiaSharp.NativeAssets.Win32": {
         "type": "Transitive",
-        "resolved": "4.153.1",
-        "contentHash": "Yqg6rChTVh0BUE8QQxtOA3uUBnihfgID4yex/AvDa0+os2bVcBjmI3Qj9tnOB+R1hd/Jry1Gwl8qw5JI9HZG8Q=="
+        "resolved": "4.154.0",
+        "contentHash": "GXgoY77GCXdPcveNAmy8o3gVit8sp6YtnI88h5camLPfihjulwJUajZXKhgVuZ8RhuwSTgfyt/00Dx8HRUSeAA=="
       },
       "System.Diagnostics.EventLog": {
         "type": "Transitive",
@@ -235,7 +235,7 @@
           "CaptureImage.Core": "[2.0.2, )",
           "Microsoft.Extensions.Logging.Abstractions": "[10.0.14, )",
           "Serilog": "[4.4.0, )",
-          "SkiaSharp": "[4.153.1, )",
+          "SkiaSharp": "[4.154.0, )",
           "Velopack": "[1.2.161, )",
           "Vortice.DXGI": "[3.8.3, )",
           "Vortice.Direct2D1": "[3.8.3, )",
@@ -265,11 +265,11 @@
       },
       "SkiaSharp": {
         "type": "CentralTransitive",
-        "requested": "[4.153.1, )",
-        "resolved": "4.153.1",
-        "contentHash": "TghYLOUaP3q6rTjQw7U9uQaaXh8lEs9rfA1U7/VtmyAptVDtj/SmjtcWzFWmcC/VMWxe3QgbV9uyvqDL7ySFtQ==",
+        "requested": "[4.154.0, )",
+        "resolved": "4.154.0",
+        "contentHash": "R3BuszJ3tUFmni37nZIRawXL0yx+XHyx7xi1716/0TybuEQFhnBx48Ig3rFpeVFQVytpGpJZZ+NLW9d9UPG7EA==",
         "dependencies": {
-          "SkiaSharp.NativeAssets.Win32": "4.153.1"
+          "SkiaSharp.NativeAssets.Win32": "4.154.0"
         }
       },
       "Velopack": {
@@ -329,8 +329,8 @@
       },
       "SkiaSharp.NativeAssets.Win32": {
         "type": "Transitive",
-        "resolved": "4.153.1",
-        "contentHash": "Yqg6rChTVh0BUE8QQxtOA3uUBnihfgID4yex/AvDa0+os2bVcBjmI3Qj9tnOB+R1hd/Jry1Gwl8qw5JI9HZG8Q=="
+        "resolved": "4.154.0",
+        "contentHash": "GXgoY77GCXdPcveNAmy8o3gVit8sp6YtnI88h5camLPfihjulwJUajZXKhgVuZ8RhuwSTgfyt/00Dx8HRUSeAA=="
       },
       "System.Diagnostics.EventLog": {
         "type": "Transitive",

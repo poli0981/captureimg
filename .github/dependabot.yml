@@ -36,6 +36,9 @@ updates:
         patterns:
           - "Serilog*"
       skiasharp:
+        # Dependabot reports every SkiaSharp 4.x as "not compatible" with
+        # net10.0-windows10.0.22621 (its net10.0-windows10.0.19041 asset group trips the
+        # updater's compatibility check), so SkiaSharp never gets a pull request: bump it by hand.
         patterns:
           - "SkiaSharp*"
       vortice:

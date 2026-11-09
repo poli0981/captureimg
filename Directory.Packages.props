@@ -37,7 +37,7 @@
   </ItemGroup>
 
   <ItemGroup Label="Imaging">
-    <PackageVersion Include="SkiaSharp" Version="4.153.1" />
+    <PackageVersion Include="SkiaSharp" Version="4.154.0" />
   </ItemGroup>
 
   <ItemGroup Label="Auto-update (keep in lockstep with the vpk tool in .config/dotnet-tools.json)">
