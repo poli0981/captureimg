@@ -109,6 +109,7 @@
   <data name="Error_TargetMinimized" xml:space="preserve"><value>Das Fenster ist minimiert. Wiederherstellen und erneut versuchen.</value></data>
   <data name="Error_Unknown" xml:space="preserve"><value>Etwas ist schiefgelaufen. Details stehen im Protokoll.</value></data>
 
+  <data name="Hotkey_AccessibleName" xml:space="preserve"><value>{0}, {1}</value></data>
   <data name="Hotkey_None" xml:space="preserve"><value>Nicht festgelegt</value></data>
   <data name="Hotkey_PressKeys" xml:space="preserve"><value>Tasten drücken…</value></data>
   <data name="Hotkey_ProblemMessage" xml:space="preserve"><value>Eine andere App verwendet eine der Aufnahme-Tastenkombinationen, oder die Kombination ist ungültig. In den Einstellungen eine andere wählen.</value></data>
@@ -211,7 +212,8 @@
   <data name="Profiles_UseGlobal" xml:space="preserve"><value>Globale Einstellung verwenden</value></data>
   <data name="Profiles_UseGlobalButton" xml:space="preserve"><value>Global verwenden</value></data>
 
-  <data name="Region_DragHint" xml:space="preserve"><value>Ziehen, um einen Bereich auszuwählen · Klicken für den ganzen Bildschirm · Esc zum Abbrechen</value></data>
+  <data name="Region_DragHint" xml:space="preserve"><value>Ziehen oder mit den Pfeiltasten einen Bereich auswählen · Shift+Pfeiltasten ändern die Größe · Ctrl: Schritte von 1 Pixel · Tab: nächster Bildschirm · Enter zum Aufnehmen · Klicken oder Enter ohne Auswahl für den ganzen Bildschirm · Esc zum Abbrechen</value></data>
+  <data name="Region_Title" xml:space="preserve"><value>Bereich auswählen</value></data>
 
   <data name="Settings_AdvancedSection" xml:space="preserve"><value>Erweitert</value></data>
   <data name="Settings_AppearanceSection" xml:space="preserve"><value>Darstellung</value></data>
@@ -248,11 +250,13 @@
   <data name="Settings_HdrOff" xml:space="preserve"><value>Aus (immer SDR)</value></data>
   <data name="Settings_HdrSection" xml:space="preserve"><value>HDR</value></data>
   <data name="Settings_HotkeyClear" xml:space="preserve"><value>Entfernen</value></data>
+  <data name="Settings_HotkeyClearNamed" xml:space="preserve"><value>Tastenkombination für {0} entfernen</value></data>
   <data name="Settings_HotkeyHint" xml:space="preserve"><value>Auf eine Tastenkombination klicken und die neue Kombination drücken. Esc bricht ab, Rücktaste löscht. Tastenkombinationen funktionieren nur im scharfgeschalteten Zustand.</value></data>
   <data name="Settings_HotkeyMonitorDescription" xml:space="preserve"><value>Nimmt den Bildschirm unter dem Mauszeiger auf.</value></data>
   <data name="Settings_HotkeyRecord" xml:space="preserve"><value>Aufzeichnen…</value></data>
   <data name="Settings_HotkeyRegionDescription" xml:space="preserve"><value>Friert alle Bildschirme ein und lässt Sie einen Bereich aufziehen.</value></data>
   <data name="Settings_HotkeyReset" xml:space="preserve"><value>Zurücksetzen</value></data>
+  <data name="Settings_HotkeyResetNamed" xml:space="preserve"><value>Tastenkombination für {0} auf Standard zurücksetzen</value></data>
   <data name="Settings_HotkeysSection" xml:space="preserve"><value>Tastenkombinationen</value></data>
   <data name="Settings_HotkeyWindowDescription" xml:space="preserve"><value>Nimmt das festgelegte Fenster oder das Fenster im Vordergrund auf.</value></data>
   <data name="Settings_Import" xml:space="preserve"><value>Importieren…</value></data>

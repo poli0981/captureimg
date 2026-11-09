@@ -109,6 +109,7 @@
   <data name="Error_TargetMinimized" xml:space="preserve"><value>النافذة مصغّرة. استعِدها ثم حاول مجددًا.</value></data>
   <data name="Error_Unknown" xml:space="preserve"><value>حدث خطأ ما. التفاصيل في السجل.</value></data>
 
+  <data name="Hotkey_AccessibleName" xml:space="preserve"><value>{0}، {1}</value></data>
   <data name="Hotkey_None" xml:space="preserve"><value>غير معيّن</value></data>
   <data name="Hotkey_PressKeys" xml:space="preserve"><value>اضغط المفاتيح…</value></data>
   <data name="Hotkey_ProblemMessage" xml:space="preserve"><value>يستخدم تطبيق آخر أحد مفاتيح اختصار الالتقاط، أو أن المجموعة غير صالحة. اختر مجموعة أخرى في الإعدادات.</value></data>
@@ -211,7 +212,8 @@
   <data name="Profiles_UseGlobal" xml:space="preserve"><value>استخدام الإعداد العام</value></data>
   <data name="Profiles_UseGlobalButton" xml:space="preserve"><value>استخدام العام</value></data>
 
-  <data name="Region_DragHint" xml:space="preserve"><value>اسحب لتحديد منطقة · انقر لالتقاط الشاشة كاملة · Esc للإلغاء</value></data>
+  <data name="Region_DragHint" xml:space="preserve"><value>اسحب أو استخدم مفاتيح الأسهم لتحديد منطقة · Shift+الأسهم لتغيير الحجم · Ctrl: خطوات بمقدار بكسل واحد · Tab: الشاشة التالية · Enter للالتقاط · انقر، أو اضغط Enter دون تحديد، لالتقاط الشاشة كاملة · Esc للإلغاء</value></data>
+  <data name="Region_Title" xml:space="preserve"><value>حدد منطقة</value></data>
 
   <data name="Settings_AdvancedSection" xml:space="preserve"><value>متقدم</value></data>
   <data name="Settings_AppearanceSection" xml:space="preserve"><value>المظهر</value></data>
@@ -248,11 +250,13 @@
   <data name="Settings_HdrOff" xml:space="preserve"><value>متوقف (SDR دائمًا)</value></data>
   <data name="Settings_HdrSection" xml:space="preserve"><value>HDR</value></data>
   <data name="Settings_HotkeyClear" xml:space="preserve"><value>مسح</value></data>
+  <data name="Settings_HotkeyClearNamed" xml:space="preserve"><value>مسح مفتاح اختصار {0}</value></data>
   <data name="Settings_HotkeyHint" xml:space="preserve"><value>انقر على مفتاح اختصار ثم اضغط المجموعة الجديدة. Esc للإلغاء، وBackspace للمسح. تعمل مفاتيح الاختصار فقط أثناء التفعيل.</value></data>
   <data name="Settings_HotkeyMonitorDescription" xml:space="preserve"><value>يلتقط الشاشة الموجودة أسفل مؤشر الماوس.</value></data>
   <data name="Settings_HotkeyRecord" xml:space="preserve"><value>تسجيل…</value></data>
   <data name="Settings_HotkeyRegionDescription" xml:space="preserve"><value>يجمّد كل الشاشات ويتيح لك سحب منطقة.</value></data>
   <data name="Settings_HotkeyReset" xml:space="preserve"><value>إعادة تعيين</value></data>
+  <data name="Settings_HotkeyResetNamed" xml:space="preserve"><value>إعادة مفتاح اختصار {0} إلى الافتراضي</value></data>
   <data name="Settings_HotkeysSection" xml:space="preserve"><value>مفاتيح الاختصار</value></data>
   <data name="Settings_HotkeyWindowDescription" xml:space="preserve"><value>يلتقط النافذة المثبّتة، أو النافذة الموجودة في المقدمة.</value></data>
   <data name="Settings_Import" xml:space="preserve"><value>استيراد…</value></data>

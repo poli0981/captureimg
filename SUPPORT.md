@@ -7,6 +7,7 @@ CaptureImage is maintained by one volunteer. Here is where to go:
 | Ask a question or share an idea | [GitHub Discussions](https://github.com/poli0981/captureimg/discussions) |
 | Report a bug | [Bug report](https://github.com/poli0981/captureimg/issues/new?template=bug_report.yml) — or **About → Report a bug** in the app |
 | Suggest a feature | [Feature request](https://github.com/poli0981/captureimg/issues/new?template=feature_request.yml) |
+| Report an accessibility barrier | [Accessibility barrier](https://github.com/poli0981/captureimg/issues/new?template=accessibility.yml) or `contact@poli0981.dev` — see [`ACCESSIBILITY.md`](ACCESSIBILITY.md) |
 | Report a security problem | Privately — see [`SECURITY.md`](SECURITY.md) (`security@poli0981.dev`) |
 | Ask about privacy | `privacy@poli0981.dev` — see [`docs/legal/PRIVACY.md`](docs/legal/PRIVACY.md) |
 | Raise a game-compatibility or anti-cheat concern (publishers, vendors) | `games@poli0981.dev` |

@@ -68,6 +68,21 @@ tests/*                          Core, Infrastructure, ViewModels tests + App.Ui
   `[LibraryImport]` rather than `[DllImport]` (SYSLIB1054). Fixers for one diagnostic at a time are
   safe: `dotnet format style|analyzers --diagnostics <ID> --severity info`.
 
+## Accessibility
+
+[`ACCESSIBILITY.md`](ACCESSIBILITY.md) is the public statement (supported keys, testing record, known
+limitations) — update it when UI behaviour changes. In XAML:
+
+- Every icon-only control gets `AutomationProperties.Name`, unique per page (add the mode or card
+  when an action repeats); list items bind the container's name to an `AutomationName` that
+  includes their badges.
+- Status text: `AutomationProperties.LiveSetting` + `a11y:LiveRegion.IsEnabled="True"` + a
+  binding with `NotifyOnTargetUpdated=True` (WPF never raises `LiveRegionChanged` itself);
+  notifications go through `Announcer`.
+- Headings via the `PageTitle`/`SectionHeader` styles or `AutomationProperties.HeadingLevel`; theme
+  brushes, never colour alone; animations honour `SystemParameters.ClientAreaAnimation`; nothing
+  takes the focus from a game.
+
 ## Pitfalls already hit
 
 - System.Text.Json source generation treats `init` properties as constructor parameters, so a

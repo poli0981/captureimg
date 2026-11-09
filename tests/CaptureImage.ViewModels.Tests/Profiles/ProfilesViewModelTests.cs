@@ -159,4 +159,37 @@ public sealed class ProfilesViewModelTests : IDisposable
         _vm.Profiles.Should().HaveCount(2);
         _vm.SelectedProfile!.Id.Should().Be(id);
     }
+
+    [Fact]
+    public void Item_AutomationName_IncludesWhatItMatchesAndItsBadges()
+    {
+        _vm.AddCommand.Execute(null);
+        _vm.Name = "Elden Ring";
+        _vm.ExecutableName = "eldenring.exe";
+        var item = _vm.Profiles.Single();
+        var changed = new List<string?>();
+        item.PropertyChanged += (_, e) => changed.Add(e.PropertyName);
+
+        item.AutomationName.Should().Be("Elden Ring, eldenring.exe");
+
+        _vm.AutoArm = true;
+        _vm.Enabled = false;
+
+        item.AutomationName.Should().Be("Elden Ring, eldenring.exe, Profiles_AutoArmBadge, Profiles_DisabledBadge");
+        changed.Should().Contain(nameof(ProfileItemViewModel.AutomationName));
+    }
+
+    [Fact]
+    public void LanguageSwitch_RefreshesTheItemNames()
+    {
+        var localization = new KeyLocalization();
+        using var vm = new ProfilesViewModel(_store, _dialogs, new InlineDispatcher(), localization, _messenger);
+        vm.AddCommand.Execute(null);
+        var changed = new List<string?>();
+        vm.Profiles.Single().PropertyChanged += (_, e) => changed.Add(e.PropertyName);
+
+        localization.SetCulture(System.Globalization.CultureInfo.GetCultureInfo("vi-VN"));
+
+        changed.Should().Contain(nameof(ProfileItemViewModel.AutomationName));
+    }
 }

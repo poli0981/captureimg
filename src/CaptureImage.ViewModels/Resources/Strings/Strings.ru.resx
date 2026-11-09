@@ -109,6 +109,7 @@
   <data name="Error_TargetMinimized" xml:space="preserve"><value>Окно свёрнуто. Разверните его и повторите попытку.</value></data>
   <data name="Error_Unknown" xml:space="preserve"><value>Что-то пошло не так. Подробности в журнале.</value></data>
 
+  <data name="Hotkey_AccessibleName" xml:space="preserve"><value>{0}, {1}</value></data>
   <data name="Hotkey_None" xml:space="preserve"><value>Не задано</value></data>
   <data name="Hotkey_PressKeys" xml:space="preserve"><value>Нажмите клавиши…</value></data>
   <data name="Hotkey_ProblemMessage" xml:space="preserve"><value>Другое приложение использует одну из горячих клавиш снимков, или сочетание недопустимо. Выберите другое в настройках.</value></data>
@@ -211,7 +212,8 @@
   <data name="Profiles_UseGlobal" xml:space="preserve"><value>Использовать общую настройку</value></data>
   <data name="Profiles_UseGlobalButton" xml:space="preserve"><value>Общая</value></data>
 
-  <data name="Region_DragHint" xml:space="preserve"><value>Выделите область · Щелчок — весь экран · Esc — отмена</value></data>
+  <data name="Region_DragHint" xml:space="preserve"><value>Выделите область мышью или клавишами со стрелками · Shift+стрелки — размер · Ctrl — шаг 1 пиксель · Tab — следующий экран · Enter — снимок · Щелчок или Enter без выделения — весь экран · Esc — отмена</value></data>
+  <data name="Region_Title" xml:space="preserve"><value>Выделите область</value></data>
 
   <data name="Settings_AdvancedSection" xml:space="preserve"><value>Дополнительно</value></data>
   <data name="Settings_AppearanceSection" xml:space="preserve"><value>Оформление</value></data>
@@ -248,11 +250,13 @@
   <data name="Settings_HdrOff" xml:space="preserve"><value>Выкл. (всегда SDR)</value></data>
   <data name="Settings_HdrSection" xml:space="preserve"><value>HDR</value></data>
   <data name="Settings_HotkeyClear" xml:space="preserve"><value>Очистить</value></data>
+  <data name="Settings_HotkeyClearNamed" xml:space="preserve"><value>Очистить горячую клавишу режима «{0}»</value></data>
   <data name="Settings_HotkeyHint" xml:space="preserve"><value>Нажмите на горячую клавишу, затем введите новое сочетание. Esc — отмена, Backspace — очистить. Горячие клавиши работают только после активации.</value></data>
   <data name="Settings_HotkeyMonitorDescription" xml:space="preserve"><value>Снимает экран, на котором находится указатель мыши.</value></data>
   <data name="Settings_HotkeyRecord" xml:space="preserve"><value>Записать…</value></data>
   <data name="Settings_HotkeyRegionDescription" xml:space="preserve"><value>Замораживает все экраны и позволяет выделить область.</value></data>
   <data name="Settings_HotkeyReset" xml:space="preserve"><value>Сброс</value></data>
+  <data name="Settings_HotkeyResetNamed" xml:space="preserve"><value>Вернуть горячую клавишу режима «{0}» по умолчанию</value></data>
   <data name="Settings_HotkeysSection" xml:space="preserve"><value>Горячие клавиши</value></data>
   <data name="Settings_HotkeyWindowDescription" xml:space="preserve"><value>Снимает закреплённое окно или окно на переднем плане.</value></data>
   <data name="Settings_Import" xml:space="preserve"><value>Импорт…</value></data>

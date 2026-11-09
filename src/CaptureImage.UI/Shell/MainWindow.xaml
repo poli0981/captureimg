@@ -61,8 +61,7 @@
             IsPaneToggleVisible="True"
             OpenPaneLength="230"
             PaneDisplayMode="Left"
-            TitleBar="{Binding ElementName=TitleBar, Mode=OneWay}"
-            Transition="FadeInWithSlide">
+            TitleBar="{Binding ElementName=TitleBar, Mode=OneWay}">
             <ui:NavigationView.MenuItems>
                 <ui:NavigationViewItem
                     AutomationProperties.AutomationId="Nav_Dashboard"

@@ -4,6 +4,7 @@
 using System.Diagnostics;
 using AwesomeAssertions;
 using FlaUI.Core.AutomationElements;
+using FlaUI.Core.Definitions;
 using FlaUI.Core.Input;
 using FlaUI.Core.Tools;
 using FlaUI.Core.WindowsAPI;
@@ -51,6 +52,58 @@ public sealed class AppTests
         AppSession.Find(window, "Dashboard_ToggleArm").AsButton().Invoke();
 
         Retry.WhileTrue(() => status.Name == idle, TimeSpan.FromSeconds(5)).Success.Should().BeTrue();
+    }
+
+    [Fact]
+    public void Arm_AnnouncesTheNewStatusToScreenReaders()
+    {
+        using var session = AppSession.Start();
+        var window = session.MainWindow();
+        var status = AppSession.Find(window, "Dashboard_Status");
+        using var announced = new ManualResetEventSlim();
+        using var handler = window.RegisterAutomationEvent(
+            session.Automation.EventLibrary.Element.LiveRegionChangedEvent,
+            TreeScope.Subtree,
+            (element, _) =>
+            {
+                if (element.Properties.AutomationId.ValueOrDefault == "Dashboard_Status")
+                {
+                    announced.Set();
+                }
+            });
+
+        AppSession.Find(window, "Dashboard_ToggleArm").AsButton().Invoke();
+
+        announced.Wait(TimeSpan.FromSeconds(5), TestContext.Current.CancellationToken).Should().BeTrue("the status text is a live region");
+        status.Name.Should().NotBeNullOrEmpty();
+    }
+
+    [Fact]
+    public void HotkeyButtons_HaveDistinctNames_AndTabLeavesTheRecorder()
+    {
+        using var session = AppSession.Start("""{ "version": 3, "culture": "en-US" }""");
+        var window = session.MainWindow();
+        AppSession.Find(window, "Nav_Settings").Click();
+        var record = AppSession.Find(window, "Hotkey_Window_Record").AsButton();
+
+        record.Name.Should().Contain("Ctrl+Shift+F12", "the name carries the current binding");
+        string[] names =
+        [
+            .. new[] { "Window", "Region", "Monitor" }.SelectMany(mode => new[]
+            {
+                AppSession.Find(window, $"Hotkey_{mode}_Clear").Name,
+                AppSession.Find(window, $"Hotkey_{mode}_Reset").Name,
+            }),
+        ];
+        names.Should().OnlyHaveUniqueItems();
+
+        record.Click();
+        Keyboard.TypeSimultaneously(VirtualKeyShort.SHIFT, VirtualKeyShort.TAB);
+
+        Retry.WhileFalse(() => record.Name.Contains("Ctrl+Shift+F12", StringComparison.Ordinal), TimeSpan.FromSeconds(5))
+            .Success.Should().BeTrue("Shift+Tab ends recording without changing the hotkey");
+        record.Properties.HasKeyboardFocus.ValueOrDefault.Should().BeFalse("Shift+Tab moves the focus on");
+        ReadSettings(session).Should().NotMatchRegex("\"virtualKey\": 9\\b", "Shift+Tab is never saved as a hotkey");
     }
 
     [Fact]

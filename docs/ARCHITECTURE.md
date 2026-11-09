@@ -95,8 +95,10 @@ sequenceDiagram
 - Registration results (registered, conflict, invalid) are shown on the Dashboard and in Settings.
 - While the hotkey recorder in Settings is listening, the coordinator suspends the hotkeys so the
   current combination can be pressed again.
-- During region selection Esc and Enter are registered temporarily, so they work even when a
-  full-screen game keeps the keyboard focus.
+- During region selection the overlay's keys (`RegionKeyboard` in Core: Esc, Enter, Tab,
+  Shift+Tab, and the arrow keys with Shift / Ctrl) are registered temporarily, so they work even
+  when a full-screen game keeps the keyboard focus. The arrow keys auto-repeat; temporary-key
+  callbacks run off the hotkey thread one at a time, in the order the keys were pressed.
 
 ### Coordinator
 
@@ -162,7 +164,15 @@ stateDiagram-v2
 - Region overlays are placed over each monitor in physical pixels and show the frozen frame at the
   monitor's DPI, so one image pixel is one screen pixel; the selection is converted back to physical
   pixels.
-- The tray icon (H.NotifyIcon) shows a red dot while armed and is re-added after Explorer restarts.
+- The tray icon (H.NotifyIcon) shows a red dot while armed and is re-added after Explorer restarts;
+  Enter and Shift+F10 on it (after Win+B) show the window and open the menu.
+- Accessibility (see [`ACCESSIBILITY.md`](../ACCESSIBILITY.md)): pages expose themselves through
+  `PageAutomationPeer`, and every control has an automation id and name. Status text uses
+  `LiveRegion` (`CaptureImage.UI/Accessibility`) to raise `LiveRegionChanged`, which WPF never
+  does on its own. Notifications are read through `Announcer` (UI Automation notification events)
+  and stay up at least as long as Windows' notification-time setting. Page transitions follow
+  `SystemParameters.ClientAreaAnimation`, and region overlays use system colours in contrast
+  themes.
 - The main window hides to the tray while it idles and the process then runs in Windows' efficiency
   mode (EcoQoS), lifted during captures.
 

@@ -12,6 +12,9 @@ Please follow the [Code of Conduct](CODE_OF_CONDUCT.md).
   file-name tokens unchanged.
 - **Fix a bug or build a feature.** For anything larger than a small fix, please open an issue or a
   discussion first so we can agree on the approach.
+- **Report or fix an accessibility barrier.** Reports from people who use a screen reader, a
+  contrast theme or only a keyboard are especially valuable — see
+  [`ACCESSIBILITY.md`](ACCESSIBILITY.md).
 
 ## Development setup
 
@@ -71,6 +74,10 @@ Conventions:
 - Packages are managed centrally in `Directory.Packages.props` with lock files; after changing a
   dependency run `dotnet restore --force-evaluate` and commit the updated `packages.lock.json` files.
 - Commits must be signed (GPG or SSH) — the `main` branch requires verified signatures.
+- User-interface changes follow the accessibility rules in
+  [`ACCESSIBILITY.md`](ACCESSIBILITY.md#contributor-expectations): keyboard access, unique
+  accessible names, announced status text, theme brushes, reduced motion — and a quick check with
+  Narrator. The pull request template has a checklist.
 
 Before pushing, the quick local check is:
 

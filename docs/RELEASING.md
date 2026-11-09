@@ -55,6 +55,9 @@ The workflow then:
       (`Update.exe apply --package <full.nupkg>` in the install folder, or the in-app updater once
       published) — settings are kept and migrated.
 - [ ] The portable zip starts with `--smoke-test --data-dir <temp>` and exits 0.
+- [ ] If the release changes the user interface: a quick pass with the keyboard alone and with
+      Narrator over the changed screens (see [`ACCESSIBILITY.md`](../ACCESSIBILITY.md)); add the
+      result to its testing record.
 
 ## 4. Publish
 

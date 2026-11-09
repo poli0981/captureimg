@@ -60,6 +60,9 @@
             <!--  Contact  -->
             <TextBlock Style="{StaticResource SectionHeader}" Text="{loc:Tr About_ContactSection}" />
             <ui:CardControl
+                AutomationProperties.AutomationId="About_Email"
+                AutomationProperties.HelpText="{Binding Contact}"
+                AutomationProperties.Name="{loc:Tr About_Email}"
                 Command="{Binding EmailContactCommand}"
                 Icon="{ui:SymbolIcon Mail24}"
                 Margin="0,0,0,4">
@@ -72,6 +75,9 @@
                 <ui:SymbolIcon Symbol="ArrowUpRight24" />
             </ui:CardControl>
             <ui:CardControl
+                AutomationProperties.AutomationId="About_OtherChannels"
+                AutomationProperties.HelpText="{Binding LinksPage}"
+                AutomationProperties.Name="{loc:Tr About_OtherChannels}"
                 Command="{Binding OpenLinksPageCommand}"
                 Icon="{ui:SymbolIcon Link24}"
                 Margin="0,0,0,4">
@@ -84,6 +90,9 @@
                 <ui:SymbolIcon Symbol="ArrowUpRight24" />
             </ui:CardControl>
             <ui:CardControl
+                AutomationProperties.AutomationId="About_Repository"
+                AutomationProperties.HelpText="github.com/poli0981/captureimg"
+                AutomationProperties.Name="{loc:Tr About_RepositoryLabel}"
                 Command="{Binding OpenRepositoryCommand}"
                 Icon="{ui:SymbolIcon Code24}"
                 Margin="0,0,0,4">
@@ -229,18 +238,25 @@
 
             <TextBlock Style="{StaticResource SectionHeader}" Text="{loc:Tr About_DisclaimersSection}" />
             <TextBlock
+                AutomationProperties.HeadingLevel="Level3"
                 FontWeight="SemiBold"
                 Text="{loc:Tr About_TranslationDisclaimer}" />
             <TextBlock
                 Margin="0,2,0,10"
                 Style="{StaticResource SecondaryText}"
                 Text="{loc:Tr About_TranslationDisclaimerBody}" />
-            <TextBlock FontWeight="SemiBold" Text="{loc:Tr About_CaptureDisclaimer}" />
+            <TextBlock
+                AutomationProperties.HeadingLevel="Level3"
+                FontWeight="SemiBold"
+                Text="{loc:Tr About_CaptureDisclaimer}" />
             <TextBlock
                 Margin="0,2,0,10"
                 Style="{StaticResource SecondaryText}"
                 Text="{loc:Tr About_CaptureLimitationDisclaimerBody}" />
-            <TextBlock FontWeight="SemiBold" Text="{loc:Tr About_LiabilityDisclaimer}" />
+            <TextBlock
+                AutomationProperties.HeadingLevel="Level3"
+                FontWeight="SemiBold"
+                Text="{loc:Tr About_LiabilityDisclaimer}" />
             <TextBlock
                 Margin="0,2,0,10"
                 Style="{StaticResource SecondaryText}"

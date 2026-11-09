@@ -52,6 +52,9 @@ small tray app that does nothing until you press a hotkey.
   Français, Deutsch, Português (Brasil), Русский. Translations are machine-assisted — see
   [`docs/legal/DISCLAIMER.md`](docs/legal/DISCLAIMER.md).
 - **Light, dark and high-contrast themes**, following Windows by default.
+- **Keyboard and screen-reader friendly** — everything works without a mouse, including region
+  selection with the arrow keys; Narrator reads every control, status change and notification. See
+  [`ACCESSIBILITY.md`](ACCESSIBILITY.md).
 - **Start with Windows**, start minimized, arm on startup.
 - **Private by default** — no telemetry, no account, no cloud. The only network request is the
   update check. See [`docs/legal/PRIVACY.md`](docs/legal/PRIVACY.md).
@@ -116,6 +119,15 @@ Tips:
   **Capture screen** from the tray menu, optionally with a countdown.
 - Settings, logs and the library index are kept in `%LocalAppData%\poli0981\CaptureImage`.
   **Settings → Advanced → Export diagnostics** creates a zip for bug reports (user paths removed).
+
+## Accessibility
+
+CaptureImage aims to be fully usable with a keyboard, a screen reader (tested with Narrator), a
+contrast theme and large display scaling, and it follows Windows' animation and notification-time
+settings. In the region overlay the arrow keys move the selection, Shift+arrows resize it, Tab moves
+to the next monitor and Enter captures. [`ACCESSIBILITY.md`](ACCESSIBILITY.md) lists every key, what
+has been tested, the known limitations, and how to
+[report a barrier](https://github.com/poli0981/captureimg/issues/new?template=accessibility.yml).
 
 ## Build from source
 

@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 // Copyright (c) CaptureImage Contributors
 
+using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Interop;
 using CaptureImage.Core.Capture;
@@ -10,9 +11,20 @@ using Windows.Win32.UI.WindowsAndMessaging;
 
 namespace CaptureImage.UI.Interop;
 
-/// <summary>Win32 window tweaks WPF has no property for.</summary>
-internal static class WindowInterop
+/// <summary>Win32 window tweaks and system settings WPF has no property for.</summary>
+internal static partial class WindowInterop
 {
+    private const uint SpiGetMessageDuration = 0x2016;
+
+    /// <summary>
+    /// Windows' "Dismiss notifications after this amount of time" (Settings → Accessibility →
+    /// Visual effects), or <see langword="null"/> when it can't be read.
+    /// </summary>
+    public static TimeSpan? NotificationDuration() =>
+        SystemParametersInfo(SpiGetMessageDuration, 0, out var seconds, 0) && seconds > 0
+            ? TimeSpan.FromSeconds(seconds)
+            : null;
+
     /// <summary>
     /// Keep the window out of screenshots and screen recordings (toasts, overlays, pinned
     /// thumbnails must never end up in the user's captures).
@@ -74,4 +86,8 @@ internal static class WindowInterop
     }
 
     private static HWND GetHandle(Window window) => new(new WindowInteropHelper(window).EnsureHandle());
+
+    [LibraryImport("user32.dll", EntryPoint = "SystemParametersInfoW")]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    private static partial bool SystemParametersInfo(uint action, uint parameter, out uint value, uint update);
 }

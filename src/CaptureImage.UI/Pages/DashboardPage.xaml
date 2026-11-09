@@ -2,6 +2,7 @@
     x:Class="CaptureImage.UI.Pages.DashboardPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a11y="clr-namespace:CaptureImage.UI.Accessibility"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:loc="clr-namespace:CaptureImage.UI.Localization"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -59,11 +60,12 @@
                 </Ellipse>
                 <StackPanel Grid.Column="1">
                     <TextBlock
+                        a11y:LiveRegion.IsEnabled="True"
                         AutomationProperties.AutomationId="Dashboard_Status"
                         AutomationProperties.LiveSetting="Polite"
                         FontSize="15"
                         FontWeight="SemiBold"
-                        Text="{Binding StatusText}"
+                        Text="{Binding StatusText, NotifyOnTargetUpdated=True}"
                         TextWrapping="Wrap" />
                     <StackPanel
                         Margin="0,6,0,0"
@@ -203,6 +205,11 @@
                 SelectionMode="Single"
                 VirtualizingPanel.IsVirtualizing="True"
                 VirtualizingPanel.VirtualizationMode="Recycling">
+                <ui:ListView.ItemContainerStyle>
+                    <Style BasedOn="{StaticResource {x:Type ui:ListViewItem}}" TargetType="{x:Type ui:ListViewItem}">
+                        <Setter Property="AutomationProperties.Name" Value="{Binding AutomationName}" />
+                    </Style>
+                </ui:ListView.ItemContainerStyle>
                 <ui:ListView.ItemTemplate>
                     <DataTemplate DataType="{x:Type vm:TargetItemViewModel}">
                         <Grid Margin="4,6">

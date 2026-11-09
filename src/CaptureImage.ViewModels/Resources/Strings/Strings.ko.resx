@@ -109,6 +109,7 @@
   <data name="Error_TargetMinimized" xml:space="preserve"><value>창이 최소화되어 있습니다. 창을 복원한 후 다시 시도하세요.</value></data>
   <data name="Error_Unknown" xml:space="preserve"><value>문제가 발생했습니다. 자세한 내용은 로그를 확인하세요.</value></data>
 
+  <data name="Hotkey_AccessibleName" xml:space="preserve"><value>{0}, {1}</value></data>
   <data name="Hotkey_None" xml:space="preserve"><value>설정 안 됨</value></data>
   <data name="Hotkey_PressKeys" xml:space="preserve"><value>키를 누르세요…</value></data>
   <data name="Hotkey_ProblemMessage" xml:space="preserve"><value>다른 앱이 캡처 단축키를 사용 중이거나 키 조합이 올바르지 않습니다. 설정에서 다른 조합을 선택하세요.</value></data>
@@ -211,7 +212,8 @@
   <data name="Profiles_UseGlobal" xml:space="preserve"><value>전체 설정 사용</value></data>
   <data name="Profiles_UseGlobalButton" xml:space="preserve"><value>전체 설정으로</value></data>
 
-  <data name="Region_DragHint" xml:space="preserve"><value>드래그하여 영역 선택 · 클릭하면 전체 화면 · Esc로 취소</value></data>
+  <data name="Region_DragHint" xml:space="preserve"><value>드래그하거나 화살표 키로 영역 선택 · Shift+화살표로 크기 조정 · Ctrl: 1픽셀씩 · Tab: 다음 화면 · Enter로 캡처 · 클릭하거나 선택 없이 Enter를 누르면 전체 화면 · Esc로 취소</value></data>
+  <data name="Region_Title" xml:space="preserve"><value>영역 선택</value></data>
 
   <data name="Settings_AdvancedSection" xml:space="preserve"><value>고급</value></data>
   <data name="Settings_AppearanceSection" xml:space="preserve"><value>모양</value></data>
@@ -248,11 +250,13 @@
   <data name="Settings_HdrOff" xml:space="preserve"><value>끔(항상 SDR)</value></data>
   <data name="Settings_HdrSection" xml:space="preserve"><value>HDR</value></data>
   <data name="Settings_HotkeyClear" xml:space="preserve"><value>지우기</value></data>
+  <data name="Settings_HotkeyClearNamed" xml:space="preserve"><value>{0} 단축키 지우기</value></data>
   <data name="Settings_HotkeyHint" xml:space="preserve"><value>단축키를 클릭한 다음 새 조합을 누르세요. Esc는 취소, Backspace는 지우기입니다. 단축키는 활성화된 동안에만 작동합니다.</value></data>
   <data name="Settings_HotkeyMonitorDescription" xml:space="preserve"><value>마우스 포인터가 있는 화면을 캡처합니다.</value></data>
   <data name="Settings_HotkeyRecord" xml:space="preserve"><value>녹화…</value></data>
   <data name="Settings_HotkeyRegionDescription" xml:space="preserve"><value>모든 화면을 정지시키고 영역을 드래그해 선택할 수 있습니다.</value></data>
   <data name="Settings_HotkeyReset" xml:space="preserve"><value>재설정</value></data>
+  <data name="Settings_HotkeyResetNamed" xml:space="preserve"><value>{0} 단축키를 기본값으로 재설정</value></data>
   <data name="Settings_HotkeysSection" xml:space="preserve"><value>단축키</value></data>
   <data name="Settings_HotkeyWindowDescription" xml:space="preserve"><value>고정한 창 또는 맨 앞의 창을 캡처합니다.</value></data>
   <data name="Settings_Import" xml:space="preserve"><value>가져오기…</value></data>

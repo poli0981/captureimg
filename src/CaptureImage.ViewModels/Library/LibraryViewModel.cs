@@ -54,6 +54,11 @@ public sealed partial class CaptureItemViewModel(CaptureRecord record, ICaptureL
         }
     }
 
+    /// <summary>Accessible name: file name, game, date and the HDR badge.</summary>
+    public string AutomationName => string.Join(
+        ", ",
+        new[] { FileName, Game, CapturedAtText, HasHdr ? "HDR" : null }.Where(part => !string.IsNullOrEmpty(part)));
+
     public override string ToString() => FileName;
 
     private async Task LoadThumbnailAsync()

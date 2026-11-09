@@ -8,6 +8,7 @@ using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Threading;
 using CaptureImage.Core.Abstractions;
 using CaptureImage.UI.Localization;
 using CaptureImage.ViewModels.Services;
@@ -20,8 +21,10 @@ using MenuItem = System.Windows.Controls.MenuItem;
 namespace CaptureImage.UI.Shell;
 
 /// <summary>
-/// The notification-area icon: left click shows the window, right click opens the menu. The
-/// icon gets a red dot while the hotkeys are armed. H.NotifyIcon re-adds it after Explorer restarts.
+/// The notification-area icon: left click shows the window, right click opens the menu; from
+/// the keyboard (Win+B, arrow keys) Enter or Space shows the window and Shift+F10 or the menu
+/// key opens the menu. The icon gets a red dot while the hotkeys are armed. H.NotifyIcon
+/// re-adds it after Explorer restarts.
 /// </summary>
 public sealed class TrayIcon : IDisposable
 {
@@ -46,6 +49,9 @@ public sealed class TrayIcon : IDisposable
             ContextMenu = BuildMenu(viewModel),
         };
         _icon.SetBinding(TaskbarIcon.ToolTipTextProperty, new Binding(nameof(ShellViewModel.TrayToolTip)) { Source = viewModel, Mode = BindingMode.OneWay });
+        // H.NotifyIcon only reports keyboard use of the icon; it doesn't act on it.
+        _icon.TrayKeyboardKeySelect += OnKeyboardSelect;
+        _icon.TrayKeyboardContextMenu += OnKeyboardContextMenu;
         LocalizationSource.Apply(_icon.ContextMenu);
 
         _viewModel.PropertyChanged += OnViewModelChanged;
@@ -64,6 +70,8 @@ public sealed class TrayIcon : IDisposable
         _disposed = true;
         _viewModel.PropertyChanged -= OnViewModelChanged;
         _localization.CultureChanged -= OnCultureChanged;
+        _icon.TrayKeyboardKeySelect -= OnKeyboardSelect;
+        _icon.TrayKeyboardContextMenu -= OnKeyboardContextMenu;
         _icon.Dispose();
     }
 
@@ -104,6 +112,19 @@ public sealed class TrayIcon : IDisposable
 
     private static BitmapFrame LoadIcon(string name) =>
         BitmapFrame.Create(new Uri($"pack://application:,,,/CaptureImage.UI;component/Assets/{name}", UriKind.Absolute));
+
+    private void OnKeyboardSelect(object sender, RoutedEventArgs e) => _viewModel.ShowWindowCommand.Execute(null);
+
+    private void OnKeyboardContextMenu(object sender, RoutedEventArgs e)
+    {
+        if (_icon.ContextMenu is not { IsOpen: false } menu)
+        {
+            return;
+        }
+
+        _icon.ShowContextMenu(TaskbarIcon.GetPopupTrayPosition());
+        menu.Dispatcher.BeginInvoke(DispatcherPriority.Input, () => menu.MoveFocus(new TraversalRequest(FocusNavigationDirection.First)));
+    }
 
     private void OnViewModelChanged(object? sender, PropertyChangedEventArgs e)
     {

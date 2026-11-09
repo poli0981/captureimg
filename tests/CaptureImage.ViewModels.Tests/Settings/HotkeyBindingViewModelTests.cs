@@ -16,6 +16,7 @@ public sealed class HotkeyBindingViewModelTests : IDisposable
     private const uint VkF9 = 0x78;
     private const uint VkG = 0x47;
     private const uint VkShift = 0x10;
+    private const uint VkTab = 0x09;
 
     private readonly FakeSettingsStore _store = new();
     private readonly CoordinatorFixture _fixture;
@@ -135,5 +136,70 @@ public sealed class HotkeyBindingViewModelTests : IDisposable
 
         _window.ApplyRegistration(new HotkeyRegistration(CaptureMode.Window, HotkeyBinding.Default, HotkeyRegistrationStatus.Registered));
         _window.HasError.Should().BeFalse();
+    }
+
+    [Theory]
+    [InlineData(HotkeyModifiers.None)]
+    [InlineData(HotkeyModifiers.Shift)]
+    public void TabWhileRecording_CancelsAndLetsTheFocusMove(HotkeyModifiers modifiers)
+    {
+        _fixture.Coordinator.Arm();
+        _window.StartRecordingCommand.Execute(null);
+        _fixture.Hotkeys.ClearReceivedCalls();
+
+        _window.ReleaseFocus(modifiers, VkTab).Should().BeTrue();
+
+        _window.IsRecording.Should().BeFalse();
+        _window.HasError.Should().BeFalse();
+        _store.Current.Hotkeys.Window.Should().Be(HotkeyBinding.DefaultFor(CaptureMode.Window), "Shift+Tab must not become the hotkey");
+        _fixture.Hotkeys.Received(1).Activate(Arg.Any<HotkeySettings>());
+    }
+
+    [Theory]
+    [InlineData(HotkeyModifiers.Control, VkTab)]
+    [InlineData(HotkeyModifiers.Alt | HotkeyModifiers.Shift, VkTab)]
+    [InlineData(HotkeyModifiers.None, VkF9)]
+    public void OtherKeysWhileRecording_AreRecorded(HotkeyModifiers modifiers, uint key)
+    {
+        _window.StartRecordingCommand.Execute(null);
+
+        _window.ReleaseFocus(modifiers, key).Should().BeFalse();
+
+        _window.IsRecording.Should().BeTrue();
+    }
+
+    [Fact]
+    public void TabWhileNotRecording_IsLeftAlone()
+    {
+        _window.ReleaseFocus(HotkeyModifiers.None, VkTab).Should().BeFalse();
+    }
+
+    [Fact]
+    public void AccessibleNames_NameTheModeAndTheBinding()
+    {
+        var localization = Substitute.For<ILocalizationService>();
+        localization.CurrentCulture.Returns(System.Globalization.CultureInfo.InvariantCulture);
+        localization[Arg.Any<string>()].Returns(call => call.Arg<string>() switch
+        {
+            "Hotkey_AccessibleName" => "{0}, {1}",
+            "Settings_HotkeyClearNamed" => "Clear {0}",
+            "Settings_HotkeyResetNamed" => "Reset {0}",
+            var key => key,
+        });
+        var region = new HotkeyBindingViewModel(CaptureMode.Region, _store, _fixture.Coordinator, _fixture.Hotkeys, localization);
+        var changed = new List<string?>();
+        region.PropertyChanged += (_, e) => changed.Add(e.PropertyName);
+
+        region.AccessibleName.Should().Be("Mode_Region, " + HotkeyBinding.DefaultFor(CaptureMode.Region));
+        region.ClearName.Should().Be("Clear Mode_Region");
+        region.ResetName.Should().Be("Reset Mode_Region");
+
+        region.StartRecordingCommand.Execute(null);
+        region.AccessibleName.Should().Be("Mode_Region, Hotkey_PressKeys");
+        changed.Should().Contain(nameof(HotkeyBindingViewModel.AccessibleName));
+
+        changed.Clear();
+        region.RefreshText();
+        changed.Should().Contain([nameof(HotkeyBindingViewModel.AccessibleName), nameof(HotkeyBindingViewModel.ClearName), nameof(HotkeyBindingViewModel.ResetName)]);
     }
 }

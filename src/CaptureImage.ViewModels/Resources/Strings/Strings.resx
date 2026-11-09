@@ -109,6 +109,7 @@
   <data name="Error_TargetMinimized" xml:space="preserve"><value>The window is minimized. Restore it and try again.</value></data>
   <data name="Error_Unknown" xml:space="preserve"><value>Something went wrong. The log has the details.</value></data>
 
+  <data name="Hotkey_AccessibleName" xml:space="preserve"><value>{0}, {1}</value></data>
   <data name="Hotkey_None" xml:space="preserve"><value>Not set</value></data>
   <data name="Hotkey_PressKeys" xml:space="preserve"><value>Press keys…</value></data>
   <data name="Hotkey_ProblemMessage" xml:space="preserve"><value>Another app is using one of the capture hotkeys, or a combination is invalid. Pick a different one in Settings.</value></data>
@@ -211,7 +212,8 @@
   <data name="Profiles_UseGlobal" xml:space="preserve"><value>Use the global setting</value></data>
   <data name="Profiles_UseGlobalButton" xml:space="preserve"><value>Use global</value></data>
 
-  <data name="Region_DragHint" xml:space="preserve"><value>Drag to select an area · Click for the whole screen · Esc to cancel</value></data>
+  <data name="Region_DragHint" xml:space="preserve"><value>Drag or use the arrow keys to select an area · Shift+arrows resize · Ctrl: 1-pixel steps · Tab: next screen · Enter to capture · Click, or Enter with nothing selected, for the whole screen · Esc to cancel</value></data>
+  <data name="Region_Title" xml:space="preserve"><value>Select an area</value></data>
 
   <data name="Settings_AdvancedSection" xml:space="preserve"><value>Advanced</value></data>
   <data name="Settings_AppearanceSection" xml:space="preserve"><value>Appearance</value></data>
@@ -248,11 +250,13 @@
   <data name="Settings_HdrOff" xml:space="preserve"><value>Off (always SDR)</value></data>
   <data name="Settings_HdrSection" xml:space="preserve"><value>HDR</value></data>
   <data name="Settings_HotkeyClear" xml:space="preserve"><value>Clear</value></data>
+  <data name="Settings_HotkeyClearNamed" xml:space="preserve"><value>Clear the {0} hotkey</value></data>
   <data name="Settings_HotkeyHint" xml:space="preserve"><value>Click a hotkey, then press the new combination. Esc cancels, Backspace clears. Hotkeys only work while armed.</value></data>
   <data name="Settings_HotkeyMonitorDescription" xml:space="preserve"><value>Captures the screen under the mouse pointer.</value></data>
   <data name="Settings_HotkeyRecord" xml:space="preserve"><value>Record…</value></data>
   <data name="Settings_HotkeyRegionDescription" xml:space="preserve"><value>Freezes every screen and lets you drag an area.</value></data>
   <data name="Settings_HotkeyReset" xml:space="preserve"><value>Reset</value></data>
+  <data name="Settings_HotkeyResetNamed" xml:space="preserve"><value>Reset the {0} hotkey to its default</value></data>
   <data name="Settings_HotkeysSection" xml:space="preserve"><value>Hotkeys</value></data>
   <data name="Settings_HotkeyWindowDescription" xml:space="preserve"><value>Captures the locked window, or the window in front.</value></data>
   <data name="Settings_Import" xml:space="preserve"><value>Import…</value></data>
